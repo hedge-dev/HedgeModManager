@@ -5,14 +5,14 @@ using HedgeModManager.Text;
 
 CodeProvider.TryLoadRoslyn();
 
-var games = ModAbleGameLocator.LocateGames();
+var games = ModdableGameLocator.LocateGames();
 if (!games.Any())
 {
     Console.WriteLine("No games found");
     return;
 }
 
-IModAbleGame game = games.First();
+IModdableGame game = games.First();
 await game.InitializeAsync();
 var db = game.ModDatabase;
 

@@ -2,7 +2,7 @@
 using Foundation;
 using Steam;
 
-public class ModAbleGameLocator
+public class ModdableGameLocator
 {
     public static Dictionary<string, GameInfo> SteamGameList = new()
     {
@@ -15,16 +15,16 @@ public class ModAbleGameLocator
         { "1237320", new GameInfo("SonicFrontiers.exe") },
     };
 
-    public static List<IModAbleGame> LocateGames()
+    public static List<IModdableGame> LocateGames()
     {
-        var games = new List<IModAbleGame>();
+        var games = new List<IModdableGame>();
         var steamLocator = new SteamLocator();
 
         foreach (var steamGame in steamLocator.LocateGames())
         {
             if (SteamGameList.TryGetValue(steamGame.ID, out var info))
             {
-                games.Add(new ModAbleGameGeneric(steamGame)
+                games.Add(new ModdableGameGeneric(steamGame)
                 {
                     Executable = info.Executable,
                     Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, info.Executable))!

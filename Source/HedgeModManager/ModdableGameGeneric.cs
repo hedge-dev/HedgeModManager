@@ -2,7 +2,7 @@
 using Foundation;
 using Text;
 
-public class ModAbleGameGeneric : IModAbleGameTDatabase<ModDatabaseGeneric>, IModAbleGameTConfiguration<ModLoaderConfiguration>
+public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, IModdableGameTConfiguration<ModLoaderConfiguration>
 {
     public string Platform { get; }
     public string ID { get; }
@@ -14,7 +14,7 @@ public class ModAbleGameGeneric : IModAbleGameTDatabase<ModDatabaseGeneric>, IMo
     public ModDatabaseGeneric ModDatabase { get; } = new ModDatabaseGeneric();
     public ModLoaderConfiguration ModLoaderConfiguration { get; set; } = new ModLoaderConfiguration();
 
-    public ModAbleGameGeneric(IGame game)
+    public ModdableGameGeneric(IGame game)
     {
         Platform = game.Platform;
         ID = game.ID;

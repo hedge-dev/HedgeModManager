@@ -1,6 +1,6 @@
 ﻿namespace HedgeModManager.Foundation;
 
-public interface IModAbleGame : IGame
+public interface IModdableGame : IGame
 {
     public IModLoaderConfiguration ModLoaderConfiguration { get; }
     public IModDatabase ModDatabase { get; }
@@ -11,16 +11,16 @@ public interface IModAbleGame : IGame
     public bool IsModLoaderInstalled();
 }
 
-public interface IModAbleGameTDatabase<out TDatabase> : IModAbleGame where TDatabase : IModDatabase
+public interface IModdableGameTDatabase<out TDatabase> : IModdableGame where TDatabase : IModDatabase
 {
     public new TDatabase ModDatabase { get; }
 
-    IModDatabase IModAbleGame.ModDatabase => ModDatabase;
+    IModDatabase IModdableGame.ModDatabase => ModDatabase;
 }
 
-public interface IModAbleGameTConfiguration<out TConfig> : IModAbleGame where TConfig : IModLoaderConfiguration
+public interface IModdableGameTConfiguration<out TConfig> : IModdableGame where TConfig : IModLoaderConfiguration
 {
     public new TConfig ModLoaderConfiguration { get; }
 
-    IModLoaderConfiguration IModAbleGame.ModLoaderConfiguration => ModLoaderConfiguration;
+    IModLoaderConfiguration IModdableGame.ModLoaderConfiguration => ModLoaderConfiguration;
 }
