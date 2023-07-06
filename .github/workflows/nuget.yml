@@ -21,8 +21,10 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Pack
+      working-directory: ./Source
       run: dotnet pack -c Release
     - name: Publish
+      working-directory: ./Source
       run: dotnet nuget push **/*.nupkg -s $NUGET_SOURCE -k $NUGET_AUTH_TOKEN
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
