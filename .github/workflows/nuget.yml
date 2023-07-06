@@ -25,7 +25,7 @@ jobs:
       run: dotnet pack -c Release
     - name: Publish
       working-directory: ./Source
-      run: dotnet nuget push **/*.nupkg -s $NUGET_SOURCE -k $NUGET_AUTH_TOKEN
+      run: dotnet nuget push **/*.nupkg -s $NUGET_SOURCE -k $NUGET_AUTH_TOKEN --skip-duplicate
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
         NUGET_SOURCE: https://api.nuget.org/v3/index.json
