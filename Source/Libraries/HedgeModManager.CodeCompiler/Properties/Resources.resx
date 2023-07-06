@@ -124,7 +124,7 @@
   <data name="MemoryService" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MemoryService.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="Microsoft_CSharp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Microsoft.CSharp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Microsoft.CSharp.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="netstandard" type="System.Resources.ResXFileRef, System.Windows.Forms">

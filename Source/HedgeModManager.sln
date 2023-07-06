@@ -7,6 +7,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager", "HedgeMod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager.Console", "HedgeModManager.Console\HedgeModManager.Console.csproj", "{A01C2BBC-FA43-4FDC-AE68-BE599FB32514}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager.Foundation", "Libraries\HedgeModManager.Foundation\HedgeModManager.Foundation.csproj", "{9A659E03-A6E0-41C2-874D-8077C869274B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{0C624CCE-BE50-4485-A599-5E7FEA002A26}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager.Text", "Libraries\HedgeModManager.Text\HedgeModManager.Text.csproj", "{2C58F074-50A5-4586-AA94-331E4447E548}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager.CodeCompiler", "Libraries\HedgeModManager.CodeCompiler\HedgeModManager.CodeCompiler.csproj", "{49E5354F-83AB-4CBA-8E13-35AAE5F61217}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager.Diagnostics", "Libraries\HedgeModManager.Diagnostics\HedgeModManager.Diagnostics.csproj", "{D0094A94-1C86-41CD-A9E8-24196AE753D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager.CoreLib", "Libraries\HedgeModManager.CoreLib\HedgeModManager.CoreLib.csproj", "{938F4CD7-210B-438B-85B1-DE2D1354FD80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HedgeModManager.Steam", "Libraries\HedgeModManager.Steam\HedgeModManager.Steam.csproj", "{7FCC52DA-69A8-4CDD-8826-569572A25A6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +35,41 @@ Global
 		{A01C2BBC-FA43-4FDC-AE68-BE599FB32514}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A01C2BBC-FA43-4FDC-AE68-BE599FB32514}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A01C2BBC-FA43-4FDC-AE68-BE599FB32514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A659E03-A6E0-41C2-874D-8077C869274B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A659E03-A6E0-41C2-874D-8077C869274B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A659E03-A6E0-41C2-874D-8077C869274B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A659E03-A6E0-41C2-874D-8077C869274B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C58F074-50A5-4586-AA94-331E4447E548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C58F074-50A5-4586-AA94-331E4447E548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C58F074-50A5-4586-AA94-331E4447E548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C58F074-50A5-4586-AA94-331E4447E548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49E5354F-83AB-4CBA-8E13-35AAE5F61217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49E5354F-83AB-4CBA-8E13-35AAE5F61217}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49E5354F-83AB-4CBA-8E13-35AAE5F61217}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49E5354F-83AB-4CBA-8E13-35AAE5F61217}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0094A94-1C86-41CD-A9E8-24196AE753D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0094A94-1C86-41CD-A9E8-24196AE753D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0094A94-1C86-41CD-A9E8-24196AE753D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0094A94-1C86-41CD-A9E8-24196AE753D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{938F4CD7-210B-438B-85B1-DE2D1354FD80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{938F4CD7-210B-438B-85B1-DE2D1354FD80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{938F4CD7-210B-438B-85B1-DE2D1354FD80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{938F4CD7-210B-438B-85B1-DE2D1354FD80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FCC52DA-69A8-4CDD-8826-569572A25A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FCC52DA-69A8-4CDD-8826-569572A25A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FCC52DA-69A8-4CDD-8826-569572A25A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FCC52DA-69A8-4CDD-8826-569572A25A6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9A659E03-A6E0-41C2-874D-8077C869274B} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
+		{2C58F074-50A5-4586-AA94-331E4447E548} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
+		{49E5354F-83AB-4CBA-8E13-35AAE5F61217} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
+		{D0094A94-1C86-41CD-A9E8-24196AE753D5} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
+		{938F4CD7-210B-438B-85B1-DE2D1354FD80} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
+		{7FCC52DA-69A8-4CDD-8826-569572A25A6C} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {870A5800-4496-4A82-9494-C5083296D996}

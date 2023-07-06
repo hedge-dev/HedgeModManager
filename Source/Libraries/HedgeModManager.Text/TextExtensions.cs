@@ -31,7 +31,7 @@ public static class TextExtensions
         var i = 0;
         foreach (var value in values)
         {
-            group.Set($"{key}{i}", value);
+            group.Set($"{key}{i}", value!);
             i++;
         }
     }

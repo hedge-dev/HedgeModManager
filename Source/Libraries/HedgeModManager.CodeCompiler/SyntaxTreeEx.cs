@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Text;
 
 public class SyntaxTreeEx : CSharpSyntaxTree
 {
-    public TextProcessor PreProcessor { get; private init; } = null!;
+    public TextProcessor PreProcessor { get; private set; } = null!;
     public List<BasicLexer.DirectiveSyntax> PreprocessorDirectives => PreProcessor.Directives;
     private readonly CSharpSyntaxTree mBaseSyntaxTree;
 
@@ -51,7 +51,7 @@ public class SyntaxTreeEx : CSharpSyntaxTree
 
     public static SyntaxTreeEx Parse(string text)
     {
-        var tree = new SyntaxTreeEx(ParseText(ProcessText(text, out var processor), new CSharpParseOptions(kind: SourceCodeKind.Script)) as CSharpSyntaxTree)
+        var tree = new SyntaxTreeEx((CSharpSyntaxTree)ParseText(ProcessText(text, out var processor), new CSharpParseOptions(kind: SourceCodeKind.Script)))
         {
             PreProcessor = processor
         };
@@ -60,7 +60,7 @@ public class SyntaxTreeEx : CSharpSyntaxTree
 
     public override bool TryGetText(out SourceText text)
     {
-        return mBaseSyntaxTree.TryGetText(out text);
+        return mBaseSyntaxTree.TryGetText(out text!);
     }
 
     public override SourceText GetText(CancellationToken cancellationToken = new CancellationToken())
@@ -75,7 +75,7 @@ public class SyntaxTreeEx : CSharpSyntaxTree
 
     public override bool TryGetRoot(out CSharpSyntaxNode root)
     {
-        return mBaseSyntaxTree.TryGetRoot(out root);
+        return mBaseSyntaxTree.TryGetRoot(out root!);
     }
 
     public override SyntaxReference GetReference(SyntaxNode node)
@@ -101,5 +101,5 @@ public class SyntaxTreeEx : CSharpSyntaxTree
 
     public override int Length => mBaseSyntaxTree.Length;
 
-    public override Encoding Encoding => mBaseSyntaxTree.Encoding;
+    public override Encoding? Encoding => mBaseSyntaxTree.Encoding;
 }

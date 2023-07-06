@@ -1,4 +1,4 @@
-﻿namespace HedgeModManager;
+﻿namespace HedgeModManager.Foundation;
 
 [Flags]
 public enum ModAttribute

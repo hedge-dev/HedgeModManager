@@ -144,7 +144,7 @@ public class CodeProvider
     {
         var meta = new List<MetadataReference>();
 
-        var basePath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+        var basePath = Path.GetDirectoryName(typeof(object).Assembly.Location)!;
         var wpfPath = Path.Combine(basePath, "WPF");
 
         foreach (var source in sources)

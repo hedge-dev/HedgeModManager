@@ -25,7 +25,7 @@ public class CodeFile
         {
             if (mFileVersion == null)
             {
-                Tags.TryGetValue(VersionTag, out string v);
+                Tags.TryGetValue(VersionTag, out string? v);
                 mFileVersion = string.IsNullOrEmpty(v) ? new Version(0, 0) : Version.Parse(v);
             }
 
@@ -109,7 +109,7 @@ public class CodeFile
         {
             diff.Added(GetCodeDiffName(code));
         }
-        
+
         return diff;
     }
 

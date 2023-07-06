@@ -1,6 +1,6 @@
 ﻿namespace HedgeModManager.Diagnostics;
 
-public record DiffBlock
+public class DiffBlock
 {
     public DiffType Type { get; set; }
     public string? Description { get; set; }

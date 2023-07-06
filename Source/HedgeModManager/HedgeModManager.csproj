@@ -19,18 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <ProjectReference Include="..\Libraries\HedgeModManager.CodeCompiler\HedgeModManager.CodeCompiler.csproj" />
+    <ProjectReference Include="..\Libraries\HedgeModManager.Diagnostics\HedgeModManager.Diagnostics.csproj" />
+    <ProjectReference Include="..\Libraries\HedgeModManager.Foundation\HedgeModManager.Foundation.csproj" />
+    <ProjectReference Include="..\Libraries\HedgeModManager.Text\HedgeModManager.Text.csproj" />
   </ItemGroup>
 
 </Project>

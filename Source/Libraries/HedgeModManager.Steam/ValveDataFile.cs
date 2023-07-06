@@ -1,6 +1,7 @@
 ﻿namespace HedgeModManager.Steam;
 using System.Buffers.Binary;
 using ValveKeyValue;
+using Foundation;
 
 public static class ValveDataFile
 {

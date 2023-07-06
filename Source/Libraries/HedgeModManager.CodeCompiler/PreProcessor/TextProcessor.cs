@@ -91,7 +91,7 @@ public class TextProcessor
                         var macroName = token.Text.ToString();
                         if (macroName == VariadicArgumentsDefine)
                         {
-                            var ellipsisIdx = value.Args.IndexOf("...");
+                            var ellipsisIdx = value.Args?.IndexOf("...") ?? -1;
                             if (ellipsisIdx != -1 && function.Arguments.Count > ellipsisIdx)
                             {
                                 builder.Append(string.Join(", ", function.Arguments.Skip(ellipsisIdx).Select(Expand)));
@@ -103,7 +103,7 @@ public class TextProcessor
                         }
                         else
                         {
-                            var argIdx = value.Args.IndexOf(macroName);
+                            var argIdx = value.Args?.IndexOf(macroName) ?? -1;
                             if (argIdx != -1)
                             {
                                 if (argIdx < function.Arguments.Count)
@@ -146,7 +146,7 @@ public class TextProcessor
                         if (token.IsKind(SyntaxTokenKind.IdentifierToken))
                         {
                             var macroName = token.Text.ToString();
-                            var argIdx = value.Args.IndexOf(macroName);
+                            var argIdx = value.Args?.IndexOf(macroName) ?? -1;
 
                             if (argIdx != -1)
                             {
@@ -164,7 +164,7 @@ public class TextProcessor
                             if (!token.IsKind(SyntaxTokenKind.EndOfFileToken))
                             {
                                 var macroName = token.Text.ToString();
-                                var argIdx = value.Args.IndexOf(macroName);
+                                var argIdx = value.Args?.IndexOf(macroName) ?? -1;
 
                                 if (argIdx != -1)
                                 {

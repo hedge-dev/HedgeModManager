@@ -1,8 +1,9 @@
 ﻿namespace HedgeModManager.Steam;
 using System.Runtime.Versioning;
 using Microsoft.Win32;
+using Foundation;
 
-public class SteamLocator
+public class SteamLocator : IGameLocator
 {
     private string? mSteamPath;
 
@@ -47,7 +48,7 @@ public class SteamLocator
         return mSteamPath;
     }
 
-    public List<SteamGame> LocateGames()
+    public List<SteamGame> Locate()
     {
         var games = new List<SteamGame>();
         var library = FindDefaultSteamLibrary();
@@ -106,4 +107,6 @@ public class SteamLocator
 
         return games;
     }
+
+    IReadOnlyList<IGame> IGameLocator.Locate() => Locate();
 }

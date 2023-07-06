@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RollForward>LatestMajor</RollForward>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ValveKeyValue" Version="0.9.0.267" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HedgeModManager.Foundation\HedgeModManager.Foundation.csproj" />
+  </ItemGroup>
+
+</Project>
