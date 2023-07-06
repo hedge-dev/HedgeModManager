@@ -20,7 +20,7 @@ public class ModdableGameLocator
         var games = new List<IModdableGame>();
         var steamLocator = new SteamLocator();
 
-        foreach (var steamGame in steamLocator.LocateGames())
+        foreach (var steamGame in steamLocator.Locate())
         {
             if (SteamGameList.TryGetValue(steamGame.ID, out var info))
             {

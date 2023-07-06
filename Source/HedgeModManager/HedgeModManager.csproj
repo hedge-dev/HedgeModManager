@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Libraries\HedgeModManager.CodeCompiler\HedgeModManager.CodeCompiler.csproj" />
     <ProjectReference Include="..\Libraries\HedgeModManager.Diagnostics\HedgeModManager.Diagnostics.csproj" />
     <ProjectReference Include="..\Libraries\HedgeModManager.Foundation\HedgeModManager.Foundation.csproj" />
+    <ProjectReference Include="..\Libraries\HedgeModManager.Steam\HedgeModManager.Steam.csproj" />
     <ProjectReference Include="..\Libraries\HedgeModManager.Text\HedgeModManager.Text.csproj" />
   </ItemGroup>
 
