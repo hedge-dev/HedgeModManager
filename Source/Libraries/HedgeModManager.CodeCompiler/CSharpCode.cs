@@ -306,13 +306,19 @@ public class CSharpCode : ICode
                 }
             }
 
-            var funcUnit = SyntaxFactoryEx.MethodDeclaration(Type == CodeType.Patch ? "Init" : "OnFrame", "void",
-                SyntaxFactory.Block(localMembers), "public");
+            var methodName = Type == CodeType.Patch ? "Init" : "OnFrame";
+            var staticMethodName = $"{methodName}Static";
+
+            var funcUnit = SyntaxFactoryEx.MethodDeclaration(staticMethodName, "void",
+                SyntaxFactory.Block(localMembers), "public", "static");
+
+            var localFuncUnit = SyntaxFactoryEx.MethodDeclaration(methodName, "void",
+                               SyntaxFactory.Block(SyntaxFactory.ExpressionStatement(SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName(staticMethodName)))), "public");
 
             classUnit = classUnit
                 .WithMembers(SyntaxFactory.List(globalMembers))
                 .AddMembers(CodeProvider.LoaderExecutableMethod)
-                .AddMembers(funcUnit);
+                .AddMembers(funcUnit, localFuncUnit);
         }
         else if (Type == CodeType.Library)
         {
@@ -363,7 +369,7 @@ public class CSharpCode : ICode
             {
                 continue;
             }
-                
+
             compileUnit = compileUnit.AddUsings(MakeUsingDirective(namespaceRef));
         }
 
