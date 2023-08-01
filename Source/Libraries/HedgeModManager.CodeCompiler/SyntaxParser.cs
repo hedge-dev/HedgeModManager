@@ -86,6 +86,8 @@ public class SyntaxParser
                 while (!token.IsKind(SyntaxTokenKind.EndOfFileToken))
                 {
                     token = BasicLexer.ParseToken(text, pos, true);
+                    pos = token.Span.End;
+
                     if (token.IsKind(SyntaxTokenKind.OpenParenToken))
                     {
                         argDepth++;
@@ -97,10 +99,8 @@ public class SyntaxParser
 
                     if (argDepth <= 0)
                     {
-                        return text.Slice(start, (pos - start) + 1);
+                        return text.Slice(start, (pos - start));
                     }
-
-                    pos = token.Span.End;
                 }
             }
         }

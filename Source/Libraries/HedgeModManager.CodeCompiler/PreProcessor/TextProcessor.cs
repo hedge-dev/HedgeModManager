@@ -81,7 +81,7 @@ public class TextProcessor
 
                 var pos = 0;
 
-                var token = BasicLexer.ParseToken(bodyMemory, pos, true);
+                var token = BasicLexer.ParseToken(bodyMemory, pos, false);
                 pos = token.Span.End;
 
                 while (!token.IsKind(SyntaxTokenKind.EndOfFileToken))
@@ -185,7 +185,7 @@ public class TextProcessor
                         builder.Append(token.Text);
                     }
 
-                    token = BasicLexer.ParseToken(bodyMemory, pos, true);
+                    token = BasicLexer.ParseToken(bodyMemory, pos, false);
                     pos = token.Span.End;
                 }
 
