@@ -16,9 +16,9 @@ public class SyntaxTreeEx : CSharpSyntaxTree
         mBaseSyntaxTree = baseTree;
     }
 
-    private static string ProcessText(string text, out TextProcessor preprocessor)
+    private static string ProcessText(string text, out TextProcessor preprocessor, IIncludeResolver? includeResolver = null)
     {
-        preprocessor = new TextProcessor();
+        preprocessor = new TextProcessor(includeResolver);
         var body = new StringBuilder(preprocessor.Process(text));
 
         var tokens = SyntaxFactory.ParseTokens(body.ToString(), options: new CSharpParseOptions(kind: SourceCodeKind.Script, documentationMode: DocumentationMode.Parse));
@@ -49,9 +49,9 @@ public class SyntaxTreeEx : CSharpSyntaxTree
         return body.ToString();
     }
 
-    public static SyntaxTreeEx Parse(string text)
+    public static SyntaxTreeEx Parse(string text, IIncludeResolver? includeResolver = null)
     {
-        var tree = new SyntaxTreeEx((CSharpSyntaxTree)ParseText(ProcessText(text, out var processor), new CSharpParseOptions(kind: SourceCodeKind.Script)))
+        var tree = new SyntaxTreeEx((CSharpSyntaxTree)ParseText(ProcessText(text, out var processor, includeResolver), new CSharpParseOptions(kind: SourceCodeKind.Script)))
         {
             PreProcessor = processor
         };

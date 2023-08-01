@@ -18,9 +18,9 @@ public class TextProcessor
 
     }
 
-    public TextProcessor(IIncludeResolver includeResolver)
+    public TextProcessor(IIncludeResolver? includeResolver)
     {
-        IncludeResolver = includeResolver;
+        IncludeResolver = includeResolver ?? DefaultIncludeResolver.Instance;
     }
 
     public bool Defined(string name)

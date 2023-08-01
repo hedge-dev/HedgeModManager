@@ -1,4 +1,6 @@
-﻿namespace HedgeModManager.CodeCompiler;
+﻿using HedgeModManager.CodeCompiler.PreProcessor;
+
+namespace HedgeModManager.CodeCompiler;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.CSharp;
@@ -232,7 +234,7 @@ public class CSharpCode : ICode
         return imports;
     }
 
-    public SyntaxTreeEx ParseSyntaxTree()
+    public SyntaxTreeEx ParseSyntaxTree(IIncludeResolver? includeResolver = null)
     {
         if (mCachedSyntaxTree == null)
         {
@@ -243,7 +245,7 @@ public class CSharpCode : ICode
         return mCachedSyntaxTree;
     }
 
-    public CompilationUnitSyntax CreateCompilationUnit()
+    public CompilationUnitSyntax CreateCompilationUnit(IIncludeResolver? includeResolver = null)
     {
         var tree = ParseSyntaxTree();
 
@@ -414,7 +416,7 @@ public class CSharpCode : ICode
         }
     }
 
-    public SyntaxTree CreateSyntaxTree()
+    public SyntaxTree CreateSyntaxTree(IIncludeResolver? includeResolver = null)
     {
         return SyntaxFactory.SyntaxTree(CreateCompilationUnit());
     }

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Text;
 using Properties;
 using Foundation;
+using PreProcessor;
 
 public class CodeProvider
 {
@@ -45,16 +46,16 @@ public class CodeProvider
         }).Start();
     }
 
-    public static Task CompileCodes<TCollection>(TCollection sources, string assemblyPath, params string[] loadsPaths) where TCollection : IEnumerable<CSharpCode>
+    public static Task CompileCodes<TCollection>(TCollection sources, string assemblyPath, IIncludeResolver? includeResolver = null, params string[] loadsPaths) where TCollection : IEnumerable<CSharpCode>
     {
         lock (mLockContext)
         {
             using var stream = File.Create(assemblyPath);
-            return CompileCodes(sources, stream, loadsPaths);
+            return CompileCodes(sources, stream, includeResolver, loadsPaths);
         }
     }
 
-    public static Task CompileCodes<TCollection>(TCollection sources, Stream resultStream, params string[] loadPaths) where TCollection : IEnumerable<CSharpCode>
+    public static Task CompileCodes<TCollection>(TCollection sources, Stream resultStream, IIncludeResolver? includeResolver = null, params string[] loadPaths) where TCollection : IEnumerable<CSharpCode>
     {
         lock (mLockContext)
         {
