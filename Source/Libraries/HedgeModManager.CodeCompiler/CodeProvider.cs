@@ -1,5 +1,6 @@
 ﻿namespace HedgeModManager.CodeCompiler;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Text;
@@ -114,6 +115,11 @@ public class CodeProvider
 
                 newLibs.Clear();
                 newLibs.UnionWith(addedLibs);
+            }
+
+            if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework"))
+            {
+                loads.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
             }
 
             loads.Add(MetadataReference.CreateFromImage(Resources.netstandard));
