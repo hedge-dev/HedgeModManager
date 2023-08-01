@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
+using System.ComponentModel;
 using System.Text;
 using Properties;
 using Foundation;
@@ -119,12 +120,18 @@ public class CodeProvider
 
             if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework"))
             {
+                var frameworkRoot = Path.GetDirectoryName(typeof(object).Assembly.Location)!;
                 loads.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+                loads.Add(MetadataReference.CreateFromFile(typeof(Component).Assembly.Location));
+                loads.Add(MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).Assembly.Location));
+                loads.Add(MetadataReference.CreateFromFile(Path.Combine(frameworkRoot, "Microsoft.CSharp.dll")));
+            }
+            else
+            {
+                loads.Add(MetadataReference.CreateFromImage(Resources.netstandard));
+                loads.Add(MetadataReference.CreateFromImage(Resources.Microsoft_CSharp));
             }
 
-            loads.Add(MetadataReference.CreateFromImage(Resources.netstandard));
-            loads.Add(MetadataReference.CreateFromImage(Resources.Microsoft_CSharp));
-            
             var compiler = CSharpCompilation.Create("HMMCodes", trees, loads, options).AddSyntaxTrees(PredefinedClasses);
             
             var result = compiler.Emit(resultStream);
