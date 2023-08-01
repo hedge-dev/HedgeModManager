@@ -62,7 +62,7 @@ public class CodeProvider
             var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true);
             var trees = new List<SyntaxTree>();
             var newLibs = new HashSet<string>();
-            var loads = GetLoadAssemblies(sources, loadPaths);
+            var loads = GetLoadAssemblies(sources, includeResolver, loadPaths);
 
             foreach (var source in sources)
             {
@@ -154,7 +154,7 @@ public class CodeProvider
         }
     }
 
-    public static List<MetadataReference> GetLoadAssemblies<TCollection>(TCollection sources, params string[] lookupPaths) where TCollection : IEnumerable<CSharpCode>
+    public static List<MetadataReference> GetLoadAssemblies<TCollection>(TCollection sources, IIncludeResolver? includeResolver = null, params string[] lookupPaths) where TCollection : IEnumerable<CSharpCode>
     {
         var meta = new List<MetadataReference>();
 
@@ -163,7 +163,7 @@ public class CodeProvider
 
         foreach (var source in sources)
         {
-            foreach (var load in source.ParseSyntaxTree().PreprocessorDirectives.Where(x => x.Kind == SyntaxTokenKind.LoadDirectiveTrivia))
+            foreach (var load in source.ParseSyntaxTree(includeResolver).PreprocessorDirectives.Where(x => x.Kind == SyntaxTokenKind.LoadDirectiveTrivia))
             {
                 var value = load.Value.ToString();
                 var path = Path.Combine(basePath, value);
