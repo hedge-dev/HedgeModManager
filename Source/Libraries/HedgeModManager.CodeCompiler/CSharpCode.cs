@@ -238,7 +238,7 @@ public class CSharpCode : ICode
     {
         if (mCachedSyntaxTree == null)
         {
-            mCachedSyntaxTree = SyntaxTreeEx.Parse(Body);
+            mCachedSyntaxTree = SyntaxTreeEx.Parse(Body, includeResolver);
             return mCachedSyntaxTree;
         }
 
@@ -247,7 +247,7 @@ public class CSharpCode : ICode
 
     public CompilationUnitSyntax CreateCompilationUnit(IIncludeResolver? includeResolver = null)
     {
-        var tree = ParseSyntaxTree();
+        var tree = ParseSyntaxTree(includeResolver);
 
         var unit = tree.GetCompilationUnitRoot();
         if (this.IsExecutable())
@@ -418,7 +418,7 @@ public class CSharpCode : ICode
 
     public SyntaxTree CreateSyntaxTree(IIncludeResolver? includeResolver = null)
     {
-        return SyntaxFactory.SyntaxTree(CreateCompilationUnit());
+        return SyntaxFactory.SyntaxTree(CreateCompilationUnit(includeResolver));
     }
 
     public static bool CodeTypeFromString(ReadOnlySpan<char> text, out CodeType type)

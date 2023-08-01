@@ -71,7 +71,7 @@ public class CodeProvider
                     continue;
                 }
 
-                trees.Add(source.CreateSyntaxTree());
+                trees.Add(source.CreateSyntaxTree(includeResolver));
 
                 foreach (string reference in source.GetReferences())
                 {
@@ -101,7 +101,7 @@ public class CodeProvider
                         throw new Exception($"Unable to find dependency library {lib}");
                     }
 
-                    trees.Add(libSource.CreateSyntaxTree());
+                    trees.Add(libSource.CreateSyntaxTree(includeResolver));
                     libs.Add(lib);
 
                     foreach (string reference in libSource.GetReferences())
