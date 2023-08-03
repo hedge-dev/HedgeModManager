@@ -1,9 +1,10 @@
 ﻿namespace HedgeModManager.CodeCompiler;
+using PreProcessor;
 using Diagnostics;
 using Foundation;
 using System.Text;
 
-public class CodeFile
+public class CodeFile : IIncludeResolver
 {
     public const string TagPrefix = "!!";
     public const string VersionTag = "VERSION";
@@ -187,5 +188,10 @@ public class CodeFile
         }
 
         return file;
+    }
+
+    public string? Resolve(string name)
+    {
+        return Codes.FirstOrDefault(c => c.Name == name)?.Body;
     }
 }

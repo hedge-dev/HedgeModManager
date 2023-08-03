@@ -207,14 +207,15 @@ public class TextProcessor
     public string Process(string text)
     {
         var builder = new StringBuilder();
-        var readers = new Stack<MemoryLineReader>();
-        readers.Push(new MemoryLineReader(BasicLexer.FilterComments(text.AsMemory())));
+        var readers = new Stack<(MemoryLineReader, bool)>();
+        readers.Push(new (new MemoryLineReader(BasicLexer.FilterComments(text.AsMemory())), true));
 
         var emitStack = 0;
 
         while (readers.Count > 0)
         {
-            var reader = readers.Peek();
+            var reader = readers.Peek().Item1;
+            var doEmit = readers.Peek().Item2;
             if (reader.ReadLine(out var line))
             {
                 var pos = 0;
@@ -339,10 +340,21 @@ public class TextProcessor
                                 var includeToken = BasicLexer.ParseToken(line, pos, true);
                                 if (includeToken.IsKind(SyntaxTokenKind.StringLiteralToken))
                                 {
+                                    var optionsTokens = BasicLexer.ParseTokens(line.Slice(includeToken.Span.End), x => x.IsKind(SyntaxTokenKind.IdentifierToken));
+                                    var emit = true;
+
+                                    foreach (var option in optionsTokens)
+                                    {
+                                        if (option.Text.Span.Equals("noemit".AsSpan(), StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            emit = false;
+                                        }
+                                    }
+
                                     var includeText = IncludeResolver.Resolve(includeToken.ValueText.ToString());
                                     if (includeText != null)
                                     {
-                                        readers.Push(new MemoryLineReader(BasicLexer.FilterComments(includeText.AsMemory())));
+                                        readers.Push(new (new MemoryLineReader(BasicLexer.FilterComments(includeText.AsMemory())), emit));
                                     }
                                 }
                                 else
@@ -368,7 +380,7 @@ public class TextProcessor
                 }
                 else
                 {
-                    if (emitStack > 0)
+                    if (emitStack > 0 || !doEmit)
                     {
                         continue;
                     }
