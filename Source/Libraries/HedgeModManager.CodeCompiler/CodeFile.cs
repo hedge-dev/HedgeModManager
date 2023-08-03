@@ -1,6 +1,7 @@
 ﻿namespace HedgeModManager.CodeCompiler;
 using Diagnostics;
 using Foundation;
+using System.Text;
 
 public class CodeFile
 {
@@ -122,10 +123,10 @@ public class CodeFile
         }
     }
 
-    public void Parse(Stream stream)
+    public void Parse(Stream stream, Encoding? encoding = null)
     {
         var start = stream.Position;
-        using var reader = new StreamReader(stream);
+        using var reader = new StreamReader(stream, encoding ?? Encoding.UTF8);
 
         var line = reader.ReadLine();
 
@@ -156,6 +157,18 @@ public class CodeFile
         stream.Position = start;
         reader.DiscardBufferedData();
         Codes.AddRange(CSharpCode.Parse(reader));
+    }
+
+    public static unsafe CodeFile FromText(string text)
+    {
+        var file = new CodeFile();
+
+        fixed (char* textPtr = text)
+        {
+            using var stream = new UnmanagedMemoryStream((byte*)textPtr, text.Length * sizeof(char));
+            file.Parse(stream, BitConverter.IsLittleEndian ? Encoding.Unicode : Encoding.BigEndianUnicode);
+            return file;
+        }
     }
 
     public static CodeFile FromFile(string path)

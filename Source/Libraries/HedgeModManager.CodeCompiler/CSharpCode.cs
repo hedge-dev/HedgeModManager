@@ -302,6 +302,14 @@ public class CSharpCode : ICode
                         globalMembers.Add(member);
                     }
                 }
+                else if (member is MethodDeclarationSyntax methodDeclaration)
+                {
+                    localMembers.Add(SyntaxFactory.LocalFunctionStatement(methodDeclaration.AttributeLists,
+                        methodDeclaration.Modifiers, methodDeclaration.ReturnType, methodDeclaration.Identifier,
+                        methodDeclaration.TypeParameterList, methodDeclaration.ParameterList,
+                        methodDeclaration.ConstraintClauses, methodDeclaration.Body,
+                        methodDeclaration.ExpressionBody));
+                }
                 else
                 {
                     globalMembers.Add(member);
