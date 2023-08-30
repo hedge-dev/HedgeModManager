@@ -119,7 +119,7 @@ public class CSharpCode : ICode
                                 currentCode.Description = DescriptionFromBody(currentCode);
                             }
 
-                            currentCode.Body = lineBuilder.ToString();
+                            currentCode.Body = lineBuilder.ToString().TrimEnd('\r', '\n');
                         }
 
                         lineBuilder.Clear();
@@ -180,7 +180,7 @@ public class CSharpCode : ICode
                     currentCode.Description = DescriptionFromBody(currentCode);
                 }
 
-                currentCode.Body = lineBuilder.ToString();
+                currentCode.Body = lineBuilder.ToString().TrimEnd('\r', '\n');
             }
         }
 
