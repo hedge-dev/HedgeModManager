@@ -54,9 +54,6 @@ public class CodeFile : IIncludeResolver
 
         foreach (var code in Codes)
         {
-            if (code.Type == CodeType.Library)
-                continue;
-
             // Added
             if (old.Codes.All(x => x.Name != code.Name))
             {
@@ -67,11 +64,6 @@ public class CodeFile : IIncludeResolver
 
         foreach (var code in old.Codes)
         {
-            if (code.Type == CodeType.Library)
-            {
-                continue;
-            }
-
             // Modified
             if (Codes.SingleOrDefault(x => x.Name == code.Name) is { } modified)
             {
