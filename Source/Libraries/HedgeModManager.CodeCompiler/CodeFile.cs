@@ -47,6 +47,10 @@ public class CodeFile : IIncludeResolver
 
         string GetCodeDiffName(CSharpCode code)
         {
+            if (code.Type == CodeType.Library)
+            {
+                return $"[Library/{(!string.IsNullOrEmpty(code.Category) ? code.Category : string.Empty)}] {code.Name}";
+            }
             return !string.IsNullOrEmpty(code.Category)
                 ? $"[{code.Category}] {code.Name}"
                 : code.Name;
