@@ -49,7 +49,7 @@ public class CodeFile : IIncludeResolver
         {
             if (code.Type == CodeType.Library)
             {
-                return $"[Library/{(!string.IsNullOrEmpty(code.Category) ? code.Category : string.Empty)}] {code.Name}";
+                return $"[Library{(!string.IsNullOrEmpty(code.Category) ? $"/{code.Category}" : string.Empty)}] {code.Name}";
             }
             return !string.IsNullOrEmpty(code.Category)
                 ? $"[{code.Category}] {code.Name}"
