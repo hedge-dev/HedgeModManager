@@ -132,18 +132,19 @@ public class CodeProvider
                 foreach (var diagnostic in result.Diagnostics)
                 {
                     var path = diagnostic.Location.SourceTree?.FilePath ?? string.Empty;
+
                     switch (diagnostic.Severity)
                     {
                         case DiagnosticSeverity.Info:
-                            report.Information(path, diagnostic.GetMessage());
+                            report.Information(path, diagnostic.ToString());
                             break;
 
                         case DiagnosticSeverity.Warning:
-                            report.Warning(path, diagnostic.GetMessage());
+                            report.Warning(path, diagnostic.ToString());
                             break;
 
                         case DiagnosticSeverity.Error:
-                            report.Error(path, diagnostic.GetMessage());
+                            report.Error(path, diagnostic.ToString());
                             break;
                     }
                 }

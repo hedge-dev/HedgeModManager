@@ -345,14 +345,22 @@ public class CSharpCode : ICode
 
                 if (member is FieldDeclarationSyntax field)
                 {
-                    field = field.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+                    if (!field.Modifiers.Any(x => x.IsKind(SyntaxKind.StaticKeyword)))
+                    {
+                        field = field.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+                    }
+
                     filteredMembers.Add(field);
                     continue;
                 }
 
                 if (member is PropertyDeclarationSyntax property)
                 {
-                    property = property.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+                    if (!property.Modifiers.Any(x => x.IsKind(SyntaxKind.StaticKeyword)))
+                    {
+                        property = property.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+                    }
+
                     filteredMembers.Add(property);
                     continue;
                 }
