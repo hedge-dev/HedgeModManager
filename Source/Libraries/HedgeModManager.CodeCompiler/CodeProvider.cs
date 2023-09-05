@@ -132,19 +132,21 @@ public class CodeProvider
                 foreach (var diagnostic in result.Diagnostics)
                 {
                     var path = diagnostic.Location.SourceTree?.FilePath ?? string.Empty;
+                    var line = diagnostic.Location.GetLineSpan();
+                    var message = $"@({line.StartLinePosition.Line + 1},{line.StartLinePosition.Character}) {diagnostic.Descriptor.Id}: {diagnostic.GetMessage()}";
 
                     switch (diagnostic.Severity)
                     {
                         case DiagnosticSeverity.Info:
-                            report.Information(path, diagnostic.ToString());
+                            report.Information(path, message);
                             break;
 
                         case DiagnosticSeverity.Warning:
-                            report.Warning(path, diagnostic.ToString());
+                            report.Warning(path, message);
                             break;
 
                         case DiagnosticSeverity.Error:
-                            report.Error(path, diagnostic.ToString());
+                            report.Error(path, message);
                             break;
                     }
                 }
