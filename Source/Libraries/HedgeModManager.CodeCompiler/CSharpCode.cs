@@ -345,14 +345,14 @@ public class CSharpCode : ICode
 
                 if (member is FieldDeclarationSyntax field)
                 {
-                    field = field.WithModifiers(SyntaxTokenList.Create(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
+                    field = field.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
                     filteredMembers.Add(field);
                     continue;
                 }
 
                 if (member is PropertyDeclarationSyntax property)
                 {
-                    property = property.WithModifiers(SyntaxTokenList.Create(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
+                    property = property.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
                     filteredMembers.Add(property);
                     continue;
                 }
@@ -426,7 +426,7 @@ public class CSharpCode : ICode
 
     public SyntaxTree CreateSyntaxTree(IIncludeResolver? includeResolver = null)
     {
-        return SyntaxFactory.SyntaxTree(CreateCompilationUnit(includeResolver));
+        return SyntaxFactory.SyntaxTree(CreateCompilationUnit(includeResolver), path: Name);
     }
 
     public static bool CodeTypeFromString(ReadOnlySpan<char> text, out CodeType type)

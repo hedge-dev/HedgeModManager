@@ -1,12 +1,11 @@
 ﻿namespace HedgeModManager.CodeCompiler;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-using System.ComponentModel;
-using System.Text;
+using System.IO.Compression;
 using Properties;
 using Foundation;
+using Diagnostics;
 using PreProcessor;
 
 public class CodeProvider
@@ -46,7 +45,7 @@ public class CodeProvider
         }).Start();
     }
 
-    public static Task CompileCodes<TCollection>(TCollection sources, string assemblyPath, IIncludeResolver? includeResolver = null, params string[] loadsPaths) where TCollection : IEnumerable<CSharpCode>
+    public static Task<Report> CompileCodes<TCollection>(TCollection sources, string assemblyPath, IIncludeResolver? includeResolver = null, params string[] loadsPaths) where TCollection : IEnumerable<CSharpCode>
     {
         lock (mLockContext)
         {
@@ -55,7 +54,7 @@ public class CodeProvider
         }
     }
 
-    public static Task CompileCodes<TCollection>(TCollection sources, Stream resultStream, IIncludeResolver? includeResolver = null, params string[] loadPaths) where TCollection : IEnumerable<CSharpCode>
+    public static Task<Report> CompileCodes<TCollection>(TCollection sources, Stream resultStream, IIncludeResolver? includeResolver = null, params string[] loadPaths) where TCollection : IEnumerable<CSharpCode>
     {
         lock (mLockContext)
         {
@@ -118,81 +117,105 @@ public class CodeProvider
                 newLibs.Clear();
                 newLibs.UnionWith(addedLibs);
             }
-
-            if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework"))
-            {
-                var frameworkRoot = Path.GetDirectoryName(typeof(object).Assembly.Location)!;
-                loads.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
-                loads.Add(MetadataReference.CreateFromFile(typeof(Component).Assembly.Location));
-                loads.Add(MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).Assembly.Location));
-                loads.Add(MetadataReference.CreateFromFile(Path.Combine(frameworkRoot, "Microsoft.CSharp.dll")));
-            }
-            else
-            {
-                loads.Add(MetadataReference.CreateFromImage(Resources.netstandard));
-                loads.Add(MetadataReference.CreateFromImage(Resources.Microsoft_CSharp));
-            }
+            
+            loads.Add(StaticAssemblyResolver.Resolve("mscorlib.dll")!);
+            loads.Add(StaticAssemblyResolver.Resolve("System.dll")!);
+            loads.Add(StaticAssemblyResolver.Resolve("System.Core.dll")!);
+            loads.Add(StaticAssemblyResolver.Resolve("Microsoft.CSharp.dll")!);
 
             var compiler = CSharpCompilation.Create("HMMCodes", trees, loads, options).AddSyntaxTrees(PredefinedClasses);
-            
+
+            var report = new Report();
             var result = compiler.Emit(resultStream);
             if (!result.Success)
             {
-                var builder = new StringBuilder();
-                builder.AppendLine("Error compiling codes");
                 foreach (var diagnostic in result.Diagnostics)
                 {
-                    if (diagnostic.Severity == DiagnosticSeverity.Error)
+                    var path = diagnostic.Location.SourceTree?.FilePath ?? string.Empty;
+                    switch (diagnostic.Severity)
                     {
-                        builder.AppendLine(diagnostic.ToString());
+                        case DiagnosticSeverity.Info:
+                            report.Information(path, diagnostic.GetMessage());
+                            break;
+
+                        case DiagnosticSeverity.Warning:
+                            report.Warning(path, diagnostic.GetMessage());
+                            break;
+
+                        case DiagnosticSeverity.Error:
+                            report.Error(path, diagnostic.GetMessage());
+                            break;
                     }
                 }
-                throw new Exception(builder.ToString());
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(report);
         }
     }
 
     public static List<MetadataReference> GetLoadAssemblies<TCollection>(TCollection sources, IIncludeResolver? includeResolver = null, params string[] lookupPaths) where TCollection : IEnumerable<CSharpCode>
     {
         var meta = new List<MetadataReference>();
-
-        var basePath = Path.GetDirectoryName(typeof(object).Assembly.Location)!;
-        var wpfPath = Path.Combine(basePath, "WPF");
-
+        
         foreach (var source in sources)
         {
             foreach (var load in source.ParseSyntaxTree(includeResolver).PreprocessorDirectives.Where(x => x.Kind == SyntaxTokenKind.LoadDirectiveTrivia))
             {
                 var value = load.Value.ToString();
-                var path = Path.Combine(basePath, value);
-                if (File.Exists(path))
+                var staticRef = StaticAssemblyResolver.Resolve(value);
+                if (staticRef != null)
                 {
-                    meta.Add(MetadataReference.CreateFromFile(path));
-                    continue;
-                }
-
-                path = Path.Combine(wpfPath, value);
-                if (File.Exists(path))
-                {
-                    meta.Add(MetadataReference.CreateFromFile(path));
+                    meta.Add(staticRef);
                     continue;
                 }
 
                 foreach (var lookupPath in lookupPaths)
                 {
-                    path = Path.Combine(lookupPath, value);
+                    var path = Path.Combine(lookupPath, value);
                     if (File.Exists(path))
                     {
                         meta.Add(MetadataReference.CreateFromFile(path));
-                        break;
+                        continue;
                     }
                 }
             }
         }
 
         return meta;
+    }
+
+    private static class StaticAssemblyResolver
+    {
+        private static ZipArchive Archive { get; }
+        private static Dictionary<string, MetadataReference?> ReferenceCache { get; } = new(StringComparer.InvariantCultureIgnoreCase);
+        static StaticAssemblyResolver()
+        {
+            Archive = new ZipArchive(new MemoryStream(Resources.ReferenceAssemblies));
+        }
+
+        public static MetadataReference? Resolve(string name)
+        {
+            if (ReferenceCache.TryGetValue(name, out var reference))
+            {
+                return reference;
+            }
+
+            var entry = Archive.GetEntry(name);
+            if (entry == null)
+            {
+                ReferenceCache.Add(name, null);
+                return null;
+            }
+
+            var memStream = new MemoryStream();
+            using var stream = entry.Open();
+            stream.CopyTo(memStream);
+
+            // Can't use CreateFromStream for some reason
+            var metaRef = AssemblyMetadata.CreateFromImage(memStream.GetBuffer()).GetReference(filePath: $"res://{name}");
+            ReferenceCache.Add(name, metaRef);
+            return metaRef;
+        }
     }
 }
 

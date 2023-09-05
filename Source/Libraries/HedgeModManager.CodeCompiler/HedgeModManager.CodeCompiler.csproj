@@ -16,8 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Resources\ReferenceAssemblies.zip" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133" PrivateAssets="all"/>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

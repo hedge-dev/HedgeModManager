@@ -118,19 +118,9 @@ namespace HedgeModManager.CodeCompiler.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] Microsoft_CSharp {
+        internal static byte[] ReferenceAssemblies {
             get {
-                object obj = ResourceManager.GetObject("Microsoft.CSharp", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] netstandard {
-            get {
-                object obj = ResourceManager.GetObject("netstandard", resourceCulture);
+                object obj = ResourceManager.GetObject("ReferenceAssemblies", resourceCulture);
                 return ((byte[])(obj));
             }
         }
