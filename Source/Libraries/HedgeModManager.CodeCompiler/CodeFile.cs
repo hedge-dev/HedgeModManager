@@ -1,10 +1,11 @@
 ﻿namespace HedgeModManager.CodeCompiler;
+using System.Collections;
 using PreProcessor;
 using Diagnostics;
 using Foundation;
 using System.Text;
 
-public class CodeFile : IIncludeResolver
+public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
 {
     public const string TagPrefix = "!!";
     public const string VersionTag = "VERSION";
@@ -189,5 +190,15 @@ public class CodeFile : IIncludeResolver
     public string? Resolve(string name)
     {
         return Codes.FirstOrDefault(c => c.Name == name)?.Body;
+    }
+
+    public IEnumerator<CSharpCode> GetEnumerator()
+    {
+        return Codes.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

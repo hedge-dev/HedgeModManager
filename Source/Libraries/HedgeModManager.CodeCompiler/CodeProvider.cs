@@ -54,8 +54,24 @@ public class CodeProvider
         }
     }
 
-    public static Task<Report> CompileCodes<TCollection>(TCollection sources, Stream resultStream, IIncludeResolver? includeResolver = null, params string[] loadPaths) where TCollection : IEnumerable<CSharpCode>
+    public static Task<Report> CompileCodes<TCollection>(TCollection sources, Stream resultStream,
+        IIncludeResolver? includeResolver = null, params string[] loadPaths) where TCollection : IEnumerable<CSharpCode>
     {
+        return CompileCodes(new CompilerOptions<TCollection>(sources)
+        {
+            AssemblyLookupPaths = loadPaths,
+            IncludeResolver = includeResolver,
+            OutputStream = resultStream,
+            IncludeAllSources = false
+        });
+    }
+
+    public static Task<Report> CompileCodes<TCollection>(in CompilerOptions<TCollection> compileOptions) where TCollection : IEnumerable<CSharpCode>
+    {
+        var sources = compileOptions.Sources;
+        var includeResolver = compileOptions.IncludeResolver;
+        var loadPaths = compileOptions.AssemblyLookupPaths;
+
         lock (mLockContext)
         {
             var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true);
@@ -65,9 +81,12 @@ public class CodeProvider
 
             foreach (var source in sources)
             {
-                if (!source.IsExecutable())
+                if (!compileOptions.IncludeAllSources)
                 {
-                    continue;
+                    if (!source.IsExecutable())
+                    {
+                        continue;
+                    }
                 }
 
                 trees.Add(source.CreateSyntaxTree(includeResolver));
@@ -126,29 +145,26 @@ public class CodeProvider
             var compiler = CSharpCompilation.Create("HMMCodes", trees, loads, options).AddSyntaxTrees(PredefinedClasses);
 
             var report = new Report();
-            var result = compiler.Emit(resultStream);
-            if (!result.Success)
+            var result = compiler.Emit(compileOptions.OutputStream);
+            foreach (var diagnostic in result.Diagnostics)
             {
-                foreach (var diagnostic in result.Diagnostics)
+                var path = diagnostic.Location.SourceTree?.FilePath ?? string.Empty;
+                var line = diagnostic.Location.GetLineSpan();
+                var message = $"@({line.StartLinePosition.Line + 1},{line.StartLinePosition.Character}) {diagnostic.Descriptor.Id}: {diagnostic.GetMessage()}";
+
+                switch (diagnostic.Severity)
                 {
-                    var path = diagnostic.Location.SourceTree?.FilePath ?? string.Empty;
-                    var line = diagnostic.Location.GetLineSpan();
-                    var message = $"@({line.StartLinePosition.Line + 1},{line.StartLinePosition.Character}) {diagnostic.Descriptor.Id}: {diagnostic.GetMessage()}";
+                    case DiagnosticSeverity.Info:
+                        report.Information(path, message);
+                        break;
 
-                    switch (diagnostic.Severity)
-                    {
-                        case DiagnosticSeverity.Info:
-                            report.Information(path, message);
-                            break;
+                    case DiagnosticSeverity.Warning:
+                        report.Warning(path, message);
+                        break;
 
-                        case DiagnosticSeverity.Warning:
-                            report.Warning(path, message);
-                            break;
-
-                        case DiagnosticSeverity.Error:
-                            report.Error(path, message);
-                            break;
-                    }
+                    case DiagnosticSeverity.Error:
+                        report.Error(path, message);
+                        break;
                 }
             }
 
@@ -156,8 +172,9 @@ public class CodeProvider
         }
     }
 
-    public static List<MetadataReference> GetLoadAssemblies<TCollection>(TCollection sources, IIncludeResolver? includeResolver = null, params string[] lookupPaths) where TCollection : IEnumerable<CSharpCode>
+    public static List<MetadataReference> GetLoadAssemblies<TCollection>(TCollection sources, IIncludeResolver? includeResolver = null, IEnumerable<string>? lookupPaths = null) where TCollection : IEnumerable<CSharpCode>
     {
+        lookupPaths ??= Array.Empty<string>();
         var meta = new List<MetadataReference>();
         
         foreach (var source in sources)
@@ -178,7 +195,6 @@ public class CodeProvider
                     if (File.Exists(path))
                     {
                         meta.Add(MetadataReference.CreateFromFile(path));
-                        continue;
                     }
                 }
             }
