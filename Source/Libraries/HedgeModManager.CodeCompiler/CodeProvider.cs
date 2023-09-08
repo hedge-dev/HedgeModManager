@@ -79,26 +79,34 @@ public class CodeProvider
             var newLibs = new HashSet<string>();
             var loads = GetLoadAssemblies(sources, includeResolver, loadPaths);
 
-            foreach (var source in sources)
+            // We don't have to concern ourselves with resolving references if everything is compiled
+            if (compileOptions.IncludeAllSources)
             {
-                if (!compileOptions.IncludeAllSources)
+                foreach (var source in sources)
+                {
+                    trees.Add(source.CreateSyntaxTree(includeResolver));
+                }
+            }
+            else
+            {
+                foreach (var source in sources)
                 {
                     if (!source.IsExecutable())
                     {
                         continue;
                     }
-                }
 
-                trees.Add(source.CreateSyntaxTree(includeResolver));
+                    trees.Add(source.CreateSyntaxTree(includeResolver));
 
-                foreach (string reference in source.GetReferences())
-                {
-                    newLibs.Add(reference);
-                }
+                    foreach (string reference in source.GetReferences())
+                    {
+                        newLibs.Add(reference);
+                    }
 
-                foreach (string reference in source.GetImports())
-                {
-                    newLibs.Add(reference);
+                    foreach (string reference in source.GetImports())
+                    {
+                        newLibs.Add(reference);
+                    }
                 }
             }
 
