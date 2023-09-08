@@ -338,14 +338,17 @@ public class CSharpCode : ICode
             {
                 if (member is MethodDeclarationSyntax method)
                 {
-                    method = method.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+                    if (!method.Modifiers.Any(x => x.IsKind(SyntaxKind.StaticKeyword)))
+                    {
+                        method = method.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+                    }
                     filteredMembers.Add(method);
                     continue;
                 }
 
                 if (member is FieldDeclarationSyntax field)
                 {
-                    if (!field.Modifiers.Any(x => x.IsKind(SyntaxKind.StaticKeyword)))
+                    if (!field.Modifiers.Any(x => x.IsKind(SyntaxKind.StaticKeyword) || x.IsKind(SyntaxKind.ConstKeyword)))
                     {
                         field = field.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
                     }
@@ -356,7 +359,7 @@ public class CSharpCode : ICode
 
                 if (member is PropertyDeclarationSyntax property)
                 {
-                    if (!property.Modifiers.Any(x => x.IsKind(SyntaxKind.StaticKeyword)))
+                    if (!property.Modifiers.Any(x => x.IsKind(SyntaxKind.StaticKeyword) || x.IsKind(SyntaxKind.ConstKeyword)))
                     {
                         property = property.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
                     }
