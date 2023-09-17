@@ -66,7 +66,8 @@ public class CodeProvider
         });
     }
 
-    public static Task<Report> CompileCodes<TCollection>(in CompilerOptions<TCollection> compileOptions) where TCollection : IEnumerable<CSharpCode>
+    public static Task<Report> CompileCodes<TCollection>(in CompilerOptions<TCollection> compileOptions)
+        where TCollection : IEnumerable<CSharpCode>
     {
         var sources = compileOptions.Sources;
         var includeResolver = compileOptions.IncludeResolver;
@@ -74,10 +75,12 @@ public class CodeProvider
 
         lock (mLockContext)
         {
+            var report = new Report();
             var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true);
             var trees = new List<SyntaxTree>();
             var newLibs = new HashSet<string>();
             var loads = GetLoadAssemblies(sources, includeResolver, loadPaths);
+            var resultStream = compileOptions.OutputStream;
 
             // We don't have to concern ourselves with resolving references if everything is compiled
             if (compileOptions.IncludeAllSources)
@@ -100,12 +103,12 @@ public class CodeProvider
 
                     foreach (string reference in source.GetReferences())
                     {
-                        newLibs.Add(reference);
+                        newLibs.Add($"{source.Name}\x00{reference}");
                     }
 
                     foreach (string reference in source.GetImports())
                     {
-                        newLibs.Add(reference);
+                        newLibs.Add($"{source.Name}\x00{reference}");
                     }
                 }
             }
@@ -114,8 +117,19 @@ public class CodeProvider
             while (newLibs.Count != 0)
             {
                 var addedLibs = new List<string>(newLibs.Count);
-                foreach (string lib in newLibs)
+                var hasError = false;
+                foreach (string libIter in newLibs)
                 {
+                    var lib = libIter;
+                    var dividerIndex = lib.IndexOf('\x00');
+                    var sourceRef = string.Empty;
+
+                    if (dividerIndex != -1)
+                    {
+                        sourceRef = lib.Substring(0, dividerIndex);
+                        lib = lib.Substring(dividerIndex + 1);
+                    }
+
                     if (libs.Contains(lib))
                     {
                         continue;
@@ -124,7 +138,9 @@ public class CodeProvider
                     var libSource = sources.FirstOrDefault(x => x.Name == lib);
                     if (libSource == null)
                     {
-                        throw new Exception($"Unable to find dependency library {lib}");
+                        report.Error(sourceRef, $"Unable to find dependency library '{lib}'");
+                        hasError = true;
+                        continue;
                     }
 
                     trees.Add(libSource.CreateSyntaxTree(includeResolver));
@@ -141,38 +157,47 @@ public class CodeProvider
                     }
                 }
 
+                if (hasError)
+                {
+                    return Task.FromResult(report);
+                }
+
                 newLibs.Clear();
                 newLibs.UnionWith(addedLibs);
             }
-            
+
             loads.Add(StaticAssemblyResolver.Resolve("mscorlib.dll")!);
             loads.Add(StaticAssemblyResolver.Resolve("System.dll")!);
             loads.Add(StaticAssemblyResolver.Resolve("System.Core.dll")!);
             loads.Add(StaticAssemblyResolver.Resolve("Microsoft.CSharp.dll")!);
 
-            var compiler = CSharpCompilation.Create("HMMCodes", trees, loads, options).AddSyntaxTrees(PredefinedClasses);
+            var compiler = CSharpCompilation.Create("HMMCodes", trees, loads, options)
+                .AddSyntaxTrees(PredefinedClasses);
 
-            var report = new Report();
-            var result = compiler.Emit(compileOptions.OutputStream);
-            foreach (var diagnostic in result.Diagnostics)
+            var result = compiler.Emit(resultStream);
+            if (!result.Success)
             {
-                var path = diagnostic.Location.SourceTree?.FilePath ?? string.Empty;
-                var line = diagnostic.Location.GetLineSpan();
-                var message = $"@({line.StartLinePosition.Line + 1},{line.StartLinePosition.Character}) {diagnostic.Descriptor.Id}: {diagnostic.GetMessage()}";
-
-                switch (diagnostic.Severity)
+                foreach (var diagnostic in result.Diagnostics)
                 {
-                    case DiagnosticSeverity.Info:
-                        report.Information(path, message);
-                        break;
+                    var path = diagnostic.Location.SourceTree?.FilePath ?? string.Empty;
+                    var line = diagnostic.Location.GetLineSpan();
+                    var message =
+                        $"@({line.StartLinePosition.Line + 1},{line.StartLinePosition.Character}) {diagnostic.Descriptor.Id}: {diagnostic.GetMessage()}";
 
-                    case DiagnosticSeverity.Warning:
-                        report.Warning(path, message);
-                        break;
+                    switch (diagnostic.Severity)
+                    {
+                        case DiagnosticSeverity.Info:
+                            report.Information(path, message);
+                            break;
 
-                    case DiagnosticSeverity.Error:
-                        report.Error(path, message);
-                        break;
+                        case DiagnosticSeverity.Warning:
+                            report.Warning(path, message);
+                            break;
+
+                        case DiagnosticSeverity.Error:
+                            report.Error(path, message);
+                            break;
+                    }
                 }
             }
 
