@@ -338,6 +338,17 @@ public class CSharpCode : ICode
             {
                 if (member is MethodDeclarationSyntax method)
                 {
+                    if (method.Identifier.ToString() == name)
+                    {
+                        var constructor = SyntaxFactory.ConstructorDeclaration(name);
+                        constructor = constructor.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+                        constructor = method.ExpressionBody != null
+                            ? constructor.WithExpressionBody(method.ExpressionBody)
+                            : constructor.WithBody(method.Body);
+
+                        filteredMembers.Add(constructor);
+                        continue;
+                    }
                     if (!method.Modifiers.Any(x => x.IsKind(SyntaxKind.StaticKeyword)))
                     {
                         method = method.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
@@ -427,8 +438,9 @@ public class CSharpCode : ICode
 
             if (isStatic)
             {
-                return SyntaxFactory.UsingDirective(SyntaxFactory.Token(SyntaxKind.StaticKeyword), null,
-                    nameSyntax);
+                return SyntaxFactory.UsingDirective(SyntaxFactory.Token(SyntaxKind.UsingKeyword),
+                    SyntaxFactory.Token(SyntaxKind.StaticKeyword), null,
+                    nameSyntax, SyntaxFactory.Token(SyntaxKind.SemicolonToken));
             }
 
             return SyntaxFactory.UsingDirective(nameSyntax);
