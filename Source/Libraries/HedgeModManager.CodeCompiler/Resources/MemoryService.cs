@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
@@ -168,5 +169,33 @@ namespace HMMCodes
     {
         Jump = 0,
         Call = 1,
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public sealed class LibraryInitializerAttribute : Attribute { }
+
+    public class StartupUtil
+    {
+        public static bool IsLoaderExecutable() => true;
+
+        public static void InitStatic()
+        {
+            var assembly = typeof(StartupUtil).Assembly;
+            foreach (var type in assembly.GetExportedTypes())
+            {
+                foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
+                {
+                    if (method.GetCustomAttribute<LibraryInitializerAttribute>() != null)
+                    {
+                        method.Invoke(null, null);
+                    }
+                }
+            }
+        }
+
+        public void Init()
+        {
+            InitStatic();
+        }
     }
 }
