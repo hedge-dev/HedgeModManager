@@ -174,8 +174,12 @@ namespace HMMCodes
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public sealed class LibraryInitializerAttribute : Attribute { }
 
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public sealed class LibraryUpdateAttribute : Attribute { }
+
     public class StartupUtil
     {
+        public static List<Action> UpdateEvents = new List<Action>();
         public static bool IsLoaderExecutable() => true;
 
         public static void InitStatic()
@@ -189,13 +193,31 @@ namespace HMMCodes
                     {
                         method.Invoke(null, null);
                     }
+
+                    if (method.GetCustomAttribute<LibraryUpdateAttribute>() != null)
+                    {
+                        UpdateEvents.Add((Action)Delegate.CreateDelegate(typeof(Action), method));
+                    }
                 }
+            }
+        }
+
+        public static void OnFrameStatic()
+        {
+            foreach (var ev in UpdateEvents)
+            {
+                ev();
             }
         }
 
         public void Init()
         {
             InitStatic();
+        }
+
+        public void OnFrame()
+        {
+            OnFrameStatic();
         }
     }
 }
