@@ -114,12 +114,12 @@ public class CSharpCode : ICode
                         // Parse description of the last code
                         if (currentCode != null)
                         {
+                            currentCode.Body = lineBuilder.ToString().TrimEnd('\r', '\n');
+
                             if (isMultilineDescription)
                             {
                                 currentCode.Description = DescriptionFromBody(currentCode);
                             }
-
-                            currentCode.Body = lineBuilder.ToString().TrimEnd('\r', '\n');
                         }
 
                         lineBuilder.Clear();
@@ -175,12 +175,12 @@ public class CSharpCode : ICode
             // Parse the last one
             if (currentCode != null)
             {
+                currentCode.Body = lineBuilder.ToString().TrimEnd('\r', '\n');
+
                 if (isMultilineDescription)
                 {
                     currentCode.Description = DescriptionFromBody(currentCode);
                 }
-
-                currentCode.Body = lineBuilder.ToString().TrimEnd('\r', '\n');
             }
         }
 
