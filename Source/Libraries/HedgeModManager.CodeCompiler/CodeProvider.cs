@@ -7,6 +7,7 @@ using Properties;
 using Foundation;
 using Diagnostics;
 using PreProcessor;
+using IL;
 
 public class CodeProvider
 {
@@ -32,6 +33,8 @@ public class CodeProvider
         CSharpSyntaxTree.ParseText(Resources.MemoryService),
         CSharpSyntaxTree.ParseText(Resources.Keys)
     };
+
+    public static AssemblyPostProcessor PostProcessor = new();
 
     public static void TryLoadRoslyn()
     {
@@ -174,7 +177,16 @@ public class CodeProvider
             var compiler = CSharpCompilation.Create("HMMCodes", trees, loads, options)
                 .AddSyntaxTrees(PredefinedClasses);
 
-            var result = compiler.Emit(resultStream);
+            var memStream = new MemoryStream();
+            var result = compiler.Emit(memStream);
+            memStream.Position = 0;
+
+            if (result.Success)
+            {
+                var outData = PostProcessor.Process(memStream);
+                resultStream.Write(outData, 0, outData.Length);
+            }
+
             if (!result.Success)
             {
                 foreach (var diagnostic in result.Diagnostics)

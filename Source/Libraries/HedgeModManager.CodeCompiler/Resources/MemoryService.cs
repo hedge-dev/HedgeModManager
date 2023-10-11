@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace HMMCodes
 {
@@ -29,29 +30,67 @@ namespace HMMCodes
             MemoryProvider = provider;
         }
 
+        public static bool IsMemoryWritable(nint address) 
+            => address > (nint)ModuleBase;
+
+        public static bool IsAligned(nint address)
+            => (address % (nint)AlignOf<nint>()) == 0;
+
         public static long ASLR(long address)
              => ModuleBase + (address - (IntPtr.Size == 8 ? 0x140000000 : 0x400000));
 
         public static void Write(IntPtr address, IntPtr dataPtr, IntPtr length)
-            => MemoryProvider.WriteMemory(address, dataPtr, length);
+        {
+            if (!IsMemoryWritable(address))
+            {
+                return;
+            }
 
-        public static void Write<T>(IntPtr address, T data)
-            => MemoryProvider.WriteMemory<T>(address, data);
+            if (IsAligned(address) && IsAligned(dataPtr))
+            {
+                Unsafe.CopyBlock(dataPtr.ToPointer(), address.ToPointer(), (uint)length);
+            }
+            else
+            {
+                Unsafe.CopyBlockUnaligned(dataPtr.ToPointer(), address.ToPointer(), (uint)length);
+            }
+        }
+
+        public static void Write<T>(IntPtr address, in T data)
+        {
+            if (!IsMemoryWritable(address))
+            {
+                return;
+            }
+
+            Unsafe.Copy(address.ToPointer(), data);
+        }
 
         public static void Write<T>(long address, params T[] data)
-            => MemoryProvider.WriteMemory<T>((IntPtr)address, data);
+        {
+            if (!IsMemoryWritable((IntPtr)address))
+            {
+                return;
+            }
+            
+            Write((IntPtr)address, (IntPtr)Unsafe.AsPointer<T>(ref data[0]), (nint)(Unsafe.SizeOf<T>() * data.Length));
+        }
 
-        public static void Write<T>(long address, T data)
+        public static void Write<T>(long address, in T data)
             => Write<T>((IntPtr)address, data);
 
-        public static char[] Read(IntPtr address, IntPtr length)
-            => MemoryProvider.ReadMemory(address, length);
+        public static byte[] Read(IntPtr address, IntPtr length)
+        {
+            var buffer = new byte[(int)length];
+            Write((IntPtr)Unsafe.AsPointer(ref buffer[0]), address, length);
+            return buffer;
+        }
 
-        public static T Read<T>(IntPtr address) where T : unmanaged
-            => MemoryProvider.ReadMemory<T>(address);
+        public static ref T Read<T>(IntPtr address) where T : unmanaged
+            => ref Unsafe.AsRef<T>(address);
 
-        public static T Read<T>(long address) where T : unmanaged
-            => Read<T>((IntPtr)address);
+        public static ref T Read<T>(long address) where T : unmanaged
+            => ref Read<T>((IntPtr)address);
 
         public static byte[] Assemble(string source)
             => MemoryProvider.AssembleInstructions(source);
@@ -89,7 +128,7 @@ namespace HMMCodes
             VirtualProtect((IntPtr)address, length, oldProtect, out _);
         }
 
-        public static void WriteProtected<T>(long address, T data) where T : unmanaged
+        public static void WriteProtected<T>(long address, in T data) where T : unmanaged
         {
             VirtualProtect((IntPtr)address, (IntPtr)sizeof(T), 0x04, out uint oldProtect);
             Write<T>(address, data);
@@ -155,7 +194,15 @@ namespace HMMCodes
         }
 
         public static bool IsKeyDown(Keys key)
-            => GetAsyncKeyState(key) > 0;
+            => (GetAsyncKeyState(key) & 1) != 0;
+        
+        public static int SizeOf<T>() => Unsafe.SizeOf<T>();
+        public static int AlignOf<T>() => Unsafe.SizeOf<AlignmentHelper<T>>() - Unsafe.SizeOf<T>();
+        private struct AlignmentHelper<T>
+        {
+            private byte b;
+            private T value;
+        };
     }
 
     public enum HookBehavior
@@ -219,5 +266,126 @@ namespace HMMCodes
         {
             OnFrameStatic();
         }
+    }
+}
+
+namespace System.Runtime.CompilerServices
+{
+    public static unsafe class Unsafe
+    {
+        public static TTo BitCast<TFrom, TTo>(TFrom source)
+            where TFrom : struct
+            where TTo : struct
+        {
+            return ReadUnaligned<TTo>(ref As<TFrom, byte>(ref source));
+        }
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void* AsPointer<T>(ref T value);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern int SizeOf<T>();
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern T As<T>(object? o) where T : class?;
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern ref TTo As<TFrom, TTo>(ref TFrom source);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern ref T AsRef<T>(IntPtr source);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern ref T AsRef<T>(void* source);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern ref T AsRef<T>(in T source);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void Copy<T>(void* destination, in T source);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void Copy<T>(ref T destination, void* source);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void CopyBlock(void* destination, void* source, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void CopyBlock(ref byte destination, ref byte source, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void CopyBlockUnaligned(void* destination, void* source, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void CopyBlockUnaligned(ref byte destination, ref byte source, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern ref T Add<T>(ref T source, int n);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern ref T Add<T>(ref T source, IntPtr n);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void* Add<T>(void* source, int n);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void* Add<T>(void* source, nint n);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void SkipInit<T>(out T value);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern bool AreSame<T>(ref T left, ref T right);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void InitBlock(void* startAddress, byte value, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void InitBlock(ref byte startAddress, byte value, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void InitBlockUnaligned(void* startAddress, byte value, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void InitBlockUnaligned(ref byte startAddress, byte value, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern T Read<T>(void* source);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern T Read<T>(ref byte source);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern T ReadUnaligned<T>(void* source);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern T ReadUnaligned<T>(ref byte source);
     }
 }
