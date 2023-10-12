@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -39,20 +41,20 @@ namespace HMMCodes
         public static long ASLR(long address)
              => ModuleBase + (address - (IntPtr.Size == 8 ? 0x140000000 : 0x400000));
 
-        public static void Write(IntPtr address, IntPtr dataPtr, IntPtr length)
+        public static void Write(IntPtr destination, IntPtr source, IntPtr length)
         {
-            if (!IsMemoryWritable(address))
+            if (!IsMemoryWritable(destination))
             {
                 return;
             }
 
-            if (IsAligned(address) && IsAligned(dataPtr))
+            if (IsAligned(destination) && IsAligned(source))
             {
-                Unsafe.CopyBlock(dataPtr.ToPointer(), address.ToPointer(), (uint)length);
+                Unsafe.CopyBlock(destination, source, (uint)length);
             }
             else
             {
-                Unsafe.CopyBlockUnaligned(dataPtr.ToPointer(), address.ToPointer(), (uint)length);
+                Unsafe.CopyBlockUnaligned(destination, source, (uint)length);
             }
         }
 
@@ -318,11 +320,19 @@ namespace System.Runtime.CompilerServices
 
         [CompilerGenerated]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void CopyBlock(IntPtr destination, IntPtr source, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static extern void CopyBlock(void* destination, void* source, uint byteCount);
 
         [CompilerGenerated]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static extern void CopyBlock(ref byte destination, ref byte source, uint byteCount);
+
+        [CompilerGenerated]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static extern void CopyBlockUnaligned(IntPtr destination, IntPtr source, uint byteCount);
 
         [CompilerGenerated]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
