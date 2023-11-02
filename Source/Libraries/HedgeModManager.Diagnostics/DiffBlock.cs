@@ -12,19 +12,15 @@ public class DiffBlock
         Description = description;
     }
 
-    public DiffBlock(DiffType type, string? description, string dataKey)
-    {
-        Type = type;
-        Description = description;
-        Data = new(dataKey, string.Empty);
-    }
-
     public DiffBlock(DiffType type, string? description, object dataKey, object dataValue)
     {
         Type = type;
         Description = description;
         Data = new(dataKey, dataValue);
     }
+
+    public DiffBlock(DiffType type, string? description, string dataKey)
+        : this(type, description, dataKey, string.Empty) { }
 
     public DiffBlock(DiffType type, string? description, string dataKey, string dataValue)
         : this(type, description, (object)dataKey, (object)dataValue) { }
