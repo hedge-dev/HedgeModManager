@@ -25,6 +25,12 @@ public class Diff
         mBlocks[(int)type].Add(new DiffBlock(type, description, dataKey, dataValue));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void MakeBlock(DiffType type, string? description, object dataKey, object dataValue)
+    {
+        mBlocks[(int)type].Add(new DiffBlock(type, description, dataKey, dataValue));
+    }
+
     public void Add(DiffBlock block)
     {
         mBlocks[(int)block.Type].Add(block);
@@ -48,6 +54,11 @@ public class Diff
     public void Renamed(string? description, string oldName, string newName)
     {
         MakeBlock(DiffType.Renamed, description, oldName, newName);
+    }
+
+    public void Renamed(string? description, object oldData, object newData)
+    {
+        MakeBlock(DiffType.Renamed, description, oldData, newData);
     }
 
     public List<DiffBlock> ToList()

@@ -82,9 +82,9 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
             // Renamed
             if (Codes.SingleOrDefault(x => x.Body == code.Body) is { } renamed)
             {
-                if (code.Name != renamed.Name)
+                if (code.Name != renamed.Name || code.Category != renamed.Category)
                 {
-                    diff.Renamed($"{GetCodeDiffName(code)} -> {GetCodeDiffName(renamed)}", code.Name, renamed.Name);
+                    diff.Renamed($"{GetCodeDiffName(code)} -> {GetCodeDiffName(renamed)}", code, renamed);
 
                     // Remove this code from the added list so we don't display it twice.
                     if (addedCodes.SingleOrDefault(x => x.Name == renamed.Name) is { } duplicate)
