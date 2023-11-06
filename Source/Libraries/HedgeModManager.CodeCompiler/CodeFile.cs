@@ -70,7 +70,7 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
         foreach (var code in old.Codes)
         {
             // Modified
-            if (Codes.SingleOrDefault(x => x.Name == code.Name) is { } modified)
+            if (Codes.SingleOrDefault(x => x.Name == code.Name && x.Category == code.Category) is { } modified)
             {
                 if (code.Body != modified.Body)
                 {
@@ -87,7 +87,7 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
                     diff.Renamed($"{GetCodeDiffName(code)} -> {GetCodeDiffName(renamed)}", code, renamed);
 
                     // Remove this code from the added list so we don't display it twice.
-                    if (addedCodes.SingleOrDefault(x => x.Name == renamed.Name) is { } duplicate)
+                    if (addedCodes.SingleOrDefault(x => x.Name == renamed.Name && x.Category == renamed.Category) is { } duplicate)
                     {
                         addedCodes.Remove(duplicate);
                     }
