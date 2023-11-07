@@ -6,5 +6,6 @@ public enum DiffType
     Modified,
     Removed,
     Renamed,
+    Moved,
     Count
 }

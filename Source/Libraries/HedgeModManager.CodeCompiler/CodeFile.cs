@@ -46,21 +46,25 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
         var diff = new Diff();
         var addedCodes = new List<CSharpCode>();
 
-        string GetCodeDiffName(CSharpCode code)
+        string GetCodeDiffName(CSharpCode code, bool showCodeCategory = false)
         {
             if (code.Type == CodeType.Library)
-            {
                 return $"[Library{(!string.IsNullOrEmpty(code.Category) ? $"/{code.Category}" : string.Empty)}] {code.Name}";
+
+            if (showCodeCategory)
+            {
+                return string.IsNullOrEmpty(code.Category)
+                    ? code.Name
+                    : $"[{code.Category}] {code.Name}";
             }
-            return !string.IsNullOrEmpty(code.Category)
-                ? $"[{code.Category}] {code.Name}"
-                : code.Name;
+
+            return code.Name;
         }
 
         foreach (var code in Codes)
         {
             // Added
-            if (old.Codes.All(x => x.Name != code.Name))
+            if (old.Codes.All(x => x != code))
             {
                 addedCodes.Add(code);
                 continue;
@@ -69,45 +73,54 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
 
         foreach (var code in old.Codes)
         {
-            // Modified
-            if (Codes.SingleOrDefault(x => x.Name == code.Name && x.Category == code.Category) is { } modified)
+            void CreateMetadataDiff(CSharpCode compare)
             {
-                if (code.Body != modified.Body)
+                bool isCategoryDiff = code.Category != compare.Category;
+
+                // Remove this code from the added list so we don't display it twice.
+                if (addedCodes.SingleOrDefault(x => x.Name == compare.Name && x.Category == compare.Category) is { } duplicate)
+                    addedCodes.Remove(duplicate);
+
+                // Renamed
+                if (code.Name != compare.Name)
                 {
-                    diff.Modified(GetCodeDiffName(code));
-                    continue;
+                    diff.Renamed($"{GetCodeDiffName(code, isCategoryDiff)} -> {GetCodeDiffName(compare, isCategoryDiff)}", code, compare);
+
+                    /* Combine Renamed and Moved blocks into one
+                       if both the name and category has changed. */
+                    if (isCategoryDiff)
+                        return;
                 }
+
+                // Moved
+                if (isCategoryDiff)
+                    diff.Moved($"{compare.Name}: [{code.Category}] -> [{compare.Category}]", code, compare);
             }
 
-            // Renamed
-            if (Codes.SingleOrDefault(x => x.Body == code.Body) is { } renamed)
+            try
             {
-                if (code.Name != renamed.Name || code.Category != renamed.Category)
+                if (Codes.SingleOrDefault(x => x.Body.Trim() == code.Body.Trim()) is { } renamed)
                 {
-                    diff.Renamed($"{GetCodeDiffName(code)} -> {GetCodeDiffName(renamed)}", code, renamed);
-
-                    // Remove this code from the added list so we don't display it twice.
-                    if (addedCodes.SingleOrDefault(x => x.Name == renamed.Name && x.Category == renamed.Category) is { } duplicate)
-                    {
-                        addedCodes.Remove(duplicate);
-                    }
-
-                    continue;
+                    CreateMetadataDiff(renamed);
+                }
+                else if (Codes.SingleOrDefault(x => (x.Name == code.Name && x.Category == code.Category) || x.Name == code.Name) is { } modified)
+                {
+                    CreateMetadataDiff(modified);
+                    diff.Modified(GetCodeDiffName(code, true));
+                }
+                else
+                {
+                    diff.Removed(GetCodeDiffName(code, true));
                 }
             }
-
-            // Removed
-            if (Codes.All(x => x.Name != code.Name))
+            catch (InvalidOperationException)
             {
-                diff.Removed(GetCodeDiffName(code));
                 continue;
             }
         }
 
         foreach (var code in addedCodes)
-        {
-            diff.Added(GetCodeDiffName(code));
-        }
+            diff.Added(GetCodeDiffName(code, true));
 
         return diff;
     }
