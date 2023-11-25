@@ -25,6 +25,7 @@ public class CSharpCode : ICode
     public CodeType Type { get; set; }
 
     public bool Enabled { get; set; }
+    public bool Naked { get; set; }
 
     public List<BasicLexer.Token> Header { get; set; } = new List<BasicLexer.Token>();
 
@@ -139,6 +140,11 @@ public class CSharpCode : ICode
                         {
                             var text = tokens[i].ValueOrText();
 
+                            if (text.Span.Equals("naked".AsSpan(), StringComparison.OrdinalIgnoreCase))
+                            {
+                                currentCode.Naked = true;
+                            }
+
                             if (text.Span.Equals("in".AsSpan(), StringComparison.OrdinalIgnoreCase))
                             {
                                 i++;
@@ -238,7 +244,7 @@ public class CSharpCode : ICode
     {
         if (mCachedSyntaxTree == null)
         {
-            mCachedSyntaxTree = SyntaxTreeEx.Parse(Body, includeResolver);
+            mCachedSyntaxTree = SyntaxTreeEx.Parse(Body, includeResolver, Naked ? CSharpParseOptions.Default : null);
             return mCachedSyntaxTree;
         }
 
@@ -248,8 +254,14 @@ public class CSharpCode : ICode
     public CompilationUnitSyntax CreateCompilationUnit(IIncludeResolver? includeResolver = null)
     {
         var tree = ParseSyntaxTree(includeResolver);
-
         var unit = tree.GetCompilationUnitRoot();
+
+        // No processing for naked codes
+        if (Naked)
+        {
+            return unit;
+        }
+
         if (this.IsExecutable())
         {
             unit = (CompilationUnitSyntax)new OptionalColonRewriter().Visit(unit);

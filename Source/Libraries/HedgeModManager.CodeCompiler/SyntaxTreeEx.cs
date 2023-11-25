@@ -49,9 +49,9 @@ public class SyntaxTreeEx : CSharpSyntaxTree
         return body.ToString();
     }
 
-    public static SyntaxTreeEx Parse(string text, IIncludeResolver? includeResolver = null)
+    public static SyntaxTreeEx Parse(string text, IIncludeResolver? includeResolver = null, CSharpParseOptions? options = null)
     {
-        var tree = new SyntaxTreeEx((CSharpSyntaxTree)ParseText(ProcessText(text, out var processor, includeResolver), new CSharpParseOptions(kind: SourceCodeKind.Script)))
+        var tree = new SyntaxTreeEx((CSharpSyntaxTree)ParseText(ProcessText(text, out var processor, includeResolver), options ?? new (kind: SourceCodeKind.Script)))
         {
             PreProcessor = processor
         };
