@@ -258,7 +258,7 @@ public class CSharpCode : ICode
         // No processing for naked codes
         if (Naked)
         {
-            unit = AddImports(unit.AddUsings(CodeProvider.PredefinedUsingDirectives));
+            unit = AddImports(unit);
 
             return unit;
         }
@@ -400,8 +400,7 @@ public class CSharpCode : ICode
 
         var compileUnit = SyntaxFactory.CompilationUnit()
             .AddMembers(MakeRootMember())
-            .WithUsings(unit.Usings)
-            .AddUsings(CodeProvider.PredefinedUsingDirectives);
+            .WithUsings(unit.Usings);
 
         compileUnit = AddImports(compileUnit);
         return compileUnit;
