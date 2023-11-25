@@ -1,10 +1,9 @@
-﻿using HedgeModManager.CodeCompiler.PreProcessor;
-
-namespace HedgeModManager.CodeCompiler;
+﻿namespace HedgeModManager.CodeCompiler;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
+using PreProcessor;
 using System.Text;
 using Foundation;
 
@@ -12,7 +11,7 @@ public class CSharpCode : ICode
 {
     private string mBody = string.Empty;
     private SyntaxTreeEx? mCachedSyntaxTree;
-
+    
     public string ID { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
 
@@ -259,6 +258,8 @@ public class CSharpCode : ICode
         // No processing for naked codes
         if (Naked)
         {
+            unit = AddImports(unit.AddUsings(CodeProvider.PredefinedUsingDirectives));
+
             return unit;
         }
 
@@ -402,28 +403,18 @@ public class CSharpCode : ICode
             .WithUsings(unit.Usings)
             .AddUsings(CodeProvider.PredefinedUsingDirectives);
 
-        foreach (var reference in GetReferences())
-        {
-            var dotIndex = reference.LastIndexOf('.');
-            if (dotIndex < 0)
-                continue;
-
-            var namespaceRef = reference.Substring(0, dotIndex);
-            if (string.IsNullOrEmpty(namespaceRef))
-            {
-                continue;
-            }
-
-            compileUnit = compileUnit.AddUsings(MakeUsingDirective(namespaceRef));
-        }
-
-        foreach (var import in GetImports())
-        {
-            compileUnit = compileUnit.AddUsings(MakeUsingDirective(import, true));
-        }
-
+        compileUnit = AddImports(compileUnit);
         return compileUnit;
 
+        CompilationUnitSyntax AddImports(CompilationUnitSyntax unit)
+        {
+            foreach (var import in GetImports())
+            {
+                unit = unit.AddUsings(MakeUsingDirective(import, true));
+            }
+
+            return unit;
+        }
 
         MemberDeclarationSyntax MakeRootMember()
         {
@@ -431,22 +422,13 @@ public class CSharpCode : ICode
             {
                 return classUnit;
             }
-
-            return SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(libNamespace)).AddMembers(classUnit);
+            
+            return SyntaxFactory.NamespaceDeclaration(SyntaxFactoryEx.MakeName(libNamespace)).AddMembers(classUnit);
         }
 
         UsingDirectiveSyntax MakeUsingDirective(string usingName, bool isStatic = false)
         {
-            var names = usingName.Split('.');
-            NameSyntax nameSyntax = SyntaxFactory.IdentifierName(names[0]);
-
-            for (var i = 1; i < names.Length; i++)
-            {
-                if (string.IsNullOrEmpty(names[i]))
-                    continue;
-
-                nameSyntax = SyntaxFactory.QualifiedName(nameSyntax, SyntaxFactory.IdentifierName(names[i]));
-            }
+            NameSyntax nameSyntax = SyntaxFactoryEx.MakeName(usingName);
 
             if (isStatic)
             {

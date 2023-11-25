@@ -31,6 +31,22 @@ public static class SyntaxFactoryEx
         return type;
     }
 
+    public static NameSyntax MakeName(string name)
+    {
+        var names = name.Split('.');
+        NameSyntax nameSyntax = SyntaxFactory.IdentifierName(names[0]);
+
+        for (var i = 1; i < names.Length; i++)
+        {
+            if (string.IsNullOrEmpty(names[i]))
+                continue;
+
+            nameSyntax = SyntaxFactory.QualifiedName(nameSyntax, SyntaxFactory.IdentifierName(names[i]));
+        }
+
+        return nameSyntax;
+    }
+
     public static MethodDeclarationSyntax MethodDeclaration(string identifier, string returnType, BlockSyntax body, params string[] modifiers)
     {
         var mods = new SyntaxToken[modifiers.Length];
