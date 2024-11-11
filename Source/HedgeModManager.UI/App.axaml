@@ -1,0 +1,27 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="HedgeModManager.UI.App"
+             xmlns:local="using:HedgeModManager.UI"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/Themes/Themes.axaml" />
+        <MergeResourceInclude Source="/Languages/en-AU.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+    <local:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    <local:NullBoolConverter x:Key="NullBoolConverter"/>
+    <local:LogStringConverter x:Key="LogStringConverter"/>
+  </Application.Resources>
+
+  <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+  
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+</Application>

@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HedgeModManager.UI.ViewModels"
+        xmlns:c="using:HedgeModManager.UI.Controls"
+        xmlns:ca="using:HedgeModManager.UI.Controls.About"
+        xmlns:cc="using:HedgeModManager.UI.Controls.Codes"
+        xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
+        xmlns:cmw="using:HedgeModManager.UI.Controls.MainWindow"
+        xmlns:cs="using:HedgeModManager.UI.Controls.Setup"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="HedgeModManager.UI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/icon.ico"
+        Title="{DynamicResource Common.Name.Program}"
+        Background="Black" Loaded="Window_Loaded" KeyDown="OnKeyDown">
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+  <Grid RowDefinitions="*,Auto" ColumnDefinitions="Auto,*">
+    <c:Sidebar Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" SelectedTabIndex="{Binding SelectedTabIndex}" IsSetupCompleted="{Binding Config.IsSetupCompleted}" />
+    <c:Footer Grid.Row="1" Grid.Column="1" />
+    <TabControl Grid.Row="0" Grid.Column="1"
+                SelectedIndex="{Binding SelectedTabIndex}"
+                SelectionChanged="OnTabChanged"
+                Background="{DynamicResource BackgroundL0Brush}">
+      <TabItem Header="Loading">
+        <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </TabItem>
+      <TabItem Header="Setup">
+        <cs:Setup />
+      </TabItem>
+      <TabItem Header="Mods">
+        <cmw:Mods Game="{Binding SelectedGame}" />
+      </TabItem>
+      <TabItem Header="Codes">
+        <cc:Codes Game="{Binding SelectedGame}" />
+      </TabItem>
+      <TabItem Header="Settings">
+        <TextBlock Margin="5">*cog sounds*</TextBlock>
+      </TabItem>
+      <TabItem Header="About">
+        <ca:About />
+      </TabItem>
+      <TabItem Header="Test">
+        <cmw:Test />
+      </TabItem>
+      <TabControl.Styles>
+        <Style Selector="TabControl > Border > DockPanel > ItemsPresenter">
+          <Setter Property="IsVisible" Value="False" />
+        </Style>
+      </TabControl.Styles>
+    </TabControl>
+      <ItemsControl ItemsSource="{Binding Modals}" Grid.RowSpan="2" Grid.ColumnSpan="2">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <Grid />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+      </ItemsControl>
+  </Grid>
+
+</Window>

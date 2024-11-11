@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cmw="using:HedgeModManager.UI.Controls.MainWindow"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cc="using:HedgeModManager.UI.Controls.Codes"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
+             x:Class="HedgeModManager.UI.Controls.Codes.Codes"
+             x:DataType="vm:MainWindowViewModel"
+             Loaded="OnLoaded">
+  <Border Margin="12">
+      <ScrollViewer>
+        <ItemsControl ItemsSource="{Binding CodesList, RelativeSource={RelativeSource AncestorType=cc:Codes}}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <cb:CheckBox Text="{Binding Code.Name}" IsChecked="{Binding Enabled}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+  </Border>
+</UserControl>

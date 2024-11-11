@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="80" d:DesignHeight="450"
+             x:Class="HedgeModManager.UI.Controls.Sidebar"
+             x:DataType="vm:MainWindowViewModel">
+  <Border Background="{DynamicResource BackgroundL1Brush}"
+          BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0"
+          Width="80" HorizontalAlignment="Left"
+          Loaded="OnLoaded">
+    <Grid>
+      <StackPanel Margin="0,16,0,0">
+        <Border x:Name="GameIconBorder" Cursor="Hand" CornerRadius="8"
+                Height="56" Width="56" Margin="0,16,0,16" ClipToBounds="True"
+                IsVisible="{Binding SelectedGame, Converter={StaticResource NullBoolConverter}}"
+                PointerPressed="OnGameIconPointerPressed">
+          <Grid>
+            <Image Source="{Binding SelectedGame.Icon}"/>
+            <Border Background="Black" Width="56" Height="56">
+              <Border.Transitions>
+                <Transitions>
+                  <DoubleTransition Property="Opacity" Duration="0:0:0.1"/>
+                </Transitions>
+              </Border.Transitions>
+              <Border.Styles>
+                <Style Selector="Border">
+                  <Setter Property="Opacity" Value="0"/>
+                </Style>
+                <Style Selector="#GameIconBorder">
+                  <Style Selector="^:pointerover Border">
+                    <Setter Property="Opacity" Value="0.5"/>
+                  </Style>
+                </Style>
+              </Border.Styles>
+            </Border>
+            <Viewbox Stretch="Uniform" Width="24" Height="24">
+              <Path Data="{DynamicResource Geometry.PenToSquare}" Fill="{DynamicResource ForegroundBrush}" />
+              <Viewbox.Styles>
+                <Style Selector="Viewbox">
+                  <Setter Property="Opacity" Value="0"/>
+                </Style>
+                <Style Selector="#GameIconBorder">
+                  <Style Selector="^:pointerover Viewbox">
+                    <Setter Property="Opacity" Value="1"/>
+                  </Style>
+                </Style>
+              </Viewbox.Styles>
+            </Viewbox>
+
+          </Grid>
+        </Border>
+        <cb:Separator IsVisible="{Binding SelectedGame, Converter={StaticResource NullBoolConverter}}" />
+        <StackPanel x:Name="TabButtons" Margin="0,12,0,0">
+          <c:SidebarButton Type="Tab" IsVisible="False" Icon="{DynamicResource Geometry.ScrewDriverWrench}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}, Converter={StaticResource InvertedBoolConverter}}" Icon="{DynamicResource Geometry.ScrewDriverWrench}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Whench}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Code}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Gear}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.CircleInfo}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding Config.TestModeEnabled}" Icon="{DynamicResource Geometry.Flask}" Click="OnTabChanged" />
+        </StackPanel>
+      </StackPanel>
+      <StackPanel Margin="0,0,0,16" VerticalAlignment="Bottom">
+        <StackPanel>
+          <c:SidebarButton Type="Normal" Click="OnSaveClicked" Icon="{DynamicResource Geometry.FloppyDisk}" />
+          <c:SidebarButton Type="Normal" Click="OnRunClicked" Icon="{DynamicResource Geometry.Play}" />
+        </StackPanel>
+        <TextBlock Text="{Binding AppVersion}" Margin="0,16,0,0" HorizontalAlignment="Center" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

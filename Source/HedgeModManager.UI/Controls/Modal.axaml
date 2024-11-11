@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="150"
+             x:Class="HedgeModManager.UI.Controls.Modal">
+  <Grid>
+    <Border Background="Black" Opacity="0.5"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            PointerPressed="OnPointerPressed">
+      
+      <Border.Transitions>
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.5"/>
+        </Transitions>
+        </Border.Transitions>
+        <Border.Styles>
+        <Style Selector="Border">
+          <Setter Property="Opacity" Value="0.9"/>
+        </Style>
+      </Border.Styles>
+    </Border>
+    <Border Background="{DynamicResource Modal.BackgroundBrush}"
+            BorderBrush="{DynamicResource Modal.BorderBrush}"
+            BorderThickness="1" Padding="20" CornerRadius="20"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            >
+      <ContentPresenter Content="{Binding Control, RelativeSource={RelativeSource AncestorType=c:Modal}}" />
+    </Border>
+  </Grid>
+</UserControl>

@@ -1,0 +1,21 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+  <!-- Common Names -->
+  <system:String x:Key="Common.Name.Program"   >Hedge Mod Manager</system:String>
+
+
+
+  <!-- Common Buttons -->
+  <system:String x:Key="Common.Button.Close"   >Close</system:String>
+  <system:String x:Key="Common.Button.OK"      >OK</system:String>
+  <system:String x:Key="Common.Button.Cancel"  >Cancel</system:String>
+  <system:String x:Key="Common.Button.Yes"     >Yes</system:String>
+  <system:String x:Key="Common.Button.No"      >No</system:String>
+  <system:String x:Key="Common.Button.Retry"   >Retry</system:String>
+  <system:String x:Key="Common.Button.Update"  >Update</system:String>
+  <system:String x:Key="Common.Button.Download">Download</system:String>
+  <system:String x:Key="Common.Button.Delete"  >Delete</system:String>
+  
+</ResourceDictionary>

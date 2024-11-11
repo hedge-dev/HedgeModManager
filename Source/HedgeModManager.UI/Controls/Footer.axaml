@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignHeight="80" d:DesignWidth="720"
+             x:Class="HedgeModManager.UI.Controls.Footer"
+             x:DataType="vm:MainWindowViewModel">
+  <Border Background="{DynamicResource BackgroundL1Brush}"
+          BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0"
+          Height="48" HorizontalAlignment="Stretch">
+    <Grid Margin="8,0,8,0">
+      <StackPanel Margin="6,6,0,0" HorizontalAlignment="Left">
+        <TextBlock Text="{Binding LastLog}" />
+      </StackPanel>
+      <ItemsControl ItemsSource="{Binding CurrentTabInfo.Buttons}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Margin="0,0,6,6" HorizontalAlignment="Right" Orientation="Horizontal" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <c:FooterButton />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </Grid>
+  </Border>
+</UserControl>

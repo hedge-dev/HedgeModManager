@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
+             x:Class="HedgeModManager.UI.Controls.MainWindow.Test"
+             x:DataType="vm:MainWindowViewModel"
+             Loaded="OnLoaded">
+  <Grid>
+    <StackPanel Margin="16,16,0,0" HorizontalAlignment="Left">
+      <TextBlock Text="Config" Margin="0,8,0,0" />
+      <StackPanel Spacing="4" Orientation="Horizontal">
+        <Button Click="SaveConfig_Click">Save</Button>
+        <Button Click="LoadConfig_Click">Load</Button>
+        <Button Click="ResetConfig_Click">Reset</Button>
+      </StackPanel>
+      <StackPanel x:Name="ConfigProps">
+        
+      </StackPanel>
+      <TextBlock Text="Game" Margin="0,8,0,0" />
+      <StackPanel Spacing="4" Orientation="Horizontal">
+        <Button Click="SaveGame_Click">Save</Button>
+        <Button Click="LoadGame_Click">Load</Button>
+        <Button Click="RunGame_Click">Run</Button>
+        <Button Click="ChangeGame_Click">Change</Button>
+        <Button Click="ClearGame_Click">Clear</Button>
+      </StackPanel>
+
+      <TextBlock Text="Functions" Margin="0,8,0,0" />
+      <StackPanel Spacing="4" Orientation="Horizontal">
+      </StackPanel>
+
+    </StackPanel>
+    <Grid Margin="0,16,0,0" 
+          RowDefinitions="Auto,*"
+          HorizontalAlignment="Right">
+      <TextBlock Grid.Row="0" Margin="0,0,0,8"
+                 Text="Log"
+                 VerticalAlignment="Center" />
+      <StackPanel Grid.Row="0" Margin="0,0,8,0"
+                  Spacing="4"
+                  Orientation="Horizontal"
+                  HorizontalAlignment="Right">
+        <Button Click="ExportLog_Click">Export</Button>
+        <Button Click="ClearLog_Click">Clear</Button>
+      </StackPanel>
+      <Border Grid.Row="1" Width="600" VerticalAlignment="Stretch"
+              BorderThickness="1" Padding="8"
+              BorderBrush="{DynamicResource BorderBrush}">
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding LoggerInstance.Logs}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock FontFamily="Courier, Consolas" Text="{Binding, Converter={StaticResource LogStringConverter}}" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

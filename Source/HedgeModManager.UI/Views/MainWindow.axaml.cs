@@ -1,0 +1,77 @@
+using Avalonia;
+using Avalonia.Controls;
+using HedgeModManager.CodeCompiler;
+using HedgeModManager.Foundation;
+using HedgeModManager.UI.Models;
+using HedgeModManager.UI.ViewModels;
+using System.Linq;
+using System;
+using System.Diagnostics;
+using Avalonia.Interactivity;
+using Avalonia.Input;
+
+namespace HedgeModManager.UI.Views
+{
+    public partial class MainWindow : Window
+    {
+
+        public MainWindowViewModel? ViewModel => (MainWindowViewModel?)DataContext;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private async void Window_Loaded(object? sender, RoutedEventArgs e)
+        {
+            if (ViewModel == null)
+                return;
+
+            Logger.Information($"Loading config...");
+            await ViewModel.Config.LoadAsync();
+
+            Logger.Information($"Initialising codes...");
+            CodeProvider.TryLoadRoslyn();
+
+            Logger.Information($"Locating games...");
+            ViewModel.Games = new(Games.GetUIGames(ModdableGameLocator.LocateGames()));
+            //ViewModel.Games = new();
+            if (ViewModel.Games.Count == 0)
+            {
+                Logger.Information($"No games found!");
+                ViewModel.StartSetup();
+            }
+            ViewModel.SelectedGame = ViewModel.Games.FirstOrDefault();
+
+            if (ViewModel.Config.IsSetupCompleted)
+                ViewModel.SelectedTabIndex = 2; // Mods
+            else
+                ViewModel.SelectedTabIndex = 1; // Setup
+        }
+
+        private void OnTabChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (ViewModel == null)
+                return;
+
+            ViewModel.CurrentTabInfo = ViewModel.TabInfos[ViewModel.SelectedTabIndex];
+        }
+
+        private void OnKeyDown(object? sender, KeyEventArgs e)
+        {
+            if (ViewModel == null)
+                return;
+
+            switch (e.Key)
+            {
+                case Key.F3:
+                    ViewModel.Config.TestModeEnabled = !ViewModel.Config.TestModeEnabled;
+                    Logger.Debug($"Set test mode to {ViewModel.Config.TestModeEnabled}");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+}

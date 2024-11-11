@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cmw="using:HedgeModManager.UI.Controls.MainWindow"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mm="using:HedgeModManager.UI.Controls.Mods"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
+             x:Class="HedgeModManager.UI.Controls.MainWindow.Mods"
+             x:DataType="vm:MainWindowViewModel"
+             Loaded="OnLoaded">
+  <Border Margin="12">
+    <Grid RowDefinitions="Auto,Auto,*">
+      <Grid Margin="0,4,0,8" Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="50,2*,*,*,*">
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="" />
+        <TextBlock Grid.Row="0" Grid.Column="1" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="Name" />
+        <TextBlock Grid.Row="0" Grid.Column="2" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="Author" />
+        <TextBlock Grid.Row="0" Grid.Column="3" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="Version" />
+        <TextBlock Grid.Row="0" Grid.Column="4" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="Features" />
+        
+        <TextBox Watermark="Search" Text="{Binding Search, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Margin="0,0,8,0" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1" />
+        <ComboBox ItemsSource="{Binding Authors, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Margin="0,0,8,0" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="2" SelectionChanged="OnAuthorSelectionChanged" />
+      </Grid>
+      <ScrollViewer Grid.Row="2">
+        <ItemsControl ItemsSource="{Binding ModsList, RelativeSource={RelativeSource AncestorType=cmw:Mods}}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <mm:ModEntry />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+  </Border>
+</UserControl>

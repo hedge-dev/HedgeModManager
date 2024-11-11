@@ -1,0 +1,48 @@
+<cp:ButtonUserControl xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:c="using:HedgeModManager.UI.Controls"
+                      xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+                      xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:m="using:HedgeModManager.UI.Models"
+                      xmlns:mm="using:HedgeModManager.UI.Controls.Mods"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:vmm="using:HedgeModManager.UI.ViewModels.Mods"
+                      mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="48"
+                      x:Class="HedgeModManager.UI.Controls.Mods.ModEntry"
+                      x:DataType="vmm:ModEntryViewModel"
+                      Initialized="OnInitialized">
+  <Border Margin="0,4,0,4" Cursor="Hand" ClipToBounds="True"
+          Classes.enabled="{Binding ModEnabled}" Classes.mainBorder="True"
+          Height="48" CornerRadius="12" IsVisible="{Binding IsVisible}"
+          BorderBrush="{DynamicResource Button.BorderBrush}" BorderThickness="1"
+          PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased">
+    <Grid ColumnDefinitions="50,2*,*,*,*">
+      <cb:CheckBox x:Name="ModEnableCheckbox" Grid.Column="0" Margin="10,0,0,0" VerticalAlignment="Center" IsChecked="{Binding ModEnabled}" />
+      <cb:TextBlock Grid.Column="1" FontSize="14" VerticalAlignment="Center" InlineSource="{Binding ModTitle}" />
+      <TextBlock Grid.Column="2" FontSize="14" VerticalAlignment="Center" Inlines="{Binding ModAuthor}" />
+      <TextBlock Grid.Column="3" FontSize="14" VerticalAlignment="Center" Text="{Binding Mod.Version}" />
+    </Grid>
+    <Border.Transitions>
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.1"/>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.1"/>
+      </Transitions>
+    </Border.Transitions>
+    <Border.Styles>
+      <Style Selector="Border.mainBorder">
+        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Background" Value="{DynamicResource Button.BackgroundBrush}" />
+        <Style Selector="^:pointerover">
+          <Setter Property="Background" Value="{DynamicResource Button.HoverBrush}"/>
+        </Style>
+        <Style Selector="^.enabled">
+          <Setter Property="Opacity" Value="1" />
+        </Style>
+      </Style>
+      <Style Selector=":pressed Border.mainBorder">
+        <Setter Property="Background" Value="{DynamicResource Button.PressedBrush}"/>
+      </Style>
+    </Border.Styles>
+  </Border>
+</cp:ButtonUserControl>
