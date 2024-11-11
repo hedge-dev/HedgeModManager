@@ -1,13 +1,11 @@
 ﻿namespace HedgeModManager;
 using CodeCompiler;
-using CodeCompiler.PreProcessor;
 using Foundation;
 using System.IO;
 using Text;
 using IO;
-using SharpCompress.Archives;
 
-public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
+public class ModDatabaseGeneric : IModDatabase
 {
     public const string DefaultDatabaseName = "ModsDB.ini";
     public const string MainCodesFileName = "Codes.hmm";
@@ -16,9 +14,8 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
 
     public string Name { get; set; } = DefaultDatabaseName;
     public string Root { get; set; } = string.Empty;
-    public List<ModGeneric> Mods { get; set; } = [];
-    public List<CSharpCode> Codes { get; set; } = [];
-    public bool SupportsCodeCompilation { get; set; } = true;
+    public List<ModGeneric> Mods { get; set; } = new();
+    public List<CSharpCode> Codes { get; set; } = new();
 
     public async Task Save()
     {
@@ -52,7 +49,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         {
             if (code.Enabled)
             {
-                enabledCodes.Add(code.ID);
+                enabledCodes.Add(code.Name);
             }
         }
 
@@ -61,7 +58,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         mainSection.SetList("FavoriteMod", favoriteMods);
         codesSection.SetList("Code", enabledCodes);
 
-        var codes = new List<CSharpCode>(Codes.Where(x => x.Enabled || x.Type == CodeType.Library));
+        var codes = new List<CSharpCode>(Codes.Where(x => x.Enabled));
         foreach (var mod in Mods)
         {
             if (mod.Enabled)
@@ -75,12 +72,8 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
             Directory.CreateDirectory(Root);
         }
 
-        if (SupportsCodeCompilation)
-        {
-            // TODO: Look into reporting back the results of the compilation
-            await using var codeStream = File.Create(Path.Combine(Root, CompileCodesFileName));
-            await CodeProvider.CompileCodes(codes, codeStream, this);
-        }
+        await using var codeStream = File.Create(Path.Combine(Root, CompileCodesFileName));
+        await CodeProvider.CompileCodes(codes, codeStream);
         await File.WriteAllTextAsync(Path.Combine(Root, Name), ini.Serialize());
     }
 
@@ -109,7 +102,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         for (int i = parsed.Codes.Count - 1; i >= 0; i--)
         {
             var enabledCode = parsed.Codes[i];
-            var codeIdx = Codes.FindIndex(c => c.ID == enabledCode || c.GetFullName() == enabledCode);
+            var codeIdx = Codes.FindIndex(c => c.Name == enabledCode);
             if (codeIdx != -1)
             {
                 var code = Codes[codeIdx];
@@ -180,7 +173,6 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
 
         if (!Directory.Exists(directory))
         {
-            Logger.Debug($"Mods directory \"{directory}\" does not exist");
             return counter;
         }
 
@@ -296,146 +288,6 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         }
 
         return report;
-    }
-
-    public bool DeleteMod(ModGeneric mod)
-    {
-        if (!Mods.Contains(mod))
-        {
-            return false;
-        }
-
-        Mods.Remove(mod);
-        Directory.Delete(mod.Root, true);
-        return true;
-    }
-
-    public async Task<bool> InstallModFromArchive(string archivePath, IProgress<long>? progress)
-    {
-        // Open archive
-        using var archive = ArchiveFactory.Open(archivePath);
-        if (archive == null)
-            return false;
-
-        // Get entry listing of config files
-        var modConfigPaths = archive.Entries
-            .Where(x => x.Key != null && x.Key.EndsWith(ModGeneric.ConfigName))
-            .Select(x => x.Key!.Replace('\\', '/'));
-
-        // Build mapping
-        var archiveEntries = new List<(string, string, IArchiveEntry)>();
-        foreach (var modConfigPath in modConfigPaths)
-        {
-            string archiveRoot = string.Empty;
-            if (modConfigPath.Contains('/'))
-            {
-                archiveRoot = modConfigPath[0..(modConfigPath.LastIndexOf('/'))];
-            }
-
-            string modDir = Path.Combine(Root, Path.GetFileNameWithoutExtension(archivePath));
-            if (!string.IsNullOrEmpty(archiveRoot))
-            {
-                if (archiveRoot.Contains('/'))
-                {
-                    modDir = Path.Combine(Root, archiveRoot[archiveRoot.LastIndexOf('/')..]);
-                }
-                else
-                {
-                    modDir = Path.Combine(Root, archiveRoot);
-                }
-            }
-
-            foreach (var entry in archive.Entries
-                .Where(x => x.Key != null && !x.IsDirectory))
-            {
-                string entryPath = entry.Key!;
-                if (entryPath.StartsWith(archiveRoot))
-                {
-                    if (!string.IsNullOrEmpty(archiveRoot))
-                        entryPath = entryPath[(archiveRoot.Length + 1)..];
-                    archiveEntries.Add((modDir, entryPath, entry));
-                }
-            }
-        }
-
-        if (progress != null)
-        {
-            // Calculate uncompressed size
-            long totalSize = 0;
-            foreach (var (_, _, entry) in archiveEntries)
-            {
-                totalSize += entry.Size;
-            }
-
-            progress.Report(0);
-            progress.ReportMax(totalSize);
-        }
-
-        // Extract files
-        long totalBytesRead = 0;
-        var archiveReader = archive.ExtractAllEntries();
-
-        while (archiveReader.MoveToNextEntry())
-        {
-            var (modDir, entryPath, entry) = archiveEntries
-                .FirstOrDefault(x => x.Item3.Key == archiveReader.Entry.Key);
-
-            if (entry == null)
-                continue;
-
-            string fullPath = Path.Combine(modDir, entryPath);
-            string dir = Path.GetDirectoryName(fullPath)!;
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-
-            using var archiveFileStream = archiveReader.OpenEntryStream();
-            using var fileStream = File.Create(fullPath);
-
-            var buffer = new byte[1048576];
-            int bytesRead;
-            while ((bytesRead = await archiveFileStream.ReadAsync(buffer)) > 0)
-            {
-                await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-                totalBytesRead += bytesRead;
-                progress?.Report(totalBytesRead);
-            }
-            await archiveFileStream.DisposeAsync();
-        }
-        return true;
-    }
-
-    public string Resolve(string name)
-    {
-        foreach (var code in Codes)
-        {
-            if (code.Name == name)
-            {
-                return code.Body;
-            }
-        }
-
-        foreach (var mod in Mods)
-        {
-            if (!mod.Enabled)
-            {
-                continue;
-            }
-
-            if (mod.Codes != null)
-            {
-                foreach (var code in mod.Codes
-                    .Where(x => x is CSharpCode)
-                    .Cast<CSharpCode>())
-                {
-                    if (code.Name == name)
-                    {
-                        return code.Body;
-                    }
-                }
-            }
-        }
-
-        return string.Empty;
     }
 
     IReadOnlyList<ICode> IModDatabase.Codes => Codes;

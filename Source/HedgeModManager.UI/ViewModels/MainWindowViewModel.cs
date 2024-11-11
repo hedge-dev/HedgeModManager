@@ -70,7 +70,11 @@ namespace HedgeModManager.UI.ViewModels
         {
             await Config.SaveAsync();
             if (SelectedGame != null)
+            {
+                if (!SelectedGame.Game.IsModLoaderInstalled())
+                    await SelectedGame.Game.InstallModLoaderAsync();
                 await SelectedGame.Game.ModDatabase.Save();
+            }
         }
 
         public async Task RunGame()
