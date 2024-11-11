@@ -25,20 +25,19 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
         Executable = game.Executable;
     }
 
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
         try
         {
             // TODO: Change this
-            ModLoaderConfiguration.Parse(Ini.FromFile(Path.Combine(Root, "cpkredir.ini")));
+            await ModLoaderConfiguration.Load(Path.Combine(Root, "cpkredir.ini"));
         }
         catch
         {
-            ModLoaderConfiguration.DatabasePath = Path.Combine(Root, "Mods", ModDatabaseGeneric.DefaultDatabaseName);
+            ModLoaderConfiguration.DatabasePath = Path.Combine(Root, "mods", ModDatabaseGeneric.DefaultDatabaseName);
         }
 
         ModDatabase.LoadDatabase(ModLoaderConfiguration.DatabasePath);
-        return Task.CompletedTask;
     }
 
     public async Task<bool> InstallModLoaderAsync()

@@ -10,6 +10,7 @@ using HedgeModManager.UI.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,7 +47,7 @@ namespace HedgeModManager.UI.ViewModels
             Logger.Debug($"IsLinux: {OperatingSystem.IsLinux()}");
         }
 
-        public void OnGameChange()
+        public async Task OnGameChange()
         {
             if (SelectedGame == null || SelectedGame.Game == null)
             {
@@ -61,7 +62,7 @@ namespace HedgeModManager.UI.ViewModels
             Logger.Debug($"Selected game changed:");
             Logger.Debug($"    {game.Name} - {game.Platform}");
             Logger.Debug($"    {game.Root}");
-            game.InitializeAsync().Wait();
+            await game.InitializeAsync();
             Logger.Debug($"Initialised game");
             Logger.Information($"Found {game.ModDatabase.Mods.Count} mods");
         }
@@ -74,6 +75,9 @@ namespace HedgeModManager.UI.ViewModels
                 if (!SelectedGame.Game.IsModLoaderInstalled())
                     await SelectedGame.Game.InstallModLoaderAsync();
                 await SelectedGame.Game.ModDatabase.Save();
+
+                if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)
+                    await config.Save(Path.Combine(SelectedGame.Game.Root, "cpkredir.ini"));
             }
         }
 
@@ -101,10 +105,10 @@ namespace HedgeModManager.UI.ViewModels
 
         }
 
-        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(SelectedGame))
-                OnGameChange();
+                await OnGameChange();
             base.OnPropertyChanged(e);
         }
     }
