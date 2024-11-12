@@ -12,6 +12,9 @@ namespace HedgeModManager.UI
 {
     public partial class App : Application
     {
+        public static readonly string ApplicationCompany = "NeverFinishAnything";
+        public static readonly string ApplicationName = "HedgeModManager";
+
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);

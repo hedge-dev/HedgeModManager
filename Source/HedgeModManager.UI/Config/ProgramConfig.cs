@@ -19,9 +19,17 @@ namespace HedgeModManager.UI.Config
         [ObservableProperty] private bool _isSetupCompleted = false;
         [ObservableProperty] private bool _testModeEnabled = true;
 
+        private string GetConfigPath()
+        {
+            string baseDirectory = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                App.ApplicationCompany, App.ApplicationName);
+            return Path.Combine(baseDirectory, "ProgramConfig.json");
+        }
+
         public async Task LoadAsync()
         {
-            string filePath = "config.json";
+            string filePath = GetConfigPath();
             if (!File.Exists(filePath))
                 return;
 
@@ -45,7 +53,7 @@ namespace HedgeModManager.UI.Config
 
         public async Task SaveAsync()
         {
-            string filePath = "config.json";
+            string filePath = GetConfigPath();
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true
