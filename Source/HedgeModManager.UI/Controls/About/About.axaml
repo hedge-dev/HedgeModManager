@@ -29,11 +29,13 @@
             <TextBlock Text="SuperSonic16" />
             <TextBlock Text="Sajid" />
             <TextBlock Text="Kandda" />
+            <TextBlock Text="LJSTAR" />
           </StackPanel>
           <StackPanel  Grid.Column="1">
             <TextBlock Text="Main Developer" />
             <TextBlock Text="Main Developer" />
             <TextBlock Text="Design" />
+            <TextBlock Text="Icons" />
           </StackPanel>
         </Grid>
       </StackPanel>
