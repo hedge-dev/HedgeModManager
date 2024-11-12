@@ -25,7 +25,6 @@
       <SolidColorBrush x:Key='Modal.BackgroundBrush'>#12131B</SolidColorBrush>
       <SolidColorBrush x:Key='Modal.BorderBrush'>#181818</SolidColorBrush>
 
-
       <SolidColorBrush x:Key='Button.BackgroundBrush'>#181A25</SolidColorBrush>
       <SolidColorBrush x:Key='Button.BorderBrush'>#202030</SolidColorBrush>
       <SolidColorBrush x:Key='Button.HoverBrush'>#2C2C3D</SolidColorBrush>
@@ -38,8 +37,6 @@
       <SolidColorBrush x:Key='CheckBox.PressedBrush'>#3C3C4D</SolidColorBrush>
       <SolidColorBrush x:Key='CheckBox.SelectedBrush'>#304060</SolidColorBrush>
       <SolidColorBrush x:Key='CheckBox.SelectedPressedBrush'>#384868</SolidColorBrush>
-
-
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
