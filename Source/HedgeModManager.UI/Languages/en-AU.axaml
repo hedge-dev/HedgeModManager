@@ -2,10 +2,24 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-  <!-- Common Names -->
-  <system:String x:Key="Common.Name.Program"   >Hedge Mod Manager</system:String>
+  <!-- Common Program -->
+  <system:String x:Key="Common.Program.Name">Hedge Mod Manager</system:String>
+  <system:String x:Key="Common.Program.Sub">A program designed to assist with loading Hedgehog Engine mods.</system:String>
 
+  <!-- Common Game -->
+  <system:String x:Key="Common.Game.SonicGenerations"    >Sonic Generations (2011)</system:String>
+  <system:String x:Key="Common.Game.SonicLostWorld"      >Sonic Lost World</system:String>
+  <system:String x:Key="Common.Game.SonicForces"         >Sonic Forces</system:String>
+  <system:String x:Key="Common.Game.PuyoPuyoTetris2"     >Puyo Puyo Tetris 2</system:String>
+  <system:String x:Key="Common.Game.Tokyo2020"           >Olympic Games Tokyo 2020</system:String>
+  <system:String x:Key="Common.Game.SonicColorsUltimate" >Sonic Colours: Ultimate</system:String>
+  <system:String x:Key="Common.Game.SonicOrigins"        >Sonic Origins</system:String>
+  <system:String x:Key="Common.Game.SonicFrontiers"      >Sonic Frontiers</system:String>
+  <system:String x:Key="Common.Game.SonicGenerations2024">Sonic Generations (2024)</system:String>
+  <system:String x:Key="Common.Game.ShadowGenerations"   >Shadow Generations</system:String>
 
+  <!-- Common Text -->
+  <system:String x:Key="Common.Text.Loading">Loading...</system:String>
 
   <!-- Common Buttons -->
   <system:String x:Key="Common.Button.Close"   >Close</system:String>
@@ -17,5 +31,31 @@
   <system:String x:Key="Common.Button.Update"  >Update</system:String>
   <system:String x:Key="Common.Button.Download">Download</system:String>
   <system:String x:Key="Common.Button.Delete"  >Delete</system:String>
-  
+  <system:String x:Key="Common.Button.Back"    >Back</system:String>
+  <system:String x:Key="Common.Button.Next"    >Next</system:String>
+  <system:String x:Key="Common.Button.Finish"  >Finish</system:String>
+  <system:String x:Key="Common.Button.Save"    >Save</system:String>
+  <system:String x:Key="Common.Button.SavePlay">Save and Play</system:String>
+  <system:String x:Key="Common.Button.Menu"    >Menu</system:String>
+  <system:String x:Key="Common.Button.Options" >Options</system:String>
+  <system:String x:Key="Common.Button.Select"  >Select</system:String>
+
+  <!-- Mods -->
+  <system:String x:Key="Mods.Text.Name"   >Name</system:String>
+  <system:String x:Key="Mods.Text.Author" >Author</system:String>
+  <system:String x:Key="Mods.Text.Version">Version</system:String>
+  <system:String x:Key="Mods.Text.Features">Features</system:String>
+
+  <!-- Codes -->
+  <system:String x:Key="Codes.Button.UpdateCodes">Update Community Codes</system:String>
+
+  <!-- Settings -->
+  <!-- About -->
+  <system:String x:Key="About.Program.Sub"  >Requires legally owned copies of the supported games.</system:String>
+  <system:String x:Key="About.Button.GitHub">GitHub</system:String>
+
+  <!-- Modal -->
+  <system:String x:Key="Modal.Title.Games">Games</system:String>
+
+
 </ResourceDictionary>

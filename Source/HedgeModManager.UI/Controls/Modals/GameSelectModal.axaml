@@ -10,7 +10,7 @@
              x:DataType="vm:MainWindowViewModel">
 
     <StackPanel>
-      <TextBlock FontSize="32" Margin="0,0,0,4" HorizontalAlignment="Center">Games</TextBlock>
+      <TextBlock Text="{DynamicResource Modal.Title.Games}" FontSize="32" Margin="0,0,0,4" HorizontalAlignment="Center" />
       <ScrollViewer MaxHeight="320">
         <ItemsControl ItemsSource="{Binding Games}">
           <ItemsControl.ItemTemplate>

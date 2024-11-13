@@ -1,18 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.VisualTree;
-using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.CodeCompiler;
-using HedgeModManager.Foundation;
-using HedgeModManager.UI.Config;
-using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Codes;
-using HedgeModManager.UI.ViewModels.Mods;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -116,15 +108,15 @@ public partial class Codes : UserControl
         if (viewModel.CurrentTabInfo != null)
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
-            viewModel.CurrentTabInfo.Buttons.Add(new("Save and Play", Buttons.Y, async (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.SavePlay", Buttons.Y, async (s, e) =>
             {
                 await viewModel.SaveAndRun();
             }));
-            viewModel.CurrentTabInfo.Buttons.Add(new("Update Community Codes", Buttons.X, (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("Codes.Button.UpdateCodes", Buttons.X, (s, e) =>
             {
                 Logger.Information("Update Codes Pressed");
             }));
-            viewModel.CurrentTabInfo.Buttons.Add(new("Select", Buttons.A, (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Select", Buttons.A, (s, e) =>
             {
                 Logger.Information("Select Pressed");
             }));

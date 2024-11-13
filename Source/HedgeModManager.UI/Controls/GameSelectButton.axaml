@@ -16,7 +16,7 @@
       <Border Margin="8" CornerRadius="8" ClipToBounds="True">
         <Image Source="{Binding Game.Icon, RelativeSource={RelativeSource AncestorType=c:GameSelectButton}}"/>
       </Border>
-      <TextBlock FontSize="16" Margin="8,0,16,0" Text="{Binding Game.TranslatedName, RelativeSource={RelativeSource AncestorType=c:GameSelectButton}}" VerticalAlignment="Center"/>
+      <TextBlock FontSize="16" Margin="8,0,16,0" Text="{Binding Game.LocalizeID, Converter={StaticResource StringLocalizeConverter}, RelativeSource={RelativeSource AncestorType=c:GameSelectButton}}" VerticalAlignment="Center"/>
     </StackPanel>
     <Border.Transitions>
       <Transitions>

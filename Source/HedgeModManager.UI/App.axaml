@@ -15,6 +15,7 @@
     <local:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
     <local:NullBoolConverter x:Key="NullBoolConverter"/>
     <local:LogStringConverter x:Key="LogStringConverter"/>
+    <local:StringLocalizeConverter x:Key="StringLocalizeConverter"/>
   </Application.Resources>
 
   <Application.DataTemplates>

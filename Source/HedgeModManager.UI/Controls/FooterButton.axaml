@@ -20,7 +20,7 @@
           <Path Data="{Binding Icon, RelativeSource={RelativeSource AncestorType=c:FooterButton}}" Fill="{DynamicResource ForegroundBrush}" />
         </Viewbox>
       </Grid>
-      <TextBlock FontSize="16" Text="{Binding Name}" VerticalAlignment="Center" />
+      <TextBlock FontSize="16" Text="{Binding Name, Converter={StaticResource StringLocalizeConverter}}" VerticalAlignment="Center" />
     </StackPanel>
     <Border.Transitions>
       <Transitions>

@@ -14,13 +14,13 @@
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
         <Image Grid.Column="0"
                Source="avares://HedgeModManager.UI/Assets/Graphics/logo.png" Width="64" Height="64" />
-        <TextBlock Text="Hedge Mod Manager"
+        <TextBlock Text="{DynamicResource Common.Program.Name}"
                    FontSize="24" FontWeight="Bold"
                    Margin="8,0,0,0"
                    VerticalAlignment="Center" />
       </StackPanel>
-      <TextBlock Text="A program designed to help people easily load Hedgehog Engine mods." HorizontalAlignment="Center" />
-      <TextBlock Text="Requires a legally owned version of one of the supported games." HorizontalAlignment="Center" />
+      <TextBlock Text="{DynamicResource Common.Program.Sub}" HorizontalAlignment="Center" />
+      <TextBlock Text="{DynamicResource About.Program.Sub}" HorizontalAlignment="Center" />
     </StackPanel>
     <Grid Grid.Row="1">
       <StackPanel>

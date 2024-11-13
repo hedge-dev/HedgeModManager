@@ -13,7 +13,7 @@
         x:Class="HedgeModManager.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/icon.ico"
-        Title="{DynamicResource Common.Name.Program}"
+        Title="{DynamicResource Common.Program.Name}"
         Background="Black" Loaded="Window_Loaded" KeyDown="OnKeyDown">
 
   <Design.DataContext>
@@ -27,7 +27,7 @@
                 SelectionChanged="OnTabChanged"
                 Background="{DynamicResource BackgroundL0Brush}">
       <TabItem Header="Loading">
-        <TextBlock Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="{DynamicResource Common.Text.Loading}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
       </TabItem>
       <TabItem Header="Setup">
         <cs:Setup />

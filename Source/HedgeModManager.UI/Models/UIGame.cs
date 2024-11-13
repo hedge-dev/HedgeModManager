@@ -11,10 +11,9 @@ namespace HedgeModManager.UI.Models
 {
     public partial class UIGame : ObservableObject
     {
-        // TODO
         [ObservableProperty] private IModdableGame _game;
         [ObservableProperty] private IImage _icon;
-        public string TranslatedName => Game.Name;
+        public string LocalizeID => $"Common.Game.{Game.Name}";
 
         public UIGame(IModdableGame game, IImage icon)
         {

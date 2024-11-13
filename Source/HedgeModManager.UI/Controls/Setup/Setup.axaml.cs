@@ -1,14 +1,6 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.VisualTree;
-using HedgeModManager.UI.Config;
-using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.ViewModels;
-using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace HedgeModManager.UI.Controls.Setup;
@@ -34,11 +26,13 @@ public partial class Setup : UserControl
         if (viewModel.CurrentTabInfo != null)
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
-            viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Back", Buttons.B, (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Common.Button.Back", Buttons.B, (s, e) =>
             {
                 MainTabControl.SelectedIndex--;
             }, MainTabControl.SelectedIndex != 0));
-            viewModel.CurrentTabInfo.Buttons.Add(NextButton = new("Next", Buttons.A, (s, e) =>
+            string nextButtonName = MainTabControl.SelectedIndex == MainTabControl.ItemCount - 1 ?
+                "Common.Button.Finish" : "Common.Button.Next";
+            viewModel.CurrentTabInfo.Buttons.Add(NextButton = new(nextButtonName, Buttons.A, (s, e) =>
             {
                 if (MainTabControl.SelectedIndex == MainTabControl.ItemCount - 1)
                 {
@@ -67,9 +61,9 @@ public partial class Setup : UserControl
             BackButton.IsEnabled = true;
 
         if (tabIndex == tabCount - 1)
-            NextButton.Name = "Finish";
+            NextButton.Name = "Common.Button.Finish";
         else
-            NextButton.Name = "Next";
+            NextButton.Name = "Common.Button.Next";
 
     }
 }

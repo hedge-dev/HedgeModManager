@@ -45,12 +45,6 @@ public partial class ModEntry : ButtonUserControl
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        // What did I just write?
-        if (change.Property == IsPointerOverProperty)
-        {
-            base.OnPropertyChanged(change);
-            return;
-        }
         base.OnPropertyChanged(change);
     }
 }
