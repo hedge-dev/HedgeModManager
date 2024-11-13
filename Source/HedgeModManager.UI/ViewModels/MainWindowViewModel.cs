@@ -25,22 +25,24 @@ namespace HedgeModManager.UI.ViewModels
 
         [ObservableProperty] private UIGame? _selectedGame;
         [ObservableProperty] private int _selectedTabIndex;
-        [ObservableProperty] private Logger? _loggerInstance;
+        [ObservableProperty] private UILogger? _loggerInstance;
         [ObservableProperty] private string _lastLog = "";
         [ObservableProperty] private TabInfo? _currentTabInfo;
         [ObservableProperty] private TabInfo[] _tabInfos = 
             [new ("Loading"), new("Setup"), new("Mods"), new("Codes"), new("Settings"), new("About"), new("Test")];
         [ObservableProperty] private ObservableCollection<Modal> _modals = new ();
 
-        public MainWindowViewModel(Logger logger)
+        public MainWindowViewModel(UILogger logger)
         {
+            // Setup logger
             _loggerInstance = logger;
+            new Logger(logger);
             logger.Logs.CollectionChanged += (sender, args) =>
             {
                 if (logger.Logs.Count == 0)
                     return;
                 LastLog = logger.Logs
-                .LastOrDefault(x => x.Type != Logger.LogType.Debug)!.Message;
+                .LastOrDefault(x => x.Type != LogType.Debug)!.Message;
             };
             Logger.Information($"Starting HedgeModManager {AppVersion}...");
             Logger.Debug($"IsWindows: {OperatingSystem.IsWindows()}");

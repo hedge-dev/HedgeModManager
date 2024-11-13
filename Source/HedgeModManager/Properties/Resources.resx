@@ -117,7 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="dotnetFrameworkRuntime" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dotnetFrameworkRuntime.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="HE1MLDownloadURL" xml:space="preserve">
+    <value>https://github.com/thesupersonic16/HedgeModManager/raw/rewrite/HedgeModManager/Resources/ModLoader/HE1ML.dll</value>
+  </data>
+  <data name="HE2MLDownloadURL" xml:space="preserve">
+    <value>https://github.com/thesupersonic16/HedgeModManager/raw/rewrite/HedgeModManager/Resources/ModLoader/HE2ModLoader.dll</value>
+  </data>
+  <data name="HMLDownloadURL" xml:space="preserve">
+    <value>https://github.com/thesupersonic16/HedgeModManager/raw/rewrite/HedgeModManager/Resources/ModLoader/HiteModLoader.zip</value>
+  </data>
+  <data name="RMLDownloadURL" xml:space="preserve">
+    <value>https://github.com/thesupersonic16/HedgeModManager/raw/rewrite/HedgeModManager/Resources/ModLoader/RainbowModLoader.dll</value>
   </data>
 </root>

@@ -1,5 +1,6 @@
 ﻿namespace HedgeModManager;
 using Foundation;
+using HedgeModManager.Properties;
 using Steam;
 using System.Linq;
 
@@ -12,6 +13,7 @@ public class ModdableGameLocator
         {
             ID = "SonicGenerations",
             ModLoaderFileName = "d3d9.dll",
+            ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             PlatformInfos = new()
             {
                 { "Steam", new ("71340", "SonicGenerations.exe") }
@@ -21,30 +23,35 @@ public class ModdableGameLocator
         {
             ID = "SonicLostWorld",
             ModLoaderFileName = "d3d9.dll",
+            ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("329440", "slw.exe") } }
         },
         new ()
         {
             ID = "SonicForces",
             ModLoaderFileName = "d3d11.dll",
+            ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("637100", Path.Combine("build", "main", "projects", "exec", "Sonic Forces.exe")) } }
         },
         new ()
         {
             ID = "PuyoPuyoTetris2",
             ModLoaderFileName = "dinput8.dll",
+            ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("1259790", "PuyoPuyoTetris2.exe") } }
         },
         new ()
         {
             ID = "Tokyo2020",
             ModLoaderFileName = "dinput8.dll",
+            ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("981890", "musashi.exe") } }
         },
         new ()
         {
             ID = "SonicColorsUltimate",
             ModLoaderFileName = "d3d11.dll",
+            ModLoaderDownloadURL = Resources.RMLDownloadURL,
             PlatformInfos = new()
             {
                 { "Steam", new ("2055290", Path.Combine("exec", "SonicColorsUltimate.exe")) },
@@ -55,6 +62,7 @@ public class ModdableGameLocator
         {
             ID = "SonicOrigins",
             ModLoaderFileName = "dinput8.dll",
+            ModLoaderDownloadURL = Resources.HMLDownloadURL,
             PlatformInfos = new()
             {
                 { "Steam", new ("1794960", Path.Combine("build", "main", "projects", "exec", "SonicOrigins.exe")) },
@@ -65,6 +73,7 @@ public class ModdableGameLocator
         {
             ID = "SonicFrontiers",
             ModLoaderFileName = "d3d11.dll",
+            ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new()
             {
                 { "Steam", new ("1237320", "SonicFrontiers.exe") },
@@ -75,6 +84,7 @@ public class ModdableGameLocator
         {
             ID = "SonicGenerations2024",
             ModLoaderFileName = "d3d11.dll",
+            ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new()
             {
                 { "Steam", new ("2513280", "SONIC_GENERATIONS.exe") },
@@ -85,6 +95,7 @@ public class ModdableGameLocator
         {
             ID = "ShadowGenerations",
             ModLoaderFileName = "d3d11.dll",
+            ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new()
             {
                 { "Steam", new ("2513280", "SONIC_X_SHADOW_GENERATIONS.exe") },
@@ -110,7 +121,8 @@ public class ModdableGameLocator
                         Name = gameInfo.ID,
                         Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, platformInfo.Executable))!,
                         Executable = platformInfo.Executable,
-                        ModLoaderFileName = gameInfo.ModLoaderFileName ?? ""
+                        ModLoaderFileName = gameInfo.ModLoaderFileName,
+                        ModLoaderDownloadURL = gameInfo.ModLoaderDownloadURL
                     });
                 }
             }
@@ -123,6 +135,7 @@ public class ModdableGameLocator
     {
         public required string ID { get; init; }
         public string? ModLoaderFileName { get; init; }
+        public string? ModLoaderDownloadURL { get; init; }
         public required Dictionary<string, GamePlatformInfo> PlatformInfos { get; init; }
     }
 

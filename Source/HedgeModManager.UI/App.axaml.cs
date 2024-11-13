@@ -28,7 +28,7 @@ namespace HedgeModManager.UI
                 // Without this line you will get duplicate validations from both Avalonia and CT
                 BindingPlugins.DataValidators.RemoveAt(0);
 
-                var viewModel = new MainWindowViewModel(new Logger());
+                var viewModel = new MainWindowViewModel(new UILogger());
                 desktop.MainWindow = new MainWindow
                 {
                     DataContext = viewModel,

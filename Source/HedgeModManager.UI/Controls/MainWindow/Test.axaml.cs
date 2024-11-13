@@ -136,12 +136,12 @@ public partial class Test : UserControl
 
     private void ClearLog_Click(object? sender, RoutedEventArgs e)
     {
-        Logger.Clear();
+        UILogger.Clear();
     }
 
     private async void ExportLog_Click(object? sender, RoutedEventArgs e)
     {
-        string log = Logger.Export();
+        string log = UILogger.Export();
 
         var topLevel = TopLevel.GetTopLevel(this);
         if (topLevel == null)

@@ -35,6 +35,7 @@ public class LinuxCompatibility
     /// <param name="path">Path to the prefix root directory</param>
     public static bool InstallRuntimeToPrefix(string? path)
     {
+        Logger.Debug($"Installing .NET runtime to {path}");
         if (path == null)
         {
             return false;
@@ -63,13 +64,16 @@ public class LinuxCompatibility
             entry.ExtractToFile(destinationPath, true);
         }
 
+        Logger.Debug($"Extracted .NET runtime");
         return true;
     }
 
     public static async Task<bool> AddDllOverride(string? path, string name)
     {
+        Logger.Debug($"Adding DLL override {name} to {path}");
         if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
         {
+            Logger.Debug($"Prefix is missing!");
             return false;
         }
 
@@ -77,11 +81,13 @@ public class LinuxCompatibility
 
         if (!Path.Exists(reg))
         {
+            Logger.Debug($"Prefix is not initialised!");
             return false;
         }
 
         string dllOverrides = $"[Software\\\\Wine\\\\DllOverrides]\n\"{name}\"=\"native,builtin\"\n";
         await File.AppendAllTextAsync(reg, dllOverrides);
+        Logger.Debug($"File written");
         return true;
     }
 

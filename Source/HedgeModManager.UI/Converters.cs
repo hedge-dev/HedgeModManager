@@ -42,14 +42,14 @@ namespace HedgeModManager.UI
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is Logger.Log log)
+            if (value is UILogger.Log log)
             {
                 string logType = log.Type switch
                 {
-                    Logger.LogType.Information => " INFO",
-                    Logger.LogType.Warning => " WARN",
-                    Logger.LogType.Error => "ERROR",
-                    Logger.LogType.Debug => "DEBUG",
+                    LogType.Information => " INFO",
+                    LogType.Warning => " WARN",
+                    LogType.Error => "ERROR",
+                    LogType.Debug => "DEBUG",
                     _ => "UNKNOWN"
                 };
                 return $"[{log.DateTime:HH:mm:ss} - {logType}] {log.Message}";

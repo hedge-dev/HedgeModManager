@@ -53,7 +53,7 @@
           <ItemsControl ItemsSource="{Binding LoggerInstance.Logs}">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <TextBlock FontFamily="Courier, Consolas" Text="{Binding, Converter={StaticResource LogStringConverter}}" />
+                <TextBlock FontFamily="DejaVu Sans Mono, Consolas" Text="{Binding, Converter={StaticResource LogStringConverter}}" />
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
