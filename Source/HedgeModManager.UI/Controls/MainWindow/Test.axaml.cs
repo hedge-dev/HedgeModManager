@@ -1,17 +1,11 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
+using Avalonia.Layout;
 using Avalonia.Platform.Storage;
-using Avalonia.VisualTree;
-using HedgeModManager.UI.Config;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Text;
 
 namespace HedgeModManager.UI.Controls.MainWindow;
@@ -66,6 +60,37 @@ public partial class Test : UserControl
             ConfigProps.Children.Add(checkbox);
         }
 
+        void createStringEditor(string name)
+        {
+            var panel = new StackPanel()
+            {
+                Orientation = Orientation.Horizontal
+            };
+            var label = new TextBlock()
+            {
+                Text = name,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            var textbox = new TextBox()
+            {
+                MaxWidth = 400
+            };
+
+            // Add items
+            panel.Children.Add(label);
+            panel.Children.Add(textbox);
+
+            var binding = new Binding
+            {
+                Source = viewModel.Config,
+                Path = name
+            };
+
+            textbox.Bind(TextBox.TextProperty, binding);
+
+            ConfigProps.Children.Add(panel);
+        }
+
         ConfigProps.Children.Clear();
         foreach (var property in viewModel.Config.GetType().GetProperties())
         {
@@ -75,6 +100,9 @@ public partial class Test : UserControl
                 {
                     case "Boolean":
                         createCheckbox(property.Name);
+                        break;
+                    case "String":
+                        createStringEditor(property.Name);
                         break;
                     default:
                         break;

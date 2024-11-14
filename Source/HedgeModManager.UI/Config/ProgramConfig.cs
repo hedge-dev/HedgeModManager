@@ -18,6 +18,7 @@ namespace HedgeModManager.UI.Config
     {
         [ObservableProperty] private bool _isSetupCompleted = false;
         [ObservableProperty] private bool _testModeEnabled = true;
+        [ObservableProperty] private string? _lastSelectedPath;
 
         private string GetConfigPath()
         {

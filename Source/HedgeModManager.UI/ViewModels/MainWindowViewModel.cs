@@ -1,9 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-using CommunityToolkit.Mvvm.ComponentModel;
-using HedgeModManager.Foundation;
-using HedgeModManager.Text;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.UI.Config;
 using HedgeModManager.UI.Controls;
 using HedgeModManager.UI.Models;
@@ -64,8 +59,12 @@ namespace HedgeModManager.UI.ViewModels
             Logger.Debug($"Selected game changed:");
             Logger.Debug($"    {game.Name} - {game.Platform}");
             Logger.Debug($"    {game.Root}");
+            Logger.Debug($"    {game.Executable}");
             await game.InitializeAsync();
             Logger.Debug($"Initialised game");
+
+            Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
+
             Logger.Information($"Found {game.ModDatabase.Mods.Count} mods");
         }
 

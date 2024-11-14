@@ -1,14 +1,10 @@
-using Avalonia;
 using Avalonia.Controls;
 using HedgeModManager.CodeCompiler;
-using HedgeModManager.Foundation;
-using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using System.Linq;
-using System;
-using System.Diagnostics;
 using Avalonia.Interactivity;
 using Avalonia.Input;
+using System.IO;
 
 namespace HedgeModManager.UI.Views
 {
@@ -41,7 +37,13 @@ namespace HedgeModManager.UI.Views
                 Logger.Information($"No games found!");
                 ViewModel.StartSetup();
             }
-            ViewModel.SelectedGame = ViewModel.Games.FirstOrDefault();
+            else
+            {
+                // Select the last selected game or first game
+                ViewModel.SelectedGame = ViewModel.Games
+                    .FirstOrDefault(x => x != null && Path.Combine(x.Game.Root, x.Game.Executable ?? "") == ViewModel.Config.LastSelectedPath, ViewModel.Games.FirstOrDefault());
+            }
+
 
             if (ViewModel.Config.IsSetupCompleted)
                 ViewModel.SelectedTabIndex = 2; // Mods
