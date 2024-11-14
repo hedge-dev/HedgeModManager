@@ -99,9 +99,10 @@ public partial class Mods : UserControl
                 Authors.Clear();
                 return;
             }
+
             ModsList.Clear();
             Game.Game.ModDatabase.Mods
-                .Select(x => new ModEntryViewModel(x))
+                .Select(x => new ModEntryViewModel(x, DataContext as MainWindowViewModel))
                 .ToList()
                 .ForEach(ModsList.Add);
 

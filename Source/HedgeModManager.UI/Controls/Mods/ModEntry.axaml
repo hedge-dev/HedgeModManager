@@ -8,10 +8,13 @@
                       xmlns:mm="using:HedgeModManager.UI.Controls.Mods"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:vmm="using:HedgeModManager.UI.ViewModels.Mods"
-                      mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="48"
+                      mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="48"
                       x:Class="HedgeModManager.UI.Controls.Mods.ModEntry"
                       x:DataType="vmm:ModEntryViewModel"
                       Initialized="OnInitialized">
+  <Design.DataContext>
+    <vmm:ModEntryViewModel/>
+  </Design.DataContext>
   <Border Margin="0,4,0,4" Cursor="Hand" ClipToBounds="True"
           Classes.enabled="{Binding ModEnabled}" Classes.mainBorder="True"
           Height="48" CornerRadius="12" IsVisible="{Binding IsVisible}"

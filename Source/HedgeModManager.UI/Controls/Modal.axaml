@@ -24,7 +24,8 @@
     </Border>
     <Border Background="{DynamicResource Modal.BackgroundBrush}"
             BorderBrush="{DynamicResource Modal.BorderBrush}"
-            BorderThickness="1" Padding="20" CornerRadius="20"
+            BorderThickness="1" CornerRadius="20"
+            Padding="20" Margin="120"
             HorizontalAlignment="Center" VerticalAlignment="Center"
             >
       <ContentPresenter Content="{Binding Control, RelativeSource={RelativeSource AncestorType=c:Modal}}" />

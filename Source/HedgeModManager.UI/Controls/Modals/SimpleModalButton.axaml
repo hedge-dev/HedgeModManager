@@ -1,0 +1,38 @@
+<cp:ButtonUserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
+             xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:m="using:HedgeModManager.UI.Models"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="60"
+             x:Class="HedgeModManager.UI.Controls.Modals.SimpleModalButton">
+  <Border Margin="0,10,0,0" Cursor="Hand" ClipToBounds="True"
+          Height="50"
+          CornerRadius="8"
+          BorderBrush="{DynamicResource Button.BorderBrush}" BorderThickness="1"
+          PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased">
+    <Grid>
+      <TextBlock FontSize="16" Margin="8,0,8,0" Padding="20,0,20,0"
+                 Text="{Binding Text, Converter={StaticResource StringLocalizeConverter}, RelativeSource={RelativeSource AncestorType=cm:SimpleModalButton}}" 
+                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </Grid>
+    <Border.Transitions>
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.1"/>
+      </Transitions>
+    </Border.Transitions>
+    <Border.Styles>
+      <Style Selector="Border > Grid">
+        <Setter Property="Background" Value="{DynamicResource Button.BackgroundBrush}" />
+        <Style Selector="^:pointerover">
+          <Setter Property="Background" Value="{DynamicResource Button.HoverBrush}"/>
+        </Style>
+      </Style>
+      <Style Selector=":pressed Border > Grid">
+        <Setter Property="Background" Value="{DynamicResource Button.PressedBrush}"/>
+      </Style>
+    </Border.Styles>
+  </Border>
+</cp:ButtonUserControl>

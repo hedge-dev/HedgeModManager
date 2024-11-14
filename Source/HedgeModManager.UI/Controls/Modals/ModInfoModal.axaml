@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
+             xmlns:cp="using:HedgeModManager.UI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:m="using:HedgeModManager.UI.Models"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="400"
+             x:Class="HedgeModManager.UI.Controls.Modals.ModInfoModal"
+             x:DataType="vm:MainWindowViewModel"
+             Initialized="OnInitialized">
+  <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
+    <TextBlock Grid.Row="0" 
+               Text="{Binding HeaderText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
+               FontSize="32" Margin="0,0,0,4" HorizontalAlignment="Center" />
+    <cb:Separator Grid.Row="1" />
+    <TextBlock Grid.Row="2"
+               Text="{Binding ModViewModel.Mod.Description, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
+               TextWrapping="Wrap" Margin="0,16,0,16" HorizontalAlignment="Center" />
+    <StackPanel Grid.Row="3" HorizontalAlignment="Center" 
+                Spacing="16" Orientation="Horizontal">
+      <cm:SimpleModalButton Text="{Binding InfoViewModel.FavoriteButtonText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource StringLocalizeConverter}}" Click="OnFavoriteClick" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Configure}" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Update}" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Delete}" />
+    </StackPanel>
+  </Grid>
+</UserControl>

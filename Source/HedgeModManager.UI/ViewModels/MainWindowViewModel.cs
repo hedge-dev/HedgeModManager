@@ -27,6 +27,12 @@ namespace HedgeModManager.UI.ViewModels
             [new ("Loading"), new("Setup"), new("Mods"), new("Codes"), new("Settings"), new("About"), new("Test")];
         [ObservableProperty] private ObservableCollection<Modal> _modals = new ();
 
+        // Preview only
+        public MainWindowViewModel()
+        {
+
+        }
+
         public MainWindowViewModel(UILogger logger)
         {
             // Setup logger

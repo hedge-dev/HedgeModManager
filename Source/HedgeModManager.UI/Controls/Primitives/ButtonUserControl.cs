@@ -3,6 +3,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using HedgeModManager.UI.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,8 @@ namespace HedgeModManager.UI.Controls.Primitives
     [PseudoClasses(":pressed")]
     public class ButtonUserControl : UserControl
     {
-        public static readonly RoutedEvent<RoutedEventArgs> ClickEvent =
-            RoutedEvent.Register<GameSelectButton, RoutedEventArgs>(nameof(Click),
+        public static readonly RoutedEvent<ButtonClickEventArgs> ClickEvent =
+            RoutedEvent.Register<GameSelectButton, ButtonClickEventArgs>(nameof(Click),
                 RoutingStrategies.Bubble);
 
         public event EventHandler<RoutedEventArgs>? Click
@@ -34,7 +35,7 @@ namespace HedgeModManager.UI.Controls.Primitives
             if (PseudoClasses.Contains(":pressed") &&
                         this.GetVisualsAt(e.GetPosition(this))
                          .Any(c => this == c || this.IsVisualAncestorOf(c)))
-                RaiseEvent(new RoutedEventArgs(ClickEvent));
+                RaiseEvent(new ButtonClickEventArgs(ClickEvent, e));
 
             if (PseudoClasses.Contains(":pressed"))
                 PseudoClasses.Remove(":pressed");

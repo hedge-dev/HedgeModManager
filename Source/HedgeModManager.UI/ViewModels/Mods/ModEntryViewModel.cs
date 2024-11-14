@@ -22,6 +22,7 @@ namespace HedgeModManager.UI.ViewModels.Mods
         [ObservableProperty] private bool _isVisible = true;
         [ObservableProperty] private InlineCollection _modTitle = new ();
         [ObservableProperty] private InlineCollection _modAuthor = new ();
+        [ObservableProperty] private MainWindowViewModel? _mainViewModel;
 
         private Regex? _search;
 
@@ -60,9 +61,33 @@ namespace HedgeModManager.UI.ViewModels.Mods
 
         public string Authors => string.Join(", ", Mod.Authors.Select(x => x.Name));
 
-        public ModEntryViewModel(IMod mod)
+        // Preview only
+        public ModEntryViewModel()
+        {
+            Mod = new ModGeneric()
+            {
+                Title = "Mod Title",
+                Authors = new List<ModAuthor>()
+                {
+                    new ModAuthor()
+                    {
+                        Name = "Author Name"
+                    },
+                    new ModAuthor()
+                    {
+                        Name = "Author Name 2"
+                    }
+                },
+                Version = "1.0",
+                Enabled = true
+            };
+            MainViewModel = null;
+        }
+
+        public ModEntryViewModel(IMod mod, MainWindowViewModel? mainViewModel)
         {
             Mod = mod;
+            MainViewModel = mainViewModel;
         }
 
         public void UpdateSearch()
