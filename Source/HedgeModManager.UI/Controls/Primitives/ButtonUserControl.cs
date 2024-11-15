@@ -27,6 +27,7 @@ namespace HedgeModManager.UI.Controls.Primitives
 
         protected void OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
+            e.Handled = true;
             PseudoClasses.Set(":pressed", true);
         }
 

@@ -2,13 +2,14 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:c="using:HedgeModManager.UI.Controls"
                       xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+                      xmlns:cm="using:HedgeModManager.UI.Controls.Mods"
                       xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:m="using:HedgeModManager.UI.Models"
                       xmlns:mm="using:HedgeModManager.UI.Controls.Mods"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:vmm="using:HedgeModManager.UI.ViewModels.Mods"
-                      mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="48"
+                      mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="48"
                       x:Class="HedgeModManager.UI.Controls.Mods.ModEntry"
                       x:DataType="vmm:ModEntryViewModel"
                       Initialized="OnInitialized">
@@ -25,6 +26,13 @@
       <cb:TextBlock Grid.Column="1" FontSize="14" VerticalAlignment="Center" InlineSource="{Binding ModTitle}" />
       <TextBlock Grid.Column="2" FontSize="14" VerticalAlignment="Center" Inlines="{Binding ModAuthor}" />
       <TextBlock Grid.Column="3" FontSize="14" VerticalAlignment="Center" Text="{Binding Mod.Version}" />
+      <StackPanel Grid.Column="4" VerticalAlignment="Center"
+                  Orientation="Horizontal" Spacing="4"
+                  Classes.featuresStackPanel="True">
+        <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}" Enabled="{Binding HasConfig}" />
+        <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.FloppyDisk}" Enabled="{Binding HasSave}" />
+        <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Code}" Enabled="{Binding HasCode}" />
+      </StackPanel>
     </Grid>
     <Border.Transitions>
       <Transitions>

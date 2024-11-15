@@ -17,6 +17,7 @@
       <SolidColorBrush x:Key='BackgroundL0Brush'>#101018</SolidColorBrush>
       <SolidColorBrush x:Key='BackgroundL1Brush'>#12131B</SolidColorBrush>
       <SolidColorBrush x:Key='ForegroundBrush'>#A0A0C0</SolidColorBrush>
+      <SolidColorBrush x:Key='TextHoverBrush'>#E0E0E0</SolidColorBrush>
       <SolidColorBrush x:Key='BorderBrush'>#181818</SolidColorBrush>
       <SolidColorBrush x:Key='HoverBrush'>#000000</SolidColorBrush>
       
@@ -29,7 +30,9 @@
       <SolidColorBrush x:Key='Button.BorderBrush'>#202030</SolidColorBrush>
       <SolidColorBrush x:Key='Button.DisabledBrush'>#12151F</SolidColorBrush>
       <SolidColorBrush x:Key='Button.HoverBrush'>#2C2C3D</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.HoverL2Brush'>#3C3C4D</SolidColorBrush>
       <SolidColorBrush x:Key='Button.PressedBrush'>#3C3C4D</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.PressedL2Brush'>#4C4C5D</SolidColorBrush>
       <SolidColorBrush x:Key='Button.SelectedBrush'>#304060</SolidColorBrush>
       <SolidColorBrush x:Key='Button.SelectedPressedBrush'>#384868</SolidColorBrush>
 
