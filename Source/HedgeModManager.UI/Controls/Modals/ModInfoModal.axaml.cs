@@ -1,9 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using HedgeModManager.Foundation;
+using HedgeModManager.UI.Models;
+using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
 using System;
 using System.Linq;
+using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.Controls.Modals;
 
@@ -50,4 +53,39 @@ public partial class ModInfoModal : UserControl
         ModViewModel.Mod.Attributes ^= ModAttribute.Favorite;
         InfoViewModel.UpdateButtons();
     }
+
+    private void OnConfigureClick(object? sender, RoutedEventArgs e)
+    {
+        Logger.Information("Configure Clicked");
+    }
+
+    private void OnUpdateClick(object? sender, RoutedEventArgs e)
+    {
+        Logger.Information("Update Clicked");
+    }
+
+    private void OnDeleteClick(object? sender, RoutedEventArgs e)
+    {
+        var viewModel = (DataContext as MainWindowViewModel);
+        if (viewModel == null)
+            return;
+
+        var modal = new MessageBoxModal(
+            Localize("Modal.Message.DeleteMod", ModViewModel.Mod.Title));
+
+        modal.AddButton("Common.Button.Delete", (s, e) =>
+        {
+            // TODO: Delete mod
+
+            viewModel.Modals.RemoveAt(viewModel.Modals.Count - 1);
+            viewModel.Modals.RemoveAt(viewModel.Modals.Count - 1);
+        });
+        modal.AddButton("Common.Button.Cancel", (s, e) =>
+        {
+            viewModel.Modals.RemoveAt(viewModel.Modals.Count - 1);
+        });
+
+        viewModel.Modals.Add(new Modal(modal));
+    }
+
 }

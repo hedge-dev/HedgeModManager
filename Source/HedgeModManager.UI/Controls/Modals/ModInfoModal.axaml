@@ -23,9 +23,9 @@
     <StackPanel Grid.Row="3" HorizontalAlignment="Center" 
                 Spacing="16" Orientation="Horizontal">
       <cm:SimpleModalButton Text="{Binding InfoViewModel.FavoriteButtonText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource StringLocalizeConverter}}" Click="OnFavoriteClick" />
-      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Configure}" />
-      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Update}" />
-      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Delete}" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Configure}" Click="OnConfigureClick" IsEnabled="False" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Update}" IsEnabled="{Binding ModViewModel.Mod.Updater, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource NullBoolConverter}}" Click="OnUpdateClick" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Delete}" Click="OnDeleteClick" />
     </StackPanel>
   </Grid>
 </UserControl>

@@ -61,6 +61,7 @@
 
   <!-- Modal -->
   <system:String x:Key="Modal.Title.Games">Games</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.DeleteMod">Are you sure you want to delete &quot;{0}&quot;?&#x0a;This action cannot be undone!</system:String>
 
 
 </ResourceDictionary>

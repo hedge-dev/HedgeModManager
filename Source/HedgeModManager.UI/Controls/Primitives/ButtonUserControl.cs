@@ -19,7 +19,7 @@ namespace HedgeModManager.UI.Controls.Primitives
             RoutedEvent.Register<GameSelectButton, ButtonClickEventArgs>(nameof(Click),
                 RoutingStrategies.Bubble);
 
-        public event EventHandler<RoutedEventArgs>? Click
+        public event EventHandler<ButtonClickEventArgs>? Click
         {
             add => AddHandler(ClickEvent, value);
             remove => RemoveHandler(ClickEvent, value);

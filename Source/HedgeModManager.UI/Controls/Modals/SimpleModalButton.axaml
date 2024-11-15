@@ -6,9 +6,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:m="using:HedgeModManager.UI.Models"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="60"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="50"
              x:Class="HedgeModManager.UI.Controls.Modals.SimpleModalButton">
-  <Border Margin="0,10,0,0" Cursor="Hand" ClipToBounds="True"
+  <Border Cursor="Hand" ClipToBounds="True"
+          Classes.mainBorder="True"
           Height="50"
           CornerRadius="8"
           BorderBrush="{DynamicResource Button.BorderBrush}" BorderThickness="1"
@@ -24,14 +25,17 @@
       </Transitions>
     </Border.Transitions>
     <Border.Styles>
-      <Style Selector="Border > Grid">
+      <Style Selector="Border.mainBorder">
         <Setter Property="Background" Value="{DynamicResource Button.BackgroundBrush}" />
         <Style Selector="^:pointerover">
           <Setter Property="Background" Value="{DynamicResource Button.HoverBrush}"/>
         </Style>
       </Style>
-      <Style Selector=":pressed Border > Grid">
+      <Style Selector=":pressed Border.mainBorder">
         <Setter Property="Background" Value="{DynamicResource Button.PressedBrush}"/>
+      </Style>
+      <Style Selector=":disabled Border.mainBorder">
+        <Setter Property="Background" Value="{DynamicResource Button.DisabledBrush}"/>
       </Style>
     </Border.Styles>
   </Border>
