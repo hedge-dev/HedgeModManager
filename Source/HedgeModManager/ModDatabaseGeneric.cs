@@ -49,7 +49,7 @@ public class ModDatabaseGeneric : IModDatabase
         {
             if (code.Enabled)
             {
-                enabledCodes.Add(code.Name);
+                enabledCodes.Add(code.GetFullName());
             }
         }
 
@@ -102,7 +102,7 @@ public class ModDatabaseGeneric : IModDatabase
         for (int i = parsed.Codes.Count - 1; i >= 0; i--)
         {
             var enabledCode = parsed.Codes[i];
-            var codeIdx = Codes.FindIndex(c => c.Name == enabledCode);
+            var codeIdx = Codes.FindIndex(c => c.GetFullName() == enabledCode);
             if (codeIdx != -1)
             {
                 var code = Codes[codeIdx];
