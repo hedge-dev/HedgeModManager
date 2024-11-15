@@ -1,11 +1,12 @@
 ﻿namespace HedgeModManager;
 using CodeCompiler;
+using CodeCompiler.PreProcessor;
 using Foundation;
 using System.IO;
 using Text;
 using IO;
 
-public class ModDatabaseGeneric : IModDatabase
+public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
 {
     public const string DefaultDatabaseName = "ModsDB.ini";
     public const string MainCodesFileName = "Codes.hmm";
@@ -58,7 +59,7 @@ public class ModDatabaseGeneric : IModDatabase
         mainSection.SetList("FavoriteMod", favoriteMods);
         codesSection.SetList("Code", enabledCodes);
 
-        var codes = new List<CSharpCode>(Codes.Where(x => x.Enabled));
+        var codes = new List<CSharpCode>(Codes.Where(x => x.Enabled || x.Type == CodeType.Library));
         foreach (var mod in Mods)
         {
             if (mod.Enabled)
@@ -73,7 +74,7 @@ public class ModDatabaseGeneric : IModDatabase
         }
 
         await using var codeStream = File.Create(Path.Combine(Root, CompileCodesFileName));
-        await CodeProvider.CompileCodes(codes, codeStream);
+        await CodeProvider.CompileCodes(codes, codeStream, this);
         await File.WriteAllTextAsync(Path.Combine(Root, Name), ini.Serialize());
     }
 
@@ -288,6 +289,40 @@ public class ModDatabaseGeneric : IModDatabase
         }
 
         return report;
+    }
+
+    public string Resolve(string name)
+    {
+        foreach (var code in Codes)
+        {
+            if (code.Name == name)
+            {
+                return code.Body;
+            }
+        }
+
+        foreach (var mod in Mods)
+        {
+            if (!mod.Enabled)
+            {
+                continue;
+            }
+
+            if (mod.Codes != null)
+            {
+                foreach (var code in mod.Codes
+                    .Where(x => x is CSharpCode)
+                    .Cast<CSharpCode>())
+                {
+                    if (code.Name == name)
+                    {
+                        return code.Body;
+                    }
+                }
+            }
+        }
+
+        return string.Empty;
     }
 
     IReadOnlyList<ICode> IModDatabase.Codes => Codes;

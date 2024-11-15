@@ -134,6 +134,7 @@ public partial class Codes : UserControl
                 return;
             }
             Game.Game.ModDatabase.Codes
+                .Where(x => x.Type != Foundation.CodeType.Library)
                 .Select(x => new CodeEntryViewModel(x))
                 .ToList()
                 .ForEach(CodesList.Add);
