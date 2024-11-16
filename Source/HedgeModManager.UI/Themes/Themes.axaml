@@ -41,6 +41,28 @@
       <SolidColorBrush x:Key='CheckBox.PressedBrush'>#3C3C4D</SolidColorBrush>
       <SolidColorBrush x:Key='CheckBox.SelectedBrush'>#304060</SolidColorBrush>
       <SolidColorBrush x:Key='CheckBox.SelectedPressedBrush'>#384868</SolidColorBrush>
+
+      <!-- Control Themes -->
+      <SolidColorBrush x:Key="NormalBackgroundBrush">#181A25</SolidColorBrush>
+      <SolidColorBrush x:Key="PointerOverBackgroundBrush">#181A25</SolidColorBrush>
+      <SolidColorBrush x:Key="PressedBackgroundBrush">#181A25</SolidColorBrush>
+      <SolidColorBrush x:Key="NormalBorderBrush">#2C2C3D</SolidColorBrush>
+      <SolidColorBrush x:Key="PointerOverBorderBrush">#3C3C4D</SolidColorBrush>
+      <SolidColorBrush x:Key="PressedBorderBrush">#3C3C4D</SolidColorBrush>
+
+      <StaticResource x:Key="TextControlBackground" ResourceKey="NormalBackgroundBrush" />
+      <StaticResource x:Key="TextControlBackgroundPointerOver" ResourceKey="PointerOverBackgroundBrush" />
+      <StaticResource x:Key="TextControlBackgroundFocused" ResourceKey="PointerOverBackgroundBrush" />
+      <StaticResource x:Key="TextControlBorderBrush" ResourceKey="NormalBorderBrush" />
+      <StaticResource x:Key="TextControlBorderBrushPointerOver" ResourceKey="PointerOverBorderBrush" />
+      <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="PressedBorderBrush" />
+      <StaticResource x:Key="ComboBoxBackground" ResourceKey="NormalBackgroundBrush" />
+      <StaticResource x:Key="ComboBoxBackgroundPointerOver" ResourceKey="PointerOverBackgroundBrush" />
+      <StaticResource x:Key="ComboBoxBackgroundPressed" ResourceKey="PressedBackgroundBrush" />
+      <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="NormalBorderBrush" />
+      <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="PointerOverBorderBrush" />
+      <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="PressedBorderBrush" />
+
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -67,7 +89,6 @@
   <StreamGeometry x:Key='Geometry.PSCircle'>M 256 0 C 115.563 0 -1.01844e-14 115.564 0 256 C 3.78956e-14 396.436 115.563 511.998 256 511.998 C 396.437 511.998 512 396.436 512 256 C 512 115.564 396.437 0 256 0 z M 256 48 C 370.105 48 464 141.895 464 256 C 464 370.105 370.105 463.998 256 463.998 C 141.895 463.998 48 370.105 48 256 C 48 141.895 141.895 48 256 48 z M 256 113.502 C 177.567 113.502 113.502 177.567 113.502 256 C 113.502 334.433 177.567 398.498 256 398.498 C 334.433 398.498 398.498 334.433 398.498 256 C 398.498 177.567 334.433 113.502 256 113.502 z M 256 158.498 C 310.116 158.498 353.502 201.884 353.502 256 C 353.502 310.116 310.116 353.502 256 353.502 C 201.884 353.502 158.496 310.116 158.496 256 C 158.496 201.884 201.884 158.498 256 158.498 z</StreamGeometry>
   <StreamGeometry x:Key='Geometry.PSSquare'>M 256 0 C 115.563 0 0 115.563 0 256 C 0 396.437 115.563 512 256 512 C 396.437 512 512 396.437 512 256 C 512 115.563 396.437 0 256 0 z M 256 48 C 370.105 48 464 141.895 464 256 C 464 370.105 370.105 464 256 464 C 141.895 464 48 370.105 48 256 C 48 141.895 141.895 48 256 48 z M 151 128.5 A 22.5026 22.5026 0 0 0 128.5 151 L 128.5 361 A 22.5026 22.5026 0 0 0 151 383.5 L 361 383.5 A 22.5026 22.5026 0 0 0 383.5 361 L 383.5 151 A 22.5026 22.5026 0 0 0 361 128.5 L 151 128.5 z M 173.5 173.5 L 338.498 173.5 L 338.498 338.5 L 173.5 338.5 L 173.5 173.5 z</StreamGeometry>
   <StreamGeometry x:Key='Geometry.PSTriangle'>M 256 0 C 115.564 1.89478e-14 1.8469e-14 115.563 0 256 C 9.47389e-14 396.437 115.564 512 256 512 C 396.437 512 511.998 396.437 511.998 256 C 511.998 115.563 396.437 0 256 0 z M 256 48 C 370.105 48 463.998 141.895 463.998 256 C 463.998 370.105 370.105 464 256 464 C 141.895 464 48 370.105 48 256 C 48 141.895 141.895 48 256 48 z M 256 128.672 A 22.3333 22.3333 0 0 0 236.811 139.578 L 111.811 349.578 A 22.3333 22.3333 0 0 0 131 383.332 L 381 383.332 A 22.3333 22.3333 0 0 0 400.188 349.578 L 275.188 139.578 A 22.3333 22.3333 0 0 0 256 128.672 z M 256 194.658 L 341.719 338.67 L 170.279 338.67 L 256 194.658 z</StreamGeometry>
-
 
   <ControlTheme x:Key="{x:Type Window}" TargetType="Window">
     <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>

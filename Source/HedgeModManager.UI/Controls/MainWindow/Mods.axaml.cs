@@ -47,6 +47,8 @@ public partial class Mods : UserControl
         var viewModel = (DataContext as MainWindowViewModel);
         if (viewModel == null)
             return;
+     
+        AuthorComboBox.SelectedIndex = 0;
 
         // Add buttons
         if (viewModel.CurrentTabInfo != null)
@@ -107,13 +109,14 @@ public partial class Mods : UserControl
                 .ForEach(ModsList.Add);
 
             Authors.Clear();
-            Authors.Add("");
+            Authors.Add("Show All");
             Game.Game.ModDatabase.Mods
                 .SelectMany(x => x.Authors)
                 .Select(x => x.Name)
                 .Distinct()
                 .ToList()
                 .ForEach(Authors.Add);
+            AuthorComboBox.SelectedIndex = 0;
         }
 
         if (change.Property == SearchProperty)

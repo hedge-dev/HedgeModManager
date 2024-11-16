@@ -13,17 +13,23 @@
              x:DataType="vm:MainWindowViewModel"
              Loaded="OnLoaded">
   <Border Margin="12">
-    <Grid RowDefinitions="Auto,Auto,*">
-      <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="50,2*,*,*,*">
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="" />
-        <TextBlock Grid.Row="0" Grid.Column="1" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="{DynamicResource Mods.Text.Name}" />
-        <TextBlock Grid.Row="0" Grid.Column="2" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="{DynamicResource Mods.Text.Author}" />
-        
-        <TextBox Watermark="Search" Text="{Binding Search, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Margin="0,4,8,16" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1" />
-        <ComboBox ItemsSource="{Binding Authors, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Margin="0,4,8,0" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="2" SelectionChanged="OnAuthorSelectionChanged" />
+    <Grid RowDefinitions="Auto,*">
+      <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="50,2*,*,*,*">        
+        <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Watermark="Search Mods..."
+                 FontSize="14" Height="28"
+                 Text="{Binding Search, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"
+                 Margin="16,8,8,0"
+                 VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+        <ComboBox x:Name="AuthorComboBox"
+                  Grid.Row="0" Grid.Column="2"
+                  FontSize="14"
+                  ItemsSource="{Binding Authors, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"
+                  Margin="0,8,8,0"
+                  VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                  SelectionChanged="OnAuthorSelectionChanged" />
 
         <Border Grid.Row="0" Grid.Column="4" Grid.RowSpan="2"
-                Margin="0,0,16,0" Height="48"
+                Margin="0,0,16,8" Height="48"
                 CornerRadius="8" BorderThickness="1"
                 VerticalAlignment="Center"
                 Background="{DynamicResource Button.BackgroundBrush}"
