@@ -23,7 +23,7 @@
         <ComboBox x:Name="AuthorComboBox"
                   Grid.Row="0" Grid.Column="2"
                   FontSize="14"
-                  ItemsSource="{Binding Authors, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"
+                  ItemsSource="{Binding ModsViewModel.Authors, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"
                   Margin="0,8,8,0"
                   VerticalAlignment="Center" HorizontalAlignment="Stretch"
                   SelectionChanged="OnAuthorSelectionChanged" />
@@ -37,19 +37,21 @@
           <Grid>
             <StackPanel VerticalAlignment="Center"
                         Orientation="Horizontal" Spacing="4">
-              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}" Enabled="True" />
-              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.FloppyDisk}" Enabled="True" />
-              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Code}" Enabled="True" />
+              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}" Enabled="{Binding ModsViewModel.ShowConfig, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Click="OnFilterClick" />
+              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.FloppyDisk}" Enabled="{Binding ModsViewModel.ShowSave, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Click="OnFilterClick" />
+              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Code}" Enabled="{Binding ModsViewModel.ShowCode, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Click="OnFilterClick" />
             </StackPanel>
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center"
                         Orientation="Horizontal" Spacing="4">
-              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.StarSolid}" Enabled="True" />
+              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.StarSolid}"
+                                        Fill="{DynamicResource Mods.FavoriteBrush}"
+                                        Enabled="{Binding ModsViewModel.ShowFavorite, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"  Click="OnFilterClick" />
             </StackPanel>
           </Grid>
         </Border>
       </Grid>
       <ScrollViewer Grid.Row="2">
-        <ItemsControl ItemsSource="{Binding ModsList, RelativeSource={RelativeSource AncestorType=cmw:Mods}}">
+        <ItemsControl ItemsSource="{Binding ModsViewModel.ModsList, RelativeSource={RelativeSource AncestorType=cmw:Mods}}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <mm:ModEntry />

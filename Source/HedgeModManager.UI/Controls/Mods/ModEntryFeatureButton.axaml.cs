@@ -1,7 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using HedgeModManager.UI.Controls.Primitives;
+using System;
 
 namespace HedgeModManager.UI.Controls.Mods;
 
@@ -11,7 +13,11 @@ public partial class ModEntryFeatureButton : ButtonUserControl
         AvaloniaProperty.Register<ModEntryFeatureButton, Geometry?>(nameof(Icon));
 
     public static readonly StyledProperty<bool> EnabledProperty =
-        AvaloniaProperty.Register<ModEntryFeatureButton, bool>(nameof(Enabled));
+        AvaloniaProperty.Register<ModEntryFeatureButton, bool>(nameof(Enabled), 
+            defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+
+    public static readonly StyledProperty<IBrush?> FillProperty =
+        AvaloniaProperty.Register<ModEntryFeatureButton, IBrush?>(nameof(Fill));
 
     public Geometry? Icon
     {
@@ -25,9 +31,21 @@ public partial class ModEntryFeatureButton : ButtonUserControl
         set => SetValue(EnabledProperty, value);
     }
 
+    public IBrush? Fill
+    {
+        get => GetValue(FillProperty);
+        set => SetValue(FillProperty, value);
+    }
+
     public ModEntryFeatureButton()
     {
         InitializeComponent();
+    }
+
+    private void OnInitialized(object? sender, EventArgs e)
+    {
+        if (Fill == null)
+            Fill = App.GetResource<ImmutableSolidColorBrush>("ForegroundBrush");
         if (Design.IsDesignMode)
             Icon = App.GetResource<Geometry>("Geometry.Gear");
     }

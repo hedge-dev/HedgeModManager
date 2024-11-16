@@ -17,10 +17,17 @@ namespace HedgeModManager.UI
         public static readonly string ApplicationCompany = "NeverFinishAnything";
         public static readonly string ApplicationName = "HedgeModManager";
 
+        public static T? GetStyleResource<T>(string key, StyledElement element)
+        {
+            object? resource = null;
+            element.TryFindResource(key, element.ActualThemeVariant, out resource);
+            return resource is T result ? result : default;
+        }
+
         public static T? GetResource<T>(string key)
         {
             object? resource = null;
-            Current?.TryFindResource(key, out resource);
+            Current?.TryFindResource(key, Current.ActualThemeVariant, out resource);
             return resource is T result ? result : default;
         }
 

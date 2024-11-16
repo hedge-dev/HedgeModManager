@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using HedgeModManager.UI.Controls.Mods;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
@@ -33,13 +34,19 @@ public partial class Mods : UserControl
         set => SetValue(SearchProperty, value);
     }
 
-    public ObservableCollection<string> Authors { get; set; } = new();
-
-    public ObservableCollection<ModEntryViewModel> ModsList { get; set; } = new();
+    public ModsViewModel ModsViewModel { get; set; } = new();
 
     public Mods()
     {
         InitializeComponent();
+    }
+
+    private void OnFilterClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is ModEntryFeatureButton button)
+        {
+            button.Enabled = !button.Enabled;
+        }
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -79,12 +86,12 @@ public partial class Mods : UserControl
         {
             if (comboBox.SelectedIndex <= 0)
             {
-                foreach (var mod in ModsList)
+                foreach (var mod in ModsViewModel.ModsList)
                     mod.IsFiltered = false;
             }
             else
             {
-                foreach (var mod in ModsList)
+                foreach (var mod in ModsViewModel.ModsList)
                     mod.IsFiltered = !mod.Mod.Authors
                         .Any(x => x.Name == comboBox.SelectedItem as string);
             }
@@ -97,25 +104,25 @@ public partial class Mods : UserControl
         {
             if (Game == null)
             {
-                ModsList.Clear();
-                Authors.Clear();
+                ModsViewModel.ModsList.Clear();
+                ModsViewModel.Authors.Clear();
                 return;
             }
 
-            ModsList.Clear();
+            ModsViewModel.ModsList.Clear();
             Game.Game.ModDatabase.Mods
                 .Select(x => new ModEntryViewModel(x, DataContext as MainWindowViewModel))
                 .ToList()
-                .ForEach(ModsList.Add);
+                .ForEach(ModsViewModel.ModsList.Add);
 
-            Authors.Clear();
-            Authors.Add("Show All");
+            ModsViewModel.Authors.Clear();
+            ModsViewModel.Authors.Add("Show All");
             Game.Game.ModDatabase.Mods
                 .SelectMany(x => x.Authors)
                 .Select(x => x.Name)
                 .Distinct()
                 .ToList()
-                .ForEach(Authors.Add);
+                .ForEach(ModsViewModel.Authors.Add);
             AuthorComboBox.SelectedIndex = 0;
         }
 
@@ -123,19 +130,19 @@ public partial class Mods : UserControl
         {
             if (string.IsNullOrEmpty(Search))
             {
-                foreach (var mod in ModsList)
+                foreach (var mod in ModsViewModel.ModsList)
                     mod.Search = null;
             } else
             {
                 try
                 {
                     var regex = new Regex(Search, RegexOptions.IgnoreCase);
-                    foreach (var mod in ModsList)
+                    foreach (var mod in ModsViewModel.ModsList)
                         mod.Search = regex;
                 }
                 catch
                 {
-                    foreach (var mod in ModsList)
+                    foreach (var mod in ModsViewModel.ModsList)
                         mod.Search = null;
                 }
             }

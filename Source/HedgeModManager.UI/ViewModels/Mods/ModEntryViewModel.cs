@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.Foundation;
@@ -28,6 +29,7 @@ namespace HedgeModManager.UI.ViewModels.Mods
         [ObservableProperty] private InlineCollection _modAuthor = new ();
         [ObservableProperty] private MainWindowViewModel? _mainViewModel;
         [ObservableProperty] private Geometry? _favoriteGeometry;
+        [ObservableProperty] private IBrush? _favoriteBrush;
 
         private Regex? _search;
 
@@ -49,6 +51,18 @@ namespace HedgeModManager.UI.ViewModels.Mods
             set
             {
                 _isFiltered = value;
+                UpdateSearch();
+            }
+        }
+
+        private bool _isFeatureFiltered;
+
+        public bool IsFeatureFiltered
+        {
+            get => _isFeatureFiltered;
+            set
+            {
+                _isFeatureFiltered = value;
                 UpdateSearch();
             }
         }
@@ -109,6 +123,8 @@ namespace HedgeModManager.UI.ViewModels.Mods
 
             FavoriteGeometry = Mod.Attributes.HasFlag(ModAttribute.Favorite) 
                 ? GeometryStarSolid : GeometryStarOutline;
+            FavoriteBrush = App.GetResource<ImmutableSolidColorBrush>(Mod.Attributes.HasFlag(ModAttribute.Favorite)
+                ? "Mods.FavoriteBrush" : "ForegroundBrush");
         }
 
         public void UpdateSearch()
@@ -147,7 +163,7 @@ namespace HedgeModManager.UI.ViewModels.Mods
                 bool hasMatch = false;
                 hasMatch |= updateInlines(ModTitle, Search, Mod.Title);
                 hasMatch |= updateInlines(ModAuthor, Search, Authors);
-                IsVisible = hasMatch && !IsFiltered;
+                IsVisible = hasMatch && !IsFiltered && !IsFeatureFiltered;
             });
         }
 

@@ -42,6 +42,9 @@
       <SolidColorBrush x:Key='CheckBox.SelectedBrush'>#304060</SolidColorBrush>
       <SolidColorBrush x:Key='CheckBox.SelectedPressedBrush'>#384868</SolidColorBrush>
 
+      <SolidColorBrush x:Key='Mods.FavoriteBrush'>#FFC861</SolidColorBrush>
+      
+      
       <!-- Control Themes -->
       <SolidColorBrush x:Key="NormalBackgroundBrush">#181A25</SolidColorBrush>
       <SolidColorBrush x:Key="PointerOverBackgroundBrush">#181A25</SolidColorBrush>
@@ -56,6 +59,7 @@
       <StaticResource x:Key="TextControlBorderBrush" ResourceKey="NormalBorderBrush" />
       <StaticResource x:Key="TextControlBorderBrushPointerOver" ResourceKey="PointerOverBorderBrush" />
       <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="PressedBorderBrush" />
+      <StaticResource x:Key="ComboBoxForeground" ResourceKey="ForegroundBrush" />
       <StaticResource x:Key="ComboBoxBackground" ResourceKey="NormalBackgroundBrush" />
       <StaticResource x:Key="ComboBoxBackgroundPointerOver" ResourceKey="PointerOverBackgroundBrush" />
       <StaticResource x:Key="ComboBoxBackgroundPressed" ResourceKey="PressedBackgroundBrush" />

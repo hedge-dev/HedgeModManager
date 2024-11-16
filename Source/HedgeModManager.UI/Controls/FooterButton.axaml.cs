@@ -62,7 +62,8 @@ public partial class FooterButton : ButtonUserControl
         {
             Click += (s, e) => button.RaisePressed();
 
-            Bind(IconProperty, Resources.GetResourceObservable(ButtonMappingPS[button.Button]));
+            if (ButtonMappingPS.ContainsKey(button.Button))
+                Bind(IconProperty, Resources.GetResourceObservable(ButtonMappingPS[button.Button]));
         }
     }
 
@@ -70,7 +71,7 @@ public partial class FooterButton : ButtonUserControl
     {
         if (change.Property == ButtonProperty)
         {
-            if (DataContext is TabInfo.TabButton button)
+            if (DataContext is TabInfo.TabButton button && ButtonMappingPS.ContainsKey(button.Button))
                 Bind(IconProperty, Resources.GetResourceObservable(ButtonMappingPS[button.Button]));
         }
 

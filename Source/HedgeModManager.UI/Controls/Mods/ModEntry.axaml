@@ -35,7 +35,9 @@
       <StackPanel Grid.Column="4" Margin="0,0,16,0"
                   HorizontalAlignment="Right" VerticalAlignment="Center"
                   Orientation="Horizontal" Spacing="4">
-        <cm:ModEntryFeatureButton Icon="{Binding FavoriteGeometry}" Enabled="True" Click="OnFavoriteClick" />
+        <cm:ModEntryFeatureButton Icon="{Binding FavoriteGeometry}"
+                                  Fill="{Binding FavoriteBrush}"
+                                  Enabled="True" Click="OnFavoriteClick" />
       </StackPanel>
     </Grid>
     <Border.Transitions>
