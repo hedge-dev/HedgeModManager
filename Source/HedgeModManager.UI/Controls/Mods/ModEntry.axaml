@@ -9,7 +9,7 @@
                       xmlns:mm="using:HedgeModManager.UI.Controls.Mods"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:vmm="using:HedgeModManager.UI.ViewModels.Mods"
-                      mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="48"
+                      mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="48"
                       x:Class="HedgeModManager.UI.Controls.Mods.ModEntry"
                       x:DataType="vmm:ModEntryViewModel"
                       Initialized="OnInitialized">
@@ -27,11 +27,15 @@
       <TextBlock Grid.Column="2" FontSize="14" VerticalAlignment="Center" Inlines="{Binding ModAuthor}" />
       <TextBlock Grid.Column="3" FontSize="14" VerticalAlignment="Center" Text="{Binding Mod.Version}" />
       <StackPanel Grid.Column="4" VerticalAlignment="Center"
-                  Orientation="Horizontal" Spacing="4"
-                  Classes.featuresStackPanel="True">
+                  Orientation="Horizontal" Spacing="4">
         <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}" Enabled="{Binding HasConfig}" />
         <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.FloppyDisk}" Enabled="{Binding HasSave}" />
         <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Code}" Enabled="{Binding HasCode}" />
+      </StackPanel>
+      <StackPanel Grid.Column="4" Margin="0,0,16,0"
+                  HorizontalAlignment="Right" VerticalAlignment="Center"
+                  Orientation="Horizontal" Spacing="4">
+        <cm:ModEntryFeatureButton Icon="{Binding FavoriteGeometry}" Enabled="True" Click="OnFavoriteClick" />
       </StackPanel>
     </Grid>
     <Border.Transitions>

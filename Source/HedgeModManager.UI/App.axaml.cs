@@ -1,8 +1,10 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.Views;
 using System;
@@ -14,6 +16,13 @@ namespace HedgeModManager.UI
     {
         public static readonly string ApplicationCompany = "NeverFinishAnything";
         public static readonly string ApplicationName = "HedgeModManager";
+
+        public static T? GetResource<T>(string key)
+        {
+            object? resource = null;
+            Current?.TryFindResource(key, out resource);
+            return resource is T result ? result : default;
+        }
 
         public override void Initialize()
         {

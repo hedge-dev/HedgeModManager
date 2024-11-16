@@ -7,13 +7,13 @@ namespace HedgeModManager.UI.Controls.Mods;
 
 public partial class ModEntryFeatureButton : ButtonUserControl
 {
-    public static readonly StyledProperty<Geometry> IconProperty =
-        AvaloniaProperty.Register<ModEntryFeatureButton, Geometry>(nameof(Icon));
+    public static readonly StyledProperty<Geometry?> IconProperty =
+        AvaloniaProperty.Register<ModEntryFeatureButton, Geometry?>(nameof(Icon));
 
     public static readonly StyledProperty<bool> EnabledProperty =
         AvaloniaProperty.Register<ModEntryFeatureButton, bool>(nameof(Enabled));
 
-    public Geometry Icon
+    public Geometry? Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
@@ -29,11 +29,6 @@ public partial class ModEntryFeatureButton : ButtonUserControl
     {
         InitializeComponent();
         if (Design.IsDesignMode)
-        {
-            object? icon = null;
-            Application.Current?.TryFindResource("Geometry.Gear", out icon);
-            if (icon is Geometry geometry)
-                Icon = geometry;
-        }
+            Icon = App.GetResource<Geometry>("Geometry.Gear");
     }
 }

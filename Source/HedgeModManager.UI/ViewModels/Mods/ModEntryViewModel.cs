@@ -18,11 +18,16 @@ namespace HedgeModManager.UI.ViewModels.Mods
 {
     public partial class ModEntryViewModel : ViewModelBase
     {
+
+        public Geometry? GeometryStarSolid = App.GetResource<Geometry>("Geometry.StarSolid");
+        public Geometry? GeometryStarOutline = App.GetResource<Geometry>("Geometry.StarOutline");
+
         [ObservableProperty] private IMod _mod;
         [ObservableProperty] private bool _isVisible = true;
         [ObservableProperty] private InlineCollection _modTitle = new ();
         [ObservableProperty] private InlineCollection _modAuthor = new ();
         [ObservableProperty] private MainWindowViewModel? _mainViewModel;
+        [ObservableProperty] private Geometry? _favoriteGeometry;
 
         private Regex? _search;
 
@@ -85,12 +90,25 @@ namespace HedgeModManager.UI.ViewModels.Mods
                 Enabled = true
             };
             MainViewModel = null;
+            UpdateFavorite(null);
         }
 
         public ModEntryViewModel(IMod mod, MainWindowViewModel? mainViewModel)
         {
             Mod = mod;
             MainViewModel = mainViewModel;
+            UpdateFavorite(null);
+        }
+
+        public void UpdateFavorite(bool? favorite)
+        {
+            if (favorite == true)
+                Mod.Attributes |= ModAttribute.Favorite;
+            else if (favorite == false)
+                Mod.Attributes &= ~ModAttribute.Favorite;
+
+            FavoriteGeometry = Mod.Attributes.HasFlag(ModAttribute.Favorite) 
+                ? GeometryStarSolid : GeometryStarOutline;
         }
 
         public void UpdateSearch()

@@ -15,7 +15,7 @@
           Width="48" Height="48"
           CornerRadius="12"
           PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased">
-      <Viewbox Stretch="Uniform" Width="26" Height="26" VerticalAlignment="Center">
+      <Viewbox Stretch="Uniform" Width="24" Height="24" VerticalAlignment="Center">
         <Path Data="{Binding Icon, RelativeSource={RelativeSource AncestorType=cm:ModEntryFeatureButton}}">
           <Path.Transitions>
             <Transitions>
@@ -31,7 +31,7 @@
     </Border.Transitions>
     <Border.Styles>
       <Style Selector="Border.buttonBorder">
-        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Opacity" Value="0.3" />
         <Setter Property="Background" Value="#00000000" />
         <Style Selector="^:pointerover">
           <Setter Property="Background" Value="{DynamicResource Button.HoverL2Brush}"/>

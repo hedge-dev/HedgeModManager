@@ -1,24 +1,11 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Input;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media;
-using Avalonia.VisualTree;
-using CommunityToolkit.Mvvm.ComponentModel;
-using HedgeModManager.Foundation;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Controls.Primitives;
 using HedgeModManager.UI.Events;
-using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels.Mods;
 using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Xml.Linq;
-using Tmds.DBus.SourceGenerator;
-using ValveKeyValue;
 
 namespace HedgeModManager.UI.Controls.Mods;
 
@@ -47,6 +34,15 @@ public partial class ModEntry : ButtonUserControl
                 viewModel.ModEnabled = !viewModel.ModEnabled;
             else if (e.MouseButton == MouseButton.Right && viewModel.MainViewModel != null)
                 viewModel.MainViewModel.Modals.Add(new Modal(new ModInfoModal(viewModel)));
+        }
+    }
+
+    public void OnFavoriteClick(object? sender, ButtonClickEventArgs e)
+    {
+        if (DataContext is ModEntryViewModel viewModel)
+        {
+            viewModel.UpdateFavorite(!viewModel.Mod.Attributes.HasFlag(Foundation.ModAttribute.Favorite));
+            e.Handled = true;
         }
     }
 

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:HedgeModManager.UI.Controls"
              xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cm="using:HedgeModManager.UI.Controls.Mods"
              xmlns:cmw="using:HedgeModManager.UI.Controls.MainWindow"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mm="using:HedgeModManager.UI.Controls.Mods"
@@ -13,15 +14,33 @@
              Loaded="OnLoaded">
   <Border Margin="12">
     <Grid RowDefinitions="Auto,Auto,*">
-      <Grid Margin="0,4,0,8" Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="50,2*,*,*,*">
+      <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="50,2*,*,*,*">
         <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="" />
         <TextBlock Grid.Row="0" Grid.Column="1" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="{DynamicResource Mods.Text.Name}" />
         <TextBlock Grid.Row="0" Grid.Column="2" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="{DynamicResource Mods.Text.Author}" />
-        <TextBlock Grid.Row="0" Grid.Column="3" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="{DynamicResource Mods.Text.Version}" />
-        <TextBlock Grid.Row="0" Grid.Column="4" Margin="0,8,0,4" FontSize="14" FontWeight="Bold" Text="{DynamicResource Mods.Text.Features}" />
         
-        <TextBox Watermark="Search" Text="{Binding Search, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Margin="0,0,8,0" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1" />
-        <ComboBox ItemsSource="{Binding Authors, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Margin="0,0,8,0" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="2" SelectionChanged="OnAuthorSelectionChanged" />
+        <TextBox Watermark="Search" Text="{Binding Search, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Margin="0,4,8,16" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1" />
+        <ComboBox ItemsSource="{Binding Authors, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Margin="0,4,8,0" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="2" SelectionChanged="OnAuthorSelectionChanged" />
+
+        <Border Grid.Row="0" Grid.Column="4" Grid.RowSpan="2"
+                Margin="0,0,16,0" Height="48"
+                CornerRadius="8" BorderThickness="1"
+                VerticalAlignment="Center"
+                Background="{DynamicResource Button.BackgroundBrush}"
+                BorderBrush="{DynamicResource Button.BorderBrush}">
+          <Grid>
+            <StackPanel VerticalAlignment="Center"
+                        Orientation="Horizontal" Spacing="4">
+              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}" Enabled="True" />
+              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.FloppyDisk}" Enabled="True" />
+              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Code}" Enabled="True" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Orientation="Horizontal" Spacing="4">
+              <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.StarSolid}" Enabled="True" />
+            </StackPanel>
+          </Grid>
+        </Border>
       </Grid>
       <ScrollViewer Grid.Row="2">
         <ItemsControl ItemsSource="{Binding ModsList, RelativeSource={RelativeSource AncestorType=cmw:Mods}}">
