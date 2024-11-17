@@ -4,7 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
+             mc:Ignorable="d" d:DesignWidth="920" d:DesignHeight="390"
              x:Class="HedgeModManager.UI.Controls.MainWindow.Test"
              x:DataType="vm:MainWindowViewModel"
              Loaded="OnLoaded">
@@ -46,7 +46,7 @@
         <Button Click="ExportLog_Click">Export</Button>
         <Button Click="ClearLog_Click">Clear</Button>
       </StackPanel>
-      <Border Grid.Row="1" Width="600" VerticalAlignment="Stretch"
+      <Border Grid.Row="1" Width="800" VerticalAlignment="Stretch"
               BorderThickness="1" Padding="8"
               BorderBrush="{DynamicResource BorderBrush}">
         <ScrollViewer>

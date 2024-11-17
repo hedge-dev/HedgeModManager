@@ -70,7 +70,7 @@ public partial class ModInfoModal : UserControl
         if (viewModel == null)
             return;
 
-        var modal = new MessageBoxModal(
+        var modal = new MessageBoxModal("Modal.Title.Confirm",
             Localize("Modal.Message.DeleteMod", ModViewModel.Mod.Title));
 
         modal.AddButton("Common.Button.Delete", (s, e) =>
@@ -85,7 +85,7 @@ public partial class ModInfoModal : UserControl
             viewModel.Modals.RemoveAt(viewModel.Modals.Count - 1);
         });
 
-        viewModel.Modals.Add(new Modal(modal));
+        modal.Open(viewModel);
     }
 
 }

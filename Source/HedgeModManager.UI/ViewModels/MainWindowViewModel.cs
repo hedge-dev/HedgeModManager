@@ -1,12 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.UI.Config;
 using HedgeModManager.UI.Controls;
+using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.ViewModels
@@ -76,16 +78,36 @@ namespace HedgeModManager.UI.ViewModels
 
         public async Task Save()
         {
-            await Config.SaveAsync();
-            if (SelectedGame != null)
+            try
             {
-                if (!SelectedGame.Game.IsModLoaderInstalled())
-                    await SelectedGame.Game.InstallModLoaderAsync();
-                await SelectedGame.Game.ModDatabase.Save();
-
-                if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)
-                    await config.Save(Path.Combine(SelectedGame.Game.Root, "cpkredir.ini"));
+                await Config.SaveAsync();
+                if (SelectedGame != null)
+                {
+                    if (!SelectedGame.Game.IsModLoaderInstalled())
+                        await SelectedGame.Game.InstallModLoaderAsync();
+                    try
+                    {
+                        await SelectedGame.Game.ModDatabase.Save();
+                        if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)
+                            await config.Save(Path.Combine(SelectedGame.Game.Root, "cpkredir.ini"));
+                    }
+                    catch (UnauthorizedAccessException e)
+                    {
+                        MessageBoxModal.CreateOK("Modal.Title.SaveError", "Modal.Message.GameNoAccess").Open(this);
+                        Logger.Error(e);
+                        Logger.Error("Failed to save mod database and config");
+                        return;
+                    }
+                }
             }
+            catch (Exception e)
+            {
+                MessageBoxModal.CreateOK("Modal.Title.SaveError", "Modal.Message.UnknownSaveError").Open(this);
+                Logger.Error(e);
+                Logger.Error("Failed to save");
+                return;
+            }
+            Logger.Information("Saved");
         }
 
         public async Task RunGame()
@@ -105,11 +127,6 @@ namespace HedgeModManager.UI.ViewModels
             Logger.Debug("Entered setup");
             Config.IsSetupCompleted = false;
             SelectedTabIndex = 1;
-        }
-
-        public void OnLoad()
-        {
-
         }
 
         protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
