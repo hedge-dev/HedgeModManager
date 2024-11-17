@@ -63,6 +63,7 @@ namespace HedgeModManager.UI.Config
             string jsonData = JsonSerializer.Serialize(this, options);
             try
             {
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
                 await File.WriteAllTextAsync(filePath, jsonData);
             }
             catch
