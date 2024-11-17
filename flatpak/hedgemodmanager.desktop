@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Hedge Mod Manager
+Exec=/app/bin/HedgeModManager.UI
+Type=Application
+Icon=io.github.hedge_dev.hedgemodmanager
+Categories=Game;
+Comment=A mod manager for Hedgehog Engine games on PC.

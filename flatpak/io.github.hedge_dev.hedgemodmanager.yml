@@ -1,4 +1,4 @@
-app-id: moe.ss16.hedgemodmanager
+app-id: io.github.hedge_dev.hedgemodmanager
 runtime: org.freedesktop.Platform
 runtime-version: "24.08"
 sdk: org.freedesktop.Sdk
@@ -12,14 +12,14 @@ build-options:
 command: /app/bin/HedgeModManager.UI
 finish-args:
   - --socket=x11
-#  - --socket=wayland
-#  - --socket=fallback-x11
-  - --filesystem=host
-  - --device=all
+  - --filesystem=~/.steam
+  - --filesystem=xdg-data
+  - --filesystem=/media
+  - --filesystem=/run/media
+  - --filesystem=/mnt
+  - --device=dri
   - --share=ipc
-  - --talk-name=org.freedesktop.DBus
   - --env=DOTNET_ROOT=/app/lib/dotnet
-  - --system-talk-name=org.freedesktop.portal.Desktop
 
 modules:
   - name: dotnet
@@ -38,3 +38,16 @@ modules:
       - dotnet publish Source/HedgeModManager.UI/HedgeModManager.UI.csproj -c Release --no-self-contained --source ./nuget-sources
       - mkdir -p ${FLATPAK_DEST}/bin
       - cp -r Source/HedgeModManager.UI/bin/Release/net8.0/publish/* ${FLATPAK_DEST}/bin
+  - name: metadata
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 hedgemodmanager.png /app/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png
+      - install -Dm644 hedgemodmanager.desktop /app/share/applications/${FLATPAK_ID}.desktop
+      - install -Dm644 hedgemodmanager.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
+    sources:
+      - type: file
+        path: hedgemodmanager.png
+      - type: file
+        path: hedgemodmanager.desktop
+      - type: file
+        path: hedgemodmanager.metainfo.xml

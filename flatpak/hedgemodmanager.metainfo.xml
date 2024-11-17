@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.hedge_dev.hedgemodmanager</id>
+  
+  <name>Hedge Mod Manager</name>
+  <summary>A mod manager for Hedgehog Engine games on PC.</summary>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  
+  <description>
+    <p>
+      A mod manager for Hedgehog Engine games on PC.
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">io.github.hedge_dev.hedgemodmanager.desktop</launchable>
+</component>
