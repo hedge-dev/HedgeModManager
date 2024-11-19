@@ -2,8 +2,8 @@
 using HedgeModManager.Foundation;
 using HedgeModManager.Properties;
 using HedgeModManager.Steam;
+using System.IO;
 using System.IO.Compression;
-using System.IO.Pipes;
 
 public class LinuxCompatibility
 {
@@ -33,7 +33,7 @@ public class LinuxCompatibility
     /// Installs the .NET runtime to the prefix
     /// </summary>
     /// <param name="path">Path to the prefix root directory</param>
-    public static bool InstallRuntimeToPrefix(string? path)
+    public static async Task<bool> InstallRuntimeToPrefix(string? path)
     {
         Logger.Debug($"Installing .NET runtime to {path}");
         if (path == null)
@@ -41,30 +41,50 @@ public class LinuxCompatibility
             return false;
         }
 
-        string cDrive = Path.Combine(path, "drive_c");
-        using var stream = new MemoryStream(Resources.dotnetFrameworkRuntime);
-        using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
-
-        foreach (var entry in archive.Entries)
+        // Download runtime
+        Logger.Information($"Downloading .NET runtime");
+        var client = new HttpClient();
+        var response = await client.GetAsync(Resources.DotnetDownloadURL);
+        if (!response.IsSuccessStatusCode)
         {
-            string destinationPath = Path.Combine(cDrive, entry.FullName);
-
-            if (entry.FullName.EndsWith('/'))
-            {
-                Directory.CreateDirectory(destinationPath);
-                continue;
-            }
-
-            // Try delete first
-            if (File.Exists(destinationPath))
-            {
-                File.Delete(destinationPath);
-            }
-
-            entry.ExtractToFile(destinationPath, true);
+            Logger.Error($"Failed to download runtime. Code: {response.StatusCode}");
+            return false;
         }
 
-        Logger.Debug($"Extracted .NET runtime");
+        string cDrive = Path.Combine(path, "drive_c");
+        using var outputStream = new MemoryStream();
+        using var inputStream = await response.Content.ReadAsStreamAsync();
+        await inputStream.CopyToAsync(outputStream);
+        Logger.Information($"Installing .NET runtime");
+
+        Logger.Debug($"Downloaded {outputStream.Position} bytes");
+        outputStream.Position = 0;
+        using var archive = new ZipArchive(outputStream, ZipArchiveMode.Read);
+        Logger.Debug("Opened zip");
+
+        await Task.Run(() =>
+        {
+            foreach (var entry in archive.Entries)
+            {
+                string destinationPath = Path.Combine(cDrive, entry.FullName);
+
+                if (entry.FullName.EndsWith('/'))
+                {
+                    Directory.CreateDirectory(destinationPath);
+                    continue;
+                }
+
+                // Try delete first
+                if (File.Exists(destinationPath))
+                {
+                    File.Delete(destinationPath);
+                }
+
+                entry.ExtractToFile(destinationPath, true);
+            }
+            Logger.Debug($"Extracted .NET runtime");
+        });
+
         return true;
     }
 

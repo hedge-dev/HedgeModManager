@@ -44,8 +44,8 @@ namespace HedgeModManager.UI.ViewModels
             {
                 if (logger.Logs.Count == 0)
                     return;
-                LastLog = logger.Logs
-                .LastOrDefault(x => x.Type != LogType.Debug)!.Message;
+                var lastLog = logger.Logs.LastOrDefault(x => x.Type != LogType.Debug);
+                LastLog = lastLog == null ? "" : lastLog.Message;
             };
             Logger.Information($"Starting HedgeModManager {AppVersion}...");
             Logger.Debug($"IsWindows: {OperatingSystem.IsWindows()}");
@@ -83,8 +83,6 @@ namespace HedgeModManager.UI.ViewModels
                 await Config.SaveAsync();
                 if (SelectedGame != null)
                 {
-                    if (!SelectedGame.Game.IsModLoaderInstalled())
-                        await SelectedGame.Game.InstallModLoaderAsync();
                     try
                     {
                         await SelectedGame.Game.ModDatabase.Save();
@@ -98,6 +96,10 @@ namespace HedgeModManager.UI.ViewModels
                         Logger.Error("Failed to save mod database and config");
                         return;
                     }
+                    if (!SelectedGame.Game.IsModLoaderInstalled())
+                        await SelectedGame.Game.InstallModLoaderAsync();
+                    else
+                        Logger.Information("Saved");
                 }
             }
             catch (Exception e)
@@ -107,7 +109,6 @@ namespace HedgeModManager.UI.ViewModels
                 Logger.Error("Failed to save");
                 return;
             }
-            Logger.Information("Saved");
         }
 
         public async Task RunGame()

@@ -174,6 +174,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
 
         if (!Directory.Exists(directory))
         {
+            Logger.Debug($"Mods directory \"{directory}\" does not exist");
             return counter;
         }
 

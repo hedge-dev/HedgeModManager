@@ -12,6 +12,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "SonicGenerations",
+            ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             PlatformInfos = new()
@@ -22,6 +23,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "SonicLostWorld",
+            ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("329440", "slw.exe") } }
@@ -29,6 +31,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "SonicForces",
+            ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("637100", Path.Combine("build", "main", "projects", "exec", "Sonic Forces.exe")) } }
@@ -36,6 +39,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "PuyoPuyoTetris2",
+            ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "dinput8.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("1259790", "PuyoPuyoTetris2.exe") } }
@@ -43,6 +47,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "Tokyo2020",
+            ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "dinput8.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("981890", "musashi.exe") } }
@@ -50,6 +55,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "SonicColorsUltimate",
+            ModLoaderName = "RainbowModLoader",
             ModLoaderFileName = "d3d11.dll",
             ModLoaderDownloadURL = Resources.RMLDownloadURL,
             PlatformInfos = new()
@@ -61,6 +67,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "SonicOrigins",
+            ModLoaderName = "HiteModLoader",
             ModLoaderFileName = "dinput8.dll",
             ModLoaderDownloadURL = Resources.HMLDownloadURL,
             PlatformInfos = new()
@@ -72,6 +79,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "SonicFrontiers",
+            ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new()
@@ -83,6 +91,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "SonicGenerations2024",
+            ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new()
@@ -94,6 +103,7 @@ public class ModdableGameLocator
         new ()
         {
             ID = "ShadowGenerations",
+            ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new()
@@ -121,6 +131,7 @@ public class ModdableGameLocator
                         Name = gameInfo.ID,
                         Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, platformInfo.Executable))!,
                         Executable = platformInfo.Executable,
+                        ModLoaderName = gameInfo.ModLoaderName ?? "None",
                         ModLoaderFileName = gameInfo.ModLoaderFileName,
                         ModLoaderDownloadURL = gameInfo.ModLoaderDownloadURL
                     });
@@ -134,6 +145,7 @@ public class ModdableGameLocator
     public class GameInfo
     {
         public required string ID { get; init; }
+        public string? ModLoaderName { get; init; }
         public string? ModLoaderFileName { get; init; }
         public string? ModLoaderDownloadURL { get; init; }
         public required Dictionary<string, GamePlatformInfo> PlatformInfos { get; init; }
