@@ -1,17 +1,24 @@
 using Avalonia;
 using Avalonia.Controls.Metadata;
 using Avalonia.Input;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Controls.Primitives;
 using HedgeModManager.UI.Events;
 using HedgeModManager.UI.ViewModels.Mods;
 using System;
+using System.Linq;
 
 namespace HedgeModManager.UI.Controls.Mods;
 
 [PseudoClasses(":enabled")]
 public partial class ModEntry : ButtonUserControl
 {
+
+    public DispatcherTimer? HoldTimer;
+    public bool HoldPointerOver = false;
+    public bool HoldHandled = false;
 
     public ModEntry()
     {
@@ -21,9 +28,24 @@ public partial class ModEntry : ButtonUserControl
     private void OnInitialized(object? sender, EventArgs e)
     {
         Click += (s, e) => OnClick(s, (ButtonClickEventArgs)e);
-
         if (DataContext is ModEntryViewModel viewModel)
+        {
+            HoldTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            HoldTimer.Tick += (sender, e) =>
+            {
+                HoldTimer.Stop();
+                if (HoldPointerOver)
+                { 
+                    viewModel.MainViewModel?.Modals.Add(new Modal(new ModInfoModal(viewModel)));
+                    HoldHandled = true;
+                }
+            };
+
             viewModel.UpdateSearch();
+        }
     }
 
     public void OnClick(object? sender, ButtonClickEventArgs e)
@@ -34,6 +56,35 @@ public partial class ModEntry : ButtonUserControl
                 viewModel.ModEnabled = !viewModel.ModEnabled;
             else if (e.MouseButton == MouseButton.Right && viewModel.MainViewModel != null)
                 viewModel.MainViewModel.Modals.Add(new Modal(new ModInfoModal(viewModel)));
+        }
+    }
+
+    public new void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        HoldPointerOver = true;
+        HoldHandled = false;
+        HoldTimer?.Start();
+        base.OnPointerPressed(sender, e);
+    }
+
+    public new void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        HoldTimer?.Stop();
+        e.Handled = HoldHandled;
+        base.OnPointerReleased(sender, e);
+    }
+
+    public void OnPointerExited(object? sender, PointerEventArgs e)
+    {
+        HoldTimer?.Stop();
+    }
+
+    public void OnPointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (HoldTimer != null)
+        {
+            HoldPointerOver = this.GetVisualsAt(e.GetPosition(this))
+                .Any(c => this == c || this.IsVisualAncestorOf(c));
         }
     }
 

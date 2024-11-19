@@ -20,9 +20,10 @@
           Classes.enabled="{Binding ModEnabled}" Classes.mainBorder="True"
           Height="48" CornerRadius="12" IsVisible="{Binding IsVisible}"
           BorderBrush="{DynamicResource Button.BorderBrush}" BorderThickness="1"
-          PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased">
+          PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased"
+          PointerExited="OnPointerExited" PointerMoved="OnPointerMoved">
     <Grid ColumnDefinitions="50,2*,*,*,*">
-      <cb:CheckBox x:Name="ModEnableCheckbox" Grid.Column="0" Margin="10,0,0,0" VerticalAlignment="Center" IsChecked="{Binding ModEnabled}" />
+      <cb:CheckBox x:Name="ModEnableCheckbox" Grid.Column="0" Margin="10,0,0,0" VerticalAlignment="Center" IsEnabled="False" IsChecked="{Binding ModEnabled}" />
       <cb:TextBlock Grid.Column="1" FontSize="14" VerticalAlignment="Center" InlineSource="{Binding ModTitle}" />
       <TextBlock Grid.Column="2" FontSize="14" VerticalAlignment="Center" Inlines="{Binding ModAuthor}" />
       <TextBlock Grid.Column="3" FontSize="14" VerticalAlignment="Center" Text="{Binding Mod.Version}" />

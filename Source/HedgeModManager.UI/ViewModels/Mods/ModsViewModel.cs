@@ -11,6 +11,7 @@ namespace HedgeModManager.UI.ViewModels.Mods
         [ObservableProperty] private bool _showSave = false;
         [ObservableProperty] private bool _showCode = false;
         [ObservableProperty] private bool _showFavorite = false;
+        [ObservableProperty] private bool _hasMods = false;
 
         public ObservableCollection<string> Authors { get; set; } = new();
         public ObservableCollection<ModEntryViewModel> ModsList { get; set; } = new();

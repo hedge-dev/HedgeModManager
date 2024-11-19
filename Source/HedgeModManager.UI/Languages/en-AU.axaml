@@ -50,6 +50,7 @@
   <system:String x:Key="Mods.Button.Configure"  >Configure</system:String>
   <system:String x:Key="Mods.Button.Update"     >Update</system:String>
   <system:String x:Key="Mods.Button.Delete"     >Delete</system:String>
+  <system:String xml:space="preserve" x:Key="Mods.Text.NoMods">..There is not a lot here.&#x0a;Go get some mods!</system:String>
 
   <!-- Codes -->
   <system:String x:Key="Codes.Button.UpdateCodes">Update Community Codes</system:String>

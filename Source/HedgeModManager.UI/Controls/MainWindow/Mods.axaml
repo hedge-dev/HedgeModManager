@@ -59,6 +59,11 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </ScrollViewer>
+      <TextBlock Grid.Row="2"
+                 Text="{DynamicResource Mods.Text.NoMods}"
+                 FontSize="14" TextAlignment="Center"
+                 VerticalAlignment="Center"
+                 IsVisible="{Binding ModsViewModel.HasMods, RelativeSource={RelativeSource AncestorType=cmw:Mods}, Converter={StaticResource InvertedBoolConverter}}"/>
     </Grid>
   </Border>
 </UserControl>

@@ -33,10 +33,12 @@ namespace HedgeModManager.UI.Controls.Primitives
 
         protected void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
         {
+            bool wasHandled = e.Handled;
             e.Handled = true;
             if (PseudoClasses.Contains(":pressed") &&
                         this.GetVisualsAt(e.GetPosition(this))
-                         .Any(c => this == c || this.IsVisualAncestorOf(c)))
+                         .Any(c => this == c || this.IsVisualAncestorOf(c)) &&
+                         !wasHandled)
                 RaiseEvent(new ButtonClickEventArgs(ClickEvent, e));
 
             if (PseudoClasses.Contains(":pressed"))

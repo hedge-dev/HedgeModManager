@@ -6,7 +6,6 @@ using HedgeModManager.UI.Controls.Mods;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -39,6 +38,37 @@ public partial class Mods : UserControl
     public Mods()
     {
         InitializeComponent();
+
+        // Hide text while initialising
+        ModsViewModel.HasMods = true;
+    }
+
+    public void UpdateModList()
+    {
+        if (Game == null)
+        {
+            ModsViewModel.ModsList.Clear();
+            ModsViewModel.Authors.Clear();
+            ModsViewModel.HasMods = false;
+            return;
+        }
+
+        ModsViewModel.ModsList.Clear();
+        Game.Game.ModDatabase.Mods
+            .Select(x => new ModEntryViewModel(x, DataContext as MainWindowViewModel))
+            .ToList()
+            .ForEach(ModsViewModel.ModsList.Add);
+        ModsViewModel.HasMods = ModsViewModel.ModsList.Count != 0;
+
+        ModsViewModel.Authors.Clear();
+        ModsViewModel.Authors.Add("Show All");
+        Game.Game.ModDatabase.Mods
+            .SelectMany(x => x.Authors)
+            .Select(x => x.Name)
+            .Distinct()
+            .ToList()
+            .ForEach(ModsViewModel.Authors.Add);
+        AuthorComboBox.SelectedIndex = 0;
     }
 
     private void OnFilterClick(object? sender, RoutedEventArgs e)
@@ -54,7 +84,7 @@ public partial class Mods : UserControl
         var viewModel = (DataContext as MainWindowViewModel);
         if (viewModel == null)
             return;
-     
+
         AuthorComboBox.SelectedIndex = 0;
 
         // Add buttons
@@ -102,28 +132,7 @@ public partial class Mods : UserControl
     {
         if (change.Property == GameProperty)
         {
-            if (Game == null)
-            {
-                ModsViewModel.ModsList.Clear();
-                ModsViewModel.Authors.Clear();
-                return;
-            }
-
-            ModsViewModel.ModsList.Clear();
-            Game.Game.ModDatabase.Mods
-                .Select(x => new ModEntryViewModel(x, DataContext as MainWindowViewModel))
-                .ToList()
-                .ForEach(ModsViewModel.ModsList.Add);
-
-            ModsViewModel.Authors.Clear();
-            ModsViewModel.Authors.Add("Show All");
-            Game.Game.ModDatabase.Mods
-                .SelectMany(x => x.Authors)
-                .Select(x => x.Name)
-                .Distinct()
-                .ToList()
-                .ForEach(ModsViewModel.Authors.Add);
-            AuthorComboBox.SelectedIndex = 0;
+            UpdateModList();
         }
 
         if (change.Property == SearchProperty)
