@@ -1,0 +1,71 @@
+name: Build Project
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ui
+#      - main
+
+env:
+  PROJECT_PATH: ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj
+  FLATPAK_ID: io.github.hedge_dev.hedgemodmanager
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rid: [linux-x64, win-x64]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      
+      - name: Restore packages
+        run: dotnet restore ${{env.PROJECT_PATH}}
+
+      - name: ${{matrix.rid}} Build
+        run: dotnet publish -r ${{matrix.rid}} -c Release -o ./output/${{matrix.rid}} ${{env.PROJECT_PATH}}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: HedgeModManager-${{matrix.rid}}
+          path: ./output/${{matrix.rid}}
+  build-flatpak:
+    name: Build Flatpak
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:gnome-44
+      options: --privileged
+    strategy:
+      matrix:
+        arch: [x86_64]
+  
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Build Flatpak
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: ${{env.FLATPAK_ID}}.flatpak
+          manifest-path: ./flatpak/${{env.FLATPAK_ID}}.yml
+          cache-key: flatpak-builder-${{github.sha}}
+          arch: ${{matrix.arch}}
+          upload-artifact: false
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HedgeModManager-flatpak-${{matrix.arch}}
+          path: ./${{env.FLATPAK_ID}}.flatpak
