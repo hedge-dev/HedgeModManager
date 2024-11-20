@@ -2,13 +2,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:HedgeModManager.UI.Controls"
              xmlns:ca="using:HedgeModManager.UI.Controls.About"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
              mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
              x:Class="HedgeModManager.UI.Controls.About.About"
+             x:DataType="vm:MainWindowViewModel"
              Loaded="OnLoaded">
-  <Grid RowDefinitions="Auto,Auto"
+  <Grid RowDefinitions="Auto,Auto,Auto"
         HorizontalAlignment="Center" VerticalAlignment="Center">
     <StackPanel Margin="0,0,0,8" HorizontalAlignment="Center">
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -23,22 +25,57 @@
       <TextBlock Text="{DynamicResource About.Program.Sub}" HorizontalAlignment="Center" />
     </StackPanel>
     <Grid Grid.Row="1">
-      <StackPanel>
-        <Grid ColumnDefinitions="Auto,Auto">
-          <StackPanel Grid.Column="0">
-            <TextBlock Text="SuperSonic16" />
-            <TextBlock Text="Sajid" />
-            <TextBlock Text="Kandda" />
-            <TextBlock Text="LJSTAR" />
-          </StackPanel>
-          <StackPanel  Grid.Column="1">
-            <TextBlock Text="Main Developer" />
-            <TextBlock Text="Main Developer" />
-            <TextBlock Text="Design" />
-            <TextBlock Text="Icons" />
-          </StackPanel>
-        </Grid>
+      <StackPanel Orientation="Horizontal"
+                  Spacing="16" Margin="0,8,0,0"
+                  HorizontalAlignment="Center">
+        <cb:GroupBox Header="{DynamicResource About.Header.Authors}">
+          <cb:GroupBox.Data>
+            <Grid ColumnDefinitions="Auto,Auto">
+              <StackPanel Grid.Column="0" Margin="8,2,8,2">
+                <TextBlock Text="SuperSonic16" />
+                <TextBlock Text="Sajid" />
+                <TextBlock Text="Kandda" />
+                <TextBlock Text="LJSTAR" />
+              </StackPanel>
+              <StackPanel  Grid.Column="1" Margin="8,2,8,2">
+                <TextBlock Text="Main Developer" />
+                <TextBlock Text="Main Developer" />
+                <TextBlock Text="Design" />
+                <TextBlock Text="Icons" />
+              </StackPanel>
+            </Grid>
+          </cb:GroupBox.Data>
+        </cb:GroupBox>
+        <cb:GroupBox Header="{DynamicResource About.Header.Translators}">
+          <cb:GroupBox.Data>
+            <Grid ColumnDefinitions="Auto,Auto">
+              <StackPanel Grid.Column="0" Margin="8,2,8,2">
+                <TextBlock Text="Placeholder" />
+              </StackPanel>
+              <StackPanel  Grid.Column="1" Margin="8,2,8,2">
+                <TextBlock Text="Placeholder" />
+              </StackPanel>
+            </Grid>
+          </cb:GroupBox.Data>
+        </cb:GroupBox>
       </StackPanel>
     </Grid>
+    <cb:GroupBox Header="{DynamicResource About.Header.SupportedGames}"
+             Grid.Row="2"
+                 Margin="0,8,0,0">
+      <cb:GroupBox.Data>
+        <Grid ColumnDefinitions="Auto,Auto">
+          <StackPanel Grid.Column="0" Margin="8,2,8,2">
+            <ItemsControl ItemsSource="{Binding Games}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding LocalizeID, Converter={StaticResource StringLocalizeConverter}}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Grid>
+      </cb:GroupBox.Data>
+    </cb:GroupBox>
   </Grid>
 </UserControl>

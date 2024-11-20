@@ -59,6 +59,9 @@
   <!-- About -->
   <system:String x:Key="About.Program.Sub"  >Requires legally owned copies of the supported games.</system:String>
   <system:String x:Key="About.Button.GitHub">GitHub</system:String>
+  <system:String x:Key="About.Header.Authors">Authors and Contributors</system:String>
+  <system:String x:Key="About.Header.Translators">Translation Roles</system:String>
+  <system:String x:Key="About.Header.SupportedGames">Supported Games</system:String>
 
   <!-- Modal -->
   <system:String x:Key="Modal.Button.ExportLog">Save Log File</system:String>
