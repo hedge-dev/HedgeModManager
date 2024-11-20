@@ -66,8 +66,8 @@
       </StackPanel>
       <StackPanel Margin="0,0,0,16" VerticalAlignment="Bottom">
         <StackPanel>
-          <c:SidebarButton Type="Normal" Click="OnSaveClicked" Icon="{DynamicResource Geometry.FloppyDisk}" />
-          <c:SidebarButton Type="Normal" Click="OnRunClicked" Icon="{DynamicResource Geometry.Play}" />
+          <c:SidebarButton Type="Normal" Click="OnSaveClicked" Icon="{DynamicResource Geometry.FloppyDisk}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
+          <c:SidebarButton Type="Normal" Click="OnRunClicked" Icon="{DynamicResource Geometry.Play}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
         </StackPanel>
         <TextBlock Text="{Binding AppVersion}" Margin="0,16,0,0" HorizontalAlignment="Center" />
       </StackPanel>

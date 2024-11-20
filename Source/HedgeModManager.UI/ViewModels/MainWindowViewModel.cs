@@ -1,14 +1,18 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Platform.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.UI.Config;
 using HedgeModManager.UI.Controls;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.ViewModels
@@ -28,6 +32,7 @@ namespace HedgeModManager.UI.ViewModels
         [ObservableProperty] private TabInfo[] _tabInfos = 
             [new ("Loading"), new("Setup"), new("Mods"), new("Codes"), new("Settings"), new("About"), new("Test")];
         [ObservableProperty] private ObservableCollection<Modal> _modals = new ();
+        [ObservableProperty] private bool _isBusy = true;
 
         // Preview only
         public MainWindowViewModel()
@@ -76,8 +81,10 @@ namespace HedgeModManager.UI.ViewModels
             Logger.Information($"Found {game.ModDatabase.Mods.Count} mods");
         }
 
-        public async Task Save()
+        public async Task Save(bool setBusy = true)
         {
+            if (setBusy)
+                IsBusy = true;
             try
             {
                 await Config.SaveAsync();
@@ -91,9 +98,9 @@ namespace HedgeModManager.UI.ViewModels
                     }
                     catch (UnauthorizedAccessException e)
                     {
-                        MessageBoxModal.CreateOK("Modal.Title.SaveError", "Modal.Message.GameNoAccess").Open(this);
-                        Logger.Error(e);
-                        Logger.Error("Failed to save mod database and config");
+                        OpenErrorMessage("Modal.Title.SaveError", "Modal.Message.GameNoAccess",
+                            "Failed to save mod database and config", e);
+                        IsBusy = false;
                         return;
                     }
                     if (!SelectedGame.Game.IsModLoaderInstalled())
@@ -104,23 +111,42 @@ namespace HedgeModManager.UI.ViewModels
             }
             catch (Exception e)
             {
+                OpenErrorMessage("Modal.Title.SaveError", "Modal.Message.UnknownSaveError",
+                    "Failed to save", e);
+
                 MessageBoxModal.CreateOK("Modal.Title.SaveError", "Modal.Message.UnknownSaveError").Open(this);
                 Logger.Error(e);
                 Logger.Error("Failed to save");
-                return;
             }
+            if (setBusy)
+                IsBusy = false;
         }
 
         public async Task RunGame()
         {
             if (SelectedGame != null)
-                await SelectedGame.Game.Run(null, true);
+            {
+                try
+                {
+                    await SelectedGame.Game.Run(null, true);
+                    // Add delay
+                    await Task.Delay(5000);
+                }
+                catch (Exception e)
+                {
+                    OpenErrorMessage("Modal.Title.RunError", "Modal.Message.UnknownRunError",
+                        "Failed to run game", e);
+                }
+
+            }
         }
 
         public async Task SaveAndRun()
         {
-            await Save();
+            IsBusy = true;
+            await Save(false);
             await RunGame();
+            IsBusy = false;
         }
 
         public void StartSetup()
@@ -128,6 +154,51 @@ namespace HedgeModManager.UI.ViewModels
             Logger.Debug("Entered setup");
             Config.IsSetupCompleted = false;
             SelectedTabIndex = 1;
+        }
+
+        public void OpenErrorMessage(string title, string message, string logMessage, Exception? exception = null)
+        {
+            if (exception != null)
+                Logger.Error(exception);
+            Logger.Error(logMessage);
+            var messageBox = new MessageBoxModal(title, message);
+            messageBox.AddButton("Common.Button.OK", (s, e) => messageBox.Close());
+            messageBox.AddButton("Modal.Button.ExportLog", async (s, e) =>
+            {
+                await ExportLog(messageBox);
+                messageBox.Close();
+            });
+            messageBox.Open(this);
+        }
+
+        public async Task ExportLog(Visual visual)
+        {
+            string log = UILogger.Export();
+
+            var topLevel = TopLevel.GetTopLevel(visual);
+            if (topLevel == null)
+                return;
+
+            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new()
+            {
+                Title = "Save Log File",
+                SuggestedFileName = "HedgeModManager.log",
+                DefaultExtension = ".log",
+                FileTypeChoices = new List<FilePickerFileType>()
+                {
+                    new("Log Files")
+                    {
+                        Patterns = new List<string>() { "*.log" },
+                        MimeTypes = new List<string>() { "text/plain" }
+                    }
+                }
+            });
+
+            if (file != null)
+            {
+                using var stream = await file.OpenWriteAsync();
+                await stream.WriteAsync(Encoding.Default.GetBytes(log));
+            }
         }
 
         protected override async void OnPropertyChanged(PropertyChangedEventArgs e)

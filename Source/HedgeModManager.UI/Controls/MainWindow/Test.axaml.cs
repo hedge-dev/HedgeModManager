@@ -169,32 +169,8 @@ public partial class Test : UserControl
 
     private async void ExportLog_Click(object? sender, RoutedEventArgs e)
     {
-        string log = UILogger.Export();
-
-        var topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel == null)
-            return;
-
-        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new()
-        {
-            Title = "Save Log File",
-            SuggestedFileName = "HedgeModManager.log",
-            DefaultExtension = ".log",
-            FileTypeChoices = new List<FilePickerFileType>()
-            {
-                new("Log Files")
-                {
-                    Patterns = new List<string>() { "*.log" },
-                    MimeTypes = new List<string>() { "text/plain" }
-                }
-            }
-        });
-
-        if (file != null)
-        {
-            using var stream = await file.OpenWriteAsync();
-            stream.Write(Encoding.Default.GetBytes(log));
-        }
+        if (DataContext is MainWindowViewModel viewModel)
+            await viewModel.ExportLog(this);
     }
 
 

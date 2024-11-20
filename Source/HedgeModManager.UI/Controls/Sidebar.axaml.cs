@@ -1,14 +1,10 @@
 using Avalonia;
-using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,9 +19,9 @@ public partial class Sidebar : UserControl
             defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<bool> IsSetupCompletedProperty =
-    AvaloniaProperty.Register<Sidebar, bool>(
-        nameof(IsSetupCompleted),
-        defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<Sidebar, bool>(
+            nameof(IsSetupCompleted),
+            defaultBindingMode: BindingMode.TwoWay);
 
     public int SelectedTabIndex
     {
@@ -47,21 +43,9 @@ public partial class Sidebar : UserControl
     public void UpdateButtons(List<Control> buttons, bool checkVisible = true)
     {
         // Update button layout
-        var enabledButtons = buttons.Where(x => x.IsVisible).ToList();
-        for (int i = 0; i < enabledButtons.Count; ++i)
-        {
-            if (enabledButtons[i] is SidebarButton button)
-            {
-                //button.Order = i switch
-                //{
-                //    0 => SidebarButton.ButtonOrder.Top,
-                //    _ when i == enabledButtons.Count - 1 => SidebarButton.ButtonOrder.Bottom,
-                //    _ => SidebarButton.ButtonOrder.Middle
-                //};
-                button.Order = SidebarButton.ButtonOrder.Normal;
+        for (int i = 0; i < buttons.Count; ++i)
+            if (buttons[i] is SidebarButton button)
                 button.IsSelected = SelectedTabIndex == buttons.IndexOf(button);
-            }
-        };
     }
 
     private void OnTabChanged(object? sender, RoutedEventArgs e)
@@ -95,7 +79,6 @@ public partial class Sidebar : UserControl
             await viewModel.SaveAndRun();
         }
     }
-
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {

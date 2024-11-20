@@ -5,10 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using HedgeModManager.UI.Events;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.Controls.Primitives
 {

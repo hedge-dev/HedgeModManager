@@ -49,6 +49,7 @@ namespace HedgeModManager.UI.Views
                 ViewModel.SelectedTabIndex = 2; // Mods
             else
                 ViewModel.SelectedTabIndex = 1; // Setup
+            ViewModel.IsBusy = false;
         }
 
         private void OnTabChanged(object? sender, SelectionChangedEventArgs e)
