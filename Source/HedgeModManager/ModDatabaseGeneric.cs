@@ -292,6 +292,18 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         return report;
     }
 
+    public bool DeleteMod(ModGeneric mod)
+    {
+        if (!Mods.Contains(mod))
+        {
+            return false;
+        }
+
+        Mods.Remove(mod);
+        Directory.Delete(mod.Root, true);
+        return true;
+    }
+
     public string Resolve(string name)
     {
         foreach (var code in Codes)

@@ -38,9 +38,6 @@ public partial class Mods : UserControl
     public Mods()
     {
         InitializeComponent();
-
-        // Hide text while initialising
-        ModsViewModel.HasMods = true;
     }
 
     public void UpdateModList()
@@ -49,16 +46,15 @@ public partial class Mods : UserControl
         {
             ModsViewModel.ModsList.Clear();
             ModsViewModel.Authors.Clear();
-            ModsViewModel.HasMods = false;
+            ModsViewModel.UpdateText();
             return;
         }
 
         ModsViewModel.ModsList.Clear();
         Game.Game.ModDatabase.Mods
-            .Select(x => new ModEntryViewModel(x, DataContext as MainWindowViewModel))
+            .Select(x => new ModEntryViewModel(x, DataContext as MainWindowViewModel, ModsViewModel))
             .ToList()
             .ForEach(ModsViewModel.ModsList.Add);
-        ModsViewModel.HasMods = ModsViewModel.ModsList.Count != 0;
 
         ModsViewModel.Authors.Clear();
         ModsViewModel.Authors.Add("Show All");
@@ -69,6 +65,7 @@ public partial class Mods : UserControl
             .ToList()
             .ForEach(ModsViewModel.Authors.Add);
         AuthorComboBox.SelectedIndex = 0;
+        ModsViewModel.UpdateText();
     }
 
     private void OnFilterClick(object? sender, RoutedEventArgs e)
@@ -125,6 +122,7 @@ public partial class Mods : UserControl
                     mod.IsFiltered = !mod.Mod.Authors
                         .Any(x => x.Name == comboBox.SelectedItem as string);
             }
+            ModsViewModel.UpdateText();
         }
     }
 
@@ -155,6 +153,7 @@ public partial class Mods : UserControl
                         mod.Search = null;
                 }
             }
+            ModsViewModel.UpdateText();
         }
 
         base.OnPropertyChanged(change);

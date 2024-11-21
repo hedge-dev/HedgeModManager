@@ -57,28 +57,35 @@ namespace HedgeModManager.UI.ViewModels
             Logger.Debug($"IsLinux: {OperatingSystem.IsLinux()}");
         }
 
-        public async Task OnGameChange()
+        public async Task LoadGame()
         {
-            if (SelectedGame == null || SelectedGame.Game == null)
+            try
             {
-                Logger.Error($"Selected game is null! Returning to setup");
-                // Return to setup if game is missing
-                StartSetup();
-                return;
+                if (SelectedGame == null || SelectedGame.Game == null)
+                    return;
+
+                var game = SelectedGame.Game;
+
+                Logger.Debug($"Selected game:");
+                Logger.Debug($"    ID: {game.ID}");
+                Logger.Debug($"  Name: {game.Name}");
+                Logger.Debug($"  Plat: {game.Platform}");
+                Logger.Debug($"  Root: {game.Root}");
+                Logger.Debug($"  Exec: {game.Executable}");
+                Logger.Debug($"  N OS: {game.NativeOS}");
+                await game.InitializeAsync();
+                Logger.Debug($"Initialised game");
+
+                Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
+
+                Logger.Information($"Found {game.ModDatabase.Mods.Count} mods");
+            }
+            catch (Exception e)
+            {
+                OpenErrorMessage("Modal.Title.LoadError", "Modal.Message.GameLoadError",
+                    "Failed to load game/mod data", e);
             }
 
-            var game = SelectedGame.Game;
-
-            Logger.Debug($"Selected game changed:");
-            Logger.Debug($"    {game.Name} - {game.Platform}");
-            Logger.Debug($"    {game.Root}");
-            Logger.Debug($"    {game.Executable}");
-            await game.InitializeAsync();
-            Logger.Debug($"Initialised game");
-
-            Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
-
-            Logger.Information($"Found {game.ModDatabase.Mods.Count} mods");
         }
 
         public async Task Save(bool setBusy = true)
@@ -204,7 +211,7 @@ namespace HedgeModManager.UI.ViewModels
         protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(SelectedGame))
-                await OnGameChange();
+                await LoadGame();
             base.OnPropertyChanged(e);
         }
     }

@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using HedgeModManager.Foundation;
-using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
 using System;
@@ -66,7 +65,7 @@ public partial class ModInfoModal : UserControl
 
     private void OnDeleteClick(object? sender, RoutedEventArgs e)
     {
-        var viewModel = (DataContext as MainWindowViewModel);
+        var viewModel = DataContext as MainWindowViewModel;
         if (viewModel == null)
             return;
 
@@ -75,7 +74,13 @@ public partial class ModInfoModal : UserControl
 
         modal.AddButton("Common.Button.Delete", (s, e) =>
         {
-            // TODO: Delete mod
+            if (ModViewModel.Mod is ModGeneric mod)
+            {
+                var database = viewModel.SelectedGame?.Game.ModDatabase as ModDatabaseGeneric;
+                database?.DeleteMod(mod);
+                ModViewModel.ModsViewModel?.ModsList.Remove(ModViewModel);
+                ModViewModel.ModsViewModel?.UpdateText();
+            }
 
             viewModel.Modals.RemoveAt(viewModel.Modals.Count - 1);
             viewModel.Modals.RemoveAt(viewModel.Modals.Count - 1);

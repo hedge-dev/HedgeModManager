@@ -10,7 +10,6 @@ namespace HedgeModManager.UI.Views
 {
     public partial class MainWindow : Window
     {
-
         public MainWindowViewModel? ViewModel => (MainWindowViewModel?)DataContext;
 
         public MainWindow()
@@ -41,9 +40,9 @@ namespace HedgeModManager.UI.Views
             {
                 // Select the last selected game or first game
                 ViewModel.SelectedGame = ViewModel.Games
-                    .FirstOrDefault(x => x != null && Path.Combine(x.Game.Root, x.Game.Executable ?? "") == ViewModel.Config.LastSelectedPath, ViewModel.Games.FirstOrDefault());
+                    .FirstOrDefault(x => x != null && Path.Combine(x.Game.Root, x.Game.Executable ?? "")
+                    == ViewModel.Config.LastSelectedPath, ViewModel.Games.FirstOrDefault());
             }
-
 
             if (ViewModel.Config.IsSetupCompleted)
                 ViewModel.SelectedTabIndex = 2; // Mods
@@ -70,6 +69,12 @@ namespace HedgeModManager.UI.Views
                 case Key.F3:
                     ViewModel.Config.TestModeEnabled = !ViewModel.Config.TestModeEnabled;
                     Logger.Debug($"Set test mode to {ViewModel.Config.TestModeEnabled}");
+                    break;
+                case Key.F5:
+                    var game = ViewModel.SelectedGame;
+                    ViewModel.SelectedGame = null;
+                    ViewModel.SelectedGame = game;
+                    Logger.Debug($"Refreshed game");
                     break;
                 default:
                     break;

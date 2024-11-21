@@ -28,6 +28,7 @@ namespace HedgeModManager.UI.ViewModels.Mods
         [ObservableProperty] private InlineCollection _modTitle = new ();
         [ObservableProperty] private InlineCollection _modAuthor = new ();
         [ObservableProperty] private MainWindowViewModel? _mainViewModel;
+        [ObservableProperty] private ModsViewModel? _modsViewModel;
         [ObservableProperty] private Geometry? _favoriteGeometry;
         [ObservableProperty] private IBrush? _favoriteBrush;
 
@@ -107,10 +108,11 @@ namespace HedgeModManager.UI.ViewModels.Mods
             UpdateFavorite(null);
         }
 
-        public ModEntryViewModel(IMod mod, MainWindowViewModel? mainViewModel)
+        public ModEntryViewModel(IMod mod, MainWindowViewModel? mainViewModel, ModsViewModel? modsViewModel)
         {
             Mod = mod;
             MainViewModel = mainViewModel;
+            _modsViewModel = modsViewModel;
             UpdateFavorite(null);
         }
 

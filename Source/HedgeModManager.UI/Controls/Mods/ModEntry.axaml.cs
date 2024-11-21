@@ -27,12 +27,12 @@ public partial class ModEntry : ButtonUserControl
 
     private void OnInitialized(object? sender, EventArgs e)
     {
-        Click += (s, e) => OnClick(s, (ButtonClickEventArgs)e);
+        Click += OnClick;
         if (DataContext is ModEntryViewModel viewModel)
         {
             HoldTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(1)
+                Interval = TimeSpan.FromMilliseconds(500)
             };
             HoldTimer.Tick += (sender, e) =>
             {

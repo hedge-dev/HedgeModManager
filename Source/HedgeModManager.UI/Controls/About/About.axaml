@@ -36,11 +36,13 @@
                 <TextBlock Text="Sajid" />
                 <TextBlock Text="Kandda" />
                 <TextBlock Text="LJSTAR" />
+                <TextBlock Text="Font Awesome" />
               </StackPanel>
               <StackPanel  Grid.Column="1" Margin="8,2,8,2">
                 <TextBlock Text="Main Developer" />
                 <TextBlock Text="Main Developer" />
                 <TextBlock Text="Design" />
+                <TextBlock Text="Icons" />
                 <TextBlock Text="Icons" />
               </StackPanel>
             </Grid>

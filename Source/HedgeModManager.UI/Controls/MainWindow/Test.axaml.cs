@@ -2,11 +2,8 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Platform.Storage;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.ViewModels;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HedgeModManager.UI.Controls.MainWindow;
 
@@ -136,11 +133,15 @@ public partial class Test : UserControl
             await viewModel.SelectedGame.Game.ModDatabase.Save();
     }
 
-    private async void LoadGame_Click(object? sender, RoutedEventArgs e)
+    private void LoadGame_Click(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is MainWindowViewModel viewModel
-            && viewModel.SelectedGame != null)
-            await viewModel.SelectedGame.Game.InitializeAsync();
+        // Trigger game load
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            var game = viewModel.SelectedGame;
+            viewModel.SelectedGame = null;
+            viewModel.SelectedGame = game;
+        }
     }
 
     private async void RunGame_Click(object? sender, RoutedEventArgs e)

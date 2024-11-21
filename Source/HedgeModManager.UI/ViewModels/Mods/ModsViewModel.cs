@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 
 namespace HedgeModManager.UI.ViewModels.Mods
 {
@@ -11,10 +12,31 @@ namespace HedgeModManager.UI.ViewModels.Mods
         [ObservableProperty] private bool _showSave = false;
         [ObservableProperty] private bool _showCode = false;
         [ObservableProperty] private bool _showFavorite = false;
-        [ObservableProperty] private bool _hasMods = false;
+        [ObservableProperty] private string? _centerText = "Mods.Text.Loading";
 
         public ObservableCollection<string> Authors { get; set; } = new();
         public ObservableCollection<ModEntryViewModel> ModsList { get; set; } = new();
+
+        public void UpdateText()
+        {
+            int visibleCount = ModsList.Count(x =>
+            {
+                bool isFiltered = x.IsFiltered || x.IsFeatureFiltered;
+                if (x.Search != null)
+                {
+                    isFiltered |= !(x.Search.Matches(x.Mod.Title).Count != 0 || 
+                    x.Search.Matches(x.Authors).Count != 0);
+                }
+                return !isFiltered;
+            });
+            int modCount = ModsList.Count;
+            if (modCount == 0)
+                CenterText = "Mods.Text.NoMods";
+            else if (visibleCount == 0)
+                CenterText = "Mods.Text.NoResults";
+            else
+                CenterText = null;
+        }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
@@ -44,7 +66,7 @@ namespace HedgeModManager.UI.ViewModels.Mods
                             (ShowFavorite && isFavorite));
                     }
                 }
-
+                UpdateText();
             }
             base.OnPropertyChanged(e);
         }
