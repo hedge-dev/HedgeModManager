@@ -6,6 +6,7 @@ using Avalonia.VisualTree;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Controls.Primitives;
 using HedgeModManager.UI.Events;
+using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
 using System;
 using System.Linq;
@@ -90,11 +91,26 @@ public partial class ModEntry : ButtonUserControl
 
     public void OnFavoriteClick(object? sender, ButtonClickEventArgs e)
     {
+        e.Handled = true;
         if (DataContext is ModEntryViewModel viewModel)
         {
             viewModel.UpdateFavorite(!viewModel.Mod.Attributes.HasFlag(Foundation.ModAttribute.Favorite));
-            e.Handled = true;
         }
+    }
+
+    public void OnConfigClick(object? sender, ButtonClickEventArgs e)
+    {
+        e.Handled = true;
+        var viewModel = DataContext as ModEntryViewModel;
+        var mainViewModel = viewModel.MainViewModel;
+        if (viewModel == null || mainViewModel == null)
+            return;
+
+        if (!viewModel.HasConfig)
+            return;
+
+        var modal = new ModConfigModal(viewModel);
+        modal.Open(mainViewModel);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

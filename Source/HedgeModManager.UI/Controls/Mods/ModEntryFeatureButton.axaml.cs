@@ -46,7 +46,7 @@ public partial class ModEntryFeatureButton : ButtonUserControl
     {
         if (Fill == null)
             Fill = App.GetResource<ImmutableSolidColorBrush>("ForegroundBrush");
-        if (Design.IsDesignMode)
+        if (Icon == null)
             Icon = App.GetResource<Geometry>("Geometry.Gear");
     }
 }

@@ -30,7 +30,8 @@
       <StackPanel Grid.Column="4" VerticalAlignment="Center"
                   Orientation="Horizontal" Spacing="4"
                   Margin="0,0,16,0">
-        <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}" Enabled="{Binding HasConfig}" />
+        <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}"
+                                  Enabled="{Binding HasConfig}" Click="OnConfigClick" />
         <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.FloppyDisk}" Enabled="{Binding HasSave}" />
         <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Code}" Enabled="{Binding HasCode}" />
         <cm:ModEntryFeatureButton Icon="{Binding FavoriteGeometry}"

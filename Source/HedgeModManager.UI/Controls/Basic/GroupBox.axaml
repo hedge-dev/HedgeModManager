@@ -18,8 +18,10 @@
               BorderBrush="{DynamicResource BorderBrush}"
               BorderThickness="0,0,0,1"
               Background="{DynamicResource BackgroundL1Brush}">
-        <TextBlock Text="{Binding Header, RelativeSource={RelativeSource AncestorType=cb:GroupBox}}"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"
+        <TextBlock Text="{Binding Header, RelativeSource={RelativeSource AncestorType=cb:GroupBox}, Converter={StaticResource StringLocalizeConverter}}"
+                   FontSize="14"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
                    Margin="4"/>
       </Border>
       

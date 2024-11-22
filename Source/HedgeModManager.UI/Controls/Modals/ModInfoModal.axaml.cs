@@ -55,7 +55,12 @@ public partial class ModInfoModal : UserControl
 
     private void OnConfigureClick(object? sender, RoutedEventArgs e)
     {
-        Logger.Information("Configure Clicked");
+        var viewModel = DataContext as MainWindowViewModel;
+        if (viewModel == null)
+            return;
+
+        var modal = new ModConfigModal(ModViewModel);
+        modal.Open(viewModel);
     }
 
     private void OnUpdateClick(object? sender, RoutedEventArgs e)

@@ -54,6 +54,7 @@
       <SolidColorBrush x:Key="PointerOverBorderBrush">#3C3C4D</SolidColorBrush>
       <SolidColorBrush x:Key="PressedBorderBrush">#3C3C4D</SolidColorBrush>
 
+      <StaticResource x:Key="TextControlForeground" ResourceKey="ForegroundBrush" />
       <StaticResource x:Key="TextControlBackground" ResourceKey="NormalBackgroundBrush" />
       <StaticResource x:Key="TextControlBackgroundPointerOver" ResourceKey="PointerOverBackgroundBrush" />
       <StaticResource x:Key="TextControlBackgroundFocused" ResourceKey="PointerOverBackgroundBrush" />

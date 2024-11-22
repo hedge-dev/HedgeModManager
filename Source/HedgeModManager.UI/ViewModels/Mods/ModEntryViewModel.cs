@@ -80,7 +80,7 @@ namespace HedgeModManager.UI.ViewModels.Mods
         }
 
         public string Authors => string.Join(", ", Mod.Authors.Select(x => x.Name));
-        public bool HasConfig => false;
+        public bool HasConfig => (Mod is ModGeneric modGeneric && !string.IsNullOrEmpty(modGeneric.ConfigSchemaFile));
         public bool HasSave => false;
         public bool HasCode => Mod.Codes.Count != 0;
 
