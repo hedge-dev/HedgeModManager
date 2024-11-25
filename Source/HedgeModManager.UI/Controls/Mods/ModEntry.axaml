@@ -31,12 +31,18 @@
                   Orientation="Horizontal" Spacing="4"
                   Margin="0,0,16,0">
         <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}"
-                                  Enabled="{Binding HasConfig}" Click="OnConfigClick" />
-        <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.FloppyDisk}" Enabled="{Binding HasSave}" />
-        <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Code}" Enabled="{Binding HasCode}" />
+                                  Enabled="{Binding HasConfig}"
+                                  Click="OnConfigClick" />
+        <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.FloppyDisk}"
+                                  Enabled="{Binding HasSave}"
+                                  Click="OnSaveClick" />
+        <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Code}"
+                                  Enabled="{Binding HasCode}"
+                                  Click="OnCodeClick" />
         <cm:ModEntryFeatureButton Icon="{Binding FavoriteGeometry}"
                                   Fill="{Binding FavoriteBrush}"
-                                  Enabled="True" Click="OnFavoriteClick" />
+                                  Enabled="True"
+                                  Click="OnFavoriteClick" />
       </StackPanel>
     </Grid>
     <Border.Transitions>

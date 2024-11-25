@@ -1,5 +1,4 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using HedgeModManager.UI.Controls.Primitives;
@@ -44,9 +43,7 @@ public partial class ModEntryFeatureButton : ButtonUserControl
 
     private void OnInitialized(object? sender, EventArgs e)
     {
-        if (Fill == null)
-            Fill = App.GetResource<ImmutableSolidColorBrush>("ForegroundBrush");
-        if (Icon == null)
-            Icon = App.GetResource<Geometry>("Geometry.Gear");
+        Fill ??= App.GetResource<ImmutableSolidColorBrush>("ForegroundBrush");
+        Icon ??= App.GetResource<Geometry>("Geometry.Gear");
     }
 }

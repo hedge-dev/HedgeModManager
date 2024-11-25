@@ -22,12 +22,14 @@
                Text="{Binding Message, RelativeSource={RelativeSource AncestorType=cm:MessageBoxModal}, Converter={StaticResource StringLocalizeConverter}}"
                FontSize="24" Margin="24,0,24,0" HorizontalAlignment="Center" />
     <Border Grid.Row="2"
-            HorizontalAlignment="Stretch"
-            Margin="0,24,0,0" Padding="8"
-            Background="{DynamicResource BackgroundL0Brush}">
+            Background="{DynamicResource BackgroundL1Brush}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="0,1,0,0"
+            Margin="0,16,0,0" Height="48"
+            HorizontalAlignment="Stretch">
       <StackPanel x:Name="ButtonStackPanel"
-                  HorizontalAlignment="Center"
-                  Spacing="16" Orientation="Horizontal">
+                  HorizontalAlignment="Right"
+                  Orientation="Horizontal">
       </StackPanel>
     </Border>
   </Grid>

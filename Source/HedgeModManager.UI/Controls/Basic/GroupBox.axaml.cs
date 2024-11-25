@@ -6,7 +6,6 @@ namespace HedgeModManager.UI.Controls.Basic;
 
 public partial class GroupBox : UserControl
 {
-
     public static readonly StyledProperty<string> HeaderProperty =
         AvaloniaProperty.Register<GroupBox, string>(nameof(Header), "",
             defaultBindingMode: BindingMode.TwoWay);

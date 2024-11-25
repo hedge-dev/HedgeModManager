@@ -1,18 +1,12 @@
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.Controls.Primitives;
-using HedgeModManager.UI.Models;
-using HedgeModManager.UI.ViewModels.Mods;
 
 namespace HedgeModManager.UI.Controls.Basic;
 
 public partial class CheckBox : ButtonUserControl
 {
-
     public static readonly StyledProperty<bool?> IsCheckedProperty =
     AvaloniaProperty.Register<CheckBox, bool?>(nameof(IsChecked), false,
         defaultBindingMode: BindingMode.TwoWay);

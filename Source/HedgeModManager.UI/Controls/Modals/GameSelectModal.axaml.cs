@@ -14,9 +14,8 @@ public partial class GameSelectModal : UserControl
 
     private void OnGameClick(object? sender, RoutedEventArgs e)
     {
-        var viewModel = DataContext as MainWindowViewModel;
-        var game = (sender as Control)?.DataContext as UIGame;
-        if (game == null || viewModel == null)
+        if ((sender as Control)?.DataContext is not UIGame game ||
+            DataContext is not MainWindowViewModel viewModel)
             return;
         viewModel.SelectedGame = game;
         viewModel.Modals.RemoveAt(viewModel.Modals.Count - 1);

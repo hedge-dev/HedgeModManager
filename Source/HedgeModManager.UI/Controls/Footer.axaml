@@ -10,14 +10,15 @@
   <Border Background="{DynamicResource BackgroundL1Brush}"
           BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0"
           Height="48" HorizontalAlignment="Stretch">
-    <Grid Margin="8,0,8,0">
-      <StackPanel Margin="6,6,0,0" HorizontalAlignment="Left">
+    <Grid>
+      <StackPanel Margin="6,0,0,0"
+                  HorizontalAlignment="Left" VerticalAlignment="Center">
         <TextBlock Text="{Binding LastLog}" />
       </StackPanel>
       <ItemsControl ItemsSource="{Binding CurrentTabInfo.Buttons}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
-            <StackPanel Margin="0,0,6,6" HorizontalAlignment="Right" Orientation="Horizontal" />
+            <StackPanel Margin="0,0,6,0" HorizontalAlignment="Right" Orientation="Horizontal" />
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>

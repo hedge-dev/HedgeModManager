@@ -40,7 +40,7 @@ public partial class Sidebar : UserControl
         InitializeComponent();
     }
 
-    public void UpdateButtons(List<Control> buttons, bool checkVisible = true)
+    public void UpdateButtons(List<Control> buttons)
     {
         // Update button layout
         for (int i = 0; i < buttons.Count; ++i)
@@ -75,9 +75,7 @@ public partial class Sidebar : UserControl
     private async void OnRunClicked(object? sender, RoutedEventArgs e)
     {
         if (DataContext is MainWindowViewModel viewModel)
-        {
             await viewModel.SaveAndRun();
-        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

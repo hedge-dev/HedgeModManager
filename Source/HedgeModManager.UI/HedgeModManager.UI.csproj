@@ -15,6 +15,7 @@
     <Folder Include="Controls\Codes\" />
     <Folder Include="Controls\About\" />
     <Folder Include="Controls\Setup\" />
+    <Folder Include="CLI\" />
     <Folder Include="Styles\" />
   </ItemGroup>
 

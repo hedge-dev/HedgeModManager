@@ -7,7 +7,6 @@ namespace HedgeModManager.UI.Controls.Setup;
 
 public partial class Setup : UserControl
 {
-
     public TabInfo.TabButton? BackButton { get; set; }
     public TabInfo.TabButton? NextButton { get; set; }
 
@@ -64,6 +63,5 @@ public partial class Setup : UserControl
             NextButton.Name = "Common.Button.Finish";
         else
             NextButton.Name = "Common.Button.Next";
-
     }
 }

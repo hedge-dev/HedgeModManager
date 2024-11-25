@@ -1,10 +1,9 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace HedgeModManager.UI.ViewModels
+namespace HedgeModManager.UI.ViewModels;
+
+public partial class SidebarButtonViewModel : ObservableObject
 {
-    public partial class SidebarButtonViewModel : ObservableObject
-    {
-        [ObservableProperty] private bool _showDisabled;
-    }
+    [ObservableProperty] private bool _showDisabled;
 }

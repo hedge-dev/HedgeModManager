@@ -6,7 +6,6 @@ using Avalonia.VisualTree;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Controls.Primitives;
 using HedgeModManager.UI.Events;
-using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
 using System;
 using System.Linq;
@@ -16,7 +15,6 @@ namespace HedgeModManager.UI.Controls.Mods;
 [PseudoClasses(":enabled")]
 public partial class ModEntry : ButtonUserControl
 {
-
     public DispatcherTimer? HoldTimer;
     public bool HoldPointerOver = false;
     public bool HoldHandled = false;
@@ -29,7 +27,7 @@ public partial class ModEntry : ButtonUserControl
     private void OnInitialized(object? sender, EventArgs e)
     {
         Click += OnClick;
-        if (DataContext is ModEntryViewModel viewModel)
+        if (DataContext is ModEntryViewModel viewModel && viewModel.MainViewModel != null)
         {
             HoldTimer = new DispatcherTimer
             {
@@ -39,8 +37,8 @@ public partial class ModEntry : ButtonUserControl
             {
                 HoldTimer.Stop();
                 if (HoldPointerOver)
-                { 
-                    viewModel.MainViewModel?.Modals.Add(new Modal(new ModInfoModal(viewModel)));
+                {
+                    new ModInfoModal(viewModel).Open(viewModel.MainViewModel);
                     HoldHandled = true;
                 }
             };
@@ -56,7 +54,7 @@ public partial class ModEntry : ButtonUserControl
             if (e.MouseButton == MouseButton.Left)
                 viewModel.ModEnabled = !viewModel.ModEnabled;
             else if (e.MouseButton == MouseButton.Right && viewModel.MainViewModel != null)
-                viewModel.MainViewModel.Modals.Add(new Modal(new ModInfoModal(viewModel)));
+                new ModInfoModal(viewModel).Open(viewModel.MainViewModel);
         }
     }
 
@@ -89,28 +87,37 @@ public partial class ModEntry : ButtonUserControl
         }
     }
 
+    public void OnConfigClick(object? sender, ButtonClickEventArgs e)
+    {
+        e.Handled = true;
+        if (DataContext is ModEntryViewModel viewModel && 
+            viewModel.MainViewModel is not null)
+        {
+            var mainViewModel = viewModel.MainViewModel;
+
+            if (!viewModel.HasConfig)
+                return;
+
+            var modal = new ModConfigModal(viewModel);
+            modal.Open(mainViewModel);
+        }
+    }
+
+    public void OnSaveClick(object? sender, ButtonClickEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    public void OnCodeClick(object? sender, ButtonClickEventArgs e)
+    {
+        e.Handled = true;
+    }
+
     public void OnFavoriteClick(object? sender, ButtonClickEventArgs e)
     {
         e.Handled = true;
         if (DataContext is ModEntryViewModel viewModel)
-        {
             viewModel.UpdateFavorite(!viewModel.Mod.Attributes.HasFlag(Foundation.ModAttribute.Favorite));
-        }
-    }
-
-    public void OnConfigClick(object? sender, ButtonClickEventArgs e)
-    {
-        e.Handled = true;
-        var viewModel = DataContext as ModEntryViewModel;
-        var mainViewModel = viewModel.MainViewModel;
-        if (viewModel == null || mainViewModel == null)
-            return;
-
-        if (!viewModel.HasConfig)
-            return;
-
-        var modal = new ModConfigModal(viewModel);
-        modal.Open(mainViewModel);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

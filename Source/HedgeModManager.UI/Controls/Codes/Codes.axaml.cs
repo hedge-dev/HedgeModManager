@@ -22,10 +22,10 @@ public partial class Codes : UserControl
         set => SetValue(GameProperty, value);
     }
 
-    public ObservableCollection<CodeCategoryViewModel> Cateories { get; set; } = new();
+    public ObservableCollection<CodeCategoryViewModel> Cateories { get; set; } = [];
 
     // Don't use
-    public ObservableCollection<CodeEntryViewModel> CodesList { get; set; } = new();
+    public ObservableCollection<CodeEntryViewModel> CodesList { get; set; } = [];
 
     public Codes()
     {

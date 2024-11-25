@@ -1,32 +1,33 @@
-﻿using Avalonia.Controls.Documents;
-using Avalonia.Media;
-using Avalonia.Threading;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.Foundation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using static HedgeModManager.UI.Languages.Language;
 
-namespace HedgeModManager.UI.ViewModels.Mods
+namespace HedgeModManager.UI.ViewModels.Mods;
+
+public partial class ModInfoViewModel : ViewModelBase
 {
-    public partial class ModInfoViewModel : ViewModelBase
+    public ModEntryViewModel ModViewModel { get; set; }
+
+    [ObservableProperty] private string _title = "";
+    [ObservableProperty] private string _modText = "";
+    [ObservableProperty] private string _authorText = "";
+    [ObservableProperty] private string _favoriteButtonText = "Mods.Button.Favorite";
+
+    public ModInfoViewModel(ModEntryViewModel modEntryViewModel)
     {
-        public ModEntryViewModel ModViewModel { get; set; }
+        ModViewModel = modEntryViewModel;
+        Title = Localize("Modal.Title.AboutMod", modEntryViewModel.Mod.Title);
+        ModText = Localize("Modal.Header.AboutMod", modEntryViewModel.Mod.Title, modEntryViewModel.Mod.Version);
+        if (ModViewModel.Mod is ModGeneric mod)
+            AuthorText = Localize("Modal.Header.AboutModAuthor", mod.AuthorShort, mod.Date);
+        else
+            AuthorText = Localize("Modal.Header.AboutModAuthor", modEntryViewModel.Authors, modEntryViewModel.Mod.Date);
+        UpdateButtons();
+    }
 
-        [ObservableProperty] private string _favoriteButtonText = "Mods.Button.Favorite";
-
-        public ModInfoViewModel(ModEntryViewModel modEntryViewModel)
-        {
-            ModViewModel = modEntryViewModel;
-        }
-
-        public void UpdateButtons()
-        {
-            FavoriteButtonText = ModViewModel.Mod.Attributes.HasFlag(ModAttribute.Favorite)
-                ? "Mods.Button.Favorited" : "Mods.Button.Favorite";
-        }
+    public void UpdateButtons()
+    {
+        FavoriteButtonText = ModViewModel.Mod.Attributes.HasFlag(ModAttribute.Favorite)
+            ? "Mods.Button.Favorited" : "Mods.Button.Favorite";
     }
 }

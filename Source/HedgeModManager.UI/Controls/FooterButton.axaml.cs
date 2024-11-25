@@ -1,17 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Metadata;
-using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-using HedgeModManager.Foundation;
-using HedgeModManager.UI.Controls.Basic;
 using HedgeModManager.UI.Controls.Primitives;
-using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using ValveKeyValue;
 
 namespace HedgeModManager.UI.Controls;
 

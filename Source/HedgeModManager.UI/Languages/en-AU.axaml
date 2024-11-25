@@ -66,14 +66,19 @@
   <system:String x:Key="About.Header.SupportedGames">Supported Games</system:String>
 
   <!-- Modal -->
-  <system:String x:Key="Modal.Button.ExportLog">Save Log File</system:String>
-  <system:String x:Key="Modal.Header.Description">Description</system:String>
-  <system:String x:Key="Modal.Title.Games">Games</system:String>
-  <system:String x:Key="Modal.Title.Confirm">Confirmation</system:String>
-  <system:String x:Key="Modal.Title.SaveError">Save Error</system:String>
-  <system:String x:Key="Modal.Title.LoadError">Load Error</system:String>
-  <system:String x:Key="Modal.Title.RunError">Launch Error</system:String>
-  <system:String x:Key="Modal.Title.ConfigureMod">Configure {0}</system:String>
+  <system:String x:Key="Modal.Button.ExportLog"     >Save Log File</system:String>
+  <system:String x:Key="Modal.Header.Credits"       >Credits</system:String>
+  <system:String x:Key="Modal.Header.Description"   >Description</system:String>
+  <system:String x:Key="Modal.Header.AboutMod"      >{0} v{1}</system:String>
+  <system:String x:Key="Modal.Header.AboutModAuthor">Authored by {0} on {1}</system:String>
+  <system:String x:Key="Modal.Title.AboutMod"       >About {0}</system:String>
+  <system:String x:Key="Modal.Title.DownloadMod"    >Download {0}</system:String>
+  <system:String x:Key="Modal.Title.Games"          >Games</system:String>
+  <system:String x:Key="Modal.Title.Confirm"        >Confirmation</system:String>
+  <system:String x:Key="Modal.Title.SaveError"      >Save Error</system:String>
+  <system:String x:Key="Modal.Title.LoadError"      >Load Error</system:String>
+  <system:String x:Key="Modal.Title.RunError"       >Launch Error</system:String>
+  <system:String x:Key="Modal.Title.ConfigureMod"   >Configure {0}</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.DeleteMod">Are you sure you want to delete &quot;{0}&quot;?&#x0a;This action cannot be undone!</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.GameNoAccess">Hedge Mod Manager does not have write&#x0a;access to the game files.&#x0a;&#x0a;Please make sure the game files are writable.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownSaveError">Hedge Mod Manager was unable to save&#x0a;due to an unknown error.</system:String>

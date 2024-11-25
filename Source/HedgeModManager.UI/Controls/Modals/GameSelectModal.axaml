@@ -11,11 +11,12 @@
 
     <StackPanel>
       <TextBlock Text="{DynamicResource Modal.Title.Games}" FontSize="32" Margin="0,0,0,4" HorizontalAlignment="Center" />
-      <ScrollViewer MaxHeight="320">
+      <ScrollViewer MaxHeight="320" Margin="4,4,0,4">
         <ItemsControl ItemsSource="{Binding Games}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <cp:GameSelectButton Game="{Binding}" Click="OnGameClick" />
+              <cp:GameSelectButton Game="{Binding}" Margin="0,0,4,0"
+                                   Click="OnGameClick" />
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>

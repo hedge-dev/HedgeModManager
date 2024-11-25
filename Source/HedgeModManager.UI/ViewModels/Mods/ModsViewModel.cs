@@ -7,15 +7,14 @@ namespace HedgeModManager.UI.ViewModels.Mods
 {
     public partial class ModsViewModel : ViewModelBase
     {
-
         [ObservableProperty] private bool _showConfig = false;
         [ObservableProperty] private bool _showSave = false;
         [ObservableProperty] private bool _showCode = false;
         [ObservableProperty] private bool _showFavorite = false;
         [ObservableProperty] private string? _centerText = "Mods.Text.Loading";
 
-        public ObservableCollection<string> Authors { get; set; } = new();
-        public ObservableCollection<ModEntryViewModel> ModsList { get; set; } = new();
+        public ObservableCollection<string> Authors { get; set; } = [];
+        public ObservableCollection<ModEntryViewModel> ModsList { get; set; } = [];
 
         public void UpdateText()
         {
@@ -55,9 +54,9 @@ namespace HedgeModManager.UI.ViewModels.Mods
                 {
                     foreach (var item in ModsList)
                     {
-                        bool isConfig = false;
-                        bool isSave = false;
-                        bool isCode = item.Mod.Codes.Count != 0;
+                        bool isConfig = item.HasConfig;
+                        bool isSave = item.HasSave;
+                        bool isCode = item.HasCode;
                         bool isFavorite = item.Mod.Attributes.HasFlag(Foundation.ModAttribute.Favorite);
                         item.IsFeatureFiltered = !(
                             (ShowConfig && isConfig) ||
@@ -70,6 +69,5 @@ namespace HedgeModManager.UI.ViewModels.Mods
             }
             base.OnPropertyChanged(e);
         }
-
     }
 }

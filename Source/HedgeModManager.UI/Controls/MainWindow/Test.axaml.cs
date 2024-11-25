@@ -1,7 +1,9 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Styling;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.ViewModels;
 
@@ -28,16 +30,17 @@ public partial class Test : UserControl
             {
                 await viewModel.SaveAndRun();
             }));
-            for (int i = 0; i < 10; i++)
+            viewModel.CurrentTabInfo.Buttons.Add(new("Change Theme", Buttons.Y, async (s, e) =>
             {
-                viewModel.CurrentTabInfo.Buttons.Add(new($"Button {i}", Buttons.B, (s, e) =>
+                if (Application.Current != null)
                 {
-                    if (s is TabInfo.TabButton button)
-                        viewModel.CurrentTabInfo.Buttons.Remove(button);
-                }));
-            }
+                    if (Application.Current.RequestedThemeVariant == ThemeVariant.Dark)
+                        Application.Current.RequestedThemeVariant = Themes.Themes.Darker;
+                    else
+                        Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
+                }
+            }));
         }
-
 
         void createCheckbox(string name)
         {
@@ -173,6 +176,4 @@ public partial class Test : UserControl
         if (DataContext is MainWindowViewModel viewModel)
             await viewModel.ExportLog(this);
     }
-
-
 }

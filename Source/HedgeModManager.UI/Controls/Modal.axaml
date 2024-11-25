@@ -10,7 +10,6 @@
     <Border Background="Black" Opacity="0.5"
             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             PointerPressed="OnPointerPressed">
-      
       <Border.Transitions>
         <Transitions>
           <DoubleTransition Property="Opacity" Duration="0:0:0.5"/>
@@ -24,11 +23,13 @@
     </Border>
     <Border Background="{DynamicResource Modal.BackgroundBrush}"
             BorderBrush="{DynamicResource Modal.BorderBrush}"
-            BorderThickness="1" CornerRadius="20" ClipToBounds="True"
+            BorderThickness="1" CornerRadius="20"
             Padding="{Binding BorderPadding, RelativeSource={RelativeSource AncestorType=c:Modal}}" Margin="120"
             HorizontalAlignment="Center" VerticalAlignment="Center"
             >
-      <ContentPresenter Content="{Binding Control, RelativeSource={RelativeSource AncestorType=c:Modal}}" />
+      <Border CornerRadius="20" ClipToBounds="True">
+        <ContentPresenter Content="{Binding Control, RelativeSource={RelativeSource AncestorType=c:Modal}}" />
+      </Border>
     </Border>
   </Grid>
 </UserControl>

@@ -71,14 +71,12 @@ public partial class Mods : UserControl
     private void OnFilterClick(object? sender, RoutedEventArgs e)
     {
         if (sender is ModEntryFeatureButton button)
-        {
             button.Enabled = !button.Enabled;
-        }
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        var viewModel = (DataContext as MainWindowViewModel);
+        var viewModel = DataContext as MainWindowViewModel;
         if (viewModel == null)
             return;
 
@@ -129,9 +127,7 @@ public partial class Mods : UserControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         if (change.Property == GameProperty)
-        {
             UpdateModList();
-        }
 
         if (change.Property == SearchProperty)
         {

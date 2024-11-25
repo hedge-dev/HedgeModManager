@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace HedgeModManager.UI.ViewModels
+namespace HedgeModManager.UI.ViewModels;
+
+public class ViewModelBase : ObservableObject
 {
-    public class ViewModelBase : ObservableObject
-    {
-    }
 }

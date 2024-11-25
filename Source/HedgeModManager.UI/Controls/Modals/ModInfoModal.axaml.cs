@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using HedgeModManager.Foundation;
@@ -14,19 +15,6 @@ public partial class ModInfoModal : UserControl
     public ModEntryViewModel ModViewModel { get; set; }
     public ModInfoViewModel InfoViewModel { get; set; }
 
-    public string HeaderText
-    {
-        get
-        {
-            if (ModViewModel.Mod.Authors.Count == 0)
-                return ModViewModel.Mod.Title;
-            if (ModViewModel.Mod is ModGeneric mod)
-                return $"{mod.Title} by {mod.AuthorShort}";
-            else
-                return $"{ModViewModel.Mod.Title} by {ModViewModel.Mod.Authors.FirstOrDefault()}";
-        }
-    }
-
     // Preview only
     public ModInfoModal()
     {
@@ -40,6 +28,21 @@ public partial class ModInfoModal : UserControl
         ModViewModel = modEntryViewModel;
         InfoViewModel = new ModInfoViewModel(ModViewModel);
         InitializeComponent();
+    }
+
+    public void Open(MainWindowViewModel viewModel)
+    {
+        viewModel.Modals.Add(new Modal(this, new Thickness(0)));
+    }
+
+    public void Close()
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            var modalInstance = viewModel.Modals.FirstOrDefault(x => x.Control == this);
+            if (modalInstance != null)
+                viewModel.Modals.Remove(modalInstance);
+        }
     }
 
     private void OnInitialized(object? sender, EventArgs e)
@@ -97,5 +100,4 @@ public partial class ModInfoModal : UserControl
 
         modal.Open(viewModel);
     }
-
 }

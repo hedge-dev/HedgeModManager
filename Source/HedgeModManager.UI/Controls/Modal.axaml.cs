@@ -1,8 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Data;
-using Avalonia.Markup.Xaml;
-using Avalonia.Metadata;
 using HedgeModManager.UI.ViewModels;
 
 namespace HedgeModManager.UI.Controls;

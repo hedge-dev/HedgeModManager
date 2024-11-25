@@ -16,7 +16,7 @@
       </Grid.RowDefinitions>
       <Border Grid.Row="0"
               BorderBrush="{DynamicResource BorderBrush}"
-              BorderThickness="0,0,0,1"
+              BorderThickness="0,0,0,1" CornerRadius="8,8,0,0"
               Background="{DynamicResource BackgroundL1Brush}">
         <TextBlock Text="{Binding Header, RelativeSource={RelativeSource AncestorType=cb:GroupBox}, Converter={StaticResource StringLocalizeConverter}}"
                    FontSize="14"
@@ -25,7 +25,7 @@
                    Margin="4"/>
       </Border>
       
-      <Border Grid.Row="1" Padding="2" ClipToBounds="True">
+      <Border Grid.Row="1" Padding="2" CornerRadius="0,0,8,8" ClipToBounds="True">
         <ContentPresenter Grid.Row="1" Content="{Binding Data, RelativeSource={RelativeSource AncestorType=cb:GroupBox}}" />
       </Border>
     </Grid>

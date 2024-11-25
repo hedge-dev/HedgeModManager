@@ -8,34 +8,39 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="50"
              x:Class="HedgeModManager.UI.Controls.Modals.SimpleModalButton">
-  <Border Cursor="Hand" ClipToBounds="True"
-          Classes.mainBorder="True"
-          Height="50"
-          CornerRadius="8"
-          BorderBrush="{DynamicResource Button.BorderBrush}" BorderThickness="1"
+  <Border Classes.mainBorder="True"
+          Classes.enabled="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=cm:SimpleModalButton}}"
+          IsEnabled="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=cm:SimpleModalButton}}"
+          Height="48" Padding="16,0,16,0"
+          Cursor="Hand"
           PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased">
-    <Grid>
-      <TextBlock FontSize="16" Margin="8,0,8,0" Padding="20,0,20,0"
-                 Text="{Binding Text, Converter={StaticResource StringLocalizeConverter}, RelativeSource={RelativeSource AncestorType=cm:SimpleModalButton}}" 
-                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    </Grid>
+    <StackPanel Orientation="Horizontal">
+      <Grid Width="24" Margin="0,0,12,0" IsVisible="False">
+        <Viewbox Stretch="Uniform" Width="24" Height="24" VerticalAlignment="Center">
+          <Path Data="{Binding Icon, RelativeSource={RelativeSource AncestorType=cm:SimpleModalButton}}" Fill="{DynamicResource ForegroundBrush}" />
+        </Viewbox>
+      </Grid>
+      <TextBlock FontSize="16" Text="{Binding Text, Converter={StaticResource StringLocalizeConverter}, RelativeSource={RelativeSource AncestorType=cm:SimpleModalButton}}" VerticalAlignment="Center" />
+    </StackPanel>
     <Border.Transitions>
       <Transitions>
         <BrushTransition Property="Background" Duration="0:0:0.1"/>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.1"/>
       </Transitions>
     </Border.Transitions>
     <Border.Styles>
       <Style Selector="Border.mainBorder">
-        <Setter Property="Background" Value="{DynamicResource Button.BackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundL1Brush}" />
+        <Setter Property="Opacity" Value="0.5" />
         <Style Selector="^:pointerover">
           <Setter Property="Background" Value="{DynamicResource Button.HoverBrush}"/>
         </Style>
+        <Style Selector="^.enabled">
+          <Setter Property="Opacity" Value="1" />
+        </Style>
       </Style>
-      <Style Selector=":pressed Border.mainBorder">
+      <Style Selector=":pressed Border">
         <Setter Property="Background" Value="{DynamicResource Button.PressedBrush}"/>
-      </Style>
-      <Style Selector=":disabled Border.mainBorder">
-        <Setter Property="Background" Value="{DynamicResource Button.DisabledBrush}"/>
       </Style>
     </Border.Styles>
   </Border>

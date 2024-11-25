@@ -25,7 +25,6 @@ public partial class ModConfigModal : UserControl
 
     public string ConfigIniPath = string.Empty;
 
-
     // Preview only
     public ModConfigModal()
     {
@@ -187,9 +186,4 @@ public partial class ModConfigModal : UserControl
     {
         Close();
     }
-
-    private void OnResetClick(object? sender, RoutedEventArgs e)
-    {
-    }
-
 }
