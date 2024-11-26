@@ -5,7 +5,10 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Styling;
 using HedgeModManager.UI.Controls.Modals;
+using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.Controls.MainWindow;
 
@@ -30,7 +33,7 @@ public partial class Test : UserControl
             {
                 await viewModel.SaveAndRun();
             }));
-            viewModel.CurrentTabInfo.Buttons.Add(new("Change Theme", Buttons.Y, async (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("Change Theme", Buttons.Y, (s, e) =>
             {
                 if (Application.Current != null)
                 {
@@ -166,6 +169,18 @@ public partial class Test : UserControl
             viewModel.SelectedGame = null;
     }
 
+    private void OpenGame_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel viewModel ||
+            viewModel.SelectedGame is not UIGame game)
+            return;
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = game.Game.Root,
+            UseShellExecute = true
+        });
+    }
+
     private void ClearLog_Click(object? sender, RoutedEventArgs e)
     {
         UILogger.Clear();
@@ -175,5 +190,48 @@ public partial class Test : UserControl
     {
         if (DataContext is MainWindowViewModel viewModel)
             await viewModel.ExportLog(this);
+    }
+
+    private void CreateDownload_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            var download = new Download("Test Download", 1000);
+
+            download.OnRun(async (d, c) =>
+            {
+                for (int i = 0; i <= 1000; i++)
+                {
+                    if (c.IsCancellationRequested)
+                        break;
+                    d.Progress = i;
+                    await Task.Delay(10, c);
+                }
+            }).OnComplete((d) =>
+            {
+                Logger.Debug("Download complete");
+                return Task.CompletedTask;
+            }).OnError((d, e) =>
+            {
+                Logger.Debug("Download failed");
+                return Task.CompletedTask;
+            }).OnCancel((d) =>
+            {
+                Logger.Debug("Download cancelled");
+                return Task.CompletedTask;
+            }).Run(viewModel.Downloads);
+        }
+    }
+
+    private void DownloadCancel_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Control control && control.DataContext is Download download)
+            download.Cancel();
+    }
+
+    private void DownloadDelete_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Control control && control.DataContext is Download download)
+            download.Destroy();
     }
 }

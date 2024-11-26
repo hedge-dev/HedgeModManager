@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using HedgeModManager.Foundation;
 using HedgeModManager.UI.CLI;
 using HedgeModManager.UI.Config;
 using HedgeModManager.UI.Controls;
@@ -23,7 +24,9 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     public string AppVersion => App.GetAppVersion();
 
-    public ObservableCollection<UIGame> Games { get; set; } = new();
+    public ObservableCollection<UIGame> Games { get; set; } = [];
+    public ObservableCollection<Download> Downloads { get; set; } = [];
+    public ObservableCollection<IMod> Mods { get; set; } = [];
     public ProgramConfig Config { get; set; } = new();
 
     [ObservableProperty] private UIGame? _selectedGame;
@@ -33,7 +36,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private TabInfo? _currentTabInfo;
     [ObservableProperty] private TabInfo[] _tabInfos = 
         [new ("Loading"), new("Setup"), new("Mods"), new("Codes"), new("Settings"), new("About"), new("Test")];
-    [ObservableProperty] private ObservableCollection<Modal> _modals = new ();
+    [ObservableProperty] private ObservableCollection<Modal> _modals = [];
     [ObservableProperty] private bool _isBusy = true;
 
     // Preview only
@@ -77,7 +80,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
             Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
 
-            Logger.Information($"Found {game.ModDatabase.Mods.Count} mods");
+            RefreshUI();
         }
         catch (Exception e)
         {
@@ -158,6 +161,18 @@ public partial class MainWindowViewModel : ViewModelBase
         Logger.Debug("Entered setup");
         Config.IsSetupCompleted = false;
         SelectedTabIndex = 1;
+    }
+
+    public async void RefreshUI()
+    {
+        if (SelectedGame is not UIGame game)
+            return;
+
+        await game.Game.InitializeAsync();
+        Mods.Clear();
+        foreach (var mod in game.Game.ModDatabase.Mods)
+            Mods.Add(mod);
+        Logger.Information($"Found {game.Game.ModDatabase.Mods.Count} mods");
     }
 
     public void OpenErrorMessage(string title, string message, string logMessage, Exception? exception = null)

@@ -1,11 +1,15 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using System;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.Controls.Modals;
 
@@ -55,11 +59,99 @@ public partial class ModDownloaderModal : UserControl
         await ViewModel.StartInfoDownload();
     }
 
-    private void OnDownloadClick(object? sender, RoutedEventArgs e)
+    private async void OnDownloadClick(object? sender, RoutedEventArgs e)
     {
-        ViewModel.Ready = false;
         if (DataContext is MainWindowViewModel viewModel)
-            MessageBoxModal.CreateOK("TODO", "Download mod").Open(viewModel);
+        {
+            Close();
+
+            var downloadInfo = ViewModel.DownloadInfo;
+            if (downloadInfo == null)
+                return;
+
+            // Get desired game
+            var uiGame = viewModel.SelectedGame;
+            if (uiGame == null || uiGame.Game.Name != downloadInfo.GameID)
+            {
+                var desiredGame = viewModel.Games
+                .FirstOrDefault(x => x.Game.Name == downloadInfo.GameID);
+                if (desiredGame is not UIGame desiredUIGame)
+                {
+                    Logger.Error($"Game {downloadInfo.GameID} not found");
+                    var messageBox = new MessageBoxModal("Modal.Title.InstallError", 
+                        Localize("Modal.Message.GameMissingError",
+                        downloadInfo.Name, Localize($"Common.Game.{downloadInfo.GameID}")));
+                    messageBox.AddButton("Common.Button.OK", (s, e) => messageBox.Close());
+                    messageBox.Open(viewModel);
+                    return;
+                }
+                uiGame = desiredUIGame;
+                await uiGame.Game.InitializeAsync();
+            }
+
+            string downloadPath = Path.GetTempFileName();
+
+            new Download(Localize("Download.Text.DownloadMod", downloadInfo.Name), 1)
+                .OnRun(async (d, c) =>
+            {
+                Logger.Information($"Downloading {downloadInfo.Name}...");
+                var client = new HttpClient();
+                var response = await client.GetAsync(downloadInfo.DownloadURL,
+                    HttpCompletionOption.ResponseHeadersRead, c);
+                response.EnsureSuccessStatusCode();
+
+                d.ProgressMax = response.Content.Headers.ContentLength ?? -1L;
+
+                using var stream = await response.Content.ReadAsStreamAsync(c);
+                using var fileStream = File.Create(downloadPath);
+
+                var buffer = new byte[1048576];
+                int bytesRead;
+
+                while ((bytesRead = await stream.ReadAsync(buffer, c)) > 0)
+                {
+                    await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), c);
+                    d.Progress += bytesRead;
+                }
+            }).OnComplete((d) =>
+            {
+                d.Destroy();
+                Logger.Information($"Finished downloading {downloadInfo.Name}");
+
+                new Download(Localize("Download.Text.InstallMod", downloadInfo.Name), 1)
+                .OnRun(async (d, c) =>
+                {
+                    Logger.Information($"Installing {downloadInfo.Name}...");
+                    if (uiGame.Game.ModDatabase is not ModDatabaseGeneric modsDB)
+                    {
+                        Logger.Error("Only ModDatabaseGeneric is supported for installing mods");
+                        throw new Exception();
+                    }
+                    await modsDB.InstallModFromArchive(downloadPath, d);
+                }).OnComplete((d) =>
+                {
+                    Logger.Information($"Finished installing {downloadInfo.Name}");
+                    if (uiGame == viewModel.SelectedGame)
+                        Dispatcher.UIThread.Invoke(viewModel.RefreshUI);
+                    try { File.Delete(downloadPath); } catch { }
+                    d.Destroy();
+                    return Task.CompletedTask;
+                }).OnError((d, e) =>
+                {
+                    Logger.Error($"Failed to install {downloadInfo.Name}");
+
+                    try { File.Delete(downloadPath); } catch { }
+                    return Task.CompletedTask;
+                })
+                .Run(viewModel.Downloads);
+
+                return Task.CompletedTask;
+            }).OnCancel((d) =>
+            {
+                Logger.Debug("Mod download cancelled");
+                return Task.CompletedTask;
+            }).Run(viewModel.Downloads);
+        }
     }
 
     private void OnCancelClick(object? sender, RoutedEventArgs e)

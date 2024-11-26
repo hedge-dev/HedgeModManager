@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
+    <PackageReference Include="SharpCompress" Version="0.38.0" />
     <PackageReference Include="ValveKeyValue" Version="0.9.0.267" />
   </ItemGroup>
 

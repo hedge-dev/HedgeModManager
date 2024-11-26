@@ -33,7 +33,7 @@
         <cs:Setup />
       </TabItem>
       <TabItem Header="Mods">
-        <cmw:Mods Game="{Binding SelectedGame}" />
+        <cmw:Mods />
       </TabItem>
       <TabItem Header="Codes">
         <cc:Codes Game="{Binding SelectedGame}" />

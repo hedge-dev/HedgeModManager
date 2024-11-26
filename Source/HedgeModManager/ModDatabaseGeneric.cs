@@ -5,6 +5,7 @@ using Foundation;
 using System.IO;
 using Text;
 using IO;
+using SharpCompress.Archives;
 
 public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
 {
@@ -301,6 +302,99 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
 
         Mods.Remove(mod);
         Directory.Delete(mod.Root, true);
+        return true;
+    }
+
+    public async Task<bool> InstallModFromArchive(string archivePath, IProgress<long>? progress)
+    {
+        // Open archive
+        using var archive = ArchiveFactory.Open(archivePath);
+        if (archive == null)
+            return false;
+
+        // Get entry listing of config files
+        var modConfigPaths = archive.Entries
+            .Where(x => x.Key != null && x.Key.EndsWith(ModGeneric.ConfigName))
+            .Select(x => x.Key!.Replace('\\', '/'));
+
+        // Build mapping
+        var archiveEntries = new List<(string, string, IArchiveEntry)>();
+        foreach (var modConfigPath in modConfigPaths)
+        {
+            string archiveRoot = string.Empty;
+            if (modConfigPath.Contains('/'))
+            {
+                archiveRoot = modConfigPath[0..(modConfigPath.LastIndexOf('/'))];
+            }
+
+            string modDir = Path.Combine(Root, Path.GetFileNameWithoutExtension(archivePath));
+            if (!string.IsNullOrEmpty(archiveRoot))
+            {
+                if (archiveRoot.Contains('/'))
+                {
+                    modDir = Path.Combine(Root, archiveRoot[archiveRoot.LastIndexOf('/')..]);
+                }
+                else
+                {
+                    modDir = Path.Combine(Root, archiveRoot);
+                }
+            }
+
+            foreach (var entry in archive.Entries
+                .Where(x => x.Key != null && !x.IsDirectory))
+            {
+                string entryPath = entry.Key!;
+                if (entryPath.StartsWith(archiveRoot))
+                {
+                    entryPath = entryPath[(archiveRoot.Length + 1)..];
+                    archiveEntries.Add((modDir, entryPath, entry));
+                }
+            }
+        }
+
+        if (progress != null)
+        {
+            // Calculate uncompressed size
+            long totalSize = 0;
+            foreach (var (_, _, entry) in archiveEntries)
+            {
+                totalSize += entry.Size;
+            }
+
+            progress.Report(0);
+            progress.ReportMax(totalSize);
+        }
+
+        // Extract files
+        long totalBytesRead = 0;
+        var archiveReader = archive.ExtractAllEntries();
+
+        while (archiveReader.MoveToNextEntry())
+        {
+            var (modDir, entryPath, entry) = archiveEntries
+                .FirstOrDefault(x => x.Item3.Key == archiveReader.Entry.Key);
+
+            if (entry == null)
+                continue;
+
+            string fullPath = Path.Combine(modDir, entryPath);
+            string dir = Path.GetDirectoryName(fullPath)!;
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            using var archiveFileStream = archiveReader.OpenEntryStream();
+            using var fileStream = File.Create(fullPath);
+
+            var buffer = new byte[1048576];
+            int bytesRead;
+            while ((bytesRead = await archiveFileStream.ReadAsync(buffer)) > 0)
+            {
+                await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+                totalBytesRead += bytesRead;
+                progress?.Report(totalBytesRead);
+            }
+            await archiveFileStream.DisposeAsync();
+        }
         return true;
     }
 

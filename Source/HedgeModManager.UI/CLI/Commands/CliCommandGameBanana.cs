@@ -1,4 +1,7 @@
-﻿using HedgeModManager.UI.Controls.Modals;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,20 +21,20 @@ public class CliCommandGameBanana : ICliCommand
     {
         string uri = (string)command.Inputs[0];
 
-        string[] sections = uri.Split(':');
-        if (sections.Length < 2)
+        int schemaIndex = uri.IndexOf(":");
+        if (schemaIndex == -1)
         {
-            Console.WriteLine("Invalid URI format (sections < 2)");
+            Console.WriteLine("Invalid URI format (schemaIndex == -1)");
             return true;
         }
-        string[] parts = uri.Split(',');
+        string[] parts = uri[(schemaIndex + 1)..].Split(',');
         if (parts.Length != 3)
         {
             Console.WriteLine("Invalid URI format (parts != 3)");
             return true;
         }
 
-        SchemaName = sections[0];
+        SchemaName = uri[0..schemaIndex];
         DownloadURL = parts[0];
         ItemType = parts[1];
         ItemID = parts[2];
@@ -50,6 +53,17 @@ public class CliCommandGameBanana : ICliCommand
             // Load GameBanana data
             return await GameBanana.GetDownloadInfo(SchemaName, DownloadURL, ItemType, ItemID);
         }).Open(mainWindowViewModel);
+
+        // Put window on top
+        if (Application.Current?.ApplicationLifetime 
+            is IClassicDesktopStyleApplicationLifetime desktop &&
+            desktop.MainWindow is Window mainWindow)
+        {
+            mainWindow.Topmost = true;
+            mainWindow.Topmost = false;
+            if (mainWindow.WindowState == WindowState.Minimized)
+                mainWindow.WindowState = WindowState.Normal;
+        }
 
         return Task.CompletedTask;
     }

@@ -7,7 +7,8 @@
              mc:Ignorable="d" d:DesignWidth="920" d:DesignHeight="390"
              x:Class="HedgeModManager.UI.Controls.MainWindow.Test"
              x:DataType="vm:MainWindowViewModel"
-             Loaded="OnLoaded">
+             Loaded="OnLoaded"
+             Background="{DynamicResource BackgroundL0Brush}">
   <Grid>
     <StackPanel Margin="16,16,0,0" HorizontalAlignment="Left">
       <TextBlock Text="Config" Margin="0,8,0,0" />
@@ -26,12 +27,41 @@
         <Button Click="RunGame_Click">Run</Button>
         <Button Click="ChangeGame_Click">Change</Button>
         <Button Click="ClearGame_Click">Clear</Button>
+        <Button Click="OpenGame_Click">Open</Button>
       </StackPanel>
 
       <TextBlock Text="Functions" Margin="0,8,0,0" />
       <StackPanel Spacing="4" Orientation="Horizontal">
+        <Button Click="CreateDownload_Click">Create Download</Button>
       </StackPanel>
 
+      <TextBlock Text="Downloads" Margin="0,8,0,0" />
+      <ItemsControl ItemsSource="{Binding Downloads}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,4,0,4" Spacing="4">
+              <TextBlock Text="{Binding Name}"
+                         VerticalAlignment="Center" />
+              <ProgressBar Height="24"
+                           Value="{Binding Progress}"
+                           ShowProgressText="True"
+                           Minimum="0"
+                           Maximum="{Binding ProgressMax}"
+                           Foreground="Green" />
+              <Button Content="{DynamicResource Common.Button.Cancel}"
+                      Click="DownloadCancel_Click" />
+              <Button Content="{DynamicResource Common.Button.Delete}"
+                      Click="DownloadDelete_Click" />
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
     </StackPanel>
     <Grid Margin="0,16,0,0" 
           RowDefinitions="Auto,*"

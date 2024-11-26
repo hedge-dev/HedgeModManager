@@ -40,6 +40,10 @@
   <system:String x:Key="Common.Button.Options" >Options</system:String>
   <system:String x:Key="Common.Button.Select"  >Select</system:String>
 
+  <!-- Other -->
+  <system:String x:Key="Download.Text.DownloadMod">Downloading {0}</system:String>
+  <system:String x:Key="Download.Text.InstallMod">Installing {0}</system:String>
+
   <!-- Mods -->
   <system:String x:Key="Mods.Text.Name"         >Name</system:String>
   <system:String x:Key="Mods.Text.Author"       >Author</system:String>
@@ -78,12 +82,14 @@
   <system:String x:Key="Modal.Title.SaveError"      >Save Error</system:String>
   <system:String x:Key="Modal.Title.LoadError"      >Load Error</system:String>
   <system:String x:Key="Modal.Title.RunError"       >Launch Error</system:String>
+  <system:String x:Key="Modal.Title.InstallError"   >Install Error</system:String>
   <system:String x:Key="Modal.Title.ConfigureMod"   >Configure {0}</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.DeleteMod">Are you sure you want to delete &quot;{0}&quot;?&#x0a;This action cannot be undone!</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.GameNoAccess">Hedge Mod Manager does not have write&#x0a;access to the game files.&#x0a;&#x0a;Please make sure the game files are writable.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownSaveError">Hedge Mod Manager was unable to save&#x0a;due to an unknown error.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownRunError">Hedge Mod Manager was unable to launch&#x0a;the game due to an unknown error.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.GameLoadError">An error occurred when Hedge Mod Manager was trying&#x0a;to load mod data.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.GameMissingError">Hedge Mod Manager is unable to install &quot;{0}&quot;&#x0a;due to {1} not being found.</system:String>
 
 
 </ResourceDictionary>

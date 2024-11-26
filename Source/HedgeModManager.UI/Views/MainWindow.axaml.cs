@@ -77,6 +77,10 @@ public partial class MainWindow : Window
                 Logger.Debug($"Set test mode to {ViewModel.Config.TestModeEnabled}");
                 break;
             case Key.F5:
+                ViewModel.RefreshUI();
+                Logger.Debug($"Refreshed mods");
+                break;
+            case Key.F6:
                 var game = ViewModel.SelectedGame;
                 ViewModel.SelectedGame = null;
                 ViewModel.SelectedGame = game;

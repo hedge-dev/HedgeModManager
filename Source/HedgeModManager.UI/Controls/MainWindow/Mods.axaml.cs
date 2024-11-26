@@ -2,10 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using HedgeModManager.Foundation;
 using HedgeModManager.UI.Controls.Mods;
-using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -13,19 +14,10 @@ namespace HedgeModManager.UI.Controls.MainWindow;
 
 public partial class Mods : UserControl
 {
-    public static readonly StyledProperty<UIGame> GameProperty =
-        AvaloniaProperty.Register<Mods, UIGame>(nameof(Game));
-
     public static readonly StyledProperty<string?> SearchProperty =
         AvaloniaProperty.Register<Mods, string?>(nameof(Search),
             defaultValue: string.Empty,
             defaultBindingMode: BindingMode.TwoWay);
-
-    public UIGame Game
-    {
-        get => GetValue(GameProperty);
-        set => SetValue(GameProperty, value);
-    }
 
     public string? Search
     {
@@ -34,6 +26,7 @@ public partial class Mods : UserControl
     }
 
     public ModsViewModel ModsViewModel { get; set; } = new();
+    public ObservableCollection<IMod>? ModList { get; set; }
 
     public Mods()
     {
@@ -42,7 +35,7 @@ public partial class Mods : UserControl
 
     public void UpdateModList()
     {
-        if (Game == null)
+        if (ModList == null)
         {
             ModsViewModel.ModsList.Clear();
             ModsViewModel.Authors.Clear();
@@ -51,14 +44,14 @@ public partial class Mods : UserControl
         }
 
         ModsViewModel.ModsList.Clear();
-        Game.Game.ModDatabase.Mods
+        ModList
             .Select(x => new ModEntryViewModel(x, DataContext as MainWindowViewModel, ModsViewModel))
             .ToList()
             .ForEach(ModsViewModel.ModsList.Add);
 
         ModsViewModel.Authors.Clear();
         ModsViewModel.Authors.Add("Show All");
-        Game.Game.ModDatabase.Mods
+        ModList
             .SelectMany(x => x.Authors)
             .Select(x => x.Name)
             .Distinct()
@@ -76,9 +69,16 @@ public partial class Mods : UserControl
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        var viewModel = DataContext as MainWindowViewModel;
-        if (viewModel == null)
+        if (DataContext is not MainWindowViewModel viewModel)
             return;
+
+        // Subscribe to changes
+        if (ModList == null)
+        {
+            ModList = viewModel.Mods;
+            ModList.CollectionChanged += (s, e) => UpdateModList();
+            UpdateModList();
+        }
 
         AuthorComboBox.SelectedIndex = 0;
 
@@ -126,9 +126,6 @@ public partial class Mods : UserControl
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        if (change.Property == GameProperty)
-            UpdateModList();
-
         if (change.Property == SearchProperty)
         {
             if (string.IsNullOrEmpty(Search))

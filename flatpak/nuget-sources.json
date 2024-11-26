@@ -358,6 +358,13 @@
     },
     {
         "type": "file",
+        "url": "https://api.nuget.org/v3-flatcontainer/sharpcompress/0.38.0/sharpcompress.0.38.0.nupkg",
+        "sha512": "9107c6cf7b5d0633a31496634c388e41870e5f25a99c4eaa44f0bb5e1ffa24307c186ef63e6b54983571cde9f0558a44f51c6b743943162668beb6dadd438278",
+        "dest": "nuget-sources",
+        "dest-filename": "sharpcompress.0.38.0.nupkg"
+    },
+    {
+        "type": "file",
         "url": "https://api.nuget.org/v3-flatcontainer/skiasharp/2.88.8/skiasharp.2.88.8.nupkg",
         "sha512": "52b0661b38146357ee5f92153d9223b03d4e043db8c811773470725a81f4ec0171fc22a644ee70636f8793ac60432222a5395777615ca63b4d44d5095a331b35",
         "dest": "nuget-sources",
@@ -838,5 +845,12 @@
         "sha512": "c18803392f6cef042ef69eb504be3d5a39d7243eb96d99dcf0f14069a99c84800eb6abf3c0bcdbaf8e43a1f64f368dd4743a4d37b41a0e6d092f3665ddbf6d8a",
         "dest": "nuget-sources",
         "dest-filename": "valvekeyvalue.0.9.0.267.nupkg"
+    },
+    {
+        "type": "file",
+        "url": "https://api.nuget.org/v3-flatcontainer/zstdsharp.port/0.8.1/zstdsharp.port.0.8.1.nupkg",
+        "sha512": "b1efdf27e2c4ef13387695318701d2f0344e4195b364cb373061766dc8269d7276adc0a2282c80d900e987bb2812b62884725878409abeeba5f796cd81395d85",
+        "dest": "nuget-sources",
+        "dest-filename": "zstdsharp.port.0.8.1.nupkg"
     }
 ]
