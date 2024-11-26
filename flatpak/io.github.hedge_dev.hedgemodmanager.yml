@@ -20,6 +20,7 @@ finish-args:
   - --filesystem=/mnt
   - --device=dri
   - --share=ipc
+  - --share=network
   - --env=DOTNET_ROOT=/app/lib/dotnet
 
 modules:
@@ -43,12 +44,15 @@ modules:
     buildsystem: simple
     build-commands:
       - install -Dm644 hedgemodmanager.png /app/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png
-      - install -Dm644 hedgemodmanager.desktop /app/share/applications/${FLATPAK_ID}.desktop
       - install -Dm644 hedgemodmanager.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
+      - install -Dm644 hedgemodmanager.desktop /app/share/applications/${FLATPAK_ID}.desktop
+      - install -Dm644 hedgemodmanager.gamebanana.desktop /app/share/applications/${FLATPAK_ID}.gamebanana.desktop
     sources:
       - type: file
         path: hedgemodmanager.png
       - type: file
+        path: hedgemodmanager.metainfo.xml
+      - type: file
         path: hedgemodmanager.desktop
       - type: file
-        path: hedgemodmanager.metainfo.xml
+        path: hedgemodmanager.gamebanana.desktop
