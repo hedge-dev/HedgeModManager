@@ -69,6 +69,7 @@ public static class GameBanana
             Images = profilePage.PreviewMedia.Images.Select(x => $"{x.BaseURL}/{x.FilePath}").ToList(),
             DownloadURL = downloadURL,
         };
+        Logger.Information("Finished downloading item data");
 
         return downloadInfo;
     }

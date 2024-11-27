@@ -11,6 +11,7 @@ namespace HedgeModManager.UI.ViewModels;
 public partial class ModDownloaderViewModel : ViewModelBase
 {
     [ObservableProperty] private bool _ready = false;
+    [ObservableProperty] private bool _loading = true;
     [ObservableProperty] private string _title = "Common.Text.Loading";
     [ObservableProperty] private string _description = "";
     [ObservableProperty] private ModDownloadInfo? _downloadInfo;
@@ -37,6 +38,7 @@ public partial class ModDownloaderViewModel : ViewModelBase
         if (DownloadInfo != null)
         {
             Ready = true;
+            Loading = false;
             Update();
         }
     }

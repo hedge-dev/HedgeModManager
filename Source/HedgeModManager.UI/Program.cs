@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using HedgeModManager.UI.CLI;
+using Microsoft.Win32;
 using System;
 using System.IO.Pipes;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Text.Json;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 namespace HedgeModManager.UI;
 
@@ -68,6 +70,33 @@ public sealed class Program
         }
         CurrentMutex?.ReleaseMutex();
         CurrentMutex?.Dispose();
+    }
+
+    public static void InstallURIHandler()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            foreach (string schema in GameBanana.GameIDMapping.Keys)
+                installToRegistery(schema, "-gb \"%1\"");
+        }
+
+        [SupportedOSPlatform("windows")]
+        static void installToRegistery(string schema, string args)
+        {
+            if (Environment.ProcessPath is not string processPath)
+                return;
+
+            try
+            {
+                var reg = Registry.CurrentUser.CreateSubKey($"Software\\Classes\\{schema}");
+                reg.SetValue("", $"URL:{ApplicationName}");
+                reg.SetValue("URL Protocol", "");
+                reg = reg.CreateSubKey("shell\\open\\command");
+                reg.SetValue("", $"\"{processPath}\" {args}");
+                reg.Close();
+            }
+            catch { }
+        }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

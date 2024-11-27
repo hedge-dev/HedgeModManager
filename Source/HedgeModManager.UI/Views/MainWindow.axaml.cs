@@ -29,6 +29,9 @@ public partial class MainWindow : Window
         Logger.Information($"Initialising codes...");
         CodeProvider.TryLoadRoslyn();
 
+        Logger.Information($"Loading URI handlers...");
+        Program.InstallURIHandler();
+
         Logger.Information($"Locating games...");
         ViewModel.Games = new(Games.GetUIGames(ModdableGameLocator.LocateGames()));
         //ViewModel.Games = new();

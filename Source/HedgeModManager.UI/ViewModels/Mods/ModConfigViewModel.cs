@@ -52,13 +52,11 @@ public partial class ModConfigViewModel : ViewModelBase
 
         public IEnumerable GetErrors(string? propertyName)
         {
-            switch (propertyName)
+            return propertyName switch
             {
-                case nameof(Value):
-                    return new[] { ErrorText };
-                default:
-                    return Array.Empty<string?>();
-            }
+                nameof(Value) => [ErrorText],
+                _ => Array.Empty<string?>(),
+            };
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -99,6 +97,7 @@ public partial class ModConfigViewModel : ViewModelBase
                     default:
                         break;
                 }
+                ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(e.PropertyName));
             }
             base.OnPropertyChanged(e);
         }
