@@ -10,6 +10,9 @@ on:
 env:
   PROJECT_PATH: ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj
   FLATPAK_ID: io.github.hedge_dev.hedgemodmanager
+  GENERATOR_URL: https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/refs/heads/master/dotnet/flatpak-dotnet-generator.py
+  DOTNET_VERSION: 8
+  FREEDESKTOP_VERSION: 24.08
 
 jobs:
   build:
@@ -55,7 +58,19 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Build Flatpak
+      - name: Install dependencies from Flathub
+        run: |
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install -y flathub org.freedesktop.Sdk//${{env.FREEDESKTOP_VERSION}}
+          sudo flatpak install -y flathub org.freedesktop.Sdk.Extension.dotnet${{env.DOTNET_VERSION}}//${{env.FREEDESKTOP_VERSION}}
+  
+      - name: Generate NuGet sources
+        run: |
+          curl -o flatpak-dotnet-generator.py ${{env.GENERATOR_URL}}
+          chmod +x flatpak-dotnet-generator.py
+          sudo python3 flatpak-dotnet-generator.py ./flatpak/nuget-sources.json ${{env.PROJECT_PATH}} --dotnet ${{env.DOTNET_VERSION}} --freedesktop ${{env.FREEDESKTOP_VERSION}}
+  
+      - name: Build flatpak
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           bundle: ${{env.FLATPAK_ID}}.flatpak
@@ -64,8 +79,13 @@ jobs:
           arch: ${{matrix.arch}}
           upload-artifact: false
       
-      - name: Upload Artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: HedgeModManager-flatpak-${{matrix.arch}}
           path: ./${{env.FLATPAK_ID}}.flatpak
+      - name: Upload nuget-sources.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-sources.json
+          path: ./flatpak/nuget-sources.json
