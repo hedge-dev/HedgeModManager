@@ -1,0 +1,9 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:collectionsGeneric="using:System.Collections.Generic"
+                    xmlns:local="using:HedgeModManager.UI.Languages"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <collectionsGeneric:List x:TypeArguments="local:LanguageEntry" x:Key="Languages">
+    <local:LanguageEntry Code="en-AU" Name="English (Australia)" />
+    <!-- <local:LanguageEntry Code="en-UW" Name="English (UwU)" /> -->
+  </collectionsGeneric:List>
+</ResourceDictionary>

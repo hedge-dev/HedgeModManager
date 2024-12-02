@@ -88,11 +88,15 @@ public partial class ModDownloaderModal : UserControl
                 uiGame = desiredUIGame;
                 await uiGame.Game.InitializeAsync();
             }
+            if (uiGame.Game.ModDatabase is not ModDatabaseGeneric modsDB)
+            {
+                Logger.Error("Only ModDatabaseGeneric is supported for installing mods");
+                return;
+            }
 
             string downloadPath = Path.GetTempFileName();
 
-            new Download(Localize("Download.Text.DownloadMod", downloadInfo.Name), 1)
-                .OnRun(async (d, c) =>
+            new Download(downloadInfo.Name, 1).OnRun(async (d, c) =>
             {
                 Logger.Information($"Downloading {downloadInfo.Name}...");
                 var client = new HttpClient();
@@ -100,57 +104,51 @@ public partial class ModDownloaderModal : UserControl
                     HttpCompletionOption.ResponseHeadersRead, c);
                 response.EnsureSuccessStatusCode();
 
-                d.ProgressMax = response.Content.Headers.ContentLength ?? -1L;
+                var downloadProgress = d.CreateProgress();
+                var installProgress = d.CreateProgress();
+
+                downloadProgress.ReportMax(response.Content.Headers.ContentLength ?? 0L);
+                installProgress.ReportMax(0);
 
                 using var stream = await response.Content.ReadAsStreamAsync(c);
                 using var fileStream = File.Create(downloadPath);
 
                 var buffer = new byte[1048576];
-                int bytesRead;
+                int bytesRead = 0;
+                long totalBytesRead = 0L;
 
                 while ((bytesRead = await stream.ReadAsync(buffer, c)) > 0)
                 {
                     await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), c);
-                    d.Progress += bytesRead;
+                    downloadProgress.Report(totalBytesRead += bytesRead);
                 }
+                fileStream.Close();
+                Logger.Debug($"Started installing {downloadInfo.Name}");
+
+                // Install mod
+                await modsDB.InstallModFromArchive(downloadPath, installProgress);
+
             }).OnComplete((d) =>
             {
+                Logger.Information($"Finished installing {downloadInfo.Name}");
+                if (uiGame == viewModel.SelectedGame)
+                    Dispatcher.UIThread.Invoke(viewModel.RefreshUI);
+                try { if (File.Exists(downloadPath)) File.Delete(downloadPath); } catch { }
                 d.Destroy();
-                Logger.Information($"Finished downloading {downloadInfo.Name}");
-
-                new Download(Localize("Download.Text.InstallMod", downloadInfo.Name), 1)
-                .OnRun(async (d, c) =>
-                {
-                    Logger.Information($"Installing {downloadInfo.Name}...");
-                    if (uiGame.Game.ModDatabase is not ModDatabaseGeneric modsDB)
-                    {
-                        Logger.Error("Only ModDatabaseGeneric is supported for installing mods");
-                        throw new Exception();
-                    }
-                    await modsDB.InstallModFromArchive(downloadPath, d);
-                }).OnComplete((d) =>
-                {
-                    Logger.Information($"Finished installing {downloadInfo.Name}");
-                    if (uiGame == viewModel.SelectedGame)
-                        Dispatcher.UIThread.Invoke(viewModel.RefreshUI);
-                    try { File.Delete(downloadPath); } catch { }
-                    d.Destroy();
-                    return Task.CompletedTask;
-                }).OnError((d, e) =>
-                {
-                    Logger.Error($"Failed to install {downloadInfo.Name}");
-
-                    try { File.Delete(downloadPath); } catch { }
-                    return Task.CompletedTask;
-                })
-                .Run(viewModel.Downloads);
-
                 return Task.CompletedTask;
             }).OnCancel((d) =>
             {
-                Logger.Debug("Mod download cancelled");
+                Logger.Debug("Mod install cancelled");
                 return Task.CompletedTask;
-            }).Run(viewModel.Downloads);
+            }).OnError(async (d, e) =>
+            {
+                Logger.Error($"Failed to install {downloadInfo.Name}");
+
+                try { if (File.Exists(downloadPath)) File.Delete(downloadPath); } catch { }
+                await Task.Delay(5000);
+                d.Destroy();
+            })
+            .Run(viewModel);
         }
     }
 

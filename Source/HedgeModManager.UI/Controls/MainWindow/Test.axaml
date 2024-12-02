@@ -33,6 +33,7 @@
       <TextBlock Text="Functions" Margin="0,8,0,0" />
       <StackPanel Spacing="4" Orientation="Horizontal">
         <Button Click="CreateDownload_Click">Create Download</Button>
+        <Button Click="InstallMod_Click">Install Mod</Button>
       </StackPanel>
 
       <TextBlock Text="Downloads" Margin="0,8,0,0" />

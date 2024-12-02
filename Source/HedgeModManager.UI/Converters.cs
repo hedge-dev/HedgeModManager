@@ -38,6 +38,23 @@ public class NullBoolConverter : IValueConverter
     }
 }
 
+public class EmptyBoolConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        bool val = true;
+        if (value is string str)
+            val = string.IsNullOrEmpty(str);
+
+        return parameter as string == "True" ? !val : val;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value != null;
+    }
+}
+
 public class LogStringConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -62,11 +79,12 @@ public class LogStringConverter : IValueConverter
         return BindingNotification.UnsetValue;
     }
 }
+
 public class StringLocalizeConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is string str)
+        if (value?.ToString() is string str)
             return Localize(str);
         return BindingNotification.UnsetValue;
     }

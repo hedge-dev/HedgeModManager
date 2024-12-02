@@ -12,15 +12,16 @@
              x:Class="HedgeModManager.UI.Controls.Modals.ModDownloaderModal"
              x:DataType="vm:MainWindowViewModel"
              Initialized="OnInitialized"
-             Background="{DynamicResource BackgroundL1Brush}">
+             Background="{DynamicResource BackgroundL1Brush}"
+             MinWidth="400" MinHeight="200">
   <Grid RowDefinitions="Auto,*,Auto">
     <Label Grid.Row="0"
             Background="{DynamicResource BackgroundL0Brush}"
             Content="{Binding ViewModel.Title, RelativeSource={RelativeSource AncestorType=cm:ModDownloaderModal}, Converter={StaticResource StringLocalizeConverter}}"
             FontSize="14" Padding="4"
             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
-    <Grid Grid.Row="1"
-          ColumnDefinitions="*,Auto">
+    <Grid Grid.Row="1" ColumnDefinitions="*,Auto"
+          IsVisible="{Binding ViewModel.Loading, Converter={StaticResource InvertedBoolConverter}, RelativeSource={RelativeSource AncestorType=cm:ModDownloaderModal}}">
       <cb:GroupBox Grid.Column="0"
                     Margin="16,16,8,16"
                     Header="Modal.Header.Description">
@@ -43,6 +44,12 @@
           </Border>
         </cb:GroupBox.Data>
       </cb:GroupBox>
+    </Grid>
+    <Grid Grid.Row="1" ColumnDefinitions="*,Auto"
+          IsVisible="{Binding ViewModel.Loading, RelativeSource={RelativeSource AncestorType=cm:ModDownloaderModal}}">
+      <TextBlock Text="{DynamicResource Common.Text.Loading}"
+                 FontSize="28" Margin="32"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" />
     </Grid>
     <Border Grid.Row="2"
             Background="{DynamicResource BackgroundL1Brush}"

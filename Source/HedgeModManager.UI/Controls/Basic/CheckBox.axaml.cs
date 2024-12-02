@@ -32,11 +32,6 @@ public partial class CheckBox : ButtonUserControl
         InitializeComponent();
     }
 
-    public void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        Click += OnClick;
-    }
-
     public void OnClick(object? sender, RoutedEventArgs e)
     {
         IsChecked = !IsChecked;

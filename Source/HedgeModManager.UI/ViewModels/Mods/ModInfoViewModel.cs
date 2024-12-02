@@ -28,6 +28,6 @@ public partial class ModInfoViewModel : ViewModelBase
     public void UpdateButtons()
     {
         FavoriteButtonText = ModViewModel.Mod.Attributes.HasFlag(ModAttribute.Favorite)
-            ? "Mods.Button.Favorited" : "Mods.Button.Favorite";
+            ? Localize("Mods.Button.Favorited") : Localize("Mods.Button.Favorite");
     }
 }

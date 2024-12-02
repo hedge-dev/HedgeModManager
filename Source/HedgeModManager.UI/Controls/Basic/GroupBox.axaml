@@ -5,19 +5,16 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
           mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="150"
           x:Class="HedgeModManager.UI.Controls.Basic.GroupBox">
-  <Border BorderBrush="{DynamicResource BorderBrush}"
-          BorderThickness="1"
-          CornerRadius="8"
-          Background="{DynamicResource BackgroundL0Brush}">
+  <Border CornerRadius="8"
+          Background="{DynamicResource BackgroundL1Brush}">
     <Grid>
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
       <Border Grid.Row="0"
-              BorderBrush="{DynamicResource BorderBrush}"
-              BorderThickness="0,0,0,1" CornerRadius="8,8,0,0"
-              Background="{DynamicResource BackgroundL1Brush}">
+              CornerRadius="8,8,0,0"
+              Background="{DynamicResource BackgroundL2Brush}">
         <TextBlock Text="{Binding Header, RelativeSource={RelativeSource AncestorType=cb:GroupBox}, Converter={StaticResource StringLocalizeConverter}}"
                    FontSize="14"
                    HorizontalAlignment="Center"
@@ -26,7 +23,8 @@
       </Border>
       
       <Border Grid.Row="1" Padding="2" CornerRadius="0,0,8,8" ClipToBounds="True">
-        <ContentPresenter Grid.Row="1" Content="{Binding Data, RelativeSource={RelativeSource AncestorType=cb:GroupBox}}" />
+        <ContentPresenter Grid.Row="1" Content="{Binding Data, RelativeSource={RelativeSource AncestorType=cb:GroupBox}}"
+                          Margin="{Binding DataPadding, RelativeSource={RelativeSource AncestorType=cb:GroupBox}}"/>
       </Border>
     </Grid>
   </Border>

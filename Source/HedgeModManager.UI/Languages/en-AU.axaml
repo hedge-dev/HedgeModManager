@@ -41,14 +41,12 @@
   <system:String x:Key="Common.Button.Select"  >Select</system:String>
 
   <!-- Other -->
-  <system:String x:Key="Download.Text.DownloadMod">Downloading {0}</system:String>
-  <system:String x:Key="Download.Text.InstallMod">Installing {0}</system:String>
+  <system:String x:Key="Download.Text.InstallMod"        >Installing {0}...</system:String>
+  <system:String x:Key="Download.Text.InstallModMultiple">Installing {0} mods...</system:String>
+  <system:String x:Key="Theme.Name.Dark"                 >Cool Dark</system:String>
+  <system:String x:Key="Theme.Name.Darker"               >Neutral Dark</system:String>
 
   <!-- Mods -->
-  <system:String x:Key="Mods.Text.Name"         >Name</system:String>
-  <system:String x:Key="Mods.Text.Author"       >Author</system:String>
-  <system:String x:Key="Mods.Text.Version"      >Version</system:String>
-  <system:String x:Key="Mods.Text.Features"     >Features</system:String>
   <system:String x:Key="Mods.Button.Favorite"   >Favourite</system:String>
   <system:String x:Key="Mods.Button.Favorited"  >Favourited</system:String>
   <system:String x:Key="Mods.Button.Configure"  >Configure</system:String>
@@ -62,6 +60,34 @@
   <system:String x:Key="Codes.Button.UpdateCodes">Update Community Codes</system:String>
 
   <!-- Settings -->
+  <system:String x:Key="Settings.Button.ChangeModsDir"     >Change</system:String>
+  <system:String x:Key="Settings.Button.InstallML"         >Install Mod Loader</system:String>
+  <system:String x:Key="Settings.Button.UninstallML"       >Uninstall Mod Loader</system:String>
+  <system:String x:Key="Settings.Button.OpenGameDir"       >Open Game Directory</system:String>
+  <system:String x:Key="Settings.Button.OpenModsDir"       >Open</system:String>
+  <system:String xml:space="preserve" x:Key="Settings.Header.GameML">Game &amp; Mod Loader</system:String>
+  <system:String x:Key="Settings.Header.Manager"           >Hedge Mod Manager</system:String>
+  <system:String x:Key="Settings.Header.Text"              >Settings</system:String>
+  <system:String x:Key="Settings.Title.Profile"            >Profile</system:String>
+  <system:String x:Key="Settings.Description.Profile"      >Quickly change the enabled mods using user-defined presets.</system:String>
+  <system:String x:Key="Settings.Description.ModLoader"    >Enable and install to load mods.</system:String>
+  <system:String x:Key="Settings.Description.DebugConsole" >Enable to display mod loader debug messages.</system:String>
+  <system:String x:Key="Settings.Description.Launcher"     >Launch the game using the associated game launcher.</system:String>
+  <system:String x:Key="Settings.Description.UpdateCodes"  >Automatically check for code update on startup and game change.</system:String>
+  <system:String x:Key="Settings.Description.UpdateManager">Automatically check for Hedge Mod Manager updates on startup.</system:String>
+  <system:String x:Key="Settings.Description.UpdateML"     >Automatically check for mod loader updates on startup and game change.</system:String>
+  <system:String x:Key="Settings.Description.UpdateMod"    >Automatically check for mod updates on startup and game change.</system:String>
+  <system:String x:Key="Settings.Title.ModsDir"            >Mods Directory</system:String>
+  <system:String x:Key="Settings.Title.ModLoader"          >Mod Loader</system:String>
+  <system:String x:Key="Settings.Title.DebugConsole"       >Enable Debug Console</system:String>
+  <system:String x:Key="Settings.Title.Language"           >Language</system:String>
+  <system:String x:Key="Settings.Title.Launcher"           >Use Game Launcher</system:String>
+  <system:String x:Key="Settings.Title.Theme"              >Theme</system:String>
+  <system:String x:Key="Settings.Title.UpdateCodes"        >Check for code updates</system:String>
+  <system:String x:Key="Settings.Title.UpdateManager"      >Check for Hedge Mod Manager updates</system:String>
+  <system:String x:Key="Settings.Title.UpdateML"           >Check for mod loader updates</system:String>
+  <system:String x:Key="Settings.Title.UpdateMod"          >Check for mod updates</system:String>
+
   <!-- About -->
   <system:String x:Key="About.Program.Sub"  >Requires legally owned copies of the supported games.</system:String>
   <system:String x:Key="About.Button.GitHub">GitHub</system:String>

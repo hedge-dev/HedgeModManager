@@ -346,7 +346,10 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
                 string entryPath = entry.Key!;
                 if (entryPath.StartsWith(archiveRoot))
                 {
-                    entryPath = entryPath[(archiveRoot.Length + 1)..];
+                    if (entryPath.Contains('/'))
+                        entryPath = entryPath[(archiveRoot.Length + 1)..];
+                    else
+                        entryPath = entryPath[(archiveRoot.Length)..];
                     archiveEntries.Add((modDir, entryPath, entry));
                 }
             }

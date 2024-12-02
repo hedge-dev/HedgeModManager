@@ -6,7 +6,8 @@
         xmlns:cc="using:HedgeModManager.UI.Controls.Codes"
         xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
         xmlns:cmw="using:HedgeModManager.UI.Controls.MainWindow"
-        xmlns:cs="using:HedgeModManager.UI.Controls.Setup"
+        xmlns:setup="using:HedgeModManager.UI.Controls.Setup"
+        xmlns:settings="using:HedgeModManager.UI.Controls.Settings"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
@@ -14,23 +15,30 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/icon.ico"
         Title="{DynamicResource Common.Program.Name}"
-        Background="Black" Loaded="Window_Loaded" KeyDown="OnKeyDown">
+        MinWidth="1089" MinHeight="613"
+        Background="Black"
+        FontSize="14"
+        Loaded="Window_Loaded"
+        KeyDown="OnKeyDown">
+  <!-- FontFamily="{StaticResource NunitoFont}"-->
 
   <Design.DataContext>
     <vm:MainWindowViewModel/>
   </Design.DataContext>
-  <Grid RowDefinitions="*,Auto" ColumnDefinitions="Auto,*">
+  <Grid RowDefinitions="*,Auto" ColumnDefinitions="Auto,*"
+        Background="{DynamicResource BackgroundL1Brush}">
     <c:Sidebar Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" SelectedTabIndex="{Binding SelectedTabIndex}" IsSetupCompleted="{Binding Config.IsSetupCompleted}" />
     <c:Footer Grid.Row="1" Grid.Column="1" />
     <TabControl Grid.Row="0" Grid.Column="1"
                 SelectedIndex="{Binding SelectedTabIndex}"
                 SelectionChanged="OnTabChanged"
-                Background="{DynamicResource BackgroundL0Brush}">
+                Background="{DynamicResource BackgroundL0Brush}"
+                CornerRadius="0,0,0,8">
       <TabItem Header="Loading">
         <TextBlock Text="{DynamicResource Common.Text.Loading}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
       </TabItem>
       <TabItem Header="Setup">
-        <cs:Setup />
+        <setup:Setup />
       </TabItem>
       <TabItem Header="Mods">
         <cmw:Mods />
@@ -39,7 +47,7 @@
         <cc:Codes Game="{Binding SelectedGame}" />
       </TabItem>
       <TabItem Header="Settings">
-        <TextBlock Margin="5">*cog sounds*</TextBlock>
+        <settings:Settings  Game="{Binding SelectedGame}" />
       </TabItem>
       <TabItem Header="About">
         <ca:About />

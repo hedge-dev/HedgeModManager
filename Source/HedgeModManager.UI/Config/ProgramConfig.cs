@@ -12,6 +12,8 @@ public partial class ProgramConfig : ViewModelBase
     [ObservableProperty] private bool _isSetupCompleted = false;
     [ObservableProperty] private bool _testModeEnabled = true;
     [ObservableProperty] private string? _lastSelectedPath;
+    [ObservableProperty] private string? _theme;
+    [ObservableProperty] private string? _language;
 
     private string GetConfigPath()
     {
@@ -19,6 +21,25 @@ public partial class ProgramConfig : ViewModelBase
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             Program.ApplicationCompany, Program.ApplicationName);
         return Path.Combine(baseDirectory, "ProgramConfig.json");
+    }
+
+    public void Load()
+    {
+        string filePath = GetConfigPath();
+        if (!File.Exists(filePath))
+            return;
+
+        string jsonData = File.ReadAllText(filePath);
+
+        var config = JsonSerializer.Deserialize<ProgramConfig>(jsonData, Program.JsonSerializerOptions);
+
+        // Copy data
+        if (config != null)
+        {
+            foreach (var property in GetType().GetProperties())
+                if (property.CanWrite)
+                    property.SetValue(this, property.GetValue(config));
+        }
     }
 
     public async Task LoadAsync()

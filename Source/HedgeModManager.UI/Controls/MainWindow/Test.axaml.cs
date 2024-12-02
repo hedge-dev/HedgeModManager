@@ -196,7 +196,7 @@ public partial class Test : UserControl
     {
         if (DataContext is MainWindowViewModel viewModel)
         {
-            var download = new Download("Test Download", 1000);
+            var download = new Download("Download", 1000);
 
             download.OnRun(async (d, c) =>
             {
@@ -219,8 +219,14 @@ public partial class Test : UserControl
             {
                 Logger.Debug("Download cancelled");
                 return Task.CompletedTask;
-            }).Run(viewModel.Downloads);
+            }).Run(viewModel);
         }
+    }
+
+    private async void InstallMod_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+            await viewModel.InstallMod(this, null);
     }
 
     private void DownloadCancel_Click(object? sender, RoutedEventArgs e)

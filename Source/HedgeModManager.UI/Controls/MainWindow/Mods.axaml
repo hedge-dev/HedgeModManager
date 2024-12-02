@@ -19,7 +19,7 @@
         <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Watermark="Search Mods..."
                  FontSize="14" Height="28"
                  Text="{Binding Search, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"
-                 Margin="16,0,8,0"
+                 Margin="0,0,8,0"
                  VerticalAlignment="Center" HorizontalAlignment="Stretch" />
         <ComboBox x:Name="AuthorComboBox"
                   Grid.Row="0" Grid.Column="2"
@@ -29,19 +29,24 @@
                   SelectionChanged="OnAuthorSelectionChanged" />
 
         <Border Grid.Row="0" Grid.Column="4"
-                Margin="0,0,16,6" Height="48"
+                Margin="0,0,0,6" Height="48"
                 CornerRadius="8" BorderThickness="1"
                 VerticalAlignment="Center"
-                Background="{DynamicResource Button.BackgroundBrush}"
-                BorderBrush="{DynamicResource Button.BorderBrush}">
+                Background="{DynamicResource BackgroundL1Brush}"
+                BorderBrush="{DynamicResource BorderBrush}">
           <StackPanel VerticalAlignment="Center"
                       Orientation="Horizontal" Spacing="4">
-            <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}" Enabled="{Binding ModsViewModel.ShowConfig, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Click="OnFilterClick" />
+            <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Gear}"
+                                      Enabled="{Binding ModsViewModel.ShowConfig, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"
+                                      Margin="16,0,0,0"
+                                      Click="OnFilterClick" />
             <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.FloppyDisk}" Enabled="{Binding ModsViewModel.ShowSave, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Click="OnFilterClick" />
             <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.Code}" Enabled="{Binding ModsViewModel.ShowCode, RelativeSource={RelativeSource AncestorType=cmw:Mods}}" Click="OnFilterClick" />
             <cm:ModEntryFeatureButton Icon="{StaticResource Geometry.StarSolid}"
                                       Fill="{DynamicResource Mods.FavoriteBrush}"
-                                      Enabled="{Binding ModsViewModel.ShowFavorite, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"  Click="OnFilterClick" />
+                                      Enabled="{Binding ModsViewModel.ShowFavorite, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"
+                                      Margin="0,0,16,0"
+                                      Click="OnFilterClick" />
           </StackPanel>
         </Border>
       </Grid>

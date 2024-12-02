@@ -1,26 +1,31 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HedgeModManager.UI.ViewModels;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.Models;
 
-public partial class Download : ObservableObject, IProgress<long>
+public partial class Download : ObservableObject
 {
-    [ObservableProperty] private string _name = "Download Name";
-    [ObservableProperty] private long _progress = 0;
-    [ObservableProperty] private long _progressMax = 100;
-    [ObservableProperty] private bool _running = false;
+    private List<DownloadProgress> _progresses = [];
 
-    public Collection<Download>? DownloadCollection;
+    [ObservableProperty] private string _name = "Download Name";
+    [ObservableProperty] private double _progress = 0d;
+    [ObservableProperty] private double _progressMax = 100d;
+    [ObservableProperty] private bool _running = false;
+    [ObservableProperty] private bool _destroyed = false;
+
     public Func<Download, CancellationToken, Task>? RunCallback;
     public Func<Download, Task>? CompleteCallback;
     public Func<Download, Exception, Task>? ErrorCallback;
     public Func<Download, Task>? CanceledCallback;
     public CancellationTokenSource CancelToken = new();
 
-    public Download(string name, long progressMax)
+
+    public Download(string name, long progressMax = 100L)
     {
         Name = name;
         ProgressMax = progressMax;
@@ -29,6 +34,7 @@ public partial class Download : ObservableObject, IProgress<long>
     public void Cancel()
     {
         CancelToken.Cancel();
+        Running = false;
     }
 
     public Download OnRun(Func<Download, CancellationToken, Task> callback)
@@ -55,15 +61,14 @@ public partial class Download : ObservableObject, IProgress<long>
         return this;
     }
 
-    public Download Run(Collection<Download>? downloadCollection = null)
+    public Download Run(MainWindowViewModel? mainViewModel)
     {
         if (Running)
             return this;
 
         Running = true;
 
-        DownloadCollection = downloadCollection;
-        DownloadCollection?.Add(this);
+        mainViewModel?.AddDownload(this);
 
         Task.Run(async () =>
         {
@@ -104,10 +109,50 @@ public partial class Download : ObservableObject, IProgress<long>
         if (Running)
             Cancel();
         CancelToken.Dispose();
-        DownloadCollection?.Remove(this);
+        Destroyed = true;
+    }
+
+    public void UpdateProgress()
+    {
+        if (_progresses.Count == 0)
+            return;
+
+        double progress = 0;
+        double progressMax = 0;
+        long largestProgressMax = _progresses.Max(x => x.ProgressMax);
+
+        progressMax = largestProgressMax * _progresses.Count;
+        foreach (var progresses in _progresses)
+        {
+            if (progresses.ProgressMax == 0)
+                continue;
+            double ratio = (double)progresses.Progress / progresses.ProgressMax;
+            progress += ratio * largestProgressMax;
+        }
+
+        Progress = progress;
+        ProgressMax = progressMax;
+    }
+
+    public DownloadProgress CreateProgress()
+    {
+        var progress = new DownloadProgress();
+        progress.PropertyChanged += (s, e) => UpdateProgress();
+        _progresses.Add(progress);
+        return progress;
     }
 
     public void Report(long value) => Progress = value;
 
     public void ReportMax(long value) => ProgressMax = value;
+
+    public partial class DownloadProgress : ObservableObject, IProgress<long>
+    {
+        [ObservableProperty] public long _progress = 0L;
+        [ObservableProperty] public long _progressMax = 100L;
+
+        public void Report(long value) => Progress = value;
+
+        public void ReportMax(long value) => ProgressMax = value;
+    }
 }

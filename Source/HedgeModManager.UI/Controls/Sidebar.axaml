@@ -9,7 +9,6 @@
              x:Class="HedgeModManager.UI.Controls.Sidebar"
              x:DataType="vm:MainWindowViewModel">
   <Border Background="{DynamicResource BackgroundL1Brush}"
-          BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0"
           Width="80" HorizontalAlignment="Left"
           Loaded="OnLoaded">
     <Grid>

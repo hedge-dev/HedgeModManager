@@ -23,9 +23,6 @@ public partial class MainWindow : Window
         if (ViewModel == null)
             return;
 
-        Logger.Information($"Loading config...");
-        await ViewModel.Config.LoadAsync();
-
         Logger.Information($"Initialising codes...");
         CodeProvider.TryLoadRoslyn();
 

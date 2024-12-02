@@ -8,12 +8,19 @@
              x:Class="HedgeModManager.UI.Controls.Footer"
              x:DataType="vm:MainWindowViewModel">
   <Border Background="{DynamicResource BackgroundL1Brush}"
-          BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0"
           Height="48" HorizontalAlignment="Stretch">
     <Grid>
-      <StackPanel Margin="6,0,0,0"
+      <StackPanel Margin="24,0,0,0" Orientation="Horizontal"
                   HorizontalAlignment="Left" VerticalAlignment="Center">
-        <TextBlock Text="{Binding LastLog}" />
+        <TextBlock Text="{Binding LastLog}" FontSize="14"
+                   VerticalAlignment="Center" />
+        <ProgressBar Height="24" Margin="24,0,0,0"
+                     Value="{Binding OverallProgress}"
+                     ShowProgressText="True"
+                     Minimum="0"
+                     Maximum="{Binding OverallProgressMax}"
+                     Foreground="Green"
+                     IsVisible="{Binding ShowProgressBar}" />
       </StackPanel>
       <ItemsControl ItemsSource="{Binding CurrentTabInfo.Buttons}">
         <ItemsControl.ItemsPanel>

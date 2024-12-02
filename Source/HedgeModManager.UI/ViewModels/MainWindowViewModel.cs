@@ -1,11 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.Foundation;
 using HedgeModManager.UI.CLI;
 using HedgeModManager.UI.Config;
 using HedgeModManager.UI.Controls;
 using HedgeModManager.UI.Controls.Modals;
+using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.ViewModels;
 
@@ -27,6 +30,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<UIGame> Games { get; set; } = [];
     public ObservableCollection<Download> Downloads { get; set; } = [];
     public ObservableCollection<IMod> Mods { get; set; } = [];
+    public ObservableCollection<LanguageEntry> Languages { get; set; } = [];
     public ProgramConfig Config { get; set; } = new();
 
     [ObservableProperty] private UIGame? _selectedGame;
@@ -38,12 +42,20 @@ public partial class MainWindowViewModel : ViewModelBase
         [new ("Loading"), new("Setup"), new("Mods"), new("Codes"), new("Settings"), new("About"), new("Test")];
     [ObservableProperty] private ObservableCollection<Modal> _modals = [];
     [ObservableProperty] private bool _isBusy = true;
+    [ObservableProperty] private double _overallProgress = 0d;
+    [ObservableProperty] private double _overallProgressMax = 0d;
+    [ObservableProperty] private bool _showProgressBar = false;
+    [ObservableProperty] private LanguageEntry? _selectedLanguage;
 
     // Preview only
     public MainWindowViewModel() { }
 
-    public MainWindowViewModel(UILogger logger)
+    public MainWindowViewModel(UILogger logger, List<LanguageEntry> languages)
     {
+        // Setup languages
+        LanguageEntry.TotalLineCount = languages.Max(x => x.Lines);
+        Languages = new ObservableCollection<LanguageEntry>(languages);
+
         // Setup logger
         _loggerInstance = logger;
         new Logger(logger);
@@ -218,6 +230,107 @@ public partial class MainWindowViewModel : ViewModelBase
             using var stream = await file.OpenWriteAsync();
             await stream.WriteAsync(Encoding.Default.GetBytes(log));
         }
+    }
+
+    public async Task InstallMod(Visual visual, UIGame? game)
+    {
+        var topLevel = TopLevel.GetTopLevel(visual);
+        if (topLevel == null)
+            return;
+
+        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new()
+        {
+            Title = "Select Mod...",
+            AllowMultiple = true,
+            FileTypeFilter =
+            [
+                new("Archive Files")
+                {
+                    Patterns = ["*.zip", "*.7z", "*.rar"],
+                    MimeTypes =
+                    [
+                        "application/zip",
+                        "application/x-rar-compressed",
+                        "application/x-7z-compressed"
+                    ]
+                }
+            ]
+        });
+
+        if (files == null)
+            return;
+
+        foreach (var file in files)
+            InstallMod(file.Name, Uri.UnescapeDataString(file.Path.AbsolutePath), game);
+    }
+
+
+    public void InstallMod(string name, string path, UIGame? game)
+    {
+        game ??= SelectedGame;
+
+        if (game?.Game.ModDatabase is not ModDatabaseGeneric modsDB)
+        {
+            Logger.Error("Only ModDatabaseGeneric is supported for installing mods");
+            return;
+        }
+
+        new Download(name).OnRun(async (d, c) =>
+        {
+            var installProgress = d.CreateProgress();
+            installProgress.ReportMax(1);
+            await modsDB.InstallModFromArchive(path, installProgress);
+
+        }).OnComplete((d) =>
+        {
+            Logger.Information($"Finished installing {name}");
+            if (game == SelectedGame)
+                Dispatcher.UIThread.Invoke(RefreshUI);
+            d.Destroy();
+            return Task.CompletedTask;
+        }).OnError(async (d, e) =>
+        {
+            Logger.Error(e);
+            Logger.Error($"Failed to install {name}");
+            await Task.Delay(5000);
+            d.Destroy();
+        })
+        .Run(this);
+    }
+
+    public void UpdateDownload()
+    {
+        double progress = 0;
+        double progressMax = 0;
+
+        for (int i = 0; i < Downloads.Count; i++)
+        {
+            if (Downloads[i].Destroyed)
+            {
+                Downloads.RemoveAt(i);
+                i--;
+                continue;
+            }
+            progress += Downloads[i].Progress;
+            progressMax += Downloads[i].ProgressMax;
+        }
+
+        if (Downloads.Count > 0)
+        {
+            OverallProgress = progress;
+            OverallProgressMax = progressMax;
+            if (Downloads.Count == 1)
+                LastLog = Localize("Download.Text.InstallMod", Downloads[0].Name);
+            else
+                LastLog = Localize("Download.Text.InstallModMultiple", Downloads.Count);
+        }
+        ShowProgressBar = Downloads.Count > 0;
+    }
+
+    public void AddDownload(Download download)
+    {
+        download.PropertyChanged += (s, e) => Dispatcher.UIThread.Invoke(UpdateDownload);
+        Downloads.Add(download);
     }
 
     public async Task ProcessCommands(List<ICliCommand> commands)

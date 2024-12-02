@@ -17,11 +17,14 @@
     <ResourceDictionary x:Key='{x:Static themes:Themes.Darker}'>
       <SolidColorBrush x:Key='BackgroundL0Brush'>#191919</SolidColorBrush>
       <SolidColorBrush x:Key='BackgroundL1Brush'>#202020</SolidColorBrush>
+      <SolidColorBrush x:Key='BackgroundL2Brush'>#272727</SolidColorBrush>
       <SolidColorBrush x:Key='ForegroundBrush'>#FFFFFF</SolidColorBrush>
       <SolidColorBrush x:Key='TextHoverBrush'>#E0E0E0</SolidColorBrush>
       <SolidColorBrush x:Key='BorderBrush'>#3F3F46</SolidColorBrush>
       <SolidColorBrush x:Key='HoverBrush'>#000000</SolidColorBrush>
-      
+
+      <SolidColorBrush x:Key='Text.NormalBrush'>#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key='Text.SubBrush'>#656878</SolidColorBrush>
       <SolidColorBrush x:Key='Text.DisabledBrush'>#555868</SolidColorBrush>
 
       <SolidColorBrush x:Key='Modal.BackgroundBrush'>#202020</SolidColorBrush>
@@ -68,47 +71,51 @@
       <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="NormalBorderBrush" />
       <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="PointerOverBorderBrush" />
       <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="PressedBorderBrush" />
+      <StaticResource x:Key="ToggleSwitchContentForeground" ResourceKey="ForegroundBrush" />
 
     </ResourceDictionary>
     <ResourceDictionary x:Key='Dark'>
-      <SolidColorBrush x:Key='BackgroundL0Brush'>#101018</SolidColorBrush>
-      <SolidColorBrush x:Key='BackgroundL1Brush'>#12131B</SolidColorBrush>
-      <SolidColorBrush x:Key='ForegroundBrush'>#A0A0C0</SolidColorBrush>
-      <SolidColorBrush x:Key='TextHoverBrush'>#E0E0E0</SolidColorBrush>
-      <SolidColorBrush x:Key='BorderBrush'>#282828</SolidColorBrush>
+      <SolidColorBrush x:Key='BackgroundL0Brush'>#14151E</SolidColorBrush>
+      <SolidColorBrush x:Key='BackgroundL1Brush'>#191B26</SolidColorBrush>
+      <SolidColorBrush x:Key='BackgroundL2Brush'>#262837</SolidColorBrush>
+      <SolidColorBrush x:Key='ForegroundBrush'>#D3DBFF</SolidColorBrush>
+      <SolidColorBrush x:Key='TextHoverBrush'>#ABB0CD</SolidColorBrush>
+      <SolidColorBrush x:Key='BorderBrush'>#282838</SolidColorBrush>
       <SolidColorBrush x:Key='HoverBrush'>#000000</SolidColorBrush>
 
-      <SolidColorBrush x:Key='Text.DisabledBrush'>#555868</SolidColorBrush>
+      <SolidColorBrush x:Key='Text.NormalBrush'>#D3DBFF</SolidColorBrush>
+      <SolidColorBrush x:Key='Text.SubBrush'>#6A6F84</SolidColorBrush>
+      <SolidColorBrush x:Key='Text.DisabledBrush'>#6A6F84</SolidColorBrush>
 
-      <SolidColorBrush x:Key='Modal.BackgroundBrush'>#12131B</SolidColorBrush>
-      <SolidColorBrush x:Key='Modal.BorderBrush'>#181818</SolidColorBrush>
+      <SolidColorBrush x:Key='Modal.BackgroundBrush'>#161720</SolidColorBrush>
+      <SolidColorBrush x:Key='Modal.BorderBrush'>#282838</SolidColorBrush>
 
-      <SolidColorBrush x:Key='Button.BackgroundBrush'>#181A25</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.BorderBrush'>#202030</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.DisabledBrush'>#12151F</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.DisabledTextBrush'>#555868</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.HoverBrush'>#2C2C3D</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.HoverL2Brush'>#3C3C4D</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.PressedBrush'>#3C3C4D</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.PressedL2Brush'>#4C4C5D</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.SelectedBrush'>#304060</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.SelectedPressedBrush'>#384868</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.BackgroundBrush'>#262837</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.BorderBrush'>#00000000</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.DisabledBrush'>#161822</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.DisabledTextBrush'>#3C3F56</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.HoverBrush'>#262837</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.HoverL2Brush'>#363847</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.PressedBrush'>#464857</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.PressedL2Brush'>#565867</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.SelectedBrush'>#666877</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.SelectedPressedBrush'>#666877</SolidColorBrush>
 
-      <SolidColorBrush x:Key='CheckBox.BorderBrush'>#B5B5EA</SolidColorBrush>
-      <SolidColorBrush x:Key='CheckBox.HoverBrush'>#CACAFF</SolidColorBrush>
-      <SolidColorBrush x:Key='CheckBox.PressedBrush'>#3C3C4D</SolidColorBrush>
+      <SolidColorBrush x:Key='CheckBox.BorderBrush'>#D3DBFF</SolidColorBrush>
+      <SolidColorBrush x:Key='CheckBox.HoverBrush'>#E3EBFF</SolidColorBrush>
+      <SolidColorBrush x:Key='CheckBox.PressedBrush'>#E3EBFF</SolidColorBrush>
       <SolidColorBrush x:Key='CheckBox.SelectedBrush'>#304060</SolidColorBrush>
       <SolidColorBrush x:Key='CheckBox.SelectedPressedBrush'>#384868</SolidColorBrush>
 
       <SolidColorBrush x:Key='Mods.FavoriteBrush'>#FFC861</SolidColorBrush>
 
       <!-- Control Themes -->
-      <SolidColorBrush x:Key="NormalBackgroundBrush">#181A25</SolidColorBrush>
-      <SolidColorBrush x:Key="PointerOverBackgroundBrush">#181A25</SolidColorBrush>
-      <SolidColorBrush x:Key="PressedBackgroundBrush">#181A25</SolidColorBrush>
-      <SolidColorBrush x:Key="NormalBorderBrush">#2C2C3D</SolidColorBrush>
-      <SolidColorBrush x:Key="PointerOverBorderBrush">#3C3C4D</SolidColorBrush>
-      <SolidColorBrush x:Key="PressedBorderBrush">#3C3C4D</SolidColorBrush>
+      <SolidColorBrush x:Key="NormalBackgroundBrush">#262837</SolidColorBrush>
+      <SolidColorBrush x:Key="PointerOverBackgroundBrush">#363847</SolidColorBrush>
+      <SolidColorBrush x:Key="PressedBackgroundBrush">#464857</SolidColorBrush>
+      <SolidColorBrush x:Key="NormalBorderBrush">#00000000</SolidColorBrush>
+      <SolidColorBrush x:Key="PointerOverBorderBrush">#00000000</SolidColorBrush>
+      <SolidColorBrush x:Key="PressedBorderBrush">#00000000</SolidColorBrush>
 
       <StaticResource x:Key="TextControlForeground" ResourceKey="ForegroundBrush" />
       <StaticResource x:Key="TextControlBackground" ResourceKey="NormalBackgroundBrush" />
@@ -124,6 +131,7 @@
       <StaticResource x:Key="ComboBoxBorderBrush" ResourceKey="NormalBorderBrush" />
       <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="PointerOverBorderBrush" />
       <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="PressedBorderBrush" />
+      <StaticResource x:Key="ToggleSwitchContentForeground" ResourceKey="ForegroundBrush" />
 
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>

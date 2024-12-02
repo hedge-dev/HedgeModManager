@@ -5,36 +5,36 @@
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
           mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="32"
-          x:Class="HedgeModManager.UI.Controls.Basic.CheckBox" Loaded="OnLoaded">
+          x:Class="HedgeModManager.UI.Controls.Basic.CheckBox"
+          Click="OnClick">
   <Border Background="#00000000" Cursor="Hand"
           Margin="4" PointerPressed="OnPointerPressed"  PointerReleased="OnPointerReleased">
     <StackPanel Orientation="Horizontal">
-      <Border Classes.checkBox="True" Width="26" Height="26"
+      <Border Classes.checked="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=cb:CheckBox}}"
+              Classes.checkBox="True" Width="30" Height="30"
               BorderThickness="2" CornerRadius="10"
               Classes.hovered="{Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=cb:CheckBox}}">
         <Grid ColumnDefinitions="*,8*,*" RowDefinitions="*,8*,*">
-          <Border Classes.subCheckBoxBorder="True" 
-                  Classes.checked="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=cb:CheckBox}}"
-                  Classes.hovered="{Binding IsPointerOver, RelativeSource={RelativeSource AncestorType=cb:CheckBox}}"
-                  Background="{DynamicResource CheckBox.BorderBrush}"
-                  CornerRadius="6" Grid.Column="1" Grid.Row="1">
-            <Border.Transitions>
-              <Transitions>
-                <DoubleTransition Property="Opacity" Duration="0:0:0.1"/>
-              </Transitions>
-            </Border.Transitions>
-            <Border.Styles>
-              <Style Selector="Border.subCheckBoxBorder">
-                <Setter Property="Opacity" Value="0" />
-                <Style Selector="^.hovered">
-                  <Setter Property="Opacity" Value="0.3" />
+          <Viewbox Grid.Column="1" Grid.Row="1"
+                   Stretch="Uniform" Width="18" Height="18"
+                   VerticalAlignment="Center">
+            <Path Classes.checked="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=cb:CheckBox}}"
+                  Data="{DynamicResource CheckMarkPathData}" Fill="#000000">
+              <Path.Transitions>
+                <Transitions>
+                  <DoubleTransition Property="Opacity" Duration="0:0:0.1"/>
+                </Transitions>
+              </Path.Transitions>
+              <Path.Styles>
+                <Style Selector="Path">
+                  <Setter Property="Opacity" Value="0" />
+                  <Style Selector="^.checked">
+                    <Setter Property="Opacity" Value="1" />
+                  </Style>
                 </Style>
-                <Style Selector="^.checked">
-                  <Setter Property="Opacity" Value="1" />
-                </Style>
-              </Style>
-            </Border.Styles>
-          </Border>
+              </Path.Styles>
+            </Path>
+          </Viewbox>
         </Grid>
         <Border.Transitions>
           <Transitions>
@@ -44,12 +44,17 @@
         </Border.Transitions>
         <Border.Styles>
           <Style Selector="Border.checkBox">
+            <Setter Property="Background" Value="#00FFFFFF" />
             <Setter Property="BorderBrush" Value="{DynamicResource CheckBox.BorderBrush}" />
             <Style Selector="^.hovered">
               <Setter Property="BorderBrush" Value="{DynamicResource CheckBox.HoverBrush}" />
             </Style>
             <Style Selector="^.enabled">
-              <Setter Property="Opacity" Value="1" />
+              <Setter Property="Opacity" Value="0.5" />
+            </Style>
+            <Style Selector="^.checked">
+              <Setter Property="BorderBrush" Value="{DynamicResource ForegroundBrush}" />
+              <Setter Property="Background" Value="{DynamicResource ForegroundBrush}" />
             </Style>
           </Style>
         </Border.Styles>
