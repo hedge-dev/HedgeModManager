@@ -54,6 +54,7 @@ public partial class ModInfoModal : UserControl
     {
         ModViewModel.Mod.Attributes ^= ModAttribute.Favorite;
         InfoViewModel.UpdateButtons();
+        ModViewModel.UpdateFavorite(null);
     }
 
     private void OnConfigureClick(object? sender, RoutedEventArgs e)

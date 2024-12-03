@@ -5,8 +5,10 @@
              xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
              xmlns:cp="using:HedgeModManager.UI.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:html="using:TheArtOfDev.HtmlRenderer.Avalonia"
              xmlns:m="using:HedgeModManager.UI.Models"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="250"
              x:Class="HedgeModManager.UI.Controls.Modals.ModInfoModal"
@@ -29,9 +31,9 @@
                  FontSize="16" HorizontalAlignment="Center" />
     </StackPanel>
     <cb:Separator Grid.Row="2" />
-    <TextBlock Grid.Row="3"
-               Text="{Binding ModViewModel.Mod.Description, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
-               TextWrapping="Wrap" Margin="24,16,24,16" HorizontalAlignment="Center" />
+    <html:HtmlPanel Grid.Row="3" Margin="24,16,24,16"
+                    Text="{Binding InfoViewModel.Description, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
+                    HorizontalAlignment="Center" />
     <Border Grid.Row="4"
             Background="{DynamicResource BackgroundL1Brush}"
             BorderBrush="{DynamicResource BorderBrush}"

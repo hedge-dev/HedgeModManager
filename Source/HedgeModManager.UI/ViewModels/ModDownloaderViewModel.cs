@@ -60,7 +60,7 @@ public partial class ModDownloaderViewModel : ViewModelBase
             creditsInline.Add(new LineBreak());
         }
         CreditsInline = creditsInline;
-        Description = DownloadInfo.Description;
+        Description = Utils.ConvertToHTML(DownloadInfo.Description);
         Title = Localize("Modal.Title.DownloadMod", DownloadInfo.Name);
     }
 }
