@@ -1,19 +1,13 @@
-using Avalonia;
-using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
-using System;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.Controls.Modals;
 
-public partial class ModDownloaderModal : UserControl
+public partial class ModDownloaderModal : WindowModal
 {
     public ModDownloaderViewModel ViewModel { get; set; }
 
@@ -22,40 +16,32 @@ public partial class ModDownloaderModal : UserControl
     {
         ViewModel = new(async () =>
         {
-            await Task.Delay(5000);
+            await Task.Delay(5);
             return new()
             {
-                Name = "Test Mod"
+                GameID = "SonicOrigins",
+                Name = "Test Mod",
+                Description = "Markdown:\n - Item 1\n - Item 2\n\nNot an item.\n\nHTML:<br/><b>Bold text</b><br/><span>Not so bold text</span>",
+                Images = ["https://images.gamebanana.com/img/Webpage/Game/Profile/Background/629d9d63eb125.png"],
             };
         });
-
         InitializeComponent();
     }
 
     public ModDownloaderModal(Func<Task<ModDownloadInfo?>> downloadInfoCallback)
     {
         ViewModel = new(downloadInfoCallback);
-
         InitializeComponent();
     }
 
-    public void Open(MainWindowViewModel viewModel)
+    private async void OnInitialized(object? sender, RoutedEventArgs e)
     {
-        viewModel.Modals.Add(new Modal(this, new Thickness(0)));
-    }
-
-    public void Close()
-    {
-        if (DataContext is MainWindowViewModel viewModel)
+        Bind(TitleProperty, new Binding
         {
-            var modalInstance = viewModel.Modals.FirstOrDefault(x => x.Control == this);
-            if (modalInstance != null)
-                viewModel.Modals.Remove(modalInstance);
-        }
-    }
+            Source = ViewModel,
+            Path = "Title"
+        });
 
-    private async void OnInitialized(object? sender, EventArgs e)
-    {
         await ViewModel.StartInfoDownload();
     }
 
@@ -96,63 +82,52 @@ public partial class ModDownloaderModal : UserControl
 
             string downloadPath = Path.GetTempFileName();
 
-            new Download(downloadInfo.Name, 1).OnRun(async (d, c) =>
+            await new Download(Localize("Download.Text.DownloadMod", downloadInfo.Name), true, -1).OnRun(async (d, c) =>
             {
+                var progress = d.CreateProgress();
+
                 Logger.Information($"Downloading {downloadInfo.Name}...");
-                var client = new HttpClient();
-                var response = await client.GetAsync(downloadInfo.DownloadURL,
-                    HttpCompletionOption.ResponseHeadersRead, c);
-                response.EnsureSuccessStatusCode();
+                bool completed = await Network.DownloadFile(downloadInfo.DownloadURL, downloadPath, null, progress, c);
 
-                var downloadProgress = d.CreateProgress();
-                var installProgress = d.CreateProgress();
-
-                downloadProgress.ReportMax(response.Content.Headers.ContentLength ?? 0L);
-                installProgress.ReportMax(0);
-
-                using var stream = await response.Content.ReadAsStreamAsync(c);
-                using var fileStream = File.Create(downloadPath);
-
-                var buffer = new byte[1048576];
-                int bytesRead = 0;
-                long totalBytesRead = 0L;
-
-                while ((bytesRead = await stream.ReadAsync(buffer, c)) > 0)
+                if (!completed)
                 {
-                    await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), c);
-                    downloadProgress.Report(totalBytesRead += bytesRead);
+                    viewModel.OpenErrorMessage("Modal.Title.DownloadError", "Modal.Message.DownloadError", $"Failed to download {downloadInfo.Name}");
+                    d.Destroy();
+                    return;
                 }
-                fileStream.Close();
+
+                d.Name = Localize("Download.Text.InstallMod", downloadInfo.Name);
+                progress.ReportMax(-1);
+
                 Logger.Debug($"Started installing {downloadInfo.Name}");
-
-                // Install mod
-                await modsDB.InstallModFromArchive(downloadPath, installProgress);
-
-            }).OnComplete((d) =>
-            {
+                await modsDB.InstallModFromArchive(downloadPath, progress);
                 Logger.Information($"Finished installing {downloadInfo.Name}");
                 if (uiGame == viewModel.SelectedGame)
                     Dispatcher.UIThread.Invoke(viewModel.RefreshUI);
-                try { if (File.Exists(downloadPath)) File.Delete(downloadPath); } catch { }
-                d.Destroy();
-                return Task.CompletedTask;
             }).OnCancel((d) =>
             {
                 Logger.Debug("Mod install cancelled");
                 return Task.CompletedTask;
-            }).OnError(async (d, e) =>
+            }).OnError((d, e) =>
             {
-                Logger.Error($"Failed to install {downloadInfo.Name}");
-
+                viewModel.OpenErrorMessage("Modal.Title.DownloadError", "Modal.Message.DownloadError", $"Failed to download/install {downloadInfo.Name}");
+                return Task.CompletedTask;
+            }).OnFinally((d) =>
+            {
                 try { if (File.Exists(downloadPath)) File.Delete(downloadPath); } catch { }
-                await Task.Delay(5000);
                 d.Destroy();
+                return Task.CompletedTask;
             })
-            .Run(viewModel);
+            .RunAsync(viewModel);
         }
     }
 
     private void OnCancelClick(object? sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
+    private void OnCloseClick(object? sender, RoutedEventArgs e)
     {
         Close();
     }

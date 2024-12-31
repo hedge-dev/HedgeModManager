@@ -1,14 +1,10 @@
 ﻿using Avalonia;
 using HedgeModManager.UI.CLI;
 using Microsoft.Win32;
-using System;
 using System.IO.Pipes;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Text.Json;
-using System.Collections.Generic;
 using System.Runtime.Versioning;
 
 namespace HedgeModManager.UI;
@@ -18,11 +14,24 @@ public sealed class Program
 {
     public static readonly string ApplicationCompany = "NeverFinishAnything";
     public static readonly string ApplicationName = "HedgeModManager";
+    public static readonly string ApplicationFriendlyName = "Hedge Mod Manager";
+    public static readonly string ApplicationID = "HedgeModManager.UI";
+
+    public static readonly string GitHubRepoOwner = "TheSuperSonic16";
+    public static readonly string GitHubRepoName = "HedgeModManager";
+    public static string UserAgent = $"Mozilla/5.0 (compatible; {ApplicationName}/{GetAppVersion()})";
 
     // Will become the GUID if exists
     public static string PipeName = $"{ApplicationCompany}\\{ApplicationName}";
+    public static string InstallLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+    public static string? FlatpakID = null;
+#if DEBUG
+    public const bool IsDebugBuild = true;
+#else
+    public const bool IsDebugBuild = false;
+#endif
 
-    private static Mutex? CurrentMutex = null;
+    public static Mutex? CurrentMutex = null;
     public static List<ICliCommand> StartupCommands = [];
 
     public static readonly JsonSerializerOptions JsonSerializerOptions = new() {
@@ -60,6 +69,12 @@ public sealed class Program
             }
         }
 
+        Network.UserAgent = UserAgent;
+        Network.Initialize();
+
+        if (Environment.GetEnvironmentVariable("FLATPAK_ID") is string flatpakID)
+            FlatpakID = flatpakID;
+
         var arguments = CommandLine.ParseArguments(args);
         var (continueStartup, commands) = CommandLine.ExecuteArguments(arguments);
         StartupCommands.AddRange(commands);
@@ -89,7 +104,7 @@ public sealed class Program
             try
             {
                 var reg = Registry.CurrentUser.CreateSubKey($"Software\\Classes\\{schema}");
-                reg.SetValue("", $"URL:{ApplicationName}");
+                reg.SetValue("", $"URL:{ApplicationFriendlyName}");
                 reg.SetValue("URL Protocol", "");
                 reg = reg.CreateSubKey("shell\\open\\command");
                 reg.SetValue("", $"\"{processPath}\" {args}");
@@ -97,6 +112,14 @@ public sealed class Program
             }
             catch { }
         }
+    }
+
+    public static string GetAppVersion()
+    {
+        var version = Assembly.GetExecutingAssembly().GetName().Version;
+        if (version is null)
+            return "Unknown";
+        return $"{version.Major}.{version.Minor}-{version.Revision}";
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

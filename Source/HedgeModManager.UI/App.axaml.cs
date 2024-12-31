@@ -7,10 +7,6 @@ using Avalonia.Markup.Xaml.Styling;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace HedgeModManager.UI;
 
@@ -106,13 +102,5 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
-    }
-
-    public static string GetAppVersion()
-    {
-        var version = Assembly.GetExecutingAssembly().GetName().Version;
-        if (version is null)
-            return "Unknown";
-        return $"{version.Major}.{version.Minor}-{version.Revision}";
     }
 }

@@ -7,6 +7,12 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <AssemblyVersion>8.0.0.0</AssemblyVersion>
+    <FileVersion>8.0.0.0</FileVersion>
+  </PropertyGroup>
+  <PropertyGroup Label="Avalonia">
+    <AvaloniaXamlReportImportance>Low</AvaloniaXamlReportImportance>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +21,6 @@
     <Folder Include="Controls\Codes\" />
     <Folder Include="Controls\About\" />
     <Folder Include="Controls\Setup\" />
-    <Folder Include="CLI\" />
     <Folder Include="Styles\" />
   </ItemGroup>
 

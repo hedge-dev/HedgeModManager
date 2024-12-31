@@ -1,6 +1,5 @@
 ﻿using Avalonia.Data;
 using Avalonia.Data.Converters;
-using System;
 using System.Globalization;
 using static HedgeModManager.UI.Languages.Language;
 
@@ -46,7 +45,7 @@ public class EmptyBoolConverter : IValueConverter
         if (value is string str)
             val = string.IsNullOrEmpty(str);
 
-        return parameter as string == "True" ? !val : val;
+        return parameter as bool? == true ? !val : val;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -132,4 +132,7 @@
   <data name="DotnetDownloadURL" xml:space="preserve">
     <value>https://github.com/hedge-dev/HedgeModManager/raw/refs/heads/ui/Source/HedgeModManager/Resources/dotnetFrameworkRuntime.zip</value>
   </data>
+  <data name="CommunityCodesURL" xml:space="preserve">
+    <value>https://raw.githubusercontent.com/hedge-dev/HMMCodes/refs/heads/build/</value>
+  </data>
 </root>

@@ -7,8 +7,6 @@ using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Controls.Primitives;
 using HedgeModManager.UI.Events;
 using HedgeModManager.UI.ViewModels.Mods;
-using System;
-using System.Linq;
 
 namespace HedgeModManager.UI.Controls.Mods;
 

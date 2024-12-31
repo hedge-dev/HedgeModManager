@@ -4,8 +4,6 @@ using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.Foundation;
-using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace HedgeModManager.UI.ViewModels.Mods;
@@ -18,8 +16,8 @@ public partial class ModEntryViewModel : ViewModelBase
 
     [ObservableProperty] private IMod _mod;
     [ObservableProperty] private bool _isVisible = true;
-    [ObservableProperty] private InlineCollection _modTitle = new ();
-    [ObservableProperty] private InlineCollection _modAuthor = new ();
+    [ObservableProperty] private InlineCollection _modTitle = [];
+    [ObservableProperty] private InlineCollection _modAuthor = [];
     [ObservableProperty] private MainWindowViewModel? _mainViewModel;
     [ObservableProperty] private ModsViewModel? _modsViewModel;
     [ObservableProperty] private Geometry? _favoriteGeometry;

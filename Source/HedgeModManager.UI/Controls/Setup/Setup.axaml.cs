@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using HedgeModManager.UI.ViewModels;
-using System.Linq;
 
 namespace HedgeModManager.UI.Controls.Setup;
 
@@ -25,13 +24,13 @@ public partial class Setup : UserControl
         if (viewModel.CurrentTabInfo != null)
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
-            viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Common.Button.Back", Buttons.B, (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Common.Button.Back", Buttons.B, (b) =>
             {
                 MainTabControl.SelectedIndex--;
             }, MainTabControl.SelectedIndex != 0));
             string nextButtonName = MainTabControl.SelectedIndex == MainTabControl.ItemCount - 1 ?
                 "Common.Button.Finish" : "Common.Button.Next";
-            viewModel.CurrentTabInfo.Buttons.Add(NextButton = new(nextButtonName, Buttons.A, (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(NextButton = new(nextButtonName, Buttons.A, (b) =>
             {
                 if (MainTabControl.SelectedIndex == MainTabControl.ItemCount - 1)
                 {

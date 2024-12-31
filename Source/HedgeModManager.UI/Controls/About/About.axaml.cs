@@ -22,11 +22,11 @@ public partial class About : UserControl
         if (viewModel.CurrentTabInfo != null)
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
-            viewModel.CurrentTabInfo.Buttons.Add(new("About.Button.GitHub", Buttons.Y, (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("About.Button.GitHub", Buttons.Y, (b) =>
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "https://github.com/hedge-dev/HedgeModManager",
+                    FileName = $"https://github.com/{Program.GitHubRepoOwner}/{Program.GitHubRepoName}",
                     UseShellExecute = true
                 });
             }));

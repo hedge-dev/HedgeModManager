@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IsPackable>false</IsPackable>
+    <Company>NeverFinishAnything</Company>
   </PropertyGroup>
 
   <ItemGroup>

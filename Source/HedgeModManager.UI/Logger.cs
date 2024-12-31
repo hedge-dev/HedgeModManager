@@ -1,15 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.Foundation;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 
 namespace HedgeModManager.UI;
 
 public partial class UILogger : ObservableObject, ILogger
 {
-    [ObservableProperty] private ObservableCollection<Log> _logs = new();
+    [ObservableProperty] private ObservableCollection<Log> _logs = [];
 
     public UILogger()
     {

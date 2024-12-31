@@ -1,36 +1,24 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:c="using:HedgeModManager.UI.Controls"
-             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
-             xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
-             xmlns:cp="using:HedgeModManager.UI.Controls"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:m="using:HedgeModManager.UI.Models"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:HedgeModManager.UI.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="200"
-             x:Class="HedgeModManager.UI.Controls.Modals.MessageBoxModal"
-             x:DataType="vm:MainWindowViewModel">
-  <Grid RowDefinitions="Auto,Auto,Auto">
-    <Label Grid.Row="0"
-           Background="{DynamicResource BackgroundL0Brush}"
-           Content="{Binding Title, RelativeSource={RelativeSource AncestorType=cm:MessageBoxModal}, Converter={StaticResource StringLocalizeConverter}}"
-           FontSize="14"
-           Margin="0,0,0,24" Padding="4" 
-           HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
-    <TextBlock Grid.Row="1" 
-               Text="{Binding Message, RelativeSource={RelativeSource AncestorType=cm:MessageBoxModal}, Converter={StaticResource StringLocalizeConverter}}"
-               FontSize="24" Margin="24,0,24,0" HorizontalAlignment="Center" />
-    <Border Grid.Row="2"
-            Background="{DynamicResource BackgroundL1Brush}"
-            BorderBrush="{DynamicResource BorderBrush}"
-            BorderThickness="0,1,0,0"
-            Margin="0,16,0,0" Height="48"
-            HorizontalAlignment="Stretch">
-      <StackPanel x:Name="ButtonStackPanel"
-                  HorizontalAlignment="Right"
-                  Orientation="Horizontal">
-      </StackPanel>
-    </Border>
-  </Grid>
-</UserControl>
+<local:WindowModal xmlns="https://github.com/avaloniaui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:c="using:HedgeModManager.UI.Controls"
+                   xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+                   xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
+                   xmlns:cp="using:HedgeModManager.UI.Controls"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:local="using:HedgeModManager.UI.Controls.Modals"
+                   xmlns:m="using:HedgeModManager.UI.Models"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:vm="using:HedgeModManager.UI.ViewModels"
+                   mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="200"
+                   x:Class="HedgeModManager.UI.Controls.Modals.MessageBoxModal"
+                   x:DataType="vm:MainWindowViewModel"
+                   Title="{Binding Title, RelativeSource={RelativeSource AncestorType=cm:MessageBoxModal}, Converter={StaticResource StringLocalizeConverter}}">
+  <local:WindowModal.Buttons>
+    <StackPanel x:Name="ButtonStackPanel"
+                HorizontalAlignment="Right" />
+  </local:WindowModal.Buttons>
+  <local:WindowModal.Data>
+    <TextBlock Text="{Binding Message, RelativeSource={RelativeSource AncestorType=cm:MessageBoxModal}, Converter={StaticResource StringLocalizeConverter}}"
+               FontSize="14" Margin="50,70,100,0" />
+  </local:WindowModal.Data>
+</local:WindowModal>

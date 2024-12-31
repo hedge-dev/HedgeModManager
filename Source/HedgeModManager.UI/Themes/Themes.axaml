@@ -15,6 +15,10 @@
       <SolidColorBrush x:Key='ForegroundBrush'>Black</SolidColorBrush>
     </ResourceDictionary>
     <ResourceDictionary x:Key='{x:Static themes:Themes.Darker}'>
+      <SolidColorBrush x:Key='Common.Background0Brush'>#121212</SolidColorBrush>
+      <SolidColorBrush x:Key='Common.Background1Brush'>#191919</SolidColorBrush>
+      <SolidColorBrush x:Key='Common.Background2Brush'>#202020</SolidColorBrush>
+      <SolidColorBrush x:Key='Common.Background3Brush'>#272727</SolidColorBrush>
       <SolidColorBrush x:Key='BackgroundL0Brush'>#191919</SolidColorBrush>
       <SolidColorBrush x:Key='BackgroundL1Brush'>#202020</SolidColorBrush>
       <SolidColorBrush x:Key='BackgroundL2Brush'>#272727</SolidColorBrush>
@@ -24,16 +28,15 @@
       <SolidColorBrush x:Key='HoverBrush'>#000000</SolidColorBrush>
 
       <SolidColorBrush x:Key='Text.NormalBrush'>#FFFFFF</SolidColorBrush>
-      <SolidColorBrush x:Key='Text.SubBrush'>#656878</SolidColorBrush>
-      <SolidColorBrush x:Key='Text.DisabledBrush'>#555868</SolidColorBrush>
+      <SolidColorBrush x:Key='Text.SubBrush'>#8F8F8F</SolidColorBrush>
+      <SolidColorBrush x:Key='Text.DisabledBrush'>#555555</SolidColorBrush>
 
       <SolidColorBrush x:Key='Modal.BackgroundBrush'>#202020</SolidColorBrush>
       <SolidColorBrush x:Key='Modal.BorderBrush'>#3F3F46</SolidColorBrush>
 
-      <SolidColorBrush x:Key='Button.BackgroundBrush'>#1D1D1D</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.BackgroundBrush'>#202020</SolidColorBrush>
       <SolidColorBrush x:Key='Button.BorderBrush'>#3F3F46</SolidColorBrush>
       <SolidColorBrush x:Key='Button.DisabledBrush'>#12151F</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.DisabledTextBrush'>#555868</SolidColorBrush>
       <SolidColorBrush x:Key='Button.HoverBrush'>#2D2D2F</SolidColorBrush>
       <SolidColorBrush x:Key='Button.HoverL2Brush'>#3D3D3F</SolidColorBrush>
       <SolidColorBrush x:Key='Button.PressedBrush'>#3E4042</SolidColorBrush>
@@ -48,7 +51,11 @@
       <SolidColorBrush x:Key='CheckBox.SelectedPressedBrush'>#384868</SolidColorBrush>
 
       <SolidColorBrush x:Key='Mods.FavoriteBrush'>#FFC861</SolidColorBrush>
-      
+
+      <SolidColorBrush x:Key='ProgressBar.BackgroundBrush'>#222222</SolidColorBrush>
+      <SolidColorBrush x:Key='ProgressBar.ForegroundBrush'>#525252</SolidColorBrush>
+
+
       <!-- Control Themes -->
       <SolidColorBrush x:Key="NormalBackgroundBrush">#202020</SolidColorBrush>
       <SolidColorBrush x:Key="PointerOverBackgroundBrush">#2D2D2F</SolidColorBrush>
@@ -93,8 +100,7 @@
       <SolidColorBrush x:Key='Button.BackgroundBrush'>#262837</SolidColorBrush>
       <SolidColorBrush x:Key='Button.BorderBrush'>#00000000</SolidColorBrush>
       <SolidColorBrush x:Key='Button.DisabledBrush'>#161822</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.DisabledTextBrush'>#3C3F56</SolidColorBrush>
-      <SolidColorBrush x:Key='Button.HoverBrush'>#262837</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.HoverBrush'>#363847</SolidColorBrush>
       <SolidColorBrush x:Key='Button.HoverL2Brush'>#363847</SolidColorBrush>
       <SolidColorBrush x:Key='Button.PressedBrush'>#464857</SolidColorBrush>
       <SolidColorBrush x:Key='Button.PressedL2Brush'>#565867</SolidColorBrush>

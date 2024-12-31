@@ -16,8 +16,8 @@
         Icon="/Assets/icon.ico"
         Title="{DynamicResource Common.Program.Name}"
         MinWidth="1089" MinHeight="613"
-        Background="Black"
-        FontSize="14"
+        Background="Black" FontSize="14"
+        DragDrop.AllowDrop="True"
         Loaded="Window_Loaded"
         KeyDown="OnKeyDown">
   <!-- FontFamily="{StaticResource NunitoFont}"-->
@@ -44,7 +44,7 @@
         <cmw:Mods />
       </TabItem>
       <TabItem Header="Codes">
-        <cc:Codes Game="{Binding SelectedGame}" />
+        <cc:Codes />
       </TabItem>
       <TabItem Header="Settings">
         <settings:Settings  Game="{Binding SelectedGame}" />

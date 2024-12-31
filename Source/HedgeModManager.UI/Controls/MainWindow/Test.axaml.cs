@@ -8,7 +8,6 @@ using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.Controls.MainWindow;
 
@@ -29,11 +28,11 @@ public partial class Test : UserControl
         if (viewModel.CurrentTabInfo != null)
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
-            viewModel.CurrentTabInfo.Buttons.Add(new("Save and Play", Buttons.Y, async (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("Save and Play", Buttons.Y, async (b) =>
             {
                 await viewModel.SaveAndRun();
             }));
-            viewModel.CurrentTabInfo.Buttons.Add(new("Change Theme", Buttons.Y, (s, e) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("Change Theme", Buttons.Y, (b) =>
             {
                 if (Application.Current != null)
                 {
@@ -189,14 +188,14 @@ public partial class Test : UserControl
     private async void ExportLog_Click(object? sender, RoutedEventArgs e)
     {
         if (DataContext is MainWindowViewModel viewModel)
-            await viewModel.ExportLog(this);
+            await MainWindowViewModel.ExportLog(this);
     }
 
     private void CreateDownload_Click(object? sender, RoutedEventArgs e)
     {
         if (DataContext is MainWindowViewModel viewModel)
         {
-            var download = new Download("Download", 1000);
+            var download = new Download("Download", false, 1000);
 
             download.OnRun(async (d, c) =>
             {
@@ -207,10 +206,6 @@ public partial class Test : UserControl
                     d.Progress = i;
                     await Task.Delay(10, c);
                 }
-            }).OnComplete((d) =>
-            {
-                Logger.Debug("Download complete");
-                return Task.CompletedTask;
             }).OnError((d, e) =>
             {
                 Logger.Debug("Download failed");
@@ -218,6 +213,10 @@ public partial class Test : UserControl
             }).OnCancel((d) =>
             {
                 Logger.Debug("Download cancelled");
+                return Task.CompletedTask;
+            }).OnFinally((d) =>
+            {
+                Logger.Debug("Download finalised");
                 return Task.CompletedTask;
             }).Run(viewModel);
         }

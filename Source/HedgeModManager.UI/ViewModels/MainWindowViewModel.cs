@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.Foundation;
+using HedgeModManager.IO;
+using HedgeModManager.UI;
 using HedgeModManager.UI.CLI;
 using HedgeModManager.UI.Config;
 using HedgeModManager.UI.Controls;
@@ -16,35 +18,43 @@ using System.ComponentModel;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using static HedgeModManager.UI.Languages.Language;
+using static HedgeModManager.UI.Models.Download;
 
 namespace HedgeModManager.UI.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public string AppVersion => App.GetAppVersion();
+    public string AppVersion => Program.GetAppVersion();
 
     public ObservableCollection<UIGame> Games { get; set; } = [];
     public ObservableCollection<Download> Downloads { get; set; } = [];
-    public ObservableCollection<IMod> Mods { get; set; } = [];
     public ObservableCollection<LanguageEntry> Languages { get; set; } = [];
     public ProgramConfig Config { get; set; } = new();
+    public int ServerStatus { get; set; } = 1;
+    public CancellationTokenSource ServerCancellationTokenSource { get; set; } = new();
 
     [ObservableProperty] private UIGame? _selectedGame;
     [ObservableProperty] private int _selectedTabIndex;
     [ObservableProperty] private UILogger? _loggerInstance;
     [ObservableProperty] private string _lastLog = "";
+    [ObservableProperty] private string _message = "";
     [ObservableProperty] private TabInfo? _currentTabInfo;
     [ObservableProperty] private TabInfo[] _tabInfos = 
         [new ("Loading"), new("Setup"), new("Mods"), new("Codes"), new("Settings"), new("About"), new("Test")];
     [ObservableProperty] private ObservableCollection<Modal> _modals = [];
+    [ObservableProperty] private ObservableCollection<IMod> _mods = [];
+    [ObservableProperty] private ObservableCollection<ICode> _codes = [];
     [ObservableProperty] private bool _isBusy = true;
     [ObservableProperty] private double _overallProgress = 0d;
     [ObservableProperty] private double _overallProgressMax = 0d;
     [ObservableProperty] private bool _showProgressBar = false;
+    [ObservableProperty] private bool _progressIndeterminate = false;
     [ObservableProperty] private LanguageEntry? _selectedLanguage;
 
     // Preview only
@@ -58,7 +68,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         // Setup logger
         _loggerInstance = logger;
-        new Logger(logger);
+        _ = new Logger(logger);
         logger.Logs.CollectionChanged += (sender, args) =>
         {
             if (logger.Logs.Count == 0)
@@ -69,6 +79,70 @@ public partial class MainWindowViewModel : ViewModelBase
         Logger.Information($"Starting HedgeModManager {AppVersion}...");
         Logger.Debug($"IsWindows: {OperatingSystem.IsWindows()}");
         Logger.Debug($"IsLinux: {OperatingSystem.IsLinux()}");
+        Logger.Debug($"RID: {RuntimeInformation.RuntimeIdentifier}");
+        Logger.Debug($"FlatpakID: \"{Program.FlatpakID}\" ({!string.IsNullOrEmpty(Program.FlatpakID)})");
+        Logger.Debug($"InstallLocation: {Program.InstallLocation}");
+        Logger.Debug($"IsDebugBuild: {Program.IsDebugBuild}");
+    }
+
+    public async Task OnStartUp()
+    {
+        if (Config.LastUpdateCheck.AddMinutes(20) < DateTime.Now &&
+            !Design.IsDesignMode)
+        {
+            await CheckForManagerUpdates();
+            await CheckForModLoaderUpdates();
+            try
+            {
+                Config.LastUpdateCheck = DateTime.Now;
+                await Config.SaveAsync();
+            }
+            catch { }
+        }
+    }
+
+    public async Task CheckForManagerUpdates()
+    {
+        await new Download(Localize("Download.Text.CheckManagerUpdate"), true)
+        .OnRun(async (d, c) =>
+        {
+            d.CreateProgress().ReportMax(-1);
+            
+            var release = await Updater.CheckForUpdates();
+            if (release == null)
+            {
+                Logger.Error("No release found");
+                d.Destroy();
+                return;
+            }
+            d.Destroy();
+
+            string message = $"Release found:\n{release.TagName} - {release.Name}";
+            var messageBox = new MessageBoxModal("Modal.Title.UpdateManager", message);
+            messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
+            messageBox.AddButton("Common.Button.Install", async (s, e) =>
+            {
+                messageBox.Close();
+                await Updater.BeginUpdate(release, this);
+            });
+            //messageBox.AddButton("Test", async (s, e) =>
+            //{
+            //    messageBox.Close();
+            //    await Updater.UpdateFromPackage("../update.zip", this);
+            //});
+            messageBox.Open(this);
+        }).OnError((d, e) =>
+        {
+            Logger.Error(e);
+            Logger.Error($"Unexpected error while checking for updates");
+            d.Destroy();
+            return Task.CompletedTask;
+        }).RunAsync(this);
+    }
+
+    public async Task CheckForModLoaderUpdates()
+    {
+        await Task.Delay(100);
     }
 
     public async Task LoadGame()
@@ -92,6 +166,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
             Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
 
+            _ = UpdateCodes(false, true);
             RefreshUI();
         }
         catch (Exception e)
@@ -133,10 +208,6 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             OpenErrorMessage("Modal.Title.SaveError", "Modal.Message.UnknownSaveError",
                 "Failed to save", e);
-
-            MessageBoxModal.CreateOK("Modal.Title.SaveError", "Modal.Message.UnknownSaveError").Open(this);
-            Logger.Error(e);
-            Logger.Error("Failed to save");
         }
         if (setBusy)
             IsBusy = false;
@@ -175,16 +246,63 @@ public partial class MainWindowViewModel : ViewModelBase
         SelectedTabIndex = 1;
     }
 
-    public async void RefreshUI()
+    public async Task UpdateCodes(bool force, bool append)
+    {
+        if (SelectedGame != null &&
+            SelectedGame.Game is ModdableGameGeneric gameGeneric &&
+            gameGeneric.ModLoaderConfiguration is ModLoaderConfiguration config)
+        {
+            string modsRoot = PathEx.GetDirectoryName(config.DatabasePath).ToString();
+            string mainCodesPath = Path.Combine(modsRoot, ModDatabaseGeneric.MainCodesFileName);
+            if (force || !File.Exists(mainCodesPath))
+            {
+                await CreateSimpleDownload("Download.Text.DownloadCodes", "Failed to download community codes",
+                    async (d, p, c) =>
+                    {
+                        await gameGeneric.DownloadCodes(null);
+                        if (append)
+                            gameGeneric.ModDatabase.LoadSingleCodeFile(mainCodesPath);
+                        else
+                            await gameGeneric.InitializeAsync();
+                        Dispatcher.UIThread.Invoke(RefreshUI);
+                    }).RunAsync(this);
+            }
+        }
+    }
+
+    public void RefreshUI()
     {
         if (SelectedGame is not UIGame game)
             return;
 
-        await game.Game.InitializeAsync();
-        Mods.Clear();
-        foreach (var mod in game.Game.ModDatabase.Mods)
-            Mods.Add(mod);
+        UpdateModsList();
+        UpdateCodesList();
+
         Logger.Information($"Found {game.Game.ModDatabase.Mods.Count} mods");
+    }
+
+    public void UpdateModsList()
+    {
+        if (SelectedGame == null)
+        {
+            Logger.Error("Updating mods from null game!");
+            Codes.Clear();
+            return;
+        }
+
+        Mods = new(SelectedGame.Game.ModDatabase.Mods);
+    }
+
+    public void UpdateCodesList()
+    {
+        if (SelectedGame == null)
+        {
+            Logger.Error("Updating codes from null game!");
+            Codes.Clear();
+            return;
+        }
+
+        Codes = new(SelectedGame.Game.ModDatabase.Codes);
     }
 
     public void OpenErrorMessage(string title, string message, string logMessage, Exception? exception = null)
@@ -202,7 +320,7 @@ public partial class MainWindowViewModel : ViewModelBase
         messageBox.Open(this);
     }
 
-    public async Task ExportLog(Visual visual)
+    public static async Task ExportLog(Visual visual)
     {
         string log = UILogger.Export();
 
@@ -261,7 +379,7 @@ public partial class MainWindowViewModel : ViewModelBase
             return;
 
         foreach (var file in files)
-            InstallMod(file.Name, Uri.UnescapeDataString(file.Path.AbsolutePath), game);
+            InstallMod(file.Name, Utils.ConvertToPath(file.Path), game);
     }
 
 
@@ -271,7 +389,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
         if (game?.Game.ModDatabase is not ModDatabaseGeneric modsDB)
         {
-            Logger.Error("Only ModDatabaseGeneric is supported for installing mods");
+            OpenErrorMessage("Modal.Title.InstallError", "Modal.Message.InstallError",
+                "Only ModDatabaseGeneric is supported for installing mods");
             return;
         }
 
@@ -280,20 +399,18 @@ public partial class MainWindowViewModel : ViewModelBase
             var installProgress = d.CreateProgress();
             installProgress.ReportMax(1);
             await modsDB.InstallModFromArchive(path, installProgress);
-
-        }).OnComplete((d) =>
-        {
             Logger.Information($"Finished installing {name}");
             if (game == SelectedGame)
                 Dispatcher.UIThread.Invoke(RefreshUI);
+        }).OnError((d, e) =>
+        {
+            OpenErrorMessage("Modal.Title.InstallError", "Modal.Message.InstallError",
+                $"Failed to install {name}");
+            return Task.CompletedTask;
+        }).OnFinally((d) =>
+        {
             d.Destroy();
             return Task.CompletedTask;
-        }).OnError(async (d, e) =>
-        {
-            Logger.Error(e);
-            Logger.Error($"Failed to install {name}");
-            await Task.Delay(5000);
-            d.Destroy();
         })
         .Run(this);
     }
@@ -301,7 +418,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public void UpdateDownload()
     {
         double progress = 0;
-        double progressMax = 0;
+        double progressMax = -1;
 
         for (int i = 0; i < Downloads.Count; i++)
         {
@@ -311,8 +428,11 @@ public partial class MainWindowViewModel : ViewModelBase
                 i--;
                 continue;
             }
-            progress += Downloads[i].Progress;
-            progressMax += Downloads[i].ProgressMax;
+            if (Downloads[i].ProgressMax != -1)
+            {
+                progress += Downloads[i].Progress;
+                progressMax += Downloads[i].ProgressMax;
+            }
         }
 
         if (Downloads.Count > 0)
@@ -320,17 +440,37 @@ public partial class MainWindowViewModel : ViewModelBase
             OverallProgress = progress;
             OverallProgressMax = progressMax;
             if (Downloads.Count == 1)
-                LastLog = Localize("Download.Text.InstallMod", Downloads[0].Name);
+                Message = Downloads[0].CustomTitle ?
+                    Downloads[0].Name : Localize("Download.Text.InstallMod", Downloads[0].Name);
             else
-                LastLog = Localize("Download.Text.InstallModMultiple", Downloads.Count);
+                Message = Localize("Download.Text.InstallModMultiple", Downloads.Count);
         }
         ShowProgressBar = Downloads.Count > 0;
+        ProgressIndeterminate = progressMax == -1;
     }
 
     public void AddDownload(Download download)
     {
         download.PropertyChanged += (s, e) => Dispatcher.UIThread.Invoke(UpdateDownload);
         Downloads.Add(download);
+    }
+
+    public static Download CreateSimpleDownload(string name, string errorMessage, Func<Download, DownloadProgress, CancellationToken, Task> callback)
+    {
+        return new Download(Localize(name), true)
+            .OnRun(async (d, c) =>
+            {
+                var progress = d.CreateProgress();
+                progress.ReportMax(-1);
+                await callback(d, progress, c);
+                d.Destroy();
+            }).OnError((d, e) =>
+            {
+                Logger.Error(e);
+                Logger.Error(errorMessage);
+                d.Destroy();
+                return Task.CompletedTask;
+            });
     }
 
     public async Task ProcessCommands(List<ICliCommand> commands)
@@ -347,15 +487,16 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            while (true)
+            var c = ServerCancellationTokenSource.Token;
+            while (ServerStatus == 1)
             {
                 using var server = new NamedPipeServerStream(Program.PipeName, PipeDirection.In, 
                     NamedPipeServerStream.MaxAllowedServerInstances,
                     PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
-                await server.WaitForConnectionAsync();
+                await server.WaitForConnectionAsync(c);
                 Logger.Debug("Recieved connection");
                 using var reader = new StreamReader(server);
-                string message = await reader.ReadToEndAsync();
+                string message = await reader.ReadToEndAsync(c);
                 Logger.Debug("Message read");
                 var argsStr = JsonSerializer.Deserialize<string[]>(message);
                 if (argsStr == null)
@@ -367,11 +508,22 @@ public partial class MainWindowViewModel : ViewModelBase
                 Logger.Debug("Message processed");
             }
         }
+        catch (OperationCanceledException)
+        {
+
+        }
         catch (Exception e)
         {
             Logger.Error("Server stopped due to error");
             Logger.Error(e);
         }
+        ServerStatus = 0;
+    }
+
+    public void StopServer()
+    {
+        ServerStatus = 2;
+        ServerCancellationTokenSource.Cancel();
     }
 
     protected override async void OnPropertyChanged(PropertyChangedEventArgs e)

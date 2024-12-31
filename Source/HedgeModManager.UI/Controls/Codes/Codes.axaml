@@ -10,16 +10,21 @@
              mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
              x:Class="HedgeModManager.UI.Controls.Codes.Codes"
              x:DataType="vm:MainWindowViewModel"
-             Loaded="OnLoaded">
-  <Border Margin="12">
-      <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding CodesList, RelativeSource={RelativeSource AncestorType=cc:Codes}}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <cb:CheckBox Text="{Binding Code.Name}" IsChecked="{Binding Enabled}" />
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-  </Border>
+             Loaded="OnLoaded"
+             Unloaded="OnUnloaded"
+             >
+  <Grid RowDefinitions="Auto,*">
+    <TextBlock Grid.Row="0" Margin="0,0,0,8"
+               Text="Layout for this tab is not final."
+               HorizontalAlignment="Center" />
+    <ScrollViewer Grid.Row="1" Margin="12,4,12,12">
+      <ItemsControl ItemsSource="{Binding CodesList, RelativeSource={RelativeSource AncestorType=cc:Codes}}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <cb:CheckBox Text="{Binding Code.Name}" IsChecked="{Binding Enabled}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </Grid>
 </UserControl>

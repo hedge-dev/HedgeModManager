@@ -1,7 +1,5 @@
 ﻿using Avalonia.Styling;
 using SharpCompress;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HedgeModManager.UI.Themes;
 
@@ -16,7 +14,7 @@ public static class Themes
 
         return GetAllThemes()
             .FirstOrDefault(x => name.Equals(x.Key as string,
-            System.StringComparison.InvariantCultureIgnoreCase)) ?? ThemeVariant.Dark;
+            StringComparison.InvariantCultureIgnoreCase)) ?? ThemeVariant.Dark;
     }
 
     public static List<ThemeVariant> GetAllThemes()

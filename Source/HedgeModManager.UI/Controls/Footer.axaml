@@ -12,11 +12,12 @@
     <Grid>
       <StackPanel Margin="24,0,0,0" Orientation="Horizontal"
                   HorizontalAlignment="Left" VerticalAlignment="Center">
-        <TextBlock Text="{Binding LastLog}" FontSize="14"
+        <TextBlock Text="{Binding Message}" FontSize="14"
                    VerticalAlignment="Center" />
         <ProgressBar Height="24" Margin="24,0,0,0"
                      Value="{Binding OverallProgress}"
-                     ShowProgressText="True"
+                     IsIndeterminate="{Binding ProgressIndeterminate}"
+                     ShowProgressText="{Binding ProgressIndeterminate, Converter={StaticResource InvertedBoolConverter}}"
                      Minimum="0"
                      Maximum="{Binding OverallProgressMax}"
                      Foreground="Green"

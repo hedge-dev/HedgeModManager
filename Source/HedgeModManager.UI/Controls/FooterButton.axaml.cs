@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using HedgeModManager.UI.Controls.Primitives;
-using System.Collections.Generic;
 
 namespace HedgeModManager.UI.Controls;
 

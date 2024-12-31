@@ -33,9 +33,9 @@
         </Style>
       </Style>
       <Style Selector="Border Path">
-        <Setter Property="Fill" Value="{DynamicResource ForegroundBrush}" />
+        <Setter Property="Fill" Value="{DynamicResource Text.NormalBrush}" />
         <Style Selector="^.showDisabled">
-          <Setter Property="Fill" Value="{DynamicResource Button.DisabledTextBrush}"/>
+          <Setter Property="Fill" Value="{DynamicResource Text.DisabledBrush}"/>
         </Style>
 
       </Style>

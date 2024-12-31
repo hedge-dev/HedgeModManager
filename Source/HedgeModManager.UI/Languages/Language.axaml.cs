@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HedgeModManager.UI.Languages;
+﻿namespace HedgeModManager.UI.Languages;
 
 public static class Language
 {

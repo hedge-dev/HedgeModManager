@@ -8,10 +8,6 @@ using HedgeModManager.UI.Controls.Basic;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.Controls.Modals;

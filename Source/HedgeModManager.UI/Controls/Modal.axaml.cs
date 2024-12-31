@@ -23,8 +23,7 @@ public partial class Modal : UserControl
 
     public void Close()
     {
-        var viewModel = (DataContext as MainWindowViewModel)!;
-        viewModel.Modals.Remove(this);
+        (DataContext as MainWindowViewModel)?.Modals.Remove(this);
     }
 
     private void OnPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)

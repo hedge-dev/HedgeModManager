@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using HedgeModManager.UI.ViewModels;
-using System;
 
 namespace HedgeModManager.UI;
 

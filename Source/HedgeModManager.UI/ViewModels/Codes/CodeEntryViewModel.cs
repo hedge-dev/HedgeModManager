@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using HedgeModManager.Foundation;
+using HedgeModManager.CodeCompiler;
 
 namespace HedgeModManager.UI.ViewModels.Codes;
 
 public partial class CodeEntryViewModel : ViewModelBase
 {
-    [ObservableProperty] private ICode _code;
+    [ObservableProperty] private CSharpCode _code;
 
     public bool Enabled
     {
@@ -17,9 +17,8 @@ public partial class CodeEntryViewModel : ViewModelBase
         }
     }
 
-    public CodeEntryViewModel(ICode code)
+    public CodeEntryViewModel(CSharpCode code)
     {
         Code = code;
     }
-
 }

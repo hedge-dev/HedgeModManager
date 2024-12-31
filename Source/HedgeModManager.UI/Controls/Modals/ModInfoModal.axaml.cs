@@ -1,16 +1,13 @@
-using Avalonia;
-using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Interactivity;
 using HedgeModManager.Foundation;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
-using System;
-using System.Linq;
 using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.Controls.Modals;
 
-public partial class ModInfoModal : UserControl
+public partial class ModInfoModal : WindowModal
 {
     public ModEntryViewModel ModViewModel { get; set; }
     public ModInfoViewModel InfoViewModel { get; set; }
@@ -30,23 +27,12 @@ public partial class ModInfoModal : UserControl
         InitializeComponent();
     }
 
-    public void Open(MainWindowViewModel viewModel)
-    {
-        viewModel.Modals.Add(new Modal(this, new Thickness(0)));
-    }
-
-    public void Close()
-    {
-        if (DataContext is MainWindowViewModel viewModel)
-        {
-            var modalInstance = viewModel.Modals.FirstOrDefault(x => x.Control == this);
-            if (modalInstance != null)
-                viewModel.Modals.Remove(modalInstance);
-        }
-    }
-
     private void OnInitialized(object? sender, EventArgs e)
     {
+        Bind(TitleProperty, new Binding("Title")
+        {
+            Source = InfoViewModel
+        });
         InfoViewModel.UpdateButtons();
     }
 
@@ -78,6 +64,9 @@ public partial class ModInfoModal : UserControl
         if (viewModel == null)
             return;
 
+        string modTitle = ModViewModel.Mod.Title;
+        if (modTitle.Length > 30)
+            modTitle = modTitle[..30] + "Åc";
         var modal = new MessageBoxModal("Modal.Title.Confirm",
             Localize("Modal.Message.DeleteMod", ModViewModel.Mod.Title));
 

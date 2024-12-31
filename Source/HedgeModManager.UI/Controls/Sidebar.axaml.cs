@@ -5,14 +5,11 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.ViewModels;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HedgeModManager.UI.Controls;
 
 public partial class Sidebar : UserControl
 {
-
     public static readonly StyledProperty<int> SelectedTabIndexProperty =
         AvaloniaProperty.Register<Sidebar, int>(
             nameof(SelectedTabIndex),

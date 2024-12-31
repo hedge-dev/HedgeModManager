@@ -4,8 +4,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using HedgeModManager.UI.Events;
-using System;
-using System.Linq;
 
 namespace HedgeModManager.UI.Controls.Primitives;
 

@@ -1,33 +1,30 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.UI.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.Models;
 
 public partial class Download : ObservableObject
 {
-    private List<DownloadProgress> _progresses = [];
+    private readonly List<DownloadProgress> _progresses = [];
 
     [ObservableProperty] private string _name = "Download Name";
     [ObservableProperty] private double _progress = 0d;
     [ObservableProperty] private double _progressMax = 100d;
     [ObservableProperty] private bool _running = false;
     [ObservableProperty] private bool _destroyed = false;
+    [ObservableProperty] private bool _customTitle = false;
 
     public Func<Download, CancellationToken, Task>? RunCallback;
-    public Func<Download, Task>? CompleteCallback;
+    public Func<Download, Task>? FinallyCallback;
     public Func<Download, Exception, Task>? ErrorCallback;
     public Func<Download, Task>? CanceledCallback;
     public CancellationTokenSource CancelToken = new();
+    public MainWindowViewModel? MainViewModel;
 
-
-    public Download(string name, long progressMax = 100L)
+    public Download(string name, bool customTitle = false, long progressMax = 100L)
     {
         Name = name;
+        CustomTitle = customTitle;
         ProgressMax = progressMax;
     }
 
@@ -43,9 +40,9 @@ public partial class Download : ObservableObject
         return this;
     }
 
-    public Download OnComplete(Func<Download, Task> callback)
+    public Download OnFinally(Func<Download, Task> callback)
     {
-        CompleteCallback = callback;
+        FinallyCallback = callback;
         return this;
     }
 
@@ -63,45 +60,47 @@ public partial class Download : ObservableObject
 
     public Download Run(MainWindowViewModel? mainViewModel)
     {
+        Task.Run(async () => await RunAsync(mainViewModel));
+        return this;
+    }
+
+    public async Task RunAsync(MainWindowViewModel? mainViewModel)
+    {
         if (Running)
-            return this;
+            return;
 
         Running = true;
+        MainViewModel = mainViewModel;
+        MainViewModel?.AddDownload(this);
 
-        mainViewModel?.AddDownload(this);
-
-        Task.Run(async () =>
+        try
         {
-            try
+            if (RunCallback != null)
+                await RunCallback(this, CancelToken.Token);
+        }
+        catch (TaskCanceledException)
+        {
+            if (CanceledCallback != null)
+                await CanceledCallback(this);
+        }
+        catch (Exception e)
+        {
+            if (ErrorCallback != null)
             {
-                if (RunCallback != null)
-                    await RunCallback(this, CancelToken.Token);
-                if (CompleteCallback != null)
-                    await CompleteCallback(this);
+                await ErrorCallback(this, e);
             }
-            catch (TaskCanceledException)
+            else
             {
-                if (CanceledCallback != null)
-                    await CanceledCallback(this);
+                Logger.Error(e);
+                Logger.Error($"Download {Name} failed with exception");
             }
-            catch (Exception e)
-            {
-                if (ErrorCallback != null)
-                {
-                    await ErrorCallback(this, e);
-                }
-                else
-                {
-                    Logger.Error(e);
-                    Logger.Error($"Download {Name} failed with exception");
-                }
-            }
-            finally
-            {
-                Running = false;
-            }
-        });
-        return this;
+        }
+        finally
+        {
+            if (FinallyCallback != null)
+                await FinallyCallback(this);
+            Running = false;
+        }
     }
 
     public void Destroy()
@@ -109,6 +108,8 @@ public partial class Download : ObservableObject
         if (Running)
             Cancel();
         CancelToken.Dispose();
+        if (MainViewModel != null)
+            MainViewModel.Message = "";
         Destroyed = true;
     }
 
@@ -148,8 +149,8 @@ public partial class Download : ObservableObject
 
     public partial class DownloadProgress : ObservableObject, IProgress<long>
     {
-        [ObservableProperty] public long _progress = 0L;
-        [ObservableProperty] public long _progressMax = 100L;
+        [ObservableProperty] public long _progress = 0;
+        [ObservableProperty] public long _progressMax = -1;
 
         public void Report(long value) => Progress = value;
 

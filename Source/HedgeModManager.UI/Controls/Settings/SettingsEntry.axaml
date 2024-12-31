@@ -22,7 +22,7 @@
                  Text="{Binding Title, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
                  Foreground="{DynamicResource Text.NormalBrush}"
                  VerticalAlignment="Bottom"
-                 IsVisible="{Binding Description, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}, Converter={StaticResource EmptyBoolConverter}, ConverterParameter=True}" />
+                 IsVisible="{Binding Description, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}, Converter={StaticResource EmptyBoolConverter}, ConverterParameter={x:True}}" />
       <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                  Text="{Binding Title, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
                  Foreground="{DynamicResource Text.NormalBrush}"

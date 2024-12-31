@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HedgeModManager.UI.CLI;
+﻿namespace HedgeModManager.UI.CLI;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class CliCommandAttribute(string name, string? alias, Type[]? inputs,

@@ -5,7 +5,6 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using HedgeModManager.UI.Controls.Primitives;
 using HedgeModManager.UI.ViewModels;
-using System;
 
 namespace HedgeModManager.UI.Controls;
 
@@ -13,13 +12,13 @@ namespace HedgeModManager.UI.Controls;
 public partial class SidebarButton : ButtonUserControl
 {
     public static readonly StyledProperty<ButtonType> TypeProperty =
-     AvaloniaProperty.Register<SidebarButton, ButtonType>(nameof(Type), defaultValue: ButtonType.Normal);
+        AvaloniaProperty.Register<SidebarButton, ButtonType>(nameof(Type), defaultValue: ButtonType.Normal);
 
     public static readonly StyledProperty<Geometry> IconProperty =
-     AvaloniaProperty.Register<SidebarButton, Geometry>(nameof(Icon));
+        AvaloniaProperty.Register<SidebarButton, Geometry>(nameof(Icon));
 
     public static readonly StyledProperty<bool> IsSelectedProperty =
-     AvaloniaProperty.Register<SidebarButton, bool>(nameof(IsSelected), defaultValue: false);
+        AvaloniaProperty.Register<SidebarButton, bool>(nameof(IsSelected), defaultValue: false);
 
     public SidebarButtonViewModel ViewModel { get; set; } = new();
 

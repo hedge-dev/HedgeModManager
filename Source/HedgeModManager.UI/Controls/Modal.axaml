@@ -24,7 +24,7 @@
     <Border Background="{DynamicResource Modal.BackgroundBrush}"
             BorderBrush="{DynamicResource Modal.BorderBrush}"
             BorderThickness="1" CornerRadius="20"
-            Padding="{Binding BorderPadding, RelativeSource={RelativeSource AncestorType=c:Modal}}" Margin="120"
+            Padding="{Binding BorderPadding, RelativeSource={RelativeSource AncestorType=c:Modal}}" Margin="80"
             HorizontalAlignment="Center" VerticalAlignment="Center"
             >
       <Border CornerRadius="20" ClipToBounds="True">

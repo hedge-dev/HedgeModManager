@@ -1,11 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.UI.Models;
-using System;
 using System.Collections;
 using System.ComponentModel;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.ViewModels.Mods;
 

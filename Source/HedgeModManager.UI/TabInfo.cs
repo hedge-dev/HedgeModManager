@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
 using System.Collections.ObjectModel;
 
 namespace HedgeModManager.UI;
@@ -7,7 +6,7 @@ namespace HedgeModManager.UI;
 public partial class TabInfo : ObservableObject
 {
     [ObservableProperty] private string _name = "Unnamed Tab";
-    [ObservableProperty] private ObservableCollection<TabButton> _buttons = new();
+    [ObservableProperty] private ObservableCollection<TabButton> _buttons = [];
 
     public TabInfo(string name)
     {
@@ -16,34 +15,23 @@ public partial class TabInfo : ObservableObject
 
     public partial class TabButton : ObservableObject
     {
+        private Action<TabButton>? _onPress;
+
         [ObservableProperty] private string _name = "Button";
         [ObservableProperty] private Buttons _button = UI.Buttons.A;
         [ObservableProperty] private bool _isEnabled = true;
-        private event EventHandler? _pressed;
 
-        public event EventHandler? Pressed
-        {
-            add
-            {
-                _pressed += value;
-            }
-            remove
-            {
-                _pressed -= value;
-            }
-        }
-
-        public TabButton(string name, Buttons button, EventHandler onPress, bool enabled = true)
+        public TabButton(string name, Buttons button, Action<TabButton>? onPress, bool enabled = true)
         {
             Name = name;
             Button = button;
-            Pressed += onPress;
+            _onPress = onPress;
             IsEnabled = enabled;
         }
 
         public void RaisePressed()
         {
-            _pressed?.Invoke(this, EventArgs.Empty);
+            _onPress?.Invoke(this);
         }
     }
 }

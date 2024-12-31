@@ -1,10 +1,8 @@
-﻿using Avalonia.Media.Imaging;
+﻿using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using HedgeModManager.Foundation;
 using HedgeModManager.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HedgeModManager.UI;
 
@@ -29,14 +27,19 @@ public class Games
         return new Uri($"avares://HedgeModManager.UI/Assets/{path}");
     }
 
+    public static IImage GetIcon(string? gameID)
+    {
+        string iconName = ExtraGameInfos.FirstOrDefault(x => x.GameID == gameID)?.IconName ?? "Default.png";
+        return new Bitmap(AssetLoader.Open(ConvertToAssetUri($"Graphics/Icons/{iconName}")));
+    }
+
     public static List<UIGame> GetUIGames(IEnumerable<IModdableGame> hmmGame)
     {
         var games = new List<UIGame>();
         foreach (var game in hmmGame)
         {
             var extraInfo = ExtraGameInfos.FirstOrDefault(x => x.GameID == game.Name);
-            var iconName = extraInfo?.IconName ?? "Default.png";
-            var icon = new Bitmap(AssetLoader.Open(ConvertToAssetUri($"Graphics/Icons/{iconName}")));
+            var icon = GetIcon(extraInfo?.GameID);
             games.Add(new UIGame(game, icon));
         }
         return games;

@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using HedgeModManager.UI.Controls.Primitives;
-using System;
 
 namespace HedgeModManager.UI.Controls.Mods;
 

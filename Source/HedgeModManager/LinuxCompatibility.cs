@@ -43,23 +43,16 @@ public class LinuxCompatibility
 
         // Download runtime
         Logger.Information($"Downloading .NET runtime");
-        var client = new HttpClient();
-        var response = await client.GetAsync(Resources.DotnetDownloadURL);
-        if (!response.IsSuccessStatusCode)
+        var stream = await Network.Download(Resources.DotnetDownloadURL, "dotnetFrameworkRuntime.zip", null);
+        if (stream == null)
         {
-            Logger.Error($"Failed to download runtime. Code: {response.StatusCode}");
+            Logger.Error($"Failed to download runtime");
             return false;
         }
 
-        string cDrive = Path.Combine(path, "drive_c");
-        using var outputStream = new MemoryStream();
-        using var inputStream = await response.Content.ReadAsStreamAsync();
-        await inputStream.CopyToAsync(outputStream);
         Logger.Information($"Installing .NET runtime");
-
-        Logger.Debug($"Downloaded {outputStream.Position} bytes");
-        outputStream.Position = 0;
-        using var archive = new ZipArchive(outputStream, ZipArchiveMode.Read);
+        string cDrive = Path.Combine(path, "drive_c");
+        using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
         Logger.Debug("Opened zip");
 
         await Task.Run(() =>
@@ -85,6 +78,7 @@ public class LinuxCompatibility
             Logger.Debug($"Extracted .NET runtime");
         });
 
+        await stream.DisposeAsync();
         return true;
     }
 

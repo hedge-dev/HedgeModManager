@@ -5,8 +5,6 @@ using HedgeModManager.IO;
 using HedgeModManager.UI.Languages;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 
 namespace HedgeModManager.UI.ViewModels.Settings;
 
@@ -14,6 +12,10 @@ public partial class SettingsViewModel : ViewModelBase
 {
     [ObservableProperty] private ModdableGameGeneric? _game;
     [ObservableProperty] private MainWindowViewModel? _mainViewModel;
+    [ObservableProperty] private string _checkManagerUpdatesText = "Settings.Button.CheckUpdates";
+    [ObservableProperty] private string _checkLoaderUpdatesText = "Settings.Button.CheckUpdates";
+    [ObservableProperty] private string _checkModUpdatesText = "Settings.Button.CheckUpdates";
+    [ObservableProperty] private string _checkCodeUpdatesText = "Settings.Button.CheckUpdates";
 
     public ObservableCollection<Theme> ThemeCollection { get; } = [];
 
@@ -62,14 +64,26 @@ public partial class SettingsViewModel : ViewModelBase
         }
     }
 
+    public string InstallModLoaderText
+    {
+        get {
+            if (Game == null || Game.ModLoader == null)
+                return "";
+            return Game.ModLoader.IsInstalled() ?
+                "Settings.Button.UninstallML" : "Settings.Button.InstallML";
+        }
+    }
+
     public bool EnableLauncher
     {
         get => false;
         set
         {
-            OnPropertyChanged(nameof(EnableDebugConsole));
+            OnPropertyChanged(nameof(EnableLauncher));
         }
     }
+
+    public bool HasModLoader => Game?.ModLoader != null;
 
     public LanguageEntry? SelectedLanguage
     {
@@ -96,10 +110,21 @@ public partial class SettingsViewModel : ViewModelBase
         Themes.Themes.GetAllThemes().ForEach(x => ThemeCollection.Add(new (x)));
     }
 
+    public void Update()
+    {
+        OnPropertyChanged(nameof(InstallModLoaderText));
+    }
+
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(Game))
+        {
             OnPropertyChanged(nameof(ModsDirectory));
+            OnPropertyChanged(nameof(ModLoaderEnabled));
+            OnPropertyChanged(nameof(InstallModLoaderText));
+            OnPropertyChanged(nameof(EnableDebugConsole));
+            OnPropertyChanged(nameof(HasModLoader));
+        }
         if (e.PropertyName == nameof(MainViewModel))
             OnPropertyChanged(nameof(SelectedLanguage));
         base.OnPropertyChanged(e);

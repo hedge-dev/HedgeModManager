@@ -12,6 +12,7 @@
              x:Class="HedgeModManager.UI.Controls.MainWindow.Mods"
              x:DataType="vm:MainWindowViewModel"
              Loaded="OnLoaded"
+             Unloaded="OnUnloaded"
              Background="{DynamicResource BackgroundL0Brush}">
   <Border Margin="12">
     <Grid RowDefinitions="Auto,*">

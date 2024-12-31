@@ -8,6 +8,7 @@ public partial class UIGame : ObservableObject
 {
     [ObservableProperty] private IModdableGame _game;
     [ObservableProperty] private IImage _icon;
+
     public string LocalizeID => $"Common.Game.{Game.Name}";
 
     public UIGame(IModdableGame game, IImage icon)

@@ -71,7 +71,7 @@ jobs:
           sudo python3 flatpak-dotnet-generator.py ./flatpak/nuget-sources.json ${{env.PROJECT_PATH}} --dotnet ${{env.DOTNET_VERSION}} --freedesktop ${{env.FREEDESKTOP_VERSION}}
   
       - name: Build flatpak
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        uses: flatpak/flatpak-github-actions/flatpak-builder@master
         with:
           bundle: ${{env.FLATPAK_ID}}.flatpak
           manifest-path: ./flatpak/${{env.FLATPAK_ID}}.yml

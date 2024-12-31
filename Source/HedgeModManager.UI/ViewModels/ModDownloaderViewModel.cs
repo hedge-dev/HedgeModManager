@@ -1,9 +1,8 @@
 ﻿using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.UI.Models;
-using System;
-using System.Threading.Tasks;
 using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.ViewModels;
@@ -12,9 +11,14 @@ public partial class ModDownloaderViewModel : ViewModelBase
 {
     [ObservableProperty] private bool _ready = false;
     [ObservableProperty] private bool _loading = true;
-    [ObservableProperty] private string _title = "Common.Text.Loading";
+    [ObservableProperty] private string _title = "Modal.Title.DownloadModLoading";
+    [ObservableProperty] private string _name = "Common.Text.Loading";
+    [ObservableProperty] private string _author = "Common.Text.Loading";
+    [ObservableProperty] private string _targetGameName = "Common.Text.Loading";
     [ObservableProperty] private string _description = "";
     [ObservableProperty] private ModDownloadInfo? _downloadInfo;
+    [ObservableProperty] private IImage? _banner;
+    [ObservableProperty] private IImage? _gameIcon;
 
     [ObservableProperty] private InlineCollection _creditsInline = [];
 
@@ -37,6 +41,11 @@ public partial class ModDownloaderViewModel : ViewModelBase
             DownloadInfo = await _downloadInfoCallback();
         if (DownloadInfo != null)
         {
+            _ = Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                if (DownloadInfo.Images.Count > 0)
+                    Banner = await Utils.DownloadBitmap(DownloadInfo.Images[0]);
+            });
             Ready = true;
             Loading = false;
             Update();
@@ -62,5 +71,15 @@ public partial class ModDownloaderViewModel : ViewModelBase
         CreditsInline = creditsInline;
         Description = Utils.ConvertToHTML(DownloadInfo.Description);
         Title = Localize("Modal.Title.DownloadMod", DownloadInfo.Name);
+        Name = DownloadInfo.Name;
+        if (DownloadInfo.Authors.Count > 0)
+            Author = DownloadInfo.Authors.First().Key;
+        else
+            Author = "Unknown Author";
+
+        var gameDef = Games.ExtraGameInfos.FirstOrDefault(x => x.GameID == DownloadInfo.GameID);
+        if (gameDef != null)
+            GameIcon = Games.GetIcon(gameDef.GameID);
+        TargetGameName = Localize("Modal.Text.TargetGame", Localize($"Common.Game.{DownloadInfo.GameID}"));
     }
 }

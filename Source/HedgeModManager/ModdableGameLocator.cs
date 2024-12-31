@@ -7,8 +7,8 @@ using System.Linq;
 public class ModdableGameLocator
 {
 
-    public static List<GameInfo> ModdableGameList = new()
-    {
+    public static List<GameInfo> ModdableGameList =
+    [
         new ()
         {
             ID = "SonicGenerations",
@@ -94,6 +94,7 @@ public class ModdableGameLocator
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
+            ModDatabaseDirectoryName = "mods_sonic",
             PlatformInfos = new()
             {
                 { "Steam", new ("2513280", "SONIC_GENERATIONS.exe") },
@@ -106,13 +107,14 @@ public class ModdableGameLocator
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
+            ModDatabaseDirectoryName = "mods_shadow",
             PlatformInfos = new()
             {
                 { "Steam", new ("2513280", "SONIC_X_SHADOW_GENERATIONS.exe") },
                 { "Epic Games", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe") }
             }
         }
-    };
+    ];
 
     public static List<IModdableGame> LocateGames()
     {
@@ -126,15 +128,18 @@ public class ModdableGameLocator
                 var steamGame = steamGames.FirstOrDefault(x => x.ID == platformInfo.ID);
                 if (steamGame != null)
                 {
-                    games.Add(new ModdableGameGeneric(steamGame)
+                    var game = new ModdableGameGeneric(steamGame)
                     {
                         Name = gameInfo.ID,
                         Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, platformInfo.Executable))!,
                         Executable = platformInfo.Executable,
                         ModLoaderName = gameInfo.ModLoaderName ?? "None",
-                        ModLoaderFileName = gameInfo.ModLoaderFileName,
-                        ModLoaderDownloadURL = gameInfo.ModLoaderDownloadURL
-                    });
+                    };
+                    game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName, 
+                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL);
+                    if (gameInfo.ModDatabaseDirectoryName != null)
+                        game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
+                    games.Add(game);
                 }
             }
         }
@@ -148,6 +153,7 @@ public class ModdableGameLocator
         public string? ModLoaderName { get; init; }
         public string? ModLoaderFileName { get; init; }
         public string? ModLoaderDownloadURL { get; init; }
+        public string? ModDatabaseDirectoryName { get; init; }
         public required Dictionary<string, GamePlatformInfo> PlatformInfos { get; init; }
     }
 

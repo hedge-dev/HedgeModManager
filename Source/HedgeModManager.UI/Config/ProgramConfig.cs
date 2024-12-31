@@ -1,19 +1,21 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.UI.ViewModels;
-using System;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.Config;
 
 public partial class ProgramConfig : ViewModelBase
 {
     [ObservableProperty] private bool _isSetupCompleted = false;
-    [ObservableProperty] private bool _testModeEnabled = true;
+    [ObservableProperty] private bool _testModeEnabled = Program.IsDebugBuild;
+    [ObservableProperty] private bool _checkManagerUpdates = true;
+    [ObservableProperty] private bool _checkModLoaderUpdates = true;
+    [ObservableProperty] private bool _checkModUpdates = true;
+    [ObservableProperty] private bool _checkCodeUpdates = true;
     [ObservableProperty] private string? _lastSelectedPath;
     [ObservableProperty] private string? _theme;
     [ObservableProperty] private string? _language;
+    [ObservableProperty] private DateTime _lastUpdateCheck = DateTime.MinValue;
 
     private string GetConfigPath()
     {

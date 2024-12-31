@@ -8,5 +8,4 @@ public partial class Footer : UserControl
     {
         InitializeComponent();
     }
-
- }
+}

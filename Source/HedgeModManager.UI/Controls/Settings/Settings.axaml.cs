@@ -2,14 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using Avalonia.Styling;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Settings;
-using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace HedgeModManager.UI.Controls.Settings;
 
@@ -25,6 +22,8 @@ public partial class Settings : UserControl
     }
 
     public SettingsViewModel ViewModel { get; set; } = new();
+
+    public bool _isInstalling = false;
 
     public Settings()
     {
@@ -110,16 +109,76 @@ public partial class Settings : UserControl
         });
     }
 
-    private void OnInstallMLClick(object? sender, RoutedEventArgs e)
+    private async void OnInstallMLClick(object? sender, RoutedEventArgs e)
     {
+        if (_isInstalling)
+            return;
+        _isInstalling = true;
+        if (DataContext is not MainWindowViewModel mainViewModel
+            || mainViewModel.SelectedGame is not UIGame uiGame)
+            return;
+
+        await uiGame.Game.InstallModLoaderAsync();
+        ViewModel.Update();
+        _isInstalling = false;
+    }
+    
+    private async void OnCheckManagerUpdatesClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.CheckManagerUpdatesText = "Settings.Button.CheckingUpdates";
+        var button = sender as Basic.Button;
+        if (button != null)
+            button.IsEnabled = false;
+        if (DataContext is MainWindowViewModel mainViewModel)
+            await mainViewModel.CheckForManagerUpdates();
+        if (button != null)
+            button.IsEnabled = true;
+        ViewModel.CheckManagerUpdatesText = "Settings.Button.CheckUpdates";
+    }
+
+    private async void OnCheckModLoaderUpdatesClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.CheckLoaderUpdatesText = "Settings.Button.CheckingUpdates";
+        var button = sender as Basic.Button;
+        if (button != null)
+            button.IsEnabled = false;
+        if (DataContext is MainWindowViewModel mainViewModel)
+            await mainViewModel.CheckForModLoaderUpdates();
+        if (button != null)
+            button.IsEnabled = true;
+        ViewModel.CheckLoaderUpdatesText = "Settings.Button.CheckUpdates";
+    }
+
+    private async void OnCheckModUpdatesClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.CheckModUpdatesText = "Settings.Button.CheckingUpdates";
+        var button = sender as Basic.Button;
+        if (button != null)
+            button.IsEnabled = false;
+        //if (DataContext is MainWindowViewModel mainViewModel)
+        await Task.Delay(2000);
+        if (button != null)
+            button.IsEnabled = true;
+        ViewModel.CheckModUpdatesText = "Settings.Button.CheckUpdates";
+    }
+
+    private async void OnCheckCodeUpdatesClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.CheckCodeUpdatesText = "Settings.Button.CheckingUpdates";
+        var button = sender as Basic.Button;
+        if (button != null)
+            button.IsEnabled = false;
+        if (DataContext is MainWindowViewModel mainViewModel)
+            await mainViewModel.UpdateCodes(true, false);
+        if (button != null)
+            button.IsEnabled = true;
+        ViewModel.CheckCodeUpdatesText = "Settings.Button.CheckUpdates";
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == GameProperty)
-        {
             ViewModel.Game = Game?.Game as ModdableGameGeneric;
-        }
         base.OnPropertyChanged(e);
     }
 }

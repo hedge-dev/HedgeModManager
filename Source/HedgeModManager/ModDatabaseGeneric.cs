@@ -16,8 +16,8 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
 
     public string Name { get; set; } = DefaultDatabaseName;
     public string Root { get; set; } = string.Empty;
-    public List<ModGeneric> Mods { get; set; } = new();
-    public List<CSharpCode> Codes { get; set; } = new();
+    public List<ModGeneric> Mods { get; set; } = [];
+    public List<CSharpCode> Codes { get; set; } = [];
 
     public async Task Save()
     {
@@ -346,10 +346,8 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
                 string entryPath = entry.Key!;
                 if (entryPath.StartsWith(archiveRoot))
                 {
-                    if (entryPath.Contains('/'))
+                    if (!string.IsNullOrEmpty(archiveRoot))
                         entryPath = entryPath[(archiveRoot.Length + 1)..];
-                    else
-                        entryPath = entryPath[(archiveRoot.Length)..];
                     archiveEntries.Add((modDir, entryPath, entry));
                 }
             }

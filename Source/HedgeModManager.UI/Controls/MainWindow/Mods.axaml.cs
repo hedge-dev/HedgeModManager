@@ -2,12 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using HedgeModManager.Foundation;
 using HedgeModManager.UI.Controls.Mods;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 
 namespace HedgeModManager.UI.Controls.MainWindow;
@@ -25,8 +24,8 @@ public partial class Mods : UserControl
         set => SetValue(SearchProperty, value);
     }
 
+    public MainWindowViewModel? MainViewModel;
     public ModsViewModel ModsViewModel { get; set; } = new();
-    public ObservableCollection<IMod>? ModList { get; set; }
 
     public Mods()
     {
@@ -35,7 +34,8 @@ public partial class Mods : UserControl
 
     public void UpdateModList()
     {
-        if (ModList == null)
+        if (MainViewModel == null ||
+            MainViewModel.Mods == null)
         {
             ModsViewModel.ModsList.Clear();
             ModsViewModel.Authors.Clear();
@@ -44,14 +44,14 @@ public partial class Mods : UserControl
         }
 
         ModsViewModel.ModsList.Clear();
-        ModList
-            .Select(x => new ModEntryViewModel(x, DataContext as MainWindowViewModel, ModsViewModel))
+        MainViewModel.Mods
+            .Select(x => new ModEntryViewModel(x, MainViewModel, ModsViewModel))
             .ToList()
             .ForEach(ModsViewModel.ModsList.Add);
 
         ModsViewModel.Authors.Clear();
         ModsViewModel.Authors.Add("Show All");
-        ModList
+        MainViewModel.Mods
             .SelectMany(x => x.Authors)
             .Select(x => x.Name)
             .Distinct()
@@ -69,40 +69,57 @@ public partial class Mods : UserControl
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is not MainWindowViewModel viewModel)
+        MainViewModel = DataContext as MainWindowViewModel;
+        if (MainViewModel == null)
             return;
 
         // Subscribe to changes
-        if (ModList == null)
-        {
-            ModList = viewModel.Mods;
-            ModList.CollectionChanged += (s, e) => UpdateModList();
-            UpdateModList();
-        }
+        MainViewModel.Mods.CollectionChanged += OnModCollectionChanged;
+        MainViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
+        UpdateModList();
 
         AuthorComboBox.SelectedIndex = 0;
 
-        // Add buttons
-        if (viewModel.CurrentTabInfo != null)
-        {
-            viewModel.CurrentTabInfo.Buttons.Clear();
-            viewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.SavePlay", Buttons.Y, async (s, e) =>
-            {
-                await viewModel.SaveAndRun();
-            }));
-            viewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Menu", Buttons.B, (s, e) =>
-            {
-                Logger.Information("Menu Pressed");
-            }));
-            viewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Options", Buttons.X, (s, e) =>
-            {
-                Logger.Information("Options Pressed");
-            }));
-            viewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Select", Buttons.A, (s, e) =>
-            {
-                Logger.Information("Select Pressed");
-            }));
-        }
+        //// Add buttons
+        //if (MainViewModel.CurrentTabInfo != null)
+        //{
+        //    MainViewModel.CurrentTabInfo.Buttons.Clear();
+        //    MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.SavePlay", Buttons.Y, async (s, e) =>
+        //    {
+        //        await MainViewModel.SaveAndRun();
+        //    }));
+        //    MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Menu", Buttons.B, (s, e) =>
+        //    {
+        //        Logger.Information("Menu Pressed");
+        //    }));
+        //    MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Options", Buttons.X, (s, e) =>
+        //    {
+        //        Logger.Information("Options Pressed");
+        //    }));
+        //    MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Select", Buttons.A, (s, e) =>
+        //    {
+        //        Logger.Information("Select Pressed");
+        //    }));
+        //}
+    }
+
+    private void OnUnloaded(object? sender, RoutedEventArgs e)
+    {
+        if (MainViewModel == null)
+            return;
+        MainViewModel.Mods.CollectionChanged -= OnModCollectionChanged;
+        MainViewModel.PropertyChanged -= OnMainViewModelPropertyChanged;
+    }
+
+    private void OnModCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        UpdateModList();
+    }
+
+    private void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MainWindowViewModel.Codes))
+            UpdateModList();
     }
 
     private void OnAuthorSelectionChanged(object? sender, SelectionChangedEventArgs e)

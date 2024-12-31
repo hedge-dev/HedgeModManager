@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace HedgeModManager.UI.CLI;
 
@@ -29,7 +26,7 @@ public class CommandLine
     public static void ShowHelp()
     {
         Console.WriteLine();
-        Console.WriteLine($"HedgeModManager {App.GetAppVersion()}\n");
+        Console.WriteLine($"HedgeModManager {Program.GetAppVersion()}\n");
 
         Console.WriteLine("Commands:");
 

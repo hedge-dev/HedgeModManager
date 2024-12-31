@@ -3,9 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace HedgeModManager.UI.CLI.Commands;
 

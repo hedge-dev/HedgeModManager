@@ -4,8 +4,6 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using HedgeModManager.CodeCompiler;
 using HedgeModManager.UI.ViewModels;
-using System.IO;
-using System.Linq;
 
 namespace HedgeModManager.UI.Views;
 
@@ -54,7 +52,11 @@ public partial class MainWindow : Window
         if (Program.StartupCommands.Count > 0)
             await ViewModel.ProcessCommands(Program.StartupCommands);
 
-        await Dispatcher.UIThread.InvokeAsync(ViewModel.StartServer);
+        _ = Dispatcher.UIThread.InvokeAsync(ViewModel.StartServer);
+        await ViewModel.OnStartUp();
+
+        AddHandler(DragDrop.DropEvent, OnDrop);
+        AddHandler(DragDrop.DragOverEvent, OnDragOver);
     }
 
     private void OnTabChanged(object? sender, SelectionChangedEventArgs e)
@@ -89,5 +91,20 @@ public partial class MainWindow : Window
             default:
                 break;
         }
+    }
+
+    private void OnDragOver(object? sender, DragEventArgs e)
+    {
+        if (ViewModel == null || !e.Data.Contains(DataFormats.Files))
+            return;
+        e.DragEffects = DragDropEffects.Copy;
+    }
+
+    private void OnDrop(object? sender, DragEventArgs e)
+    {
+        if (ViewModel == null || !e.Data.Contains(DataFormats.Files))
+            return;
+        foreach (var file in e.Data.GetFiles() ?? [])
+            ViewModel.InstallMod(file.Name, Utils.ConvertToPath(file.Path), null);
     }
 }
