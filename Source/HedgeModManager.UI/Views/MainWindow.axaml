@@ -17,7 +17,7 @@
         Title="{DynamicResource Common.Program.Name}"
         MinWidth="1089" MinHeight="613"
         Background="Black" FontSize="14"
-        DragDrop.AllowDrop="True"
+        DragDrop.AllowDrop="True" WindowState="{Binding WindowState}"
         Loaded="Window_Loaded"
         KeyDown="OnKeyDown">
   <!-- FontFamily="{StaticResource NunitoFont}"-->
@@ -27,7 +27,7 @@
   </Design.DataContext>
   <Grid RowDefinitions="*,Auto" ColumnDefinitions="Auto,*"
         Background="{DynamicResource BackgroundL1Brush}">
-    <c:Sidebar Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" SelectedTabIndex="{Binding SelectedTabIndex}" IsSetupCompleted="{Binding Config.IsSetupCompleted}" />
+    <c:Sidebar Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" />
     <c:Footer Grid.Row="1" Grid.Column="1" />
     <TabControl Grid.Row="0" Grid.Column="1"
                 SelectedIndex="{Binding SelectedTabIndex}"

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.Events;
 using static HedgeModManager.UI.Languages.Language;
 
@@ -19,7 +20,7 @@ public partial class MessageBoxModal : WindowModal
     // Preview only
     public MessageBoxModal()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
         Title = "Title";
         Message = "Message\nLine 2";
         AddButton("Button 1", (s, e) => { Message = "Button 1 Clicked"; });
@@ -28,7 +29,7 @@ public partial class MessageBoxModal : WindowModal
 
     public MessageBoxModal(string title, string message)
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
         Title = title;
         Message = message;
     }

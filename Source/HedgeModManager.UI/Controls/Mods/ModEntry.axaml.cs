@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.Metadata;
 using Avalonia.Input;
+using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using HedgeModManager.UI.Controls.Modals;
@@ -16,10 +17,11 @@ public partial class ModEntry : ButtonUserControl
     public DispatcherTimer? HoldTimer;
     public bool HoldPointerOver = false;
     public bool HoldHandled = false;
+    public bool StartDragging = false;
 
     public ModEntry()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void OnInitialized(object? sender, EventArgs e)
@@ -38,6 +40,7 @@ public partial class ModEntry : ButtonUserControl
                 {
                     new ModInfoModal(viewModel).Open(viewModel.MainViewModel);
                     HoldHandled = true;
+                    StartDragging = false;
                 }
             };
 
@@ -60,7 +63,10 @@ public partial class ModEntry : ButtonUserControl
     {
         HoldPointerOver = true;
         HoldHandled = false;
+        StartDragging = true;
         HoldTimer?.Start();
+        if (DataContext is ModEntryViewModel viewModel)
+            viewModel.DragOffset = e.GetPosition(this);
         base.OnPointerPressed(sender, e);
     }
 
@@ -68,6 +74,7 @@ public partial class ModEntry : ButtonUserControl
     {
         HoldTimer?.Stop();
         e.Handled = HoldHandled;
+        StartDragging = false;
         base.OnPointerReleased(sender, e);
     }
 
@@ -78,10 +85,17 @@ public partial class ModEntry : ButtonUserControl
 
     public void OnPointerMoved(object? sender, PointerEventArgs e)
     {
-        if (HoldTimer != null)
+        if (HoldTimer != null || StartDragging)
         {
             HoldPointerOver = this.GetVisualsAt(e.GetPosition(this))
                 .Any(c => this == c || this.IsVisualAncestorOf(c));
+
+            if (StartDragging && !HoldPointerOver)
+            {
+                StartDragging = false;
+                if (DataContext is ModEntryViewModel viewModel)
+                    viewModel.IsDraging = true;
+            }
         }
     }
 

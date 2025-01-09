@@ -11,7 +11,7 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
                    xmlns:vm="using:HedgeModManager.UI.ViewModels"
-                   mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="280"
+                   mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="506"
                    x:Class="HedgeModManager.UI.Controls.Modals.ModInfoModal"
                    x:DataType="vm:MainWindowViewModel"
                    Initialized="OnInitialized"
@@ -21,6 +21,7 @@
                    LargeWindow="True">
   <local:WindowModal.Buttons>
     <StackPanel>
+      <cb:Button Text="{DynamicResource Mods.Button.Open}" Click="OnOpenClick" />
       <cb:Button Text="{Binding InfoViewModel.FavoriteButtonText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource StringLocalizeConverter}}" Click="OnFavoriteClick" />
       <cb:Button Text="{DynamicResource Mods.Button.Configure}" Click="OnConfigureClick" IsEnabled="{Binding ModViewModel.HasConfig, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}" />
       <cb:Button Text="{DynamicResource Mods.Button.Update}" IsEnabled="{Binding ModViewModel.Mod.Updater, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource NullBoolConverter}}" Click="OnUpdateClick" />

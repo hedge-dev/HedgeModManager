@@ -26,7 +26,7 @@ public class CommandLine
     public static void ShowHelp()
     {
         Console.WriteLine();
-        Console.WriteLine($"HedgeModManager {Program.GetAppVersion()}\n");
+        Console.WriteLine($"HedgeModManager {Program.ApplicationVersion}\n");
 
         Console.WriteLine("Commands:");
 

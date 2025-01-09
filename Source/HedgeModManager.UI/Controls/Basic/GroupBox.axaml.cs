@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Markup.Xaml;
 
 namespace HedgeModManager.UI.Controls.Basic;
 
@@ -42,6 +43,6 @@ public partial class GroupBox : UserControl
                 Header = "Header Text";
             Data = "Content";
         }
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 }

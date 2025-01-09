@@ -77,9 +77,7 @@ public partial class ModDownloaderViewModel : ViewModelBase
         else
             Author = "Unknown Author";
 
-        var gameDef = Games.ExtraGameInfos.FirstOrDefault(x => x.GameID == DownloadInfo.GameID);
-        if (gameDef != null)
-            GameIcon = Games.GetIcon(gameDef.GameID);
+        GameIcon = Games.GetIcon(DownloadInfo.GameID);
         TargetGameName = Localize("Modal.Text.TargetGame", Localize($"Common.Game.{DownloadInfo.GameID}"));
     }
 }

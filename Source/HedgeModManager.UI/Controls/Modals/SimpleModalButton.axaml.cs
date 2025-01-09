@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using HedgeModManager.UI.Controls.Primitives;
 
@@ -26,6 +27,6 @@ public partial class SimpleModalButton : ButtonUserControl
 
     public SimpleModalButton()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 }

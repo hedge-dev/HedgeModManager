@@ -85,6 +85,16 @@ public partial class SettingsViewModel : ViewModelBase
 
     public bool HasModLoader => Game?.ModLoader != null;
 
+    public bool SupportsMultipleLaunchMethods
+    {
+        get
+        {
+            if (MainViewModel?.GetModdableGameGeneric() is ModdableGameGeneric game)
+                return game.SupportsDirectLaunch && game.SupportsLauncher;
+            return false;
+        }
+    }
+
     public LanguageEntry? SelectedLanguage
     {
         get => MainViewModel?.SelectedLanguage ?? MainViewModel?.Languages.FirstOrDefault();
@@ -124,6 +134,7 @@ public partial class SettingsViewModel : ViewModelBase
             OnPropertyChanged(nameof(InstallModLoaderText));
             OnPropertyChanged(nameof(EnableDebugConsole));
             OnPropertyChanged(nameof(HasModLoader));
+            OnPropertyChanged(nameof(SupportsMultipleLaunchMethods));
         }
         if (e.PropertyName == nameof(MainViewModel))
             OnPropertyChanged(nameof(SelectedLanguage));

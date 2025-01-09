@@ -1,11 +1,12 @@
 ﻿using Avalonia;
-using Avalonia.Markup.Xaml.Templates;
 using HedgeModManager.GitHub;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI;
@@ -14,19 +15,96 @@ public class Updater
 {
     public static string GetUpdatePackageName()
     {
-        return $"HedgeModManager-{RuntimeInformation.RuntimeIdentifier}.zip";
+        if (OperatingSystem.IsWindows())
+            return $"HedgeModManager-win-x64.zip";
+        else if (OperatingSystem.IsLinux())
+            return $"HedgeModManager-linux-x64.zip";
+        else
+            return $"HedgeModManager-{RuntimeInformation.RuntimeIdentifier}.zip";
     }
 
-    public static async Task<GitHubRelease?> CheckForUpdates()
+    public static async Task<(Update?, UpdateCheckStatus)> CheckForUpdates()
     {
-        var (release, _) = await GitHubAPI.GetRelease(Program.GitHubRepoOwner, Program.GitHubRepoName);
-        return release;
+        // Check Flathub if running under a Flatpak
+        if (!string.IsNullOrEmpty(Program.FlatpakID))
+        {
+            Logger.Debug($"Checking for updates for {Program.FlatpakID}");
+            var app = await Network.Get<FlathubApp>($"https://flathub.org/api/v1/apps/{Program.FlatpakID}");
+            if (app == null)
+            {
+                Logger.Error("Failed to check for updates");
+                return (null, UpdateCheckStatus.Error);
+            }
+            Logger.Debug("Got Flathub data");
+            Logger.Debug($"Current Version: {Program.ApplicationVersion}");
+            Logger.Debug($"New Version: {app.CurrentReleaseVersion}");
+
+            if (IsNewer(app.CurrentReleaseVersion, Program.ApplicationVersion))
+            {
+                Logger.Debug("Current version is older");
+                return (new Update()
+                {
+                    Version = app.CurrentReleaseVersion!,
+                    Title = app.Name,
+                    Description = app.CurrentReleaseDescription
+                }, UpdateCheckStatus.UpdateAvailable);
+            }
+
+            Logger.Debug("Current version is newer");
+            return (null, UpdateCheckStatus.NoUpdate);
+        }
+        else
+        {
+            var release = await GitHubAPI.GetRelease(Program.GitHubRepoOwner, Program.GitHubRepoName);
+
+            if (release == null)
+            {
+                Logger.Error("Failed to check for updates");
+                return (null, UpdateCheckStatus.Error);
+            }
+
+            Logger.Debug($"Current Version: {Program.ApplicationVersion}");
+            Logger.Debug($"New Version: {release.TagName}");
+
+            if (IsNewer(release.TagName, Program.ApplicationVersion))
+            {
+                Logger.Debug("Current version is older");
+                // Find Asset
+                var asset = release.Assets.FirstOrDefault(x => x!.Name.Equals(GetUpdatePackageName()),
+                    release.Assets.FirstOrDefault(x => x.Name.Contains(RuntimeInformation.RuntimeIdentifier)));
+                if (asset == null)
+                {
+                    Logger.Error($"No Assets found!");
+                    return (null, UpdateCheckStatus.Error);
+                }
+
+                Logger.Debug($"Found asset {asset.Name} - {asset.BrowserDownloadURL}");
+
+                return (new Update()
+                {
+                    Version = release.TagName,
+                    Title = release.Name,
+                    Description = release.Body,
+                    DownloadURI = asset.BrowserDownloadURL
+                }, UpdateCheckStatus.UpdateAvailable);
+            }
+            else
+            {
+                Logger.Debug("Current version is newer");
+                return (null, UpdateCheckStatus.NoUpdate);
+            }
+        }
     }
 
-    public static async Task BeginUpdate(GitHubRelease release, MainWindowViewModel? mainViewModel)
+    public static async Task BeginUpdate(Update update, MainWindowViewModel? mainViewModel)
     {
-        string tempPath = Cache.GetTempPath();
-        string packageFilePath = Path.Combine(tempPath, $"update.zip");
+        if (update.DownloadURI == null)
+        {
+            Logger.Error("No download URI found!");
+            return;
+        }
+        string tempPath = Paths.GetTempPath();
+        string packageFilePath = Path.Combine(tempPath, "update.zip");
 
         await new Download(Localize("Download.Text.UpdateManager0"), true)
         .OnRun(async (d, c) =>
@@ -34,23 +112,11 @@ public class Updater
             var progress = d.CreateProgress();
             progress.ReportMax(-1);
 
-            // Find update file
-            Logger.Debug($"Looking for asset {GetUpdatePackageName()} - {RuntimeInformation.RuntimeIdentifier}");
-            var asset = release.Assets.FirstOrDefault(x => x!.Name.Equals(GetUpdatePackageName()), 
-                release.Assets.FirstOrDefault(x => x.Name.Contains(RuntimeInformation.RuntimeIdentifier)));
-            if (asset == null)
-            {
-                Logger.Error($"No Assets found!");
-                d.Destroy();
-                return;
-            }
-
-            Logger.Debug($"Found asset {asset.Name} - {asset.BrowserDownloadURL}");
             Logger.Debug($"Downloading to {packageFilePath}");
-            bool completed = await Network.DownloadFile(asset.BrowserDownloadURL, packageFilePath, null, progress, c);
+            bool completed = await Network.DownloadFile(update.DownloadURI, packageFilePath, null, progress, c);
             if (!completed)
             {
-                Logger.Error($"Failed to download asset");
+                Logger.Error($"Failed to download package");
                 d.Destroy();
                 return;
             }
@@ -79,7 +145,7 @@ public class Updater
 
     public static async Task UpdateFromPackage(string packagePath, MainWindowViewModel? mainViewModel)
     {
-        string tempPath = Cache.GetTempPath();
+        string tempPath = Paths.GetTempPath();
         string updateDirPath = Path.Combine(tempPath, $"Update");
         if (Directory.Exists(updateDirPath))
             Directory.Delete(updateDirPath, true);
@@ -117,5 +183,65 @@ public class Updater
         // Exit
         if (Application.Current is App app && app.MainWindow != null)
             app.MainWindow.Close();
+    }
+
+    public static Version ConvertVersion(string formattedVersion)
+    {
+        Version defaultVersion = new Version(0, 0);
+        string pattern = @"(\d+)\.(\d+)-(\d+)";
+        var regex = new Regex(pattern);
+        var match = regex.Match(formattedVersion);
+
+        if (!match.Success)
+        {
+            Logger.Error($"Failed to process regex on string: {formattedVersion}");
+            return defaultVersion;
+        }
+        if (match.Groups.Count != 4)
+        {
+            Logger.Error($"Invalid group count from regex on string: {formattedVersion}");
+            return defaultVersion;
+        }
+
+        _ = Version.TryParse($"{match.Groups[1].Value}.{match.Groups[2].Value}.0.{match.Groups[3].Value}", out Version? version);
+        return version ?? defaultVersion;
+    }
+
+    public static bool IsNewer(string? newFormattedVersion, string? oldFormattedVersion = null)
+    {
+        if (newFormattedVersion == null)
+            return false;
+
+        oldFormattedVersion ??= Program.ApplicationVersion;
+
+        var oldVersion = ConvertVersion(oldFormattedVersion);
+        var newVersion = ConvertVersion(newFormattedVersion);
+
+        return newVersion > oldVersion;
+    }
+
+    public enum UpdateCheckStatus
+    {
+        NoUpdate,
+        UpdateAvailable,
+        Error
+    }
+
+    public class Update
+    {
+        public string Version { get; set; } = "0.0-0";
+        public string Title { get; set; } = "Update Title";
+        public string? Description { get; set; }
+        public Uri? DownloadURI { get; set; }
+    }
+
+    public class FlathubApp
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = "No Name";
+        [JsonPropertyName("currentReleaseDescription")]
+        public string? CurrentReleaseDescription { get; set; }
+        [JsonPropertyName("currentReleaseVersion")]
+        public string? CurrentReleaseVersion { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
 namespace HedgeModManager.UI.Controls.Settings;
 
@@ -56,7 +57,7 @@ public partial class SettingsEntry : UserControl
 
     public SettingsEntry()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 
@@ -9,7 +10,7 @@ public partial class GameSelectModal : UserControl
 {
     public GameSelectModal()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void OnGameClick(object? sender, RoutedEventArgs e)

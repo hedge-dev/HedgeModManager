@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.Controls.Primitives;
 
 namespace HedgeModManager.UI.Controls.Basic;
@@ -29,7 +30,7 @@ public partial class CheckBox : ButtonUserControl
 
     public CheckBox()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     public void OnClick(object? sender, RoutedEventArgs e)

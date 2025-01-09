@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="80" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="80" d:DesignHeight="720"
              x:Class="HedgeModManager.UI.Controls.Sidebar"
              x:DataType="vm:MainWindowViewModel">
   <Border Background="{DynamicResource BackgroundL1Brush}"
@@ -52,16 +52,17 @@
 
           </Grid>
         </Border>
-        <cb:Separator IsVisible="{Binding SelectedGame, Converter={StaticResource NullBoolConverter}}" />
-        <StackPanel x:Name="TabButtons" Margin="0,12,0,0">
+        <cb:Separator Foreground="{DynamicResource BorderBrush}" />
+        <StackPanel x:Name="TabButtons" Margin="0,12,0,12">
           <c:SidebarButton Type="Tab" IsVisible="False" Icon="{DynamicResource Geometry.ScrewDriverWrench}" Click="OnTabChanged" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}, Converter={StaticResource InvertedBoolConverter}}" Icon="{DynamicResource Geometry.ScrewDriverWrench}" Click="OnTabChanged" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Whench}" Click="OnTabChanged" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Code}" Click="OnTabChanged" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Gear}" Click="OnTabChanged" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.CircleInfo}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}, Converter={StaticResource InvertedBoolConverter}}" Icon="{DynamicResource Geometry.ScrewDriverWrench}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Whench}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsCodesTabVisible, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Code}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Gear}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.CircleInfo}" Click="OnTabChanged" />
           <c:SidebarButton Type="Tab" IsVisible="{Binding Config.TestModeEnabled}" Icon="{DynamicResource Geometry.Flask}" Click="OnTabChanged" />
         </StackPanel>
+        <cb:Separator Foreground="{DynamicResource BorderBrush}" />
       </StackPanel>
       <StackPanel Margin="0,0,0,16" VerticalAlignment="Bottom">
         <StackPanel>

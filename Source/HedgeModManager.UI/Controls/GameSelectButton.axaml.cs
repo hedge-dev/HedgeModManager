@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.Controls.Primitives;
 using HedgeModManager.UI.Models;
 
@@ -17,6 +18,6 @@ public partial class GameSelectButton : ButtonUserControl
 
     public GameSelectButton()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 }

@@ -1,19 +1,24 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.ViewModels;
+using HedgeModManager.UI.ViewModels.About;
 using System.Diagnostics;
 
 namespace HedgeModManager.UI.Controls.About;
 
 public partial class About : UserControl
 {
+    public AboutViewModel ViewModel { get; set; } = new();
+
     public About()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
-    private void OnLoaded(object? sender, RoutedEventArgs e)
+    private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
+        await ViewModel.Update();
         var viewModel = (DataContext as MainWindowViewModel);
         if (viewModel == null)
             return;

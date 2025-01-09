@@ -7,24 +7,30 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Runtime.Versioning;
 
+#if !DEBUG
+using System.Diagnostics;
+using System.Text;
+#endif
+
 namespace HedgeModManager.UI;
 
 [Guid("DC33288B-818F-43AF-927C-75AA9A2FB42D")]
 public sealed class Program
 {
-    public static readonly string ApplicationCompany = "NeverFinishAnything";
+    public static readonly string ApplicationCompany = "hedge-dev";
     public static readonly string ApplicationName = "HedgeModManager";
     public static readonly string ApplicationFriendlyName = "Hedge Mod Manager";
     public static readonly string ApplicationID = "HedgeModManager.UI";
 
-    public static readonly string GitHubRepoOwner = "TheSuperSonic16";
+    public static readonly string GitHubRepoOwner = "hedge-dev";
     public static readonly string GitHubRepoName = "HedgeModManager";
-    public static string UserAgent = $"Mozilla/5.0 (compatible; {ApplicationName}/{GetAppVersion()})";
+    public static string UserAgent = $"Mozilla/5.0 (compatible; {ApplicationName}/{ApplicationVersion})";
 
     // Will become the GUID if exists
     public static string PipeName = $"{ApplicationCompany}\\{ApplicationName}";
-    public static string InstallLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+    public static string InstallLocation = Path.GetDirectoryName(System.AppContext.BaseDirectory)!;
     public static string? FlatpakID = null;
+    public static string ApplicationVersion = GetFormattedAppVersion(); 
 #if DEBUG
     public const bool IsDebugBuild = true;
 #else
@@ -47,6 +53,54 @@ public sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
+#if !DEBUG
+        // Save and display unhandled exceptions
+        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+        {
+            try
+            {
+                StringBuilder sb = new();
+                sb.AppendLine($"{ApplicationFriendlyName} Crash Log");
+                sb.AppendLine($"Date: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                sb.AppendLine();
+
+                sb.AppendLine("-- Logger Dump Start --");
+                try
+                {
+                    sb.AppendLine(UILogger.Export());
+                } catch (Exception loggerException)
+                {
+                    sb.AppendLine("Failed to export UI Logger: " + loggerException);
+                }
+                sb.AppendLine("-- Logger Dump End --");
+                sb.AppendLine();
+
+                var thrownException = (Exception)e.ExceptionObject;
+
+                sb.AppendLine("Unhandled Exception:");
+                sb.AppendLine(thrownException.ToString());
+                sb.AppendLine();
+
+                sb.AppendLine("Unhandled Inner Exception:");
+                sb.AppendLine(thrownException.InnerException?.ToString() ?? "None");
+                sb.AppendLine();
+
+                string text = sb.ToString();
+                Console.WriteLine(text);
+
+                string crashLogFileName = $"HMMCrash-{DateTime.Now:yyyyMMddHHmmss}.log";
+                string crashLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), crashLogFileName);
+
+                File.WriteAllText(crashLogPath, text);
+                Console.WriteLine($"Crash log saved to {crashLogPath}");
+                Process.Start(new ProcessStartInfo(crashLogPath) { UseShellExecute = true });
+            } catch
+            {
+                Console.WriteLine("Exception thrown while creating crash log.");
+            }
+        };
+#endif
+
         var guidAttribute = typeof(Program).GetCustomAttribute<GuidAttribute>();
         if (guidAttribute == null)
             Console.WriteLine("Failed to get GUID");
@@ -114,12 +168,15 @@ public sealed class Program
         }
     }
 
-    public static string GetAppVersion()
+    public static string GetFormattedAppVersion()
     {
-        var version = Assembly.GetExecutingAssembly().GetName().Version;
-        if (version is null)
-            return "Unknown";
+        var version = GetAppVersion();
         return $"{version.Major}.{version.Minor}-{version.Revision}";
+    }
+
+    public static Version GetAppVersion()
+    {
+        return Assembly.GetExecutingAssembly().GetName().Version ?? Version.Parse("0");
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

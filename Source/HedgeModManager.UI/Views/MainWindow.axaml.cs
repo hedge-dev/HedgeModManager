@@ -4,6 +4,8 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using HedgeModManager.CodeCompiler;
 using HedgeModManager.UI.ViewModels;
+using Avalonia.Markup.Xaml;
+using Avalonia;
 
 namespace HedgeModManager.UI.Views;
 
@@ -13,7 +15,10 @@ public partial class MainWindow : Window
 
     public MainWindow()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
+#if DEBUG
+        this.AttachDevTools();
+#endif
     }
 
     private async void Window_Loaded(object? sender, RoutedEventArgs e)
@@ -80,12 +85,10 @@ public partial class MainWindow : Window
                 break;
             case Key.F5:
                 ViewModel.RefreshUI();
-                Logger.Debug($"Refreshed mods");
+                Logger.Debug($"Refreshed UI");
                 break;
             case Key.F6:
-                var game = ViewModel.SelectedGame;
-                ViewModel.SelectedGame = null;
-                ViewModel.SelectedGame = game;
+                ViewModel.RefreshGame();
                 Logger.Debug($"Refreshed game");
                 break;
             default:

@@ -66,6 +66,7 @@
           </cs:SettingsEntry.Data>
         </cs:SettingsEntry>
         <cs:SettingsEntry Icon="RocketLaunch"
+                          IsVisible="{Binding ViewModel.SupportsMultipleLaunchMethods, RelativeSource={RelativeSource AncestorType=cs:Settings}}"
                           Title="{DynamicResource Settings.Title.Launcher}"
                           Description="{DynamicResource Settings.Description.Launcher}">
           <cs:SettingsEntry.Data>

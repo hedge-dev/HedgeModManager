@@ -1,5 +1,6 @@
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
@@ -25,13 +26,13 @@ public partial class ModDownloaderModal : WindowModal
                 Images = ["https://images.gamebanana.com/img/Webpage/Game/Profile/Background/629d9d63eb125.png"],
             };
         });
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     public ModDownloaderModal(Func<Task<ModDownloadInfo?>> downloadInfoCallback)
     {
         ViewModel = new(downloadInfoCallback);
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     private async void OnInitialized(object? sender, RoutedEventArgs e)
@@ -103,7 +104,7 @@ public partial class ModDownloaderModal : WindowModal
                 await modsDB.InstallModFromArchive(downloadPath, progress);
                 Logger.Information($"Finished installing {downloadInfo.Name}");
                 if (uiGame == viewModel.SelectedGame)
-                    Dispatcher.UIThread.Invoke(viewModel.RefreshUI);
+                    Dispatcher.UIThread.Invoke(viewModel.RefreshGame);
             }).OnCancel((d) =>
             {
                 Logger.Debug("Mod install cancelled");

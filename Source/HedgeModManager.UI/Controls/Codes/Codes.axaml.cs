@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.CodeCompiler;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Codes;
@@ -18,7 +19,7 @@ public partial class Codes : UserControl
 
     public Codes()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     //public void LogCodes(int level, CodeCategoryViewModel codeCategory)
@@ -65,8 +66,17 @@ public partial class Codes : UserControl
     //    return categories;
     //}
 
-    public void UpdateCodesList()
+    public void RefreshUI()
     {
+        // Switch to mods if codes are not supported
+        if (MainViewModel?.GetModdableGameGeneric()?.SupportsCodes == false)
+        {
+            if (MainViewModel.SelectedTabIndex == MainViewModel.GetTabIndex("Codes"))
+                MainViewModel.SelectedTabIndex -= 1;
+            return;
+        }
+
+        // TODO: Implement notfication of CodesList changes. Adding is slow
         CodesList.Clear();
         if (MainViewModel == null ||
             MainViewModel.Codes == null)
@@ -78,6 +88,7 @@ public partial class Codes : UserControl
             .Select(x => new CodeEntryViewModel(x))
             .ToList()
             .ForEach(CodesList.Add);
+
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -89,7 +100,7 @@ public partial class Codes : UserControl
         // Subscribe to changes
         MainViewModel.Codes.CollectionChanged += OnCodesCollectionChanged;
         MainViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
-        UpdateCodesList();
+        RefreshUI();
 
         //// Generate categories
         //Cateories.Clear();
@@ -112,10 +123,10 @@ public partial class Codes : UserControl
         if (MainViewModel.CurrentTabInfo != null)
         {
             MainViewModel.CurrentTabInfo.Buttons.Clear();
-            MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.SavePlay", Buttons.Y, async (b) =>
-            {
-                await MainViewModel.SaveAndRun();
-            }));
+            //MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.SavePlay", Buttons.Y, async (b) =>
+            //{
+            //    await MainViewModel.SaveAndRun();
+            //}));
             MainViewModel.CurrentTabInfo.Buttons.Add(new("Codes.Button.UpdateCodes", Buttons.X, async (b) =>
             {
                 b.IsEnabled = false;
@@ -139,12 +150,12 @@ public partial class Codes : UserControl
 
     private void OnCodesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        UpdateCodesList();
+        RefreshUI();
     }
 
     private void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MainWindowViewModel.Codes))
-            UpdateCodesList();
+            RefreshUI();
     }
 }

@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.ViewModels;
 
 namespace HedgeModManager.UI.Controls;
@@ -11,7 +12,7 @@ public partial class Modal : UserControl
 
     public Modal()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     public Modal(object? content, Thickness? padding = null) : this()

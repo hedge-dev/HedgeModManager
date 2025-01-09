@@ -6,74 +6,87 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             xmlns:vma="using:HedgeModManager.UI.ViewModels.About"
              mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
              x:Class="HedgeModManager.UI.Controls.About.About"
              x:DataType="vm:MainWindowViewModel"
+             Background="{DynamicResource BackgroundL0Brush}"
              Loaded="OnLoaded">
-  <Grid RowDefinitions="Auto,Auto,Auto"
-        HorizontalAlignment="Center" VerticalAlignment="Center">
-    <StackPanel Margin="0,0,0,8" HorizontalAlignment="Center">
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-        <Image Grid.Column="0"
-               Source="avares://HedgeModManager.UI/Assets/Graphics/logo.png" Width="64" Height="64" />
-        <TextBlock Text="{DynamicResource Common.Program.Name}"
-                   FontSize="24" FontWeight="Bold"
-                   Margin="8,0,0,0"
-                   VerticalAlignment="Center" />
-      </StackPanel>
-      <TextBlock Text="{DynamicResource Common.Program.Sub}" HorizontalAlignment="Center" />
-      <TextBlock Text="{DynamicResource About.Program.Sub}" HorizontalAlignment="Center" />
-    </StackPanel>
-    <Grid Grid.Row="1">
-      <StackPanel Orientation="Horizontal"
-                  Spacing="16" Margin="0,8,0,0"
+  <Grid RowDefinitions="Auto,Auto,*" Margin="0,32,0,0"
+        HorizontalAlignment="Stretch" VerticalAlignment="Center">
+    <!-- Header -->
+    <Grid RowDefinitions="Auto,Auto,Auto"
+          ColumnDefinitions="Auto,Auto"
+          Grid.Row="0" HorizontalAlignment="Center">
+      <Image Grid.Row="0" Grid.Column="0"
+             Margin="0,0,16,0"
+             Source="avares://HedgeModManager.UI/Assets/Graphics/logo.png" Width="96" Height="96" />
+        <TextBlock Grid.Row="0" Grid.Column="1"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center">
+          <InlineCollection>
+            <Run FontSize="30" FontWeight="Bold"
+                 Text="{DynamicResource Common.Program.Name}" />
+            <Run FontSize="30"
+                 Text=" " />
+            <Run Foreground="{DynamicResource Text.SubBrush}"
+                 Text="{Binding ViewModel.Version, RelativeSource={RelativeSource AncestorType=ca:About}}" />
+          </InlineCollection>
+        </TextBlock>
+      <cb:Separator Grid.Row="0" Grid.ColumnSpan="2"
+                    Margin="8"
+                    VerticalAlignment="Bottom"/>
+      <StackPanel Grid.Row="1" Grid.ColumnSpan="2"
+                  Margin="0,12,0,0"
                   HorizontalAlignment="Center">
-        <cb:GroupBox Header="{DynamicResource About.Header.Authors}">
-          <cb:GroupBox.Data>
-            <Grid ColumnDefinitions="Auto,Auto">
-              <StackPanel Grid.Column="0" Margin="8,2,8,2">
-                <TextBlock Text="SuperSonic16" />
-                <TextBlock Text="Sajid" />
-                <TextBlock Text="Kandda" />
-              </StackPanel>
-              <StackPanel  Grid.Column="1" Margin="8,2,8,2">
-                <TextBlock Text="Main Developer" />
-                <TextBlock Text="Main Developer" />
-                <TextBlock Text="Design" />
-              </StackPanel>
-            </Grid>
-          </cb:GroupBox.Data>
-        </cb:GroupBox>
-        <cb:GroupBox Header="{DynamicResource About.Header.Translators}">
-          <cb:GroupBox.Data>
-            <Grid ColumnDefinitions="Auto,Auto">
-              <StackPanel Grid.Column="0" Margin="8,2,8,2">
-                <TextBlock Text="Placeholder" />
-              </StackPanel>
-              <StackPanel  Grid.Column="1" Margin="8,2,8,2">
-                <TextBlock Text="Placeholder" />
-              </StackPanel>
-            </Grid>
-          </cb:GroupBox.Data>
-        </cb:GroupBox>
+        <TextBlock Text="{DynamicResource Common.Program.Sub}" HorizontalAlignment="Center" />
+        <TextBlock Text="{DynamicResource About.Program.Sub}" HorizontalAlignment="Center" />
       </StackPanel>
     </Grid>
-    <cb:GroupBox Header="{DynamicResource About.Header.SupportedGames}"
-             Grid.Row="2"
-                 Margin="0,8,0,0">
-      <cb:GroupBox.Data>
-        <Grid ColumnDefinitions="Auto,Auto">
-          <StackPanel Grid.Column="0" Margin="8,2,8,2">
-            <ItemsControl ItemsSource="{Binding Games}">
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <TextBlock Text="{Binding LocalizeID, Converter={StaticResource StringLocalizeConverter}}" />
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </StackPanel>
-        </Grid>
-      </cb:GroupBox.Data>
-    </cb:GroupBox>
+
+    <!-- Content -->
+    <Border Grid.Row="2" Margin="32,16,0,32"
+            VerticalAlignment="Stretch">
+      <ScrollViewer>
+        <ItemsControl ItemsSource="{Binding ViewModel.Credits, RelativeSource={RelativeSource AncestorType=ca:About}}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="{Binding Key}"
+                           FontSize="16" FontWeight="Bold"
+                           Margin="0,8,0,8" HorizontalAlignment="Center" />
+                <ItemsControl Margin="8,0,0,0"
+                              ItemsSource="{Binding Value}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <StackPanel Margin="4" Width="92"
+                                  x:DataType="vma:AboutViewModel+Credit">
+                        <Border Margin="0,0,0,8"
+                                Width="48" Height="48"
+                                CornerRadius="16"
+                                ClipToBounds="True"
+                                IsVisible="{Binding Image, Converter={StaticResource NullBoolConverter}}">
+                          <Image Source="{Binding Image}" />
+                        </Border>
+                        <TextBlock HorizontalAlignment="Center"
+                                   Text="{Binding Name}" />
+                        <TextBlock FontSize="12" Foreground="{DynamicResource Text.SubBrush}"
+                                   HorizontalAlignment="Center"
+                                   Text="{Binding Role}" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ItemsControl>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Border>
   </Grid>
 </UserControl>

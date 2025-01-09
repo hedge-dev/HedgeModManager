@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.Controls.Primitives;
 using Material.Icons;
 
@@ -35,6 +36,6 @@ public partial class Button : ButtonUserControl
 
     public Button()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 }

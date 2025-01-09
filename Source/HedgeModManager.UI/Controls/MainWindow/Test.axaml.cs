@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Models;
@@ -15,7 +16,7 @@ public partial class Test : UserControl
 {
     public Test()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)

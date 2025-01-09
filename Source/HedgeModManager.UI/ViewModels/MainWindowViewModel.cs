@@ -4,25 +4,18 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.Foundation;
 using HedgeModManager.IO;
-using HedgeModManager.UI;
 using HedgeModManager.UI.CLI;
 using HedgeModManager.UI.Config;
 using HedgeModManager.UI.Controls;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.IO.Pipes;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using static HedgeModManager.UI.Languages.Language;
 using static HedgeModManager.UI.Models.Download;
 
@@ -30,7 +23,7 @@ namespace HedgeModManager.UI.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public string AppVersion => Program.GetAppVersion();
+    public string AppVersion => Program.ApplicationVersion;
 
     public ObservableCollection<UIGame> Games { get; set; } = [];
     public ObservableCollection<Download> Downloads { get; set; } = [];
@@ -56,6 +49,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private bool _showProgressBar = false;
     [ObservableProperty] private bool _progressIndeterminate = false;
     [ObservableProperty] private LanguageEntry? _selectedLanguage;
+    [ObservableProperty] private WindowState _windowState = WindowState.Normal;
 
     // Preview only
     public MainWindowViewModel() { }
@@ -88,7 +82,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public async Task OnStartUp()
     {
         if (Config.LastUpdateCheck.AddMinutes(20) < DateTime.Now &&
-            !Design.IsDesignMode)
+            !Design.IsDesignMode && !Program.IsDebugBuild)
         {
             await CheckForManagerUpdates();
             await CheckForModLoaderUpdates();
@@ -108,22 +102,36 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             d.CreateProgress().ReportMax(-1);
             
-            var release = await Updater.CheckForUpdates();
-            if (release == null)
+            var (update, status) = await Updater.CheckForUpdates();
+            if (update == null)
             {
-                Logger.Error("No release found");
+                if (status == Updater.UpdateCheckStatus.NoUpdate)
+                {
+                    Logger.Information("No release found");
+                } else
+                {
+                    OpenErrorMessage("Modal.Title.UpdateError", "Modal.Message.UpdateCheckError",
+                        "Failed to check for updates", null);
+                }
                 d.Destroy();
                 return;
             }
             d.Destroy();
 
-            string message = $"Release found:\n{release.TagName} - {release.Name}";
+            string message = $"update found:\n{update.Title} - {update.Version}";
+            Logger.Information(message);
             var messageBox = new MessageBoxModal("Modal.Title.UpdateManager", message);
             messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
             messageBox.AddButton("Common.Button.Install", async (s, e) =>
             {
+                Logger.Information("Install clicked for update");
                 messageBox.Close();
-                await Updater.BeginUpdate(release, this);
+                if (Program.FlatpakID != null)
+                {
+                    MessageBoxModal.CreateOK("Modal.Title.UpdateManager", "Modal.Message.PkgUpdate");
+                    return;
+                }
+                await Updater.BeginUpdate(update, this);
             });
             //messageBox.AddButton("Test", async (s, e) =>
             //{
@@ -140,9 +148,74 @@ public partial class MainWindowViewModel : ViewModelBase
         }).RunAsync(this);
     }
 
-    public async Task CheckForModLoaderUpdates()
+    public Task CheckForModLoaderUpdates()
     {
-        await Task.Delay(100);
+        return Task.CompletedTask;
+    }
+
+    public async Task CheckForAllModUpdates()
+    {
+        if (SelectedGame == null)
+            return;
+        await new Download(Localize("Download.Text.CheckModUpdate", 0, 0), true)
+        .OnRun(async (d, c) =>
+        {
+            var updatableMods = SelectedGame.Game.ModDatabase.Mods
+                .Where(x => x.Updater != null)
+                .ToList();
+
+            var progress = d.CreateProgress();
+            progress.ReportMax(updatableMods.Count);
+
+            Logger.Debug($"Checking {updatableMods.Count} mod updates");
+            foreach (var mod in updatableMods)
+            {
+                if (c.IsCancellationRequested)
+                    break;
+                await CheckForModUpdates(mod, false, c);
+                progress.ReportAdd(1);
+                d.Name = Localize("CheckModUpdate", progress.Progress, progress.ProgressMax);
+            }
+        }).OnError((d, e) =>
+        {
+            Logger.Error(e);
+            Logger.Error($"Unexpected error while checking for mod updates");
+            d.Destroy();
+            return Task.CompletedTask;
+        }).RunAsync(this);
+    }
+
+    public async Task<UpdateInfo?> CheckForModUpdates(IMod mod, bool promptUpdate = false, CancellationToken c = default)
+    {
+        try
+        {
+            if (await mod.Updater!.CheckForUpdatesAsync(c))
+            {
+                var info = await mod.Updater.GetUpdateInfoAsync(c);
+                Logger.Debug($"Update found for {mod.Title}");
+                Logger.Debug($"  Current: {mod.Version}");
+                Logger.Debug($"  Latest: {info.Version}");
+                if (promptUpdate)
+                {
+                    var messageBox = new MessageBoxModal("Modal.Title.UpdateMod", "Modal.Message.UpdateMod");
+                    messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
+                    messageBox.AddButton("Common.Button.Update", async (s, e) =>
+                    {
+                        Logger.Information($"Update clicked for {mod.Title}");
+                        messageBox.Close();
+                        await mod.Updater.PerformUpdateAsync(c);
+                    });
+                    messageBox.Open(this);
+                }
+                return info;
+            }
+        }
+        catch (Exception e)
+        {
+            Logger.Error($"Failed to check for updates for {mod.Title}");
+            Logger.Error(e);
+        }
+        return null;
     }
 
     public async Task LoadGame()
@@ -270,6 +343,13 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    public void RefreshGame()
+    {
+        if (SelectedGame is not UIGame game)
+            return;
+        OnPropertyChanged(nameof(SelectedGame));
+    }
+
     public void RefreshUI()
     {
         if (SelectedGame is not UIGame game)
@@ -318,6 +398,16 @@ public partial class MainWindowViewModel : ViewModelBase
             messageBox.Close();
         });
         messageBox.Open(this);
+    }
+
+    public ModdableGameGeneric? GetModdableGameGeneric()
+    {
+        return SelectedGame?.Game as ModdableGameGeneric;
+    }
+
+    public int GetTabIndex(string name)
+    {
+        return Array.FindIndex(TabInfos, x => x.Name == name);
     }
 
     public static async Task ExportLog(Visual visual)
@@ -401,7 +491,13 @@ public partial class MainWindowViewModel : ViewModelBase
             await modsDB.InstallModFromArchive(path, installProgress);
             Logger.Information($"Finished installing {name}");
             if (game == SelectedGame)
-                Dispatcher.UIThread.Invoke(RefreshUI);
+            {
+                await Dispatcher.UIThread.Invoke(async () =>
+                {
+                    await SelectedGame.Game.InitializeAsync();
+                    RefreshUI();
+                });
+            }
         }).OnError((d, e) =>
         {
             OpenErrorMessage("Modal.Title.InstallError", "Modal.Message.InstallError",

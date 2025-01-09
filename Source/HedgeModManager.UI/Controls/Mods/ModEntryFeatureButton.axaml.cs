@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using HedgeModManager.UI.Controls.Primitives;
@@ -37,7 +38,7 @@ public partial class ModEntryFeatureButton : ButtonUserControl
 
     public ModEntryFeatureButton()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void OnInitialized(object? sender, EventArgs e)

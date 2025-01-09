@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media.Immutable;
 using HedgeModManager.UI.Controls.Basic;
 using HedgeModManager.UI.Models;
@@ -29,7 +30,7 @@ public partial class ModConfigModal : UserControl
         ConfigViewModel = new(mod);
         Title = Localize("Modal.Title.ConfigureMod", mod.Title);
         
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     public ModConfigModal(ModEntryViewModel modViewModel)
@@ -39,7 +40,7 @@ public partial class ModConfigModal : UserControl
         ConfigViewModel = new(mod);
         Title = Localize("Modal.Title.ConfigureMod", mod.Title);
 
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     public Control CreateControl(ModConfig.ConfigElement element, ModConfig modConfig)

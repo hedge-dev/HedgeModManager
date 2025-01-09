@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.ViewModels;
 
 namespace HedgeModManager.UI.Controls.Modals;
@@ -55,7 +56,7 @@ public partial class WindowModal : UserControl
 
     public WindowModal()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     public Modal? GetBaseModal()

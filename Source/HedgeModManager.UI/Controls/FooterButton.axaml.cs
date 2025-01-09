@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using HedgeModManager.UI.Controls.Primitives;
 
@@ -44,7 +45,7 @@ public partial class FooterButton : ButtonUserControl
 
     public FooterButton()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     public void OnLoaded(object? sender, RoutedEventArgs e)

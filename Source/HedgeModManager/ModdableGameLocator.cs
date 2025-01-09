@@ -6,10 +6,9 @@ using System.Linq;
 
 public class ModdableGameLocator
 {
-
-    public static List<GameInfo> ModdableGameList =
+    public static readonly List<GameInfo> ModdableGameList =
     [
-        new ()
+        new()
         {
             ID = "SonicGenerations",
             ModLoaderName = "HE1ModLoader",
@@ -20,7 +19,7 @@ public class ModdableGameLocator
                 { "Steam", new ("71340", "SonicGenerations.exe") }
             }
         },
-        new ()
+        new()
         {
             ID = "SonicLostWorld",
             ModLoaderName = "HE1ModLoader",
@@ -28,7 +27,7 @@ public class ModdableGameLocator
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("329440", "slw.exe") } }
         },
-        new ()
+        new()
         {
             ID = "SonicForces",
             ModLoaderName = "HE2ModLoader",
@@ -36,7 +35,7 @@ public class ModdableGameLocator
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("637100", Path.Combine("build", "main", "projects", "exec", "Sonic Forces.exe")) } }
         },
-        new ()
+        new()
         {
             ID = "PuyoPuyoTetris2",
             ModLoaderName = "HE2ModLoader",
@@ -44,7 +43,7 @@ public class ModdableGameLocator
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("1259790", "PuyoPuyoTetris2.exe") } }
         },
-        new ()
+        new()
         {
             ID = "Tokyo2020",
             ModLoaderName = "HE2ModLoader",
@@ -52,7 +51,7 @@ public class ModdableGameLocator
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("981890", "musashi.exe") } }
         },
-        new ()
+        new()
         {
             ID = "SonicColorsUltimate",
             ModLoaderName = "RainbowModLoader",
@@ -64,7 +63,7 @@ public class ModdableGameLocator
                 { "Epic Games", new ("e5071e19d08c45a6bdda5d92fbd0a03e", Path.Combine("rainbow Shipping", "Sonic Colors - Ultimate.exe")) }
             }
         },
-        new ()
+        new()
         {
             ID = "SonicOrigins",
             ModLoaderName = "HiteModLoader",
@@ -76,7 +75,7 @@ public class ModdableGameLocator
                 { "Epic Games", new ("5070a8e44cf74ba3b9a4ca0c0dce5cf1", Path.Combine("build", "main", "projects", "exec", "SonicOrigins.exe")) }
             }
         },
-        new ()
+        new()
         {
             ID = "SonicFrontiers",
             ModLoaderName = "HE2ModLoader",
@@ -88,7 +87,7 @@ public class ModdableGameLocator
                 { "Epic Games", new ("c5ca98fa240c4eb796835f97126df8e7", "SonicFrontiers.exe") }
             }
         },
-        new ()
+        new()
         {
             ID = "SonicGenerations2024",
             ModLoaderName = "HE2ModLoader",
@@ -101,7 +100,7 @@ public class ModdableGameLocator
                 { "Epic Games", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_GENERATIONS.exe") }
             }
         },
-        new ()
+        new()
         {
             ID = "ShadowGenerations",
             ModLoaderName = "HE2ModLoader",
@@ -123,17 +122,18 @@ public class ModdableGameLocator
 
         foreach (var gameInfo in ModdableGameList)
         {
-            if (gameInfo.PlatformInfos.TryGetValue("Steam", out var platformInfo))
+            if (gameInfo.PlatformInfos.TryGetValue("Steam", out var steamInfo))
             {
-                var steamGame = steamGames.FirstOrDefault(x => x.ID == platformInfo.ID);
+                var steamGame = steamGames.FirstOrDefault(x => x.ID == steamInfo.ID);
                 if (steamGame != null)
                 {
                     var game = new ModdableGameGeneric(steamGame)
                     {
                         Name = gameInfo.ID,
-                        Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, platformInfo.Executable))!,
-                        Executable = platformInfo.Executable,
+                        Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, steamInfo.Executable))!,
+                        Executable = steamInfo.Executable,
                         ModLoaderName = gameInfo.ModLoaderName ?? "None",
+                        SupportsCodes = gameInfo.SupportsCodes
                     };
                     game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName, 
                         gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL);
@@ -154,6 +154,7 @@ public class ModdableGameLocator
         public string? ModLoaderFileName { get; init; }
         public string? ModLoaderDownloadURL { get; init; }
         public string? ModDatabaseDirectoryName { get; init; }
+        public bool SupportsCodes { get; init; } = true;
         public required Dictionary<string, GamePlatformInfo> PlatformInfos { get; init; }
     }
 

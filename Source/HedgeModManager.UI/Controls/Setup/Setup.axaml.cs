@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.ViewModels;
 
 namespace HedgeModManager.UI.Controls.Setup;
@@ -11,7 +12,7 @@ public partial class Setup : UserControl
 
     public Setup()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)

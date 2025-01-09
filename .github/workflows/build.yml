@@ -37,7 +37,7 @@ jobs:
         run: dotnet restore ${{env.PROJECT_PATH}}
 
       - name: ${{matrix.rid}} Build
-        run: dotnet publish -r ${{matrix.rid}} -c Release -o ./output/${{matrix.rid}} ${{env.PROJECT_PATH}}
+        run: dotnet publish -p:PublishProfile=${{matrix.rid}} -c Release -o ./output/${{matrix.rid}} ${{env.PROJECT_PATH}}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

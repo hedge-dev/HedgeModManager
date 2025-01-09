@@ -44,6 +44,7 @@
   <!-- Other -->
   <system:String x:Key="Download.Text.CheckManagerUpdate">Checking for Hedge Mod Manager updates...</system:String>
   <system:String x:Key="Download.Text.CheckMLUpdate"     >Updating mod loaders... {0} / {1}</system:String>
+  <system:String x:Key="Download.Text.CheckModUpdate"    >Checking for mod updates... {0} / {1}</system:String>
   <system:String x:Key="Download.Text.DownloadCodes"     >Downloading Codes...</system:String>
   <system:String x:Key="Download.Text.DownloadMod"       >Downloading {0}...</system:String>
   <system:String x:Key="Download.Text.InstallMod"        >Installing {0}...</system:String>
@@ -54,11 +55,13 @@
   <system:String x:Key="Theme.Name.Darker"               >Neutral Dark</system:String>
 
   <!-- Mods -->
+  <system:String x:Key="Mods.Button.Configure"  >Configure</system:String>
+  <system:String x:Key="Mods.Button.Delete"     >Delete</system:String>
   <system:String x:Key="Mods.Button.Favorite"   >Favourite</system:String>
   <system:String x:Key="Mods.Button.Favorited"  >Favourited</system:String>
-  <system:String x:Key="Mods.Button.Configure"  >Configure</system:String>
+  <system:String x:Key="Mods.Button.InstallMod" >Install Mod</system:String>
+  <system:String x:Key="Mods.Button.Open"       >Open Directory</system:String>
   <system:String x:Key="Mods.Button.Update"     >Update</system:String>
-  <system:String x:Key="Mods.Button.Delete"     >Delete</system:String>
   <system:String x:Key="Mods.Text.Loading"      >Loading Mods...</system:String>
   <system:String xml:space="preserve" x:Key="Mods.Text.NoResults">No Results.&#x0a;Filtering is enabled.</system:String>
   <system:String xml:space="preserve" x:Key="Mods.Text.NoMods">..There is not a lot here.&#x0a;Go get some mods!</system:String>
@@ -112,27 +115,32 @@
   <system:String x:Key="Modal.Header.AboutModAuthor"   >Authored by {0} on {1}</system:String>
   <system:String x:Key="Modal.Text.TargetGame"         >For {0}</system:String>
   <system:String x:Key="Modal.Title.AboutMod"          >About {0}</system:String>
+  <system:String x:Key="Modal.Title.Confirm"           >Confirmation</system:String>
+  <system:String x:Key="Modal.Title.DownloadError"     >Download Error</system:String>
   <system:String x:Key="Modal.Title.DownloadMod"       >Download {0}</system:String>
   <system:String x:Key="Modal.Title.DownloadModLoading">Download Mod</system:String>
   <system:String x:Key="Modal.Title.Games"             >Games</system:String>
-  <system:String x:Key="Modal.Title.UpdateManager"     >Hedge Mod Manager Update</system:String>
-  <system:String x:Key="Modal.Title.Confirm"           >Confirmation</system:String>
-  <system:String x:Key="Modal.Title.DownloadError"     >Dowload Error</system:String>
   <system:String x:Key="Modal.Title.InstallError"      >Install Error</system:String>
   <system:String x:Key="Modal.Title.LoadError"         >Load Error</system:String>
   <system:String x:Key="Modal.Title.SaveError"         >Save Error</system:String>
+  <system:String x:Key="Modal.Title.SelectMods"        >Select Mods Directory...</system:String>
+  <system:String x:Key="Modal.Title.SelectModsFailed"  >Invalid Mods Directory</system:String>
   <system:String x:Key="Modal.Title.UpdateError"       >Update Error</system:String>
+  <system:String x:Key="Modal.Title.UpdateManager"     >Hedge Mod Manager Update</system:String>
   <system:String x:Key="Modal.Title.RunError"          >Launch Error</system:String>
   <system:String x:Key="Modal.Title.ConfigureMod"      >Configure {0}</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.DeleteMod">Are you sure you want to delete &quot;{0}&quot;?&#x0a;This action cannot be undone!</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.DownloadError">Failed to download mod.&quot; Please try again later.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.PkgUpdate">Please update Hedge Mod Manager using your system's package manager.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.GameLoadError">An error occurred when Hedge Mod Manager was trying&#x0a;to load mod data.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.GameMissingError">Hedge Mod Manager is unable to install &quot;{0}&quot;&#x0a;due to {1} not being found.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.GameNoAccess">Hedge Mod Manager does not have write&#x0a;access to the game files.&#x0a;&#x0a;Please make sure the game files are writable.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.InstallError">Failed to install mod. Check log for exception.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.SelectModsError">Hedge Mod Manager does not have permissions to the selected directory.&#x0a;&#x0a;Please select another directory.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownSaveError">Hedge Mod Manager was unable to save&#x0a;due to an unknown error.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownUpdateError">An error occurred when trying to prepare&#x0a;for updating.&#x0a;&#x0a;Please try again later.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownRunError">Hedge Mod Manager was unable to launch&#x0a;the game due to an unknown error.</system:String>
-  <system:String xml:space="preserve" x:Key="Modal.Message.GameLoadError">An error occurred when Hedge Mod Manager was trying&#x0a;to load mod data.</system:String>
-  <system:String xml:space="preserve" x:Key="Modal.Message.GameMissingError">Hedge Mod Manager is unable to install &quot;{0}&quot;&#x0a;due to {1} not being found.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.UpdateCheckError">An error occurred while checking for updates.</system:String>
 
 
 </ResourceDictionary>

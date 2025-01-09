@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
 using HedgeModManager.UI.Controls.Primitives;
@@ -48,7 +49,7 @@ public partial class SidebarButton : ButtonUserControl
 
     public SidebarButton()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
 
         Timer = new DispatcherTimer
         {

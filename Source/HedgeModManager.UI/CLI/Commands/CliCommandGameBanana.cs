@@ -32,7 +32,7 @@ public class CliCommandGameBanana : ICliCommand
         }
 
         SchemaName = uri[0..schemaIndex];
-        DownloadURL = parts[0];
+        DownloadURL = parts[0].Replace("https//", "https://");
         ItemType = parts[1];
         ItemID = parts[2];
         return true;

@@ -8,11 +8,12 @@
              xmlns:mm="using:HedgeModManager.UI.Controls.Mods"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             xmlns:vmm="using:HedgeModManager.UI.ViewModels.Mods"
              mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
              x:Class="HedgeModManager.UI.Controls.MainWindow.Mods"
              x:DataType="vm:MainWindowViewModel"
-             Loaded="OnLoaded"
-             Unloaded="OnUnloaded"
+             Loaded="OnLoaded" Unloaded="OnUnloaded"
+             PointerMoved="OnPointerMoved" PointerReleased="OnPointerReleased"
              Background="{DynamicResource BackgroundL0Brush}">
   <Border Margin="12">
     <Grid RowDefinitions="Auto,*">
@@ -52,19 +53,31 @@
         </Border>
       </Grid>
       <ScrollViewer Grid.Row="2">
-        <ItemsControl ItemsSource="{Binding ModsViewModel.ModsList, RelativeSource={RelativeSource AncestorType=cmw:Mods}}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <mm:ModEntry />
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <Grid>
+          <ItemsControl x:Name="ModItemControl"
+                        ItemsSource="{Binding ModsViewModel.ModsList, RelativeSource={RelativeSource AncestorType=cmw:Mods}}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <mm:ModEntry />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <mm:ModEntry x:Name="DragModEntry"
+                       IsHitTestVisible="False"
+                       VerticalAlignment="Top"
+                       IsVisible="False"
+                       Opacity="0.5">
+            <mm:ModEntry.DataContext>
+              <vmm:ModEntryViewModel />
+            </mm:ModEntry.DataContext>
+            </mm:ModEntry>
+        </Grid>
       </ScrollViewer>
       <TextBlock Grid.Row="2"
                  FontSize="14" TextAlignment="Center"
                  VerticalAlignment="Center"
                  Text="{Binding ModsViewModel.CenterText, RelativeSource={RelativeSource AncestorType=cmw:Mods}, Converter={StaticResource StringLocalizeConverter}}"
-                 IsVisible="{Binding ModsViewModel.CenterText, RelativeSource={RelativeSource AncestorType=cmw:Mods}, Converter={StaticResource NullBoolConverter}}"/>
+                 IsVisible="{Binding ModsViewModel.CenterText, RelativeSource={RelativeSource AncestorType=cmw:Mods}, Converter={StaticResource NullBoolConverter}}" />
     </Grid>
   </Border>
 </UserControl>

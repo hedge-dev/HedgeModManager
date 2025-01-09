@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls.Documents;
+﻿using Avalonia;
+using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Threading;
@@ -22,6 +23,8 @@ public partial class ModEntryViewModel : ViewModelBase
     [ObservableProperty] private ModsViewModel? _modsViewModel;
     [ObservableProperty] private Geometry? _favoriteGeometry;
     [ObservableProperty] private IBrush? _favoriteBrush;
+    [ObservableProperty] private bool _isDraging = false;
+    [ObservableProperty] private Point _dragOffset = new();
 
     private Regex? _search;
 

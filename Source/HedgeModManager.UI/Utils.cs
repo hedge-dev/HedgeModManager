@@ -1,7 +1,7 @@
-﻿
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Media.Immutable;
+using Avalonia.Platform;
 using HedgeModManager.UI.Properties;
 using Markdig;
 
@@ -42,6 +42,11 @@ public static class Utils
         }
         catch { }
         return null;
+    }
+
+    public static Stream LoadAsset(string path)
+    {
+        return AssetLoader.Open(new Uri($"avares://HedgeModManager.UI/Assets/{path}"));
     }
 
     public static string ConvertToPath(this Uri uri)

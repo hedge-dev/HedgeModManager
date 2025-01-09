@@ -2,7 +2,7 @@
 using Foundation;
 using HedgeModManager.IO;
 using HedgeModManager.Properties;
-using System.IO.Compression;
+using System.Diagnostics;
 
 public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, IModdableGameTConfiguration<ModLoaderConfiguration>
 {
@@ -16,6 +16,10 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
     public string DefaultDatabaseDirectory { get; set; } = "mods";
     public string ModLoaderName { get; init; } = "None";
     public string NativeOS { get; set; } = "Windows";
+    public bool SupportsDirectLaunch { get; set; }
+    public bool SupportsLauncher { get; set; }
+    public bool SupportsCodes { get; set; } = true;
+    public string? LaunchCommand { get; set; } = null;
     public ModDatabaseGeneric ModDatabase { get; } = new ModDatabaseGeneric();
     public ModLoaderConfiguration ModLoaderConfiguration { get; set; } = new ModLoaderConfiguration();
     public ModLoaderGeneric? ModLoader { get; set; }
@@ -26,10 +30,15 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
         Name = game.Name;
         Root = game.Root;
         Executable = game.Executable;
+        SupportsDirectLaunch = game.SupportsDirectLaunch;
+        SupportsLauncher = game.SupportsLauncher;
     }
 
     public async Task DownloadCodes(string? url)
     {
+        if (!SupportsCodes)
+            return;
+
         url ??= Resources.CommunityCodesURL;
         if (url.EndsWith('/'))
             url += $"{Name}.hmm";
@@ -91,6 +100,6 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
         return true;
     }
 
-    public Task Run(string? launchArgs, bool useLauncher) =>
-        BaseGame.Run(launchArgs, useLauncher);
+    public async Task Run(string? launchArgs, bool useLauncher) =>
+        await BaseGame.Run(launchArgs, useLauncher);
 }

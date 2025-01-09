@@ -1,12 +1,16 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
+using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Settings;
 using System.Diagnostics;
+
+using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.Controls.Settings;
 
@@ -27,7 +31,7 @@ public partial class Settings : UserControl
 
     public Settings()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -74,14 +78,22 @@ public partial class Settings : UserControl
 
         var picker = await storageProvider.OpenFolderPickerAsync(new()
         {
-            Title = "Select mods folder...",
+            Title = Localize("Modal.Title.SelectMods"),
             SuggestedStartLocation = await storageProvider.TryGetFolderFromPathAsync(ViewModel.ModsDirectory),
             AllowMultiple = false
         });
 
         if (picker.Count == 1)
         {
-            ViewModel.ModsDirectory = Path.GetDirectoryName(Uri.UnescapeDataString(picker[0].Path.AbsolutePath))!;
+            string path = Path.GetDirectoryName(Uri.UnescapeDataString(picker[0].Path.AbsolutePath))!;
+            if (path.StartsWith("/run/user"))
+            {
+                MessageBoxModal.CreateOK("Modal.Title.SelectModsFailed", "Modal.Message.SelectModsError")
+                    .Open(mainViewModel);
+                return;
+            }
+
+            ViewModel.ModsDirectory = path;
             await mainViewModel.Save();
             mainViewModel.RefreshUI();
         }
@@ -155,8 +167,8 @@ public partial class Settings : UserControl
         var button = sender as Basic.Button;
         if (button != null)
             button.IsEnabled = false;
-        //if (DataContext is MainWindowViewModel mainViewModel)
-        await Task.Delay(2000);
+        if (DataContext is MainWindowViewModel mainViewModel)
+            await mainViewModel.CheckForAllModUpdates();
         if (button != null)
             button.IsEnabled = true;
         ViewModel.CheckModUpdatesText = "Settings.Button.CheckUpdates";

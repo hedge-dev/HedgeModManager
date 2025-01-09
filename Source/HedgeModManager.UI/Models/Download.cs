@@ -153,6 +153,7 @@ public partial class Download : ObservableObject
         [ObservableProperty] public long _progressMax = -1;
 
         public void Report(long value) => Progress = value;
+        public void ReportAdd(long value) => Progress += value;
 
         public void ReportMax(long value) => ProgressMax = value;
     }

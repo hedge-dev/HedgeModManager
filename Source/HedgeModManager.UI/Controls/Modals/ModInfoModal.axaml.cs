@@ -1,8 +1,10 @@
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using HedgeModManager.Foundation;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Mods;
+using System.Diagnostics;
 using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.Controls.Modals;
@@ -17,14 +19,14 @@ public partial class ModInfoModal : WindowModal
     {
         ModViewModel = new ModEntryViewModel();
         InfoViewModel = new ModInfoViewModel(ModViewModel);
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     public ModInfoModal(ModEntryViewModel modEntryViewModel)
     {
         ModViewModel = modEntryViewModel;
         InfoViewModel = new ModInfoViewModel(ModViewModel);
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void OnInitialized(object? sender, EventArgs e)
@@ -53,9 +55,21 @@ public partial class ModInfoModal : WindowModal
         modal.Open(viewModel);
     }
 
-    private void OnUpdateClick(object? sender, RoutedEventArgs e)
+    private void OnOpenClick(object? sender, RoutedEventArgs e)
     {
-        Logger.Information("Update Clicked");
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = ModViewModel.Mod.Root,
+            UseShellExecute = true
+        });
+    }
+
+    private async void OnUpdateClick(object? sender, RoutedEventArgs e)
+    {
+        var viewModel = DataContext as MainWindowViewModel;
+        if (viewModel == null)
+            return;
+        await viewModel.CheckForModUpdates(ModViewModel.Mod, true);
     }
 
     private void OnDeleteClick(object? sender, RoutedEventArgs e)
