@@ -1,5 +1,6 @@
 ﻿namespace HedgeModManager;
 using Foundation;
+using HedgeModManager.Epic;
 using HedgeModManager.Properties;
 using Steam;
 using System.Linq;
@@ -60,7 +61,7 @@ public class ModdableGameLocator
             PlatformInfos = new()
             {
                 { "Steam", new ("2055290", Path.Combine("exec", "SonicColorsUltimate.exe")) },
-                { "Epic Games", new ("e5071e19d08c45a6bdda5d92fbd0a03e", Path.Combine("rainbow Shipping", "Sonic Colors - Ultimate.exe")) }
+                { "Epic", new ("e5071e19d08c45a6bdda5d92fbd0a03e", Path.Combine("rainbow Shipping", "Sonic Colors - Ultimate.exe")) }
             }
         },
         new()
@@ -72,7 +73,7 @@ public class ModdableGameLocator
             PlatformInfos = new()
             {
                 { "Steam", new ("1794960", Path.Combine("build", "main", "projects", "exec", "SonicOrigins.exe")) },
-                { "Epic Games", new ("5070a8e44cf74ba3b9a4ca0c0dce5cf1", Path.Combine("build", "main", "projects", "exec", "SonicOrigins.exe")) }
+                { "Epic", new ("5070a8e44cf74ba3b9a4ca0c0dce5cf1", Path.Combine("build", "main", "projects", "exec", "SonicOrigins.exe")) }
             }
         },
         new()
@@ -84,7 +85,7 @@ public class ModdableGameLocator
             PlatformInfos = new()
             {
                 { "Steam", new ("1237320", "SonicFrontiers.exe") },
-                { "Epic Games", new ("c5ca98fa240c4eb796835f97126df8e7", "SonicFrontiers.exe") }
+                { "Epic", new ("c5ca98fa240c4eb796835f97126df8e7", "SonicFrontiers.exe") }
             }
         },
         new()
@@ -97,7 +98,7 @@ public class ModdableGameLocator
             PlatformInfos = new()
             {
                 { "Steam", new ("2513280", "SONIC_GENERATIONS.exe") },
-                { "Epic Games", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_GENERATIONS.exe") }
+                { "Epic", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_GENERATIONS.exe") }
             }
         },
         new()
@@ -110,7 +111,7 @@ public class ModdableGameLocator
             PlatformInfos = new()
             {
                 { "Steam", new ("2513280", "SONIC_X_SHADOW_GENERATIONS.exe") },
-                { "Epic Games", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe") }
+                { "Epic", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe") }
             }
         }
     ];
@@ -118,7 +119,16 @@ public class ModdableGameLocator
     public static List<IModdableGame> LocateGames()
     {
         var games = new List<IModdableGame>();
-        var steamGames = new SteamLocator().Locate();
+        var steamLocator = new SteamLocator();
+        var epicLocator = new EpicLocator();
+        var steamGames = steamLocator.Locate();
+        var epicGames = epicLocator.Locate();
+
+        if (epicLocator.HeroicRootPaths.Count > 0)
+        {
+            Logger.Debug("Epic Locations: ");
+            epicLocator.HeroicRootPaths.ForEach(Logger.Debug);
+        }
 
         foreach (var gameInfo in ModdableGameList)
         {
@@ -136,6 +146,26 @@ public class ModdableGameLocator
                         SupportsCodes = gameInfo.SupportsCodes
                     };
                     game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName, 
+                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL);
+                    if (gameInfo.ModDatabaseDirectoryName != null)
+                        game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
+                    games.Add(game);
+                }
+            }
+            if (gameInfo.PlatformInfos.TryGetValue("Epic", out var epicInfo))
+            {
+                var epicGame = epicGames.FirstOrDefault(x => x.ID == epicInfo.ID);
+                if (epicGame != null)
+                {
+                    var game = new ModdableGameGeneric(epicGame)
+                    {
+                        Name = gameInfo.ID,
+                        Root = Path.GetDirectoryName(Path.Combine(epicGame.Root, epicGame.Executable ?? epicInfo.Executable))!,
+                        Executable = epicGame.Executable ?? epicInfo.Executable,
+                        ModLoaderName = gameInfo.ModLoaderName ?? "None",
+                        SupportsCodes = gameInfo.SupportsCodes
+                    };
+                    game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName,
                         gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL);
                     if (gameInfo.ModDatabaseDirectoryName != null)
                         game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;

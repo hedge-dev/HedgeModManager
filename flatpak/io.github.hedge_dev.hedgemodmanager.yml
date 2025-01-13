@@ -14,6 +14,7 @@ finish-args:
   - --socket=x11
   - --filesystem=~/.steam
   - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam
+  - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic
   - --filesystem=xdg-data
   - --filesystem=/media
   - --filesystem=/run/media

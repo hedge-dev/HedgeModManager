@@ -11,6 +11,7 @@ public class SteamGame : IGame
     public string Root { get; init; } = string.Empty;
     public string? Executable { get; init; }
     public string NativeOS { get; } = "Windows";
+    public string? PrefixRoot { get; init; }
     public bool SupportsDirectLaunch => OperatingSystem.IsWindows();
     public bool SupportsLauncher => true;
 

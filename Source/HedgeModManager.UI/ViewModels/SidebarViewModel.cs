@@ -22,16 +22,6 @@ public partial class SidebarViewModel : ObservableObject
         }
     }
     public bool IsSetupCompleted => MainViewModel?.Config.IsSetupCompleted == true;
-    public bool IsCodesTabVisible
-    {
-        get
-        {
-            var game = MainViewModel?.GetModdableGameGeneric();
-            if (game != null)
-                return game.SupportsCodes;
-            return false;
-        }
-    }
 
     public void UpdateButtons(List<Control> buttons)
     {
@@ -45,7 +35,6 @@ public partial class SidebarViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(SelectedTabIndex));
         OnPropertyChanged(nameof(IsSetupCompleted));
-        OnPropertyChanged(nameof(IsCodesTabVisible));
         if (SidebarElement != null)
             UpdateButtons(SidebarElement.TabButtons.Children.ToList());
     }

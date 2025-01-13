@@ -28,7 +28,7 @@ public sealed class Program
 
     // Will become the GUID if exists
     public static string PipeName = $"{ApplicationCompany}\\{ApplicationName}";
-    public static string InstallLocation = Path.GetDirectoryName(System.AppContext.BaseDirectory)!;
+    public static string InstallLocation = Path.GetDirectoryName(AppContext.BaseDirectory)!;
     public static string? FlatpakID = null;
     public static string ApplicationVersion = GetFormattedAppVersion(); 
 #if DEBUG

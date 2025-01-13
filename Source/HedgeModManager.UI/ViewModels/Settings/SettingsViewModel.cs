@@ -3,6 +3,7 @@ using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.IO;
 using HedgeModManager.UI.Languages;
+using HedgeModManager.UI.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -100,6 +101,11 @@ public partial class SettingsViewModel : ViewModelBase
         get => MainViewModel?.SelectedLanguage ?? MainViewModel?.Languages.FirstOrDefault();
     }
 
+    public ModProfile? SelectedProfile
+    {
+        get => MainViewModel?.SelectedProfile ?? ModProfile.Default;
+    }
+
     public Theme SelectedTheme
     {
         get
@@ -123,6 +129,7 @@ public partial class SettingsViewModel : ViewModelBase
     public void Update()
     {
         OnPropertyChanged(nameof(InstallModLoaderText));
+        OnPropertyChanged(nameof(SelectedProfile));
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)

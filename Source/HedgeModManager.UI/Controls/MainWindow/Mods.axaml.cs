@@ -49,6 +49,7 @@ public partial class Mods : UserControl
             return;
         }
 
+        // TODO: Needs a better solution
         if (ModsViewModel.ModsList.Count != MainViewModel.Mods.Count)
         {
             ModsViewModel.ModsList.Clear();
@@ -58,6 +59,11 @@ public partial class Mods : UserControl
                 .ToList()
                 .ForEach(ModsViewModel.ModsList.Add);
         }
+        else
+        {
+            for (int i = 0; i < MainViewModel.Mods.Count; ++i)
+                ModsViewModel.ModsList[i].Mod = MainViewModel.Mods[i];
+        }
 
         ModsViewModel.Authors.Clear();
         ModsViewModel.Authors.Add("Show All");
@@ -66,6 +72,7 @@ public partial class Mods : UserControl
             .Select(x => x.Name)
             .Distinct()
             .ToList()
+            .Order()
             .ForEach(ModsViewModel.Authors.Add);
         AuthorComboBox.SelectedIndex = 0;
         ModsViewModel.UpdateText();

@@ -16,6 +16,7 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
     public string DefaultDatabaseDirectory { get; set; } = "mods";
     public string ModLoaderName { get; init; } = "None";
     public string NativeOS { get; set; } = "Windows";
+    public string? PrefixRoot => BaseGame.PrefixRoot;
     public bool SupportsDirectLaunch { get; set; }
     public bool SupportsLauncher { get; set; }
     public bool SupportsCodes { get; set; } = true;

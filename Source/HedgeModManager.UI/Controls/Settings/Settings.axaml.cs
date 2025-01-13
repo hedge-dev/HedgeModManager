@@ -19,10 +19,19 @@ public partial class Settings : UserControl
     public static readonly StyledProperty<UIGame?> GameProperty =
         AvaloniaProperty.Register<Settings, UIGame?>(nameof(Game));
 
+    public static readonly StyledProperty<ModProfile?> ProfileProperty =
+        AvaloniaProperty.Register<Settings, ModProfile?>(nameof(Profile));
+
     public UIGame? Game
     {
         get => GetValue(GameProperty);
         set => SetValue(GameProperty, value);
+    }
+
+    public ModProfile? Profile
+    {
+        get => GetValue(ProfileProperty);
+        set => SetValue(ProfileProperty, value);
     }
 
     public SettingsViewModel ViewModel { get; set; } = new();
@@ -51,6 +60,16 @@ public partial class Settings : UserControl
         {
             app.RequestedThemeVariant = theme.Variant;
             mainViewModel.Config.Theme = theme.Variant.Key.ToString();
+        }
+    }
+
+    private void OnProfileSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel mainViewModel &&
+            sender is ComboBox comboBox &&
+            comboBox.SelectedItem is ModProfile profile)
+        {
+            mainViewModel.SelectedProfile = profile;
         }
     }
 
@@ -191,6 +210,8 @@ public partial class Settings : UserControl
     {
         if (e.Property == GameProperty)
             ViewModel.Game = Game?.Game as ModdableGameGeneric;
+        else if (e.Property == ProfileProperty)
+            ViewModel.Update();
         base.OnPropertyChanged(e);
     }
 }

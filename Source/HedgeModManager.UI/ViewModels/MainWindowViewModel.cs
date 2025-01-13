@@ -10,6 +10,7 @@ using HedgeModManager.UI.Controls;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
+using SharpCompress;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO.Pipes;
@@ -33,6 +34,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public CancellationTokenSource ServerCancellationTokenSource { get; set; } = new();
 
     [ObservableProperty] private UIGame? _selectedGame;
+    [ObservableProperty] private ModProfile _selectedProfile = ModProfile.Default;
     [ObservableProperty] private int _selectedTabIndex;
     [ObservableProperty] private UILogger? _loggerInstance;
     [ObservableProperty] private string _lastLog = "";
@@ -43,6 +45,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private ObservableCollection<Modal> _modals = [];
     [ObservableProperty] private ObservableCollection<IMod> _mods = [];
     [ObservableProperty] private ObservableCollection<ICode> _codes = [];
+    [ObservableProperty] private ObservableCollection<ModProfile> _profiles = [];
     [ObservableProperty] private bool _isBusy = true;
     [ObservableProperty] private double _overallProgress = 0d;
     [ObservableProperty] private double _overallProgressMax = 0d;
@@ -201,9 +204,12 @@ public partial class MainWindowViewModel : ViewModelBase
                     messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
                     messageBox.AddButton("Common.Button.Update", async (s, e) =>
                     {
+                        Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
                         Logger.Information($"Update clicked for {mod.Title}");
                         messageBox.Close();
                         await mod.Updater.PerformUpdateAsync(c);
+                        Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
+                        await Dispatcher.UIThread.InvokeAsync(RefreshGame);
                     });
                     messageBox.Open(this);
                 }
@@ -237,6 +243,12 @@ public partial class MainWindowViewModel : ViewModelBase
             await game.InitializeAsync();
             Logger.Debug($"Initialised game");
 
+            Logger.Debug($"Loading profiles...");
+            if (game.ModDatabase is ModDatabaseGeneric modsDB)
+                Profiles = new(await LoadProfiles(game) ?? []);
+            SelectedProfile = Profiles.FirstOrDefault() ?? ModProfile.Default;
+            Logger.Debug($"Loaded {Profiles.Count} profiles");
+
             Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
 
             _ = UpdateCodes(false, true);
@@ -247,6 +259,34 @@ public partial class MainWindowViewModel : ViewModelBase
             OpenErrorMessage("Modal.Title.LoadError", "Modal.Message.GameLoadError",
                 "Failed to load game/mod data", e);
         }
+    }
+
+    // TODO: Implement mod config switching
+    public Task LoadProfile()
+    {
+        Logger.Debug($"Loaded profile {SelectedProfile?.Name}");
+        return Task.CompletedTask;
+    }
+
+    public async Task<List<ModProfile>?> LoadProfiles(IModdableGame game)
+    {
+        string filePath = Path.Combine(game.Root, "profiles.json");
+        // Profiles are only supported for ModDatabaseGeneric
+        if (SelectedGame?.Game.ModDatabase is not ModDatabaseGeneric modsDB)
+            return null;
+        if (!File.Exists(filePath))
+            return [ModProfile.Default];
+
+        string json = await File.ReadAllTextAsync(filePath);
+        var profiles = JsonSerializer.Deserialize<List<ModProfile>>(json);
+
+        // Remove missing profiles
+        if (profiles != null)
+            profiles = profiles.Where(x => File.Exists(Path.Combine(modsDB.Root, x.ModDBPath))).ToList();
+
+        if (profiles?.Count == 0)
+            return [ModProfile.Default];
+        return profiles ?? [ModProfile.Default];
     }
 
     public async Task Save(bool setBusy = true)
@@ -626,6 +666,8 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (e.PropertyName == nameof(SelectedGame))
             await LoadGame();
+        if (e.PropertyName == nameof(SelectedProfile))
+            await LoadProfile();
         base.OnPropertyChanged(e);
     }
 }

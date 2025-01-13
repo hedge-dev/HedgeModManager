@@ -68,15 +68,7 @@ public partial class Codes : UserControl
 
     public void RefreshUI()
     {
-        // Switch to mods if codes are not supported
-        if (MainViewModel?.GetModdableGameGeneric()?.SupportsCodes == false)
-        {
-            if (MainViewModel.SelectedTabIndex == MainViewModel.GetTabIndex("Codes"))
-                MainViewModel.SelectedTabIndex -= 1;
-            return;
-        }
-
-        // TODO: Implement notfication of CodesList changes. Adding is slow
+        // TODO: Implement notification of CodesList changes. Adding is slow
         CodesList.Clear();
         if (MainViewModel == null ||
             MainViewModel.Codes == null)

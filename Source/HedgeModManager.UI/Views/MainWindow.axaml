@@ -47,7 +47,9 @@
         <cc:Codes />
       </TabItem>
       <TabItem Header="Settings">
-        <settings:Settings  Game="{Binding SelectedGame}" />
+        <settings:Settings 
+                           Game="{Binding SelectedGame}"
+                           Profile="{Binding SelectedProfile}"/>
       </TabItem>
       <TabItem Header="About">
         <ca:About />

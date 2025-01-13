@@ -8,28 +8,6 @@ using System.IO.Compression;
 public class LinuxCompatibility
 {
     /// <summary>
-    /// Finds the WINE prefix for the game
-    /// </summary>
-    /// <param name="game"></param>
-    /// <returns>Full path to the prefix root</returns>
-    public static string? GetPrefix(IGame game)
-    {
-        if (game.Platform != "Steam")
-        {
-            return null; // Only Steam games are supported
-        }
-
-        var locator = new SteamLocator();
-        string? steamRoot = locator.FindDefaultSteamLibrary();
-        if (steamRoot == null)
-        {
-            return null;
-        }
-
-        return Path.Combine(steamRoot, "steamapps", "compatdata", game.ID, "pfx");
-    }
-
-    /// <summary>
     /// Installs the .NET runtime to the prefix
     /// </summary>
     /// <param name="path">Path to the prefix root directory</param>

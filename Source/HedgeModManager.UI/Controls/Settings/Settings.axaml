@@ -25,7 +25,12 @@
                           Title="{DynamicResource Settings.Title.Profile}"
                           Description="{DynamicResource Settings.Description.Profile}">
           <cs:SettingsEntry.Data>
-            <ComboBox MinWidth="220" />
+            <ComboBox MinWidth="220"
+                      ItemsSource="{Binding Profiles}"
+                      SelectedItem="{Binding ViewModel.SelectedProfile, RelativeSource={RelativeSource AncestorType=cs:Settings}}"
+                      SelectionChanged="OnProfileSelectionChanged"
+                      VerticalContentAlignment="Center"
+                      HorizontalAlignment="Stretch" />
           </cs:SettingsEntry.Data>
         </cs:SettingsEntry>
         <cs:SettingsEntry Icon="FolderOpen"
