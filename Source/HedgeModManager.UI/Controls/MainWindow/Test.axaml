@@ -7,19 +7,19 @@
              mc:Ignorable="d" d:DesignWidth="920" d:DesignHeight="390"
              x:Class="HedgeModManager.UI.Controls.MainWindow.Test"
              x:DataType="vm:MainWindowViewModel"
-             Loaded="OnLoaded"
+             Loaded="OnLoaded" Unloaded="OnUnloaded"
              Background="{DynamicResource BackgroundL0Brush}">
-  <Grid>
-    <StackPanel Margin="16,16,0,0" HorizontalAlignment="Left">
+  <Grid ColumnDefinitions="Auto,*">
+    <StackPanel Grid.Column="0" Margin="16,16,0,0">
       <TextBlock Text="Config" Margin="0,8,0,0" />
       <StackPanel Spacing="4" Orientation="Horizontal">
         <Button Click="SaveConfig_Click">Save</Button>
         <Button Click="LoadConfig_Click">Load</Button>
         <Button Click="ResetConfig_Click">Reset</Button>
       </StackPanel>
-      <StackPanel x:Name="ConfigProps">
-        
-      </StackPanel>
+      
+      <StackPanel x:Name="ConfigProps" />
+      
       <TextBlock Text="Game" Margin="0,8,0,0" />
       <StackPanel Spacing="4" Orientation="Horizontal">
         <Button Click="SaveGame_Click">Save</Button>
@@ -64,11 +64,11 @@
         </ItemsControl.ItemTemplate>
       </ItemsControl>
     </StackPanel>
-    <Grid Margin="0,16,0,0" 
+    <Grid Grid.Column="1"
+          Margin="16,16,0,0" 
           RowDefinitions="Auto,*"
-          HorizontalAlignment="Right">
-      <TextBlock Grid.Row="0" Margin="0,0,0,8"
-                 Text="Log"
+          HorizontalAlignment="Stretch">
+      <TextBlock Grid.Row="0" Text="Log"
                  VerticalAlignment="Center" />
       <StackPanel Grid.Row="0" Margin="0,0,8,0"
                   Spacing="4"
@@ -77,10 +77,13 @@
         <Button Click="ExportLog_Click">Export</Button>
         <Button Click="ClearLog_Click">Clear</Button>
       </StackPanel>
-      <Border Grid.Row="1" Width="800" VerticalAlignment="Stretch"
-              BorderThickness="1" Padding="8"
+      <Border Grid.Row="1"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              BorderThickness="1"
+              Margin="0,8,8,8" Padding="8"
               BorderBrush="{DynamicResource BorderBrush}">
-        <ScrollViewer>
+        <ScrollViewer  x:Name="LogScrollViewer">
           <ItemsControl ItemsSource="{Binding LoggerInstance.Logs}">
             <ItemsControl.ItemTemplate>
               <DataTemplate>

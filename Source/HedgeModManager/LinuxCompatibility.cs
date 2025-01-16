@@ -4,6 +4,7 @@ using HedgeModManager.Properties;
 using HedgeModManager.Steam;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
 
 public class LinuxCompatibility
 {
@@ -55,8 +56,10 @@ public class LinuxCompatibility
             }
             Logger.Debug($"Extracted .NET runtime");
         });
-
         await stream.DisposeAsync();
+
+        await AddDotnetRegPatch(path);
+
         return true;
     }
 
@@ -79,6 +82,30 @@ public class LinuxCompatibility
 
         string dllOverrides = $"[Software\\\\Wine\\\\DllOverrides]\n\"{name}\"=\"native,builtin\"\n";
         await File.AppendAllTextAsync(reg, dllOverrides);
+        Logger.Debug($"File written");
+        return true;
+    }
+
+    public static async Task<bool> AddDotnetRegPatch(string? path)
+    {
+        Logger.Debug($"Adding .NET Framework registry patch to {path}");
+        if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+        {
+            Logger.Debug($"Prefix is missing!");
+            return false;
+        }
+
+        string reg = Path.Combine(path!, "system.reg");
+
+        if (!Path.Exists(reg))
+        {
+            Logger.Debug($"Prefix is not initialised!");
+            return false;
+        }
+
+        string regPatch = Encoding.Unicode.GetString(Resources.dotnetReg);
+
+        await File.AppendAllTextAsync(reg, regPatch);
         Logger.Debug($"File written");
         return true;
     }

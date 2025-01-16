@@ -16,7 +16,7 @@ public class Updater
     public static string GetUpdatePackageName()
     {
         if (OperatingSystem.IsWindows())
-            return $"HedgeModManager-win-x64.zip";
+            return $"HedgeModManager.exe";
         else if (OperatingSystem.IsLinux())
             return $"HedgeModManager-linux-x64.zip";
         else
@@ -33,7 +33,9 @@ public class Updater
             if (app == null)
             {
                 Logger.Error("Failed to check for updates");
-                return (null, UpdateCheckStatus.Error);
+                // TODO: Swap these nearing release
+                //return (null, UpdateCheckStatus.Error);
+                return (null, UpdateCheckStatus.NoUpdate);
             }
             Logger.Debug("Got Flathub data");
             Logger.Debug($"Current Version: {Program.ApplicationVersion}");
@@ -46,7 +48,8 @@ public class Updater
                 {
                     Version = app.CurrentReleaseVersion!,
                     Title = app.Name,
-                    Description = app.CurrentReleaseDescription
+                    Description = app.CurrentReleaseDescription,
+                    IsSingleExecutable = false
                 }, UpdateCheckStatus.UpdateAvailable);
             }
 
@@ -60,7 +63,9 @@ public class Updater
             if (release == null)
             {
                 Logger.Error("Failed to check for updates");
-                return (null, UpdateCheckStatus.Error);
+                // TODO: Swap these nearing release
+                //return (null, UpdateCheckStatus.Error);
+                return (null, UpdateCheckStatus.NoUpdate);
             }
 
             Logger.Debug($"Current Version: {Program.ApplicationVersion}");
@@ -85,7 +90,8 @@ public class Updater
                     Version = release.TagName,
                     Title = release.Name,
                     Description = release.Body,
-                    DownloadURI = asset.BrowserDownloadURL
+                    DownloadURI = asset.BrowserDownloadURL,
+                    IsSingleExecutable = OperatingSystem.IsWindows()
                 }, UpdateCheckStatus.UpdateAvailable);
             }
             else
@@ -104,7 +110,8 @@ public class Updater
             return;
         }
         string tempPath = Paths.GetTempPath();
-        string packageFilePath = Path.Combine(tempPath, "update.zip");
+        string packageFileName = update.IsSingleExecutable ? "update.exe" : "update.zip";
+        string packageFilePath = Path.Combine(tempPath, packageFileName);
 
         await new Download(Localize("Download.Text.UpdateManager0"), true)
         .OnRun(async (d, c) =>
@@ -233,6 +240,7 @@ public class Updater
         public string Title { get; set; } = "Update Title";
         public string? Description { get; set; }
         public Uri? DownloadURI { get; set; }
+        public bool IsSingleExecutable { get; set; }
     }
 
     public class FlathubApp

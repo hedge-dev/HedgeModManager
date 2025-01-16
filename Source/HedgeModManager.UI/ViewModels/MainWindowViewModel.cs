@@ -121,7 +121,7 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             d.Destroy();
 
-            string message = $"update found:\n{update.Title} - {update.Version}";
+            string message = $"Update found:\n{update.Title} - {update.Version}";
             Logger.Information(message);
             var messageBox = new MessageBoxModal("Modal.Title.UpdateManager", message);
             messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
@@ -200,16 +200,20 @@ public partial class MainWindowViewModel : ViewModelBase
                 Logger.Debug($"  Latest: {info.Version}");
                 if (promptUpdate)
                 {
-                    var messageBox = new MessageBoxModal("Modal.Title.UpdateMod", "Modal.Message.UpdateMod");
+                    var messageBox = new MessageBoxModal("Modal.Title.UpdateMod", Localize("Modal.Message.UpdateMod", mod.Title));
                     messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
                     messageBox.AddButton("Common.Button.Update", async (s, e) =>
                     {
-                        Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
-                        Logger.Information($"Update clicked for {mod.Title}");
-                        messageBox.Close();
-                        await mod.Updater.PerformUpdateAsync(c);
-                        Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
-                        await Dispatcher.UIThread.InvokeAsync(RefreshGame);
+                        // TODO: Look into threading issues
+                        await Dispatcher.UIThread.InvokeAsync(async () =>
+                        {
+                            Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
+                            Logger.Information($"Update clicked for {mod.Title}");
+                            messageBox.Close();
+                            await mod.Updater.PerformUpdateAsync(c);
+                            Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
+                            RefreshGame();
+                        });
                     });
                     messageBox.Open(this);
                 }
@@ -247,7 +251,7 @@ public partial class MainWindowViewModel : ViewModelBase
             if (game.ModDatabase is ModDatabaseGeneric modsDB)
                 Profiles = new(await LoadProfiles(game) ?? []);
             SelectedProfile = Profiles.FirstOrDefault() ?? ModProfile.Default;
-            Logger.Debug($"Loaded {Profiles.Count} profiles");
+            Logger.Debug($"Loaded {Profiles.Count} profile(s)");
 
             Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
 
@@ -259,6 +263,34 @@ public partial class MainWindowViewModel : ViewModelBase
             OpenErrorMessage("Modal.Title.LoadError", "Modal.Message.GameLoadError",
                 "Failed to load game/mod data", e);
         }
+    }
+
+    public async Task InstallModLoader(bool? install = null)
+    {
+        IsBusy = true;
+        await CreateSimpleDownload("Download.Text.InstallModLoader", "Failed to install modloader",
+            async (d, p, c) =>
+            {
+                if (SelectedGame == null)
+                    return;
+                if (install != null)
+                {
+                    var gameGeneric = GetModdableGameGeneric();
+                    if (gameGeneric == null || gameGeneric.ModLoader == null)
+                        return;
+                    
+                    if (install == true)
+                        _ = await gameGeneric.ModLoader.InstallAsync();
+                    else
+                        _ = await gameGeneric.ModLoader.UninstallAsync();
+                }
+                else
+                {
+                    _ = await SelectedGame.Game.InstallModLoaderAsync();
+                }
+                IsBusy = false;
+                Dispatcher.UIThread.Invoke(RefreshUI);
+            }).RunAsync(this);
     }
 
     // TODO: Implement mod config switching
@@ -300,6 +332,7 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 try
                 {
+                    // TODO: Resolve mod dependencies
                     await SelectedGame.Game.ModDatabase.Save();
                     if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)
                         await config.Save(Path.Combine(SelectedGame.Game.Root, "cpkredir.ini"));
@@ -319,8 +352,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception e)
         {
-            OpenErrorMessage("Modal.Title.SaveError", "Modal.Message.UnknownSaveError",
-                "Failed to save", e);
+            OpenErrorMessage("Modal.Title.SaveError", "Modal.Message.UnknownSaveError", "Failed to save", e);
         }
         if (setBusy)
             IsBusy = false;
@@ -333,7 +365,6 @@ public partial class MainWindowViewModel : ViewModelBase
             try
             {
                 await SelectedGame.Game.Run(null, true);
-                // Add delay
                 await Task.Delay(5000);
             }
             catch (Exception e)
@@ -361,8 +392,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public async Task UpdateCodes(bool force, bool append)
     {
-        if (SelectedGame != null &&
-            SelectedGame.Game is ModdableGameGeneric gameGeneric &&
+        if (SelectedGame != null && SelectedGame.Game is ModdableGameGeneric gameGeneric &&
             gameGeneric.ModLoaderConfiguration is ModLoaderConfiguration config)
         {
             string modsRoot = PathEx.GetDirectoryName(config.DatabasePath).ToString();
@@ -511,7 +541,6 @@ public partial class MainWindowViewModel : ViewModelBase
         foreach (var file in files)
             InstallMod(file.Name, Utils.ConvertToPath(file.Path), game);
     }
-
 
     public void InstallMod(string name, string path, UIGame? game)
     {

@@ -5,9 +5,11 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
+using System.Collections.Specialized;
 using System.Diagnostics;
 
 namespace HedgeModManager.UI.Controls.MainWindow;
@@ -24,6 +26,9 @@ public partial class Test : UserControl
         var viewModel = (DataContext as MainWindowViewModel);
         if (viewModel == null)
             return;
+
+        if (viewModel.LoggerInstance != null)
+            viewModel.LoggerInstance.Logs.CollectionChanged += OnLogCollectionChanged;
 
         // Add buttons
         if (viewModel.CurrentTabInfo != null)
@@ -112,6 +117,19 @@ public partial class Test : UserControl
                 }
             }
         }
+    }
+
+    private void OnUnloaded(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel viewModel || viewModel.LoggerInstance == null)
+            throw new Exception("View model or logger is missing. It is not safe to continue.");
+
+        viewModel.LoggerInstance.Logs.CollectionChanged += OnLogCollectionChanged;
+    }
+
+    private void OnLogCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        Dispatcher.UIThread.Invoke(LogScrollViewer.ScrollToEnd);
     }
 
     private async void SaveConfig_Click(object? sender, RoutedEventArgs e)

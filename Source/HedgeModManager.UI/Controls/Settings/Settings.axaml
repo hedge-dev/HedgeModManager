@@ -78,6 +78,28 @@
             <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding ViewModel.EnableLauncher, RelativeSource={RelativeSource AncestorType=cs:Settings}}" />
           </cs:SettingsEntry.Data>
         </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="Atom"
+                          IsVisible="{Binding ViewModel.SupportsProton, RelativeSource={RelativeSource AncestorType=cs:Settings}}"
+                          Title="{DynamicResource Settings.Title.Proton}"
+                          Description="{DynamicResource Settings.Description.Proton}">
+          <cs:SettingsEntry.Data>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <cb:Button MinWidth="105"
+                         Text="{DynamicResource Settings.Button.ClearPrefix}"
+                         VerticalContentAlignment="Center"
+                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
+              <cb:Button MinWidth="105"
+                         Text="{DynamicResource Settings.Button.ReinstallRuntime}"
+                         VerticalContentAlignment="Center"
+                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                         Click="OnPrefixReinstallClick" />
+              <cb:Button MinWidth="105"
+                         Text="{DynamicResource Settings.Button.OpenPrefixDir}"
+                         VerticalContentAlignment="Center"
+                         Click="OnPrefixOpenClick" />
+            </StackPanel>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
       </StackPanel>
 
       <!-- Hedge Mod Manager -->

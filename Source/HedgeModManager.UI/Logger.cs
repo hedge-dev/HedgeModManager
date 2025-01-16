@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.Foundation;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -8,6 +9,7 @@ namespace HedgeModManager.UI;
 public partial class UILogger : ObservableObject, ILogger
 {
     [ObservableProperty] private ObservableCollection<Log> _logs = [];
+    private List<Log> _backupLogs = [];
 
     public UILogger()
     {
@@ -16,7 +18,12 @@ public partial class UILogger : ObservableObject, ILogger
 
     public void WriteLine(LogType type, string message)
     {
-        Logs.Add(new Log(type, message));
+        var log = new Log(type, message);
+        _backupLogs.Add(log);
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            Logs.Add(new Log(type, message));
+        });
     }
 
     public static UILogger GetInstance()
@@ -27,11 +34,12 @@ public partial class UILogger : ObservableObject, ILogger
     public static void Clear()
     {
         GetInstance().Logs.Clear();
+        GetInstance()._backupLogs.Clear();
     }
 
     public static string Export()
     {
-        return GetInstance().Logs
+        return GetInstance()._backupLogs
             .Aggregate(new StringBuilder(), (sb, log) => sb.AppendLine(log.ToString()))
             .ToString();
     }

@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
+using HedgeModManager.CoreLib;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
@@ -142,18 +143,55 @@ public partial class Settings : UserControl
 
     private async void OnInstallMLClick(object? sender, RoutedEventArgs e)
     {
-        if (_isInstalling)
-            return;
-        _isInstalling = true;
         if (DataContext is not MainWindowViewModel mainViewModel
             || mainViewModel.SelectedGame is not UIGame uiGame)
             return;
 
-        await uiGame.Game.InstallModLoaderAsync();
+        if (_isInstalling)
+            return;
+        _isInstalling = true;
+        await mainViewModel.InstallModLoader();
         ViewModel.Update();
         _isInstalling = false;
     }
-    
+
+    private async void OnPrefixReinstallClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel mainViewModel)
+            return;
+
+        mainViewModel.IsBusy = true;
+        await MainWindowViewModel.CreateSimpleDownload("Download.Text.InstallRuntime", "Failed to install runtime",
+            async (d, p, c) =>
+            {
+                if (mainViewModel.SelectedGame == null)
+                    return;
+
+                await LinuxCompatibility.InstallRuntimeToPrefix(
+                    mainViewModel.SelectedGame.Game.PrefixRoot);
+            }).OnFinally((d) =>
+            {
+                mainViewModel.IsBusy = false;
+                return Task.CompletedTask;
+            }).RunAsync(mainViewModel);
+    }
+
+    private void OnPrefixOpenClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel mainViewModel)
+            return;
+
+        if (mainViewModel.SelectedGame == null)
+            return;
+
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = mainViewModel.SelectedGame.Game.PrefixRoot ?? string.Empty,
+            UseShellExecute = true
+        });
+
+    }
+
     private async void OnCheckManagerUpdatesClick(object? sender, RoutedEventArgs e)
     {
         ViewModel.CheckManagerUpdatesText = "Settings.Button.CheckingUpdates";

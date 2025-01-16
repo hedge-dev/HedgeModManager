@@ -115,6 +115,8 @@ public partial class SettingsViewModel : ViewModelBase
         }
     }
 
+    public bool SupportsProton => Game?.NativeOS == "Windows" && OperatingSystem.IsLinux() && !string.IsNullOrEmpty(Game.PrefixRoot);
+
     public SettingsViewModel()
     {
         UpdateThemes();
@@ -130,6 +132,7 @@ public partial class SettingsViewModel : ViewModelBase
     {
         OnPropertyChanged(nameof(InstallModLoaderText));
         OnPropertyChanged(nameof(SelectedProfile));
+        OnPropertyChanged(nameof(SupportsProton));
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -142,6 +145,7 @@ public partial class SettingsViewModel : ViewModelBase
             OnPropertyChanged(nameof(EnableDebugConsole));
             OnPropertyChanged(nameof(HasModLoader));
             OnPropertyChanged(nameof(SupportsMultipleLaunchMethods));
+            OnPropertyChanged(nameof(SupportsProton));
         }
         if (e.PropertyName == nameof(MainViewModel))
             OnPropertyChanged(nameof(SelectedLanguage));

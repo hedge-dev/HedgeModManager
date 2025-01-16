@@ -75,14 +75,10 @@ public sealed class Program
                 sb.AppendLine("-- Logger Dump End --");
                 sb.AppendLine();
 
-                var thrownException = (Exception)e.ExceptionObject;
+                var thrownException = e.ExceptionObject as Exception;
 
                 sb.AppendLine("Unhandled Exception:");
-                sb.AppendLine(thrownException.ToString());
-                sb.AppendLine();
-
-                sb.AppendLine("Unhandled Inner Exception:");
-                sb.AppendLine(thrownException.InnerException?.ToString() ?? "None");
+                sb.AppendLine(thrownException?.ToString() ?? "NULL EXCEPTION");
                 sb.AppendLine();
 
                 string text = sb.ToString();
