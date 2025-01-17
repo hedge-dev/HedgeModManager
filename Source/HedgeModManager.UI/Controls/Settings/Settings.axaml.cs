@@ -50,6 +50,20 @@ public partial class Settings : UserControl
         if (viewModel == null)
             return;
         ViewModel.MainViewModel = viewModel;
+
+        // Add buttons
+        if (viewModel.CurrentTabInfo != null)
+        {
+            viewModel.CurrentTabInfo.Buttons.Clear();
+            viewModel.CurrentTabInfo.Buttons.Add(new("Settings.Button.ToggleFullscreen", Buttons.X, (b) =>
+            {
+                if (viewModel.WindowState == WindowState.FullScreen)
+                    viewModel.WindowState = WindowState.Normal;
+                else
+                    viewModel.WindowState = WindowState.FullScreen;
+                viewModel.Config.LastWindowState = viewModel.WindowState;
+            }));
+        }
     }
 
     private void OnThemeSelectionChanged(object? sender, SelectionChangedEventArgs e)

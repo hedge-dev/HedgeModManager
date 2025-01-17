@@ -82,6 +82,7 @@
   <system:String x:Key="Settings.Button.OpenGameDir"        >Open Game Directory</system:String>
   <system:String x:Key="Settings.Button.OpenModsDir"        >Open</system:String>
   <system:String x:Key="Settings.Button.OpenPrefixDir"      >Open</system:String>
+  <system:String x:Key="Settings.Button.ToggleFullscreen"   >Toggle Fullscreen</system:String>
   <system:String xml:space="preserve" x:Key="Settings.Header.GameML">Game &amp; Mod Loader</system:String>
   <system:String x:Key="Settings.Header.Manager"            >Hedge Mod Manager</system:String>
   <system:String x:Key="Settings.Header.Text"               >Settings</system:String>

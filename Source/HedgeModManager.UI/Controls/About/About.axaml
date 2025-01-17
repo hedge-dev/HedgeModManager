@@ -59,7 +59,7 @@
                               ItemsSource="{Binding Value}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                      <StackPanel Margin="4" Width="92"
+                      <StackPanel Margin="4" Width="98"
                                   x:DataType="vma:AboutViewModel+Credit">
                         <Border Margin="0,0,0,8"
                                 Width="48" Height="48"
