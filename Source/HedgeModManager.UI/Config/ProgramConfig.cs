@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.UI.ViewModels;
 using System.Text.Json;
 
@@ -6,7 +7,8 @@ namespace HedgeModManager.UI.Config;
 
 public partial class ProgramConfig : ViewModelBase
 {
-    [ObservableProperty] private bool _isSetupCompleted = false;
+    // TODO: Make use of setup
+    [ObservableProperty] private bool _isSetupCompleted = true;
     [ObservableProperty] private bool _testModeEnabled = Program.IsDebugBuild;
     [ObservableProperty] private bool _checkManagerUpdates = true;
     [ObservableProperty] private bool _checkModLoaderUpdates = true;
@@ -16,18 +18,17 @@ public partial class ProgramConfig : ViewModelBase
     [ObservableProperty] private string? _theme;
     [ObservableProperty] private string? _language;
     [ObservableProperty] private DateTime _lastUpdateCheck = DateTime.MinValue;
+    [ObservableProperty] private WindowState _lastWindowState = WindowState.Normal;
+    [ObservableProperty] private string[] _lastSeenLanguages = [];
 
-    private string GetConfigPath()
+    private string GetConfigFilePath()
     {
-        string baseDirectory = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            Program.ApplicationCompany, Program.ApplicationName);
-        return Path.Combine(baseDirectory, "ProgramConfig.json");
+        return Path.Combine(Paths.GetConfigPath(), "ProgramConfig.json");
     }
 
     public void Load()
     {
-        string filePath = GetConfigPath();
+        string filePath = GetConfigFilePath();
         if (!File.Exists(filePath))
             return;
 
@@ -46,7 +47,7 @@ public partial class ProgramConfig : ViewModelBase
 
     public async Task LoadAsync()
     {
-        string filePath = GetConfigPath();
+        string filePath = GetConfigFilePath();
         if (!File.Exists(filePath))
             return;
 
@@ -65,7 +66,7 @@ public partial class ProgramConfig : ViewModelBase
 
     public async Task SaveAsync()
     {
-        string filePath = GetConfigPath();
+        string filePath = GetConfigFilePath();
 
         string jsonData = JsonSerializer.Serialize(this, Program.JsonSerializerOptions);
         try

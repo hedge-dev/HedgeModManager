@@ -110,6 +110,11 @@ public class ModConfig
     public async Task Save(string iniPath)
     {
         var ini = new Ini();
+
+        // Reuse existing config if exists
+        if (File.Exists(iniPath))
+            ini = Ini.FromText(await File.ReadAllTextAsync(iniPath));
+
         foreach (var group in Groups)
         {
             var iniGroup = ini.GetOrAddValue(group.Name);

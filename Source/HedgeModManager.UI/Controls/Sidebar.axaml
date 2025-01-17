@@ -61,6 +61,7 @@
           <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Gear}" Click="OnTabChanged" />
           <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.CircleInfo}" Click="OnTabChanged" />
           <c:SidebarButton Type="Tab" IsVisible="{Binding Config.TestModeEnabled}" Icon="{DynamicResource Geometry.Flask}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Normal" IsVisible="{Binding IsFullscreen}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" Icon="{DynamicResource Geometry.Exit}" Click="OnExitClicked"  />
         </StackPanel>
         <cb:Separator Foreground="{DynamicResource BorderBrush}" />
       </StackPanel>

@@ -32,6 +32,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public ProgramConfig Config { get; set; } = new();
     public int ServerStatus { get; set; } = 1;
     public CancellationTokenSource ServerCancellationTokenSource { get; set; } = new();
+    public bool IsFullscreen => WindowState == WindowState.FullScreen;
 
     [ObservableProperty] private UIGame? _selectedGame;
     [ObservableProperty] private ModProfile _selectedProfile = ModProfile.Default;
@@ -697,6 +698,8 @@ public partial class MainWindowViewModel : ViewModelBase
             await LoadGame();
         if (e.PropertyName == nameof(SelectedProfile))
             await LoadProfile();
+        if (e.PropertyName == nameof(WindowState))
+            OnPropertyChanged(nameof(IsFullscreen));
         base.OnPropertyChanged(e);
     }
 }

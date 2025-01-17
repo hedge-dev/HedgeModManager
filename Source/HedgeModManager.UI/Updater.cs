@@ -159,17 +159,29 @@ public class Updater
         Directory.CreateDirectory(updateDirPath);
 
         Logger.Information($"Starting update from package \"{packagePath}\"");
-        Logger.Debug($"Extracting to {updateDirPath}");
-        // TODO: Extract async
-        ZipFile.ExtractToDirectory(packagePath, updateDirPath);
+        bool isSingleExecutable = packagePath.EndsWith(".exe");
 
         string args = $"--continue-update";
         args += $" {Process.GetCurrentProcess().Id}";
         args += $" 0";
         args += $" \"{Program.InstallLocation}\"";
+
         string exePath = Path.Combine(updateDirPath, "HedgeModManager.UI.exe");
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             exePath = Path.Combine(updateDirPath, "HedgeModManager.UI");
+
+        if (isSingleExecutable)
+        {
+            exePath = Path.Combine(updateDirPath, "update.exe");
+            File.Copy(packagePath, exePath, true);
+        }
+        else
+        {
+            Logger.Debug($"Extracting to {updateDirPath}");
+            // TODO: Extract async
+            ZipFile.ExtractToDirectory(packagePath, updateDirPath);
+            args += $" \"{Program.InstallLocation}\"";
+        }
 
         if (mainViewModel != null)
         {

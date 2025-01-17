@@ -54,6 +54,8 @@ public partial class MainWindow : Window
             ViewModel.SelectedTabIndex = 1; // Setup
         ViewModel.IsBusy = false;
 
+        ViewModel.WindowState = ViewModel.Config.LastWindowState;
+
         if (Program.StartupCommands.Count > 0)
             await ViewModel.ProcessCommands(Program.StartupCommands);
 
@@ -74,6 +76,7 @@ public partial class MainWindow : Window
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
+        bool toggleFullscreen = e.KeyModifiers == KeyModifiers.Alt && e.Key == Key.Enter;
         if (ViewModel == null)
             return;
 
@@ -91,8 +94,20 @@ public partial class MainWindow : Window
                 ViewModel.RefreshGame();
                 Logger.Debug($"Refreshed game");
                 break;
+            case Key.F11:
+                toggleFullscreen = true;
+                break;
             default:
                 break;
+        }
+
+        if (toggleFullscreen)
+        {
+            if (ViewModel.WindowState == WindowState.FullScreen)
+                ViewModel.WindowState = WindowState.Normal;
+            else
+                ViewModel.WindowState = WindowState.FullScreen;
+            ViewModel.Config.LastWindowState = ViewModel.WindowState;
         }
     }
 

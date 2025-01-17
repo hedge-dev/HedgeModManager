@@ -18,6 +18,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
     public string Root { get; set; } = string.Empty;
     public List<ModGeneric> Mods { get; set; } = [];
     public List<CSharpCode> Codes { get; set; } = [];
+    public bool SupportsCodeCompilation { get; set; } = true;
 
     public async Task Save()
     {
@@ -74,8 +75,12 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
             Directory.CreateDirectory(Root);
         }
 
-        await using var codeStream = File.Create(Path.Combine(Root, CompileCodesFileName));
-        await CodeProvider.CompileCodes(codes, codeStream, this);
+        if (SupportsCodeCompilation)
+        {
+            // TODO: Look into reporting back the results of the compilation
+            await using var codeStream = File.Create(Path.Combine(Root, CompileCodesFileName));
+            await CodeProvider.CompileCodes(codes, codeStream, this);
+        }
         await File.WriteAllTextAsync(Path.Combine(Root, Name), ini.Serialize());
     }
 

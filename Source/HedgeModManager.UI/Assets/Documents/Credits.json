@@ -12,8 +12,12 @@
         },
         {
             "Name": "Kandda",
-            "Role": "Main Designer",
+            "Role": "Main Design",
             "GitHub": "Kanddaa"
+        },
+        {
+            "Name": "LJ",
+            "Role": "Logo Design"
         }
     ]
 }

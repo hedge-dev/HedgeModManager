@@ -142,9 +142,9 @@ public class ModdableGameLocator
                         Name = gameInfo.ID,
                         Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, steamInfo.Executable))!,
                         Executable = steamInfo.Executable,
-                        ModLoaderName = gameInfo.ModLoaderName ?? "None",
-                        SupportsCodes = gameInfo.SupportsCodes
+                        ModLoaderName = gameInfo.ModLoaderName ?? "None"
                     };
+                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
                     game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName, 
                         gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL);
                     if (gameInfo.ModDatabaseDirectoryName != null)
@@ -162,9 +162,9 @@ public class ModdableGameLocator
                         Name = gameInfo.ID,
                         Root = Path.GetDirectoryName(Path.Combine(epicGame.Root, epicGame.Executable ?? epicInfo.Executable))!,
                         Executable = epicGame.Executable ?? epicInfo.Executable,
-                        ModLoaderName = gameInfo.ModLoaderName ?? "None",
-                        SupportsCodes = gameInfo.SupportsCodes
+                        ModLoaderName = gameInfo.ModLoaderName ?? "None"
                     };
+                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
                     game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName,
                         gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL);
                     if (gameInfo.ModDatabaseDirectoryName != null)

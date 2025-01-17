@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -44,6 +45,20 @@ public partial class Sidebar : UserControl
     {
         var viewModel = (DataContext as MainWindowViewModel)!;
         viewModel.Modals.Add(new Modal(new GameSelectModal()));
+    }
+
+    private void OnExitClicked(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+            return;
+
+        var messageBox = new MessageBoxModal("Modal.Title.Confirm", "Modal.Message.ExitConfirm");
+        messageBox.AddButton("Common.Button.Yes", (s, a) =>
+        {
+            (Application.Current as App)?.MainWindow?.Close();
+        });
+        messageBox.AddButton("Common.Button.No", (s, a) => messageBox.Close());
+        messageBox.Open(viewModel);
     }
 
     private async void OnSaveClicked(object? sender, RoutedEventArgs e)
