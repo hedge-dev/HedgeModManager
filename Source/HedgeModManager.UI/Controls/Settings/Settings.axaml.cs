@@ -169,6 +169,29 @@ public partial class Settings : UserControl
         _isInstalling = false;
     }
 
+    private void OnPrefixClearClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel mainViewModel)
+            return;
+
+        string prefixPath = mainViewModel.SelectedGame?.Game.PrefixRoot ?? string.Empty;
+        if (string.IsNullOrEmpty(prefixPath))
+            return;
+
+        if (Directory.Exists(prefixPath))
+        {
+            var messageBox = new MessageBoxModal("Modal.Title.Confirm", "Settings.Message.ClearPrefix");
+            messageBox.AddButton("Common.Button.Yes", (s, a) =>
+            {
+                if (Directory.Exists(prefixPath))
+                    Directory.Delete(prefixPath, true);
+                messageBox.Close();
+            });
+            messageBox.AddButton("Common.Button.No", (s, a) => messageBox.Close());
+            messageBox.Open(mainViewModel);
+        }
+    }
+
     private async void OnPrefixReinstallClick(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not MainWindowViewModel mainViewModel)
@@ -203,7 +226,6 @@ public partial class Settings : UserControl
             FileName = mainViewModel.SelectedGame.Game.PrefixRoot ?? string.Empty,
             UseShellExecute = true
         });
-
     }
 
     private async void OnCheckManagerUpdatesClick(object? sender, RoutedEventArgs e)

@@ -125,6 +125,14 @@ public sealed class Program
         if (Environment.GetEnvironmentVariable("FLATPAK_ID") is string flatpakID)
             FlatpakID = flatpakID;
 
+        // GB workaround
+        // Checks if the first argument is "hedgemm", not "hedgemm:". If it is,
+        //  it will add "-gb" to the arguments as it is assumed that a GB URI was passed.
+        var editedArgs = new List<string>(args);
+        if (editedArgs.Count > 0 && 
+            editedArgs[0].StartsWith("hedgemm"))
+            editedArgs.Insert(0, "-schema");
+
         var arguments = CommandLine.ParseArguments(args);
         var (continueStartup, commands) = CommandLine.ExecuteArguments(arguments);
         StartupCommands.AddRange(commands);
@@ -141,8 +149,9 @@ public sealed class Program
     {
         if (OperatingSystem.IsWindows())
         {
+            installToRegistery("hedgemm", "--schema \"%1\"");
             foreach (string schema in GameBanana.GameIDMapping.Keys)
-                installToRegistery(schema, "-gb \"%1\"");
+                installToRegistery(schema, "--schema \"%1\"");
         }
 
         [SupportedOSPlatform("windows")]
@@ -167,7 +176,9 @@ public sealed class Program
     public static string GetFormattedAppVersion()
     {
         var version = GetAppVersion();
-        return $"{version.Major}.{version.Minor}-{version.Revision}";
+        if (version.Revision == 0)
+            return $"{version.Major}.{version.Minor}.{version.Build}";
+        return $"{version.Major}.{version.Minor}.{version.Build}-beta{version.Revision}";
     }
 
     public static Version GetAppVersion()

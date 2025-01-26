@@ -2,7 +2,6 @@
 using Foundation;
 using HedgeModManager.IO;
 using HedgeModManager.Properties;
-using System.Diagnostics;
 
 public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, IModdableGameTConfiguration<ModLoaderConfiguration>
 {
@@ -19,6 +18,7 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
     public string? PrefixRoot => BaseGame.PrefixRoot;
     public bool SupportsDirectLaunch { get; set; }
     public bool SupportsLauncher { get; set; }
+    public bool Is64Bit { get; set; } = true;
     public string? LaunchCommand { get; set; } = null;
     public ModDatabaseGeneric ModDatabase { get; } = new ModDatabaseGeneric();
     public ModLoaderConfiguration ModLoaderConfiguration { get; set; } = new ModLoaderConfiguration();

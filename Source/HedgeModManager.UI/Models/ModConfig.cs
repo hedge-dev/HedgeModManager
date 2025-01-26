@@ -1,4 +1,5 @@
 ﻿using HedgeModManager.Text;
+using System.Text.Json;
 
 namespace HedgeModManager.UI.Models;
 
@@ -38,6 +39,16 @@ public class ModConfig
         public List<string> Description { get; set; } = [];
 
         public override string ToString() => DisplayName;
+    }
+
+    public static async Task<ModConfig?> LoadSchemaFile(string? jsonPath)
+    {
+        if (!File.Exists(jsonPath))
+            return null;
+
+        string jsonData = await File.ReadAllTextAsync(jsonPath);
+
+        return JsonSerializer.Deserialize<ModConfig>(jsonData, Program.JsonSerializerOptions) ?? new();
     }
 
     public async Task Load(string iniPath)
@@ -107,12 +118,12 @@ public class ModConfig
         }
     }
 
-    public async Task Save(string iniPath)
+    public async Task Save(string iniPath, bool useExisting = true)
     {
         var ini = new Ini();
 
         // Reuse existing config if exists
-        if (File.Exists(iniPath))
+        if (useExisting && File.Exists(iniPath))
             ini = Ini.FromText(await File.ReadAllTextAsync(iniPath));
 
         foreach (var group in Groups)
@@ -122,6 +133,7 @@ public class ModConfig
                 iniGroup[element.Name] = element.Value;
         }
 
+        Directory.CreateDirectory(Path.GetDirectoryName(iniPath)!);
         await File.WriteAllTextAsync(iniPath, ini.Serialize());
     }
 

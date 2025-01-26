@@ -15,6 +15,7 @@ public class ModdableGameLocator
             ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
+            Is64Bit = false,
             PlatformInfos = new()
             {
                 { "Steam", new ("71340", "SonicGenerations.exe") }
@@ -26,6 +27,7 @@ public class ModdableGameLocator
             ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
+            Is64Bit = false,
             PlatformInfos = new() { { "Steam", new ("329440", "slw.exe") } }
         },
         new()
@@ -142,11 +144,12 @@ public class ModdableGameLocator
                         Name = gameInfo.ID,
                         Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, steamInfo.Executable))!,
                         Executable = steamInfo.Executable,
-                        ModLoaderName = gameInfo.ModLoaderName ?? "None"
+                        ModLoaderName = gameInfo.ModLoaderName ?? "None",
+                        Is64Bit = gameInfo.Is64Bit
                     };
                     game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
                     game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName, 
-                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL);
+                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
                     if (gameInfo.ModDatabaseDirectoryName != null)
                         game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
                     games.Add(game);
@@ -162,11 +165,12 @@ public class ModdableGameLocator
                         Name = gameInfo.ID,
                         Root = Path.GetDirectoryName(Path.Combine(epicGame.Root, epicGame.Executable ?? epicInfo.Executable))!,
                         Executable = epicGame.Executable ?? epicInfo.Executable,
-                        ModLoaderName = gameInfo.ModLoaderName ?? "None"
+                        ModLoaderName = gameInfo.ModLoaderName ?? "None",
+                        Is64Bit = gameInfo.Is64Bit
                     };
                     game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
                     game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName,
-                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL);
+                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
                     if (gameInfo.ModDatabaseDirectoryName != null)
                         game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
                     games.Add(game);
@@ -184,6 +188,7 @@ public class ModdableGameLocator
         public string? ModLoaderFileName { get; init; }
         public string? ModLoaderDownloadURL { get; init; }
         public string? ModDatabaseDirectoryName { get; init; }
+        public bool Is64Bit { get; init; } = true;
         public bool SupportsCodes { get; init; } = true;
         public required Dictionary<string, GamePlatformInfo> PlatformInfos { get; init; }
     }

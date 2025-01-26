@@ -5,6 +5,7 @@ using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.Foundation;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 
 namespace HedgeModManager.UI.ViewModels.Mods;
@@ -163,5 +164,18 @@ public partial class ModEntryViewModel : ViewModelBase
             hasMatch |= updateInlines(ModAuthor, Search, Authors);
             IsVisible = hasMatch && !IsFiltered && !IsFeatureFiltered;
         });
+    }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Mod))
+        {
+            OnPropertyChanged(nameof(ModEnabled));
+            OnPropertyChanged(nameof(Authors));
+            OnPropertyChanged(nameof(HasConfig));
+            OnPropertyChanged(nameof(HasSave));
+            OnPropertyChanged(nameof(HasCode));
+        }
+        base.OnPropertyChanged(e);
     }
 }

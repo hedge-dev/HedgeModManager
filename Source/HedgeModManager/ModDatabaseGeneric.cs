@@ -52,7 +52,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         {
             if (code.Enabled)
             {
-                enabledCodes.Add(code.GetFullName());
+                enabledCodes.Add(code.ID);
             }
         }
 
@@ -109,7 +109,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         for (int i = parsed.Codes.Count - 1; i >= 0; i--)
         {
             var enabledCode = parsed.Codes[i];
-            var codeIdx = Codes.FindIndex(c => c.GetFullName() == enabledCode);
+            var codeIdx = Codes.FindIndex(c => c.ID == enabledCode || c.GetFullName() == enabledCode);
             if (codeIdx != -1)
             {
                 var code = Codes[codeIdx];

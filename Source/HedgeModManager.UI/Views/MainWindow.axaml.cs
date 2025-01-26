@@ -48,6 +48,10 @@ public partial class MainWindow : Window
                 == ViewModel.Config.LastSelectedPath, ViewModel.Games.FirstOrDefault());
         }
 
+        // Set to true until we create a setup
+        if (ViewModel.SelectedGame != null)
+            ViewModel.Config.IsSetupCompleted = true;
+
         if (ViewModel.Config.IsSetupCompleted)
             ViewModel.SelectedTabIndex = 2; // Mods
         else
@@ -74,7 +78,7 @@ public partial class MainWindow : Window
         ViewModel.CurrentTabInfo = ViewModel.TabInfos[ViewModel.SelectedTabIndex];
     }
 
-    private void OnKeyDown(object? sender, KeyEventArgs e)
+    private async void OnKeyDown(object? sender, KeyEventArgs e)
     {
         bool toggleFullscreen = e.KeyModifiers == KeyModifiers.Alt && e.Key == Key.Enter;
         if (ViewModel == null)
@@ -87,12 +91,14 @@ public partial class MainWindow : Window
                 Logger.Debug($"Set test mode to {ViewModel.Config.TestModeEnabled}");
                 break;
             case Key.F5:
+                if (ViewModel.SelectedGame != null)
+                    await ViewModel.SelectedGame.Game.InitializeAsync();
                 ViewModel.RefreshUI();
-                Logger.Debug($"Refreshed UI");
+                Logger.Debug($"Refreshed game");
                 break;
             case Key.F6:
                 ViewModel.RefreshGame();
-                Logger.Debug($"Refreshed game");
+                Logger.Debug($"Reloaded game");
                 break;
             case Key.F11:
                 toggleFullscreen = true;

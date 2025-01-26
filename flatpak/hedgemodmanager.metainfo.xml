@@ -9,8 +9,8 @@
   <project_license>MIT</project_license>
   
   <supports>
+    <control>pointing</control>
     <control>keyboard</control>
-    <control>touch</control>
   </supports>
   
   <description>

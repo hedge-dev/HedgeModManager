@@ -41,7 +41,7 @@ public class Updater
             Logger.Debug($"Current Version: {Program.ApplicationVersion}");
             Logger.Debug($"New Version: {app.CurrentReleaseVersion}");
 
-            if (IsNewer(app.CurrentReleaseVersion, Program.ApplicationVersion))
+            if (app.CurrentReleaseVersion != Program.ApplicationVersion)
             {
                 Logger.Debug("Current version is older");
                 return (new Update()
@@ -71,7 +71,7 @@ public class Updater
             Logger.Debug($"Current Version: {Program.ApplicationVersion}");
             Logger.Debug($"New Version: {release.TagName}");
 
-            if (IsNewer(release.TagName, Program.ApplicationVersion))
+            if (release.TagName != Program.ApplicationVersion)
             {
                 Logger.Debug("Current version is older");
                 // Find Asset
@@ -202,41 +202,6 @@ public class Updater
         // Exit
         if (Application.Current is App app && app.MainWindow != null)
             app.MainWindow.Close();
-    }
-
-    public static Version ConvertVersion(string formattedVersion)
-    {
-        Version defaultVersion = new Version(0, 0);
-        string pattern = @"(\d+)\.(\d+)-(\d+)";
-        var regex = new Regex(pattern);
-        var match = regex.Match(formattedVersion);
-
-        if (!match.Success)
-        {
-            Logger.Error($"Failed to process regex on string: {formattedVersion}");
-            return defaultVersion;
-        }
-        if (match.Groups.Count != 4)
-        {
-            Logger.Error($"Invalid group count from regex on string: {formattedVersion}");
-            return defaultVersion;
-        }
-
-        _ = Version.TryParse($"{match.Groups[1].Value}.{match.Groups[2].Value}.0.{match.Groups[3].Value}", out Version? version);
-        return version ?? defaultVersion;
-    }
-
-    public static bool IsNewer(string? newFormattedVersion, string? oldFormattedVersion = null)
-    {
-        if (newFormattedVersion == null)
-            return false;
-
-        oldFormattedVersion ??= Program.ApplicationVersion;
-
-        var oldVersion = ConvertVersion(oldFormattedVersion);
-        var newVersion = ConvertVersion(newFormattedVersion);
-
-        return newVersion > oldVersion;
     }
 
     public enum UpdateCheckStatus

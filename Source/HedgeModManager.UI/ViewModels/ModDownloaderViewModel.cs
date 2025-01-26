@@ -72,10 +72,17 @@ public partial class ModDownloaderViewModel : ViewModelBase
         Description = Utils.ConvertToHTML(DownloadInfo.Description);
         Title = Localize("Modal.Title.DownloadMod", DownloadInfo.Name);
         Name = DownloadInfo.Name;
+
         if (DownloadInfo.Authors.Count > 0)
-            Author = DownloadInfo.Authors.First().Key;
+        {
+            var names = DownloadInfo.Authors.First().Value.Select(y => y.Name);
+            if (names.Count() > 0)
+                Author = string.Join(", ", names);
+            else
+                Author = "Unknown Author";
+        }
         else
-            Author = "Unknown Author";
+            Author = "No Authors";
 
         GameIcon = Games.GetIcon(DownloadInfo.GameID);
         TargetGameName = Localize("Modal.Text.TargetGame", Localize($"Common.Game.{DownloadInfo.GameID}"));

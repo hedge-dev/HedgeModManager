@@ -62,7 +62,10 @@ public partial class Mods : UserControl
         else
         {
             for (int i = 0; i < MainViewModel.Mods.Count; ++i)
+            {
                 ModsViewModel.ModsList[i].Mod = MainViewModel.Mods[i];
+                ModsViewModel.ModsList[i].ModEnabled = MainViewModel.Mods[i].Enabled;
+            }    
         }
 
         ModsViewModel.Authors.Clear();
@@ -139,7 +142,7 @@ public partial class Mods : UserControl
 
     private void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(MainWindowViewModel.Codes))
+        if (e.PropertyName == nameof(MainWindowViewModel.Mods))
             UpdateModList();
     }
 

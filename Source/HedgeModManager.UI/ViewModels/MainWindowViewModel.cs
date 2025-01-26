@@ -10,7 +10,6 @@ using HedgeModManager.UI.Controls;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
-using SharpCompress;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO.Pipes;
@@ -33,6 +32,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public int ServerStatus { get; set; } = 1;
     public CancellationTokenSource ServerCancellationTokenSource { get; set; } = new();
     public bool IsFullscreen => WindowState == WindowState.FullScreen;
+
+    private ModProfile _lastSelectedProfile = ModProfile.Default;
 
     [ObservableProperty] private UIGame? _selectedGame;
     [ObservableProperty] private ModProfile _selectedProfile = ModProfile.Default;
@@ -251,7 +252,8 @@ public partial class MainWindowViewModel : ViewModelBase
             Logger.Debug($"Loading profiles...");
             if (game.ModDatabase is ModDatabaseGeneric modsDB)
                 Profiles = new(await LoadProfiles(game) ?? []);
-            SelectedProfile = Profiles.FirstOrDefault() ?? ModProfile.Default;
+            _lastSelectedProfile = Profiles.FirstOrDefault() ?? ModProfile.Default;
+            SelectedProfile = _lastSelectedProfile;
             Logger.Debug($"Loaded {Profiles.Count} profile(s)");
 
             Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
@@ -294,11 +296,52 @@ public partial class MainWindowViewModel : ViewModelBase
             }).RunAsync(this);
     }
 
-    // TODO: Implement mod config switching
-    public Task LoadProfile()
+    /// <summary>
+    /// Loads all the mod configurations for the current selected profile.
+    /// It is important to have the selected game already initialised.
+    /// </summary>
+    public async Task SwitchProfile()
     {
-        Logger.Debug($"Loaded profile {SelectedProfile?.Name}");
-        return Task.CompletedTask;
+        var lastProfile = _lastSelectedProfile;
+        var currentProfile = SelectedProfile;
+        var moddableGameGeneric = GetModdableGameGeneric();
+        var database = moddableGameGeneric?.ModDatabase;
+
+        // No need to reload the same profile
+        if (currentProfile == lastProfile)
+            return;
+
+        if (SelectedProfile == null)
+        {
+            Logger.Debug("Attempted to load a null profile");
+            return;
+        }
+
+        if (moddableGameGeneric == null || database == null)
+        {
+            Logger.Warning("Profile switching is only supported on ModdableGameGeneric");
+            return;
+        }
+
+        IsBusy = true;
+
+        await CreateSimpleDownload("Download.Text.SwitchProfileSave", "Failed to switch profiles", 
+            async (d, p, c) =>
+            {
+                var backupProgress = d.CreateProgress();
+                var restoreProgress = d.CreateProgress();
+
+                await lastProfile.BackupModConfigAsync(moddableGameGeneric.ModDatabase, backupProgress);
+
+                d.Name = Localize("Download.Text.SwitchProfileLoad");
+                await currentProfile.RestoreModConfigAsync(moddableGameGeneric.ModDatabase, restoreProgress);
+            }).RunAsync(this);
+
+        Logger.Debug($"Switched profile {_lastSelectedProfile.Name} -> {SelectedProfile.Name}");
+        _lastSelectedProfile = SelectedProfile;
+
+        await Save(false);
+        IsBusy = false;
     }
 
     public async Task<List<ModProfile>?> LoadProfiles(IModdableGame game)
@@ -333,7 +376,28 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 try
                 {
-                    // TODO: Resolve mod dependencies
+                    // Ensure enabled mods are on top of disabled mods
+                    var orderedMods = Mods.OrderBy(x => !x.Enabled).ToList();
+
+                    var indices = new Dictionary<IMod, int>();
+                    for (int i = 0; i < orderedMods.Count; i++)
+                        indices[orderedMods[i]] = i;
+
+                    for (int i = 0; i < Mods.Count; i++)
+                    {
+                        var newIndex = indices[Mods[i]];
+
+                        if (i != newIndex)
+                        {
+                            Mods.Move(i, newIndex);
+                            // Move back
+                            i = Math.Min(i, newIndex) - 1;
+                        }
+                    }
+
+                    // Resolve mod dependencies
+                    CheckAndInstallModDependencies();
+
                     await SelectedGame.Game.ModDatabase.Save();
                     if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)
                         await config.Save(Path.Combine(SelectedGame.Game.Root, "cpkredir.ini"));
@@ -389,6 +453,58 @@ public partial class MainWindowViewModel : ViewModelBase
         Logger.Debug("Entered setup");
         Config.IsSetupCompleted = false;
         SelectedTabIndex = 1;
+    }
+
+    public void CheckAndInstallModDependencies()
+    {
+        if (SelectedGame == null)
+            return;
+        var game = SelectedGame.Game;
+        var database = game.ModDatabase;
+        var dependencies = new List<ModDependency>();
+        var missing = new List<ModDependency>();
+
+        foreach (var mod in database.Mods.Where(x => x.Enabled))
+        {
+            var report = ModDependencyReport.GenerateReport(database, mod);
+            dependencies.AddRange(report.Dependencies);
+            missing.AddRange(report.MissingDependencies);
+        }
+
+        if (missing.Count == 0)
+        {
+            if (dependencies.Count == 0)
+                return;
+            Logger.Debug($"Enabling {dependencies.Count} dependencies");
+            foreach (var dependency in dependencies)
+            {
+                var mod = database.Mods.FirstOrDefault(x => x.ID == dependency.ID);
+                if (mod == null)
+                {
+                    Logger.Debug($"  Missing {dependency.Title}");
+                    continue;
+                }
+                Logger.Debug($"  Enabling {mod.Title}");
+                mod.Enabled = true;
+            }
+            UpdateModsList();
+        }
+        else
+        {
+            Logger.Debug($"Found {missing.Count} dependencies");
+            foreach (var dependency in missing)
+                Logger.Debug($"  {dependency.Title}");
+
+            // TODO: Show what mods is missing
+            var messageBox = new MessageBoxModal("Modal.Title.InstallDependencies", Localize("Modal.Message.InstallDependencies"));
+            messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
+            messageBox.AddButton("Common.Button.Install", (s, e) =>
+            {
+                Logger.Debug("Install clicked for dependency install");
+                messageBox.Close();
+            });
+            messageBox.Open(this);
+        }
     }
 
     public async Task UpdateCodes(bool force, bool append)
@@ -697,7 +813,7 @@ public partial class MainWindowViewModel : ViewModelBase
         if (e.PropertyName == nameof(SelectedGame))
             await LoadGame();
         if (e.PropertyName == nameof(SelectedProfile))
-            await LoadProfile();
+            await SwitchProfile();
         if (e.PropertyName == nameof(WindowState))
             OnPropertyChanged(nameof(IsFullscreen));
         base.OnPropertyChanged(e);

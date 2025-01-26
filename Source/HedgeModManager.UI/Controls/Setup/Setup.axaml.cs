@@ -31,7 +31,7 @@ public partial class Setup : UserControl
             }, MainTabControl.SelectedIndex != 0));
             string nextButtonName = MainTabControl.SelectedIndex == MainTabControl.ItemCount - 1 ?
                 "Common.Button.Finish" : "Common.Button.Next";
-            viewModel.CurrentTabInfo.Buttons.Add(NextButton = new(nextButtonName, Buttons.A, (b) =>
+            viewModel.CurrentTabInfo.Buttons.Add(NextButton = new(nextButtonName, Buttons.A, async (b) =>
             {
                 if (MainTabControl.SelectedIndex == MainTabControl.ItemCount - 1)
                 {
@@ -41,6 +41,7 @@ public partial class Setup : UserControl
                         viewModel.Config.IsSetupCompleted = true;
                         viewModel.SelectedTabIndex = 2;
                     }
+                    await viewModel.Save(false);
                 }
                 MainTabControl.SelectedIndex++;
             }));

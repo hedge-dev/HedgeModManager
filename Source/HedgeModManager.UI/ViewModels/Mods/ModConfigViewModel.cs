@@ -20,12 +20,7 @@ public partial class ModConfigViewModel : ViewModelBase
 
     public async Task DeserializeSchema(string? jsonPath)
     {
-        if (!File.Exists(jsonPath))
-            return;
-
-        string jsonData = await File.ReadAllTextAsync(jsonPath);
-
-        Config = JsonSerializer.Deserialize<ModConfig>(jsonData, Program.JsonSerializerOptions) ?? new();
+        Config = await ModConfig.LoadSchemaFile(jsonPath) ?? Config;
     }
 
     public partial class ValidatableConfigElement : ObservableObject, INotifyDataErrorInfo

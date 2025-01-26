@@ -3,7 +3,6 @@ using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HedgeModManager.IO;
 using HedgeModManager.UI.Languages;
-using HedgeModManager.UI.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -86,13 +85,25 @@ public partial class SettingsViewModel : ViewModelBase
 
     public bool HasModLoader => Game?.ModLoader != null;
 
+    public bool EnableSaveRedirection
+    {
+        get => Game?.ModLoaderConfiguration.EnableSaveFileRedirection ?? false;
+        set
+        {
+            if (Game == null)
+                return;
+            Game.ModLoaderConfiguration.EnableSaveFileRedirection = value;
+            OnPropertyChanged(nameof(EnableSaveRedirection));
+        }
+    }
+
     public bool SupportsMultipleLaunchMethods
     {
         get
         {
             if (MainViewModel?.GetModdableGameGeneric() is ModdableGameGeneric game)
                 return game.SupportsDirectLaunch && game.SupportsLauncher;
-            return false;
+            return MainViewModel == null;
         }
     }
 
@@ -106,6 +117,8 @@ public partial class SettingsViewModel : ViewModelBase
         get => MainViewModel?.SelectedProfile ?? ModProfile.Default;
     }
 
+    public ObservableCollection<ModProfile> SelectedProfiles => MainViewModel?.Profiles ?? [];
+
     public Theme SelectedTheme
     {
         get
@@ -115,7 +128,7 @@ public partial class SettingsViewModel : ViewModelBase
         }
     }
 
-    public bool SupportsProton => Game?.NativeOS == "Windows" && OperatingSystem.IsLinux() && !string.IsNullOrEmpty(Game.PrefixRoot);
+    public bool SupportsProton => (Game?.NativeOS == "Windows" && OperatingSystem.IsLinux() && !string.IsNullOrEmpty(Game.PrefixRoot)) || MainViewModel == null;
 
     public SettingsViewModel()
     {
@@ -132,23 +145,20 @@ public partial class SettingsViewModel : ViewModelBase
     {
         OnPropertyChanged(nameof(InstallModLoaderText));
         OnPropertyChanged(nameof(SelectedProfile));
+        OnPropertyChanged(nameof(ModsDirectory));
+        OnPropertyChanged(nameof(ModLoaderEnabled));
+        OnPropertyChanged(nameof(EnableDebugConsole));
+        OnPropertyChanged(nameof(EnableSaveRedirection));
+        OnPropertyChanged(nameof(HasModLoader));
+        OnPropertyChanged(nameof(SupportsMultipleLaunchMethods));
         OnPropertyChanged(nameof(SupportsProton));
+        OnPropertyChanged(nameof(SelectedLanguage));
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(Game))
-        {
-            OnPropertyChanged(nameof(ModsDirectory));
-            OnPropertyChanged(nameof(ModLoaderEnabled));
-            OnPropertyChanged(nameof(InstallModLoaderText));
-            OnPropertyChanged(nameof(EnableDebugConsole));
-            OnPropertyChanged(nameof(HasModLoader));
-            OnPropertyChanged(nameof(SupportsMultipleLaunchMethods));
-            OnPropertyChanged(nameof(SupportsProton));
-        }
-        if (e.PropertyName == nameof(MainViewModel))
-            OnPropertyChanged(nameof(SelectedLanguage));
+        if (e.PropertyName == nameof(Game) || e.PropertyName == nameof(MainViewModel))
+            Update();
         base.OnPropertyChanged(e);
     }
 

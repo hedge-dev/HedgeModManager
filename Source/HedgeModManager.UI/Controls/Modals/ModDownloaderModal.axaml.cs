@@ -86,6 +86,7 @@ public partial class ModDownloaderModal : WindowModal
             await new Download(Localize("Download.Text.DownloadMod", downloadInfo.Name), true, -1).OnRun(async (d, c) =>
             {
                 var progress = d.CreateProgress();
+                progress.ReportMax(-1);
 
                 Logger.Information($"Downloading {downloadInfo.Name}...");
                 bool completed = await Network.DownloadFile(downloadInfo.DownloadURL, downloadPath, null, progress, c);
