@@ -101,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: HedgeModManager-flatpak-x86_64
-          path: ./${{env.FLATPAK_ID}}.flatpak
+          path: ./flatpak/${{env.FLATPAK_ID}}.flatpak
       
       - name: Upload NuGet Sources
         uses: actions/upload-artifact@v4
