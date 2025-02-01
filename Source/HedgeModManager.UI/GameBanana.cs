@@ -6,18 +6,18 @@ namespace HedgeModManager.UI;
 
 public static class GameBanana
 {
-    public static Dictionary<string, string> GameIDMapping = new()
+    public static readonly Dictionary<string, string[]> GameIDMappings = new()
     {
-        { "hedgemmgens", "SonicGenerations" },
-        { "hedgemmlw", "SonicLostWorld" },
-        { "hedgemmforces", "SonicForces" },
-        { "hedgemmtenpex", "PuyoPuyoTetris2" },
-        { "hedgemmmusashi", "Tokyo2020" },
-        { "hedgemmrainbow", "SonicColorsUltimate" },
-        { "hedgemmhite", "SonicOrigins" },
-        { "hedgemmrangers", "SonicFrontiers" },
-        { "hedgemmmillersonic", "SonicGenerations2024" },
-        { "hedgemmmillershadow", "ShadowGenerations" },
+        { "hedgemmgens",         [ "SonicGenerations" ] },
+        { "hedgemmlw",           [ "SonicLostWorld" ] },
+        { "hedgemmforces",       [ "SonicForces" ] },
+        { "hedgemmtenpex",       [ "PuyoPuyoTetris2" ] },
+        { "hedgemmmusashi",      [ "Tokyo2020" ] },
+        { "hedgemmrainbow",      [ "SonicColorsUltimate" ] },
+        { "hedgemmhite",         [ "SonicOrigins" ] },
+        { "hedgemmrangers",      [ "SonicFrontiers" ] },
+        { "hedgemmmillersonic",  [ "SonicGenerations2024" ] },
+        { "hedgemmmillershadow", [ "ShadowGenerations" ] },
     };
 
     public static async Task<ModDownloadInfo?> GetDownloadInfo(string schema, string downloadURL, string type, string id)
@@ -56,18 +56,23 @@ public static class GameBanana
             authors.TryAdd(group.Name, authorList);
         }
 
-        var downloadInfo = new ModDownloadInfo()
+        if (GameIDMappings.TryGetValue(schema, out var mappings))
         {
-            GameID = GameIDMapping[schema],
-            Name = profilePage.Name,
-            Description = profilePage.Description,
-            Authors = authors,
-            Images = profilePage.PreviewMedia.Images.Select(x => $"{x.BaseURL}/{x.FilePath}").ToList(),
-            DownloadURL = downloadURL,
-        };
-        Logger.Information("Finished downloading item data");
+            var downloadInfo = new ModDownloadInfo()
+            {
+                GameID = mappings[0],
+                Name = profilePage.Name,
+                Description = profilePage.Description,
+                Authors = authors,
+                Images = profilePage.PreviewMedia.Images.Select(x => $"{x.BaseURL}/{x.FilePath}").ToList(),
+                DownloadURL = downloadURL,
+            };
+            Logger.Information("Finished downloading item data");
 
-        return downloadInfo;
+            return downloadInfo;
+        }
+        Logger.Error($"Failed to find game ID mapping for schema: {schema}");
+        return null;
     }
 
     public class ProfilePage

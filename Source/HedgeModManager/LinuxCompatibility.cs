@@ -1,7 +1,5 @@
 ﻿namespace HedgeModManager;
-using HedgeModManager.Foundation;
 using HedgeModManager.Properties;
-using HedgeModManager.Steam;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -42,7 +40,10 @@ public class LinuxCompatibility
 
                 if (entry.FullName.EndsWith('/'))
                 {
-                    Directory.CreateDirectory(destinationPath);
+                    if (!Directory.Exists(destinationPath))
+                    {
+                        Directory.CreateDirectory(destinationPath);
+                    }
                     continue;
                 }
 

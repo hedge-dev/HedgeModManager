@@ -108,6 +108,10 @@ public sealed class Program
 
             if (!createdNew)
             {
+                // Focus the existing instance if no arguments are passed
+                if (args.Length == 0)
+                    args = [ "--focus" ];
+
                 using var client = new NamedPipeClientStream(".", PipeName, PipeDirection.Out);
                 client.Connect(3000);
                 using var writer = new StreamWriter(client);
@@ -150,7 +154,7 @@ public sealed class Program
         if (OperatingSystem.IsWindows())
         {
             installToRegistery("hedgemm", "--schema \"%1\"");
-            foreach (string schema in GameBanana.GameIDMapping.Keys)
+            foreach (string schema in GameBanana.GameIDMappings.Keys)
                 installToRegistery(schema, "--schema \"%1\"");
         }
 

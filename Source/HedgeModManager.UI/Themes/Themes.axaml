@@ -42,6 +42,7 @@
       <SolidColorBrush x:Key='Button.PressedBrush'>#3E4042</SolidColorBrush>
       <SolidColorBrush x:Key='Button.PressedL2Brush'>#4E5052</SolidColorBrush>
       <SolidColorBrush x:Key='Button.SelectedBrush'>#006ABC</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.SelectedHoverBrush'>#208ADC</SolidColorBrush>
       <SolidColorBrush x:Key='Button.SelectedPressedBrush'>#384868</SolidColorBrush>
 
       <SolidColorBrush x:Key='CheckBox.BorderBrush'>#FFFFFF</SolidColorBrush>
@@ -54,7 +55,6 @@
 
       <SolidColorBrush x:Key='ProgressBar.BackgroundBrush'>#222222</SolidColorBrush>
       <SolidColorBrush x:Key='ProgressBar.ForegroundBrush'>#525252</SolidColorBrush>
-
 
       <!-- Control Themes -->
       <SolidColorBrush x:Key="NormalBackgroundBrush">#202020</SolidColorBrush>
@@ -79,7 +79,9 @@
       <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="PointerOverBorderBrush" />
       <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="PressedBorderBrush" />
       <StaticResource x:Key="ToggleSwitchContentForeground" ResourceKey="ForegroundBrush" />
-
+      <StaticResource x:Key="ToggleSwitchFillOn" ResourceKey="Button.SelectedBrush" />
+      <StaticResource x:Key="ToggleSwitchFillOnPointerOver" ResourceKey="Button.SelectedHoverBrush" />
+      <StaticResource x:Key="ToggleSwitchFillOnPressed" ResourceKey="Button.SelectedPressedBrush" />
     </ResourceDictionary>
     <ResourceDictionary x:Key='Dark'>
       <SolidColorBrush x:Key='BackgroundL0Brush'>#14151E</SolidColorBrush>
@@ -105,6 +107,7 @@
       <SolidColorBrush x:Key='Button.PressedBrush'>#464857</SolidColorBrush>
       <SolidColorBrush x:Key='Button.PressedL2Brush'>#565867</SolidColorBrush>
       <SolidColorBrush x:Key='Button.SelectedBrush'>#666877</SolidColorBrush>
+      <SolidColorBrush x:Key='Button.SelectedHoverBrush'>#868897</SolidColorBrush>
       <SolidColorBrush x:Key='Button.SelectedPressedBrush'>#666877</SolidColorBrush>
 
       <SolidColorBrush x:Key='CheckBox.BorderBrush'>#D3DBFF</SolidColorBrush>
@@ -138,7 +141,9 @@
       <StaticResource x:Key="ComboBoxBorderBrushPointerOver" ResourceKey="PointerOverBorderBrush" />
       <StaticResource x:Key="ComboBoxBorderBrushPressed" ResourceKey="PressedBorderBrush" />
       <StaticResource x:Key="ToggleSwitchContentForeground" ResourceKey="ForegroundBrush" />
-
+      <StaticResource x:Key="ToggleSwitchFillOn" ResourceKey="Button.SelectedBrush" />
+      <StaticResource x:Key="ToggleSwitchFillOnPointerOver" ResourceKey="Button.SelectedHoverBrush" />
+      <StaticResource x:Key="ToggleSwitchFillOnPressed" ResourceKey="Button.SelectedPressedBrush" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

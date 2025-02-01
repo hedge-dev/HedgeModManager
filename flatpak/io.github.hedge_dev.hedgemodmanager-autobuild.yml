@@ -13,10 +13,10 @@ command: /app/bin/HedgeModManager.UI
 
 finish-args:
   - --socket=x11
-  - --filesystem=~/.steam
-  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam
+  - --filesystem=~/.steam/steam
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic
-  - --filesystem=xdg-data
+#  - --filesystem=xdg-data
   - --filesystem=/media
   - --filesystem=/run/media
   - --filesystem=/mnt

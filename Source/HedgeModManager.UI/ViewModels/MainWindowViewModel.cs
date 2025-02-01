@@ -181,6 +181,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 progress.ReportAdd(1);
                 d.Name = Localize("CheckModUpdate", progress.Progress, progress.ProgressMax);
             }
+            d.Destroy();
         }).OnError((d, e) =>
         {
             Logger.Error(e);
