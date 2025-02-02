@@ -15,10 +15,8 @@ finish-args:
   - --socket=x11
   # Create permissions are required for accessing the mod loader, game and for patching game prefixes
   # Steam permissions
-  - --filesystem=~/.steam/steam/steamapps/common:create
-  - --filesystem=~/.steam/steam/steamapps/compatdata:create
-  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps/common:create
-  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps/compatdata:create
+  - --filesystem=~/.steam/steam/steamapps:create
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps:create
   # Heroic permissions
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/GamesConfig:ro
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/legendaryConfig/legendary:ro
