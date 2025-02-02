@@ -55,14 +55,17 @@ public partial class Settings : UserControl
         if (viewModel.CurrentTabInfo != null)
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
-            viewModel.CurrentTabInfo.Buttons.Add(new("Settings.Button.ToggleFullscreen", Buttons.X, (b) =>
+            if (!viewModel.IsGamescope)
             {
-                if (viewModel.WindowState == WindowState.FullScreen)
-                    viewModel.WindowState = WindowState.Normal;
-                else
-                    viewModel.WindowState = WindowState.FullScreen;
-                viewModel.Config.LastWindowState = viewModel.WindowState;
-            }));
+                viewModel.CurrentTabInfo.Buttons.Add(new("Settings.Button.ToggleFullscreen", Buttons.X, (b) =>
+                {
+                    if (viewModel.WindowState == WindowState.FullScreen)
+                        viewModel.WindowState = WindowState.Normal;
+                    else
+                        viewModel.WindowState = WindowState.FullScreen;
+                    viewModel.Config.LastWindowState = viewModel.WindowState;
+                }));
+            }
         }
     }
 

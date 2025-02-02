@@ -1,5 +1,7 @@
 ﻿using HedgeModManager.Text;
+using HedgeModManager.UI.Converters.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace HedgeModManager.UI.Models;
 
@@ -25,8 +27,11 @@ public class ModConfig
         public string DisplayName { get; set; } = "Config Name";
         public string Type { get; set; } = "string";
         public object Value { get; set; } = string.Empty;
+        [JsonConverter(typeof(StringDoubleConverter))]
         public double? MinValue { get; set; }
+        [JsonConverter(typeof(StringDoubleConverter))]
         public double? MaxValue { get; set; }
+        [JsonConverter(typeof(StringDynamicConverter))]
         public dynamic? DefaultValue { get; set; }
 
         public override string ToString() => $"{DisplayName}: {Value}";

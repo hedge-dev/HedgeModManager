@@ -13,10 +13,17 @@ command: /app/bin/HedgeModManager.UI
 
 finish-args:
   - --socket=x11
-  - --filesystem=~/.steam/steam
-  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam
-  - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic
-#  - --filesystem=xdg-data
+  # Create permissions are required for accessing the mod loader, game and for patching game prefixes
+  # Steam permissions
+  - --filesystem=~/.steam/steam/steamapps/common:create
+  - --filesystem=~/.steam/steam/steamapps/compatdata:create
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps/common:create
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps/compatdata:create
+  # Heroic permissions
+  - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/GamesConfig:ro
+  - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/legendaryConfig/legendary:ro
+  - --filesystem=~/Games/Heroic:create
+  # Common locations for game and mod files
   - --filesystem=/media
   - --filesystem=/run/media
   - --filesystem=/mnt

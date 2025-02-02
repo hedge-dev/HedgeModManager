@@ -126,10 +126,36 @@ public class ModdableGameLocator
         var steamGames = steamLocator.Locate();
         var epicGames = epicLocator.Locate();
 
+        if (!string.IsNullOrEmpty(steamLocator.SteamInstallPath))
+        {
+            Logger.Debug($"Found Steam at: {steamLocator.SteamInstallPath}");
+            Logger.Debug("  Supported games:");
+            foreach (var game in steamGames)
+            {
+                if (ModdableGameList.Any(gameinfo => 
+                    gameinfo.PlatformInfos.Any(platformInfo => 
+                    platformInfo.Key == "Steam" && platformInfo.Value.ID == game.ID)))
+                {
+                    Logger.Debug($"    {game.ID} - {game.Root}");
+                }
+            }
+        }
+        else
+        {
+            Logger.Debug("Steam not found!");
+        }
+
         if (epicLocator.HeroicRootPaths.Count > 0)
         {
-            Logger.Debug("Epic Locations: ");
-            epicLocator.HeroicRootPaths.ForEach(Logger.Debug);
+            Logger.Debug("Found Heroic at: ");
+            foreach (var path in epicLocator.HeroicRootPaths)
+            {
+                Logger.Debug($"  {path}");
+            }
+        }
+        else
+        {
+            Logger.Debug("Heroic not found!");
         }
 
         foreach (var gameInfo in ModdableGameList)

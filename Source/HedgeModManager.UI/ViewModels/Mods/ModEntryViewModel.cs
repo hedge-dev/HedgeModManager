@@ -74,8 +74,8 @@ public partial class ModEntryViewModel : ViewModelBase
     }
 
     public string Authors => string.Join(", ", Mod.Authors.Select(x => x.Name));
-    public bool HasConfig => (Mod is ModGeneric modGeneric && !string.IsNullOrEmpty(modGeneric.ConfigSchemaFile));
-    public bool HasSave => false;
+    public bool HasConfig => Mod is ModGeneric modGeneric && !string.IsNullOrEmpty(modGeneric.ConfigSchemaFile);
+    public bool HasSave => Mod is ModGeneric modGeneric && !string.IsNullOrEmpty(modGeneric.SaveFile);
     public bool HasCode => Mod.Codes.Count != 0;
 
     // Preview only

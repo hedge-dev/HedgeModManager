@@ -1,7 +1,7 @@
 ﻿namespace HedgeModManager.Epic;
 using Foundation;
 using System.Text.Json;
-using System.Xml.Linq;
+
 
 public class EpicLocator : IGameLocator
 {

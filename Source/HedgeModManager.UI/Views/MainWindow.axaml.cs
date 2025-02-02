@@ -21,20 +21,13 @@ public partial class MainWindow : Window
 #endif
     }
 
-    private async void Window_Loaded(object? sender, RoutedEventArgs e)
+    public void LoadGames()
     {
         if (ViewModel == null)
             return;
 
-        Logger.Information($"Initialising codes...");
-        CodeProvider.TryLoadRoslyn();
-
-        Logger.Information($"Loading URI handlers...");
-        Program.InstallURIHandler();
-
         Logger.Information($"Locating games...");
         ViewModel.Games = new(Games.GetUIGames(ModdableGameLocator.LocateGames()));
-        //ViewModel.Games = new();
         if (ViewModel.Games.Count == 0)
         {
             Logger.Information($"No games found!");
@@ -58,7 +51,25 @@ public partial class MainWindow : Window
             ViewModel.SelectedTabIndex = 1; // Setup
         ViewModel.IsBusy = false;
 
-        ViewModel.WindowState = ViewModel.Config.LastWindowState;
+        // Enable fullscreen if running in gamescope
+        if (ViewModel.IsGamescope)
+            ViewModel.WindowState = WindowState.FullScreen;
+        else
+            ViewModel.WindowState = ViewModel.Config.LastWindowState;
+    }
+
+    private async void Window_Loaded(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel == null)
+            return;
+
+        Logger.Information($"Initialising codes...");
+        CodeProvider.TryLoadRoslyn();
+
+        Logger.Information($"Loading URI handlers...");
+        Program.InstallURIHandler();
+
+        LoadGames();
 
         if (Program.StartupCommands.Count > 0)
             await ViewModel.ProcessCommands(Program.StartupCommands);
@@ -81,6 +92,7 @@ public partial class MainWindow : Window
     private async void OnKeyDown(object? sender, KeyEventArgs e)
     {
         bool toggleFullscreen = e.KeyModifiers == KeyModifiers.Alt && e.Key == Key.Enter;
+        bool isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
         if (ViewModel == null)
             return;
 
@@ -91,14 +103,36 @@ public partial class MainWindow : Window
                 Logger.Debug($"Set test mode to {ViewModel.Config.TestModeEnabled}");
                 break;
             case Key.F5:
-                if (ViewModel.SelectedGame != null)
-                    await ViewModel.SelectedGame.Game.InitializeAsync();
-                ViewModel.RefreshUI();
-                Logger.Debug($"Refreshed game");
-                break;
-            case Key.F6:
-                ViewModel.RefreshGame();
-                Logger.Debug($"Reloaded game");
+
+                // Reload if holding shift
+                if (isShift)
+                {
+                    if (ViewModel.IsBusy)
+                        break;
+
+                    ViewModel.SelectedTabIndex = 0; // Loading
+
+                    ViewModel.Modals.Clear();
+                    ViewModel.IsBusy = true;
+
+                    Logger.Information($"Locating loading config...");
+                    await ViewModel.Config.LoadAsync();
+
+                    Logger.Information($"Loading URI handlers...");
+                    Program.InstallURIHandler();
+
+                    LoadGames();
+                    ViewModel.IsBusy = false;
+
+                    Logger.Debug($"Reloaded");
+                }
+                else
+                {
+                    if (ViewModel.SelectedGame != null)
+                        await ViewModel.SelectedGame.Game.InitializeAsync();
+                    ViewModel.RefreshUI();
+                    Logger.Debug($"Refreshed game");
+                }
                 break;
             case Key.F11:
                 toggleFullscreen = true;

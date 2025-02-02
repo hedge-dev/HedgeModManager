@@ -32,6 +32,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public int ServerStatus { get; set; } = 1;
     public CancellationTokenSource ServerCancellationTokenSource { get; set; } = new();
     public bool IsFullscreen => WindowState == WindowState.FullScreen;
+    public bool IsGamescope { get; set; }
 
     private ModProfile _lastSelectedProfile = ModProfile.Default;
 

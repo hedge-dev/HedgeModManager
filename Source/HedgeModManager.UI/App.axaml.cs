@@ -87,7 +87,8 @@ public partial class App : Application
 
             var languages = GetLanguages();
             var viewModel = new MainWindowViewModel(new UILogger(), languages);
-            
+            viewModel.IsGamescope = Environment.GetEnvironmentVariable("XDG_CURRENT_DESKTOP") == "gamescope";
+
             MainWindow = desktop.MainWindow = new MainWindow
             {
                 DataContext = viewModel,
