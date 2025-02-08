@@ -134,8 +134,6 @@ public class CSharpCode : ICode
                         var tokens = BasicLexer.ParseTokens(line.AsMemory(), x => !x.IsKind(SyntaxTokenKind.WhitespaceTrivia)).ToList();
                         currentCode.Header = tokens;
                         currentCode.Name = tokens[1].ValueOrText().ToString();
-                        if (string.IsNullOrEmpty(currentCode.ID))
-                            currentCode.ID = currentCode.Name;
 
                         for (int i = 2; i < tokens.Count; i++)
                         {
