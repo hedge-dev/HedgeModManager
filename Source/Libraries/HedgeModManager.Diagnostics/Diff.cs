@@ -35,9 +35,12 @@ public class Diff
         MakeBlock(DiffType.Added, description);
     }
 
-    public void Modified(string? description, object oldData = null, object newData = null)
+    public void Modified(string? description, object? oldData = null, object? newData = null)
     {
-        MakeBlock(DiffType.Modified, description, oldData ?? newData, newData ?? oldData);
+        if (oldData == null || newData == null)
+            MakeBlock(DiffType.Modified, description);
+        else
+            MakeBlock(DiffType.Modified, description, oldData, newData);
     }
 
     public void Removed(string? description)

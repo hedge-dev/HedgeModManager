@@ -5,7 +5,7 @@ using Foundation;
 
 public class SteamLocator : IGameLocator
 {
-    private string? mSteamPath;
+    public string? SteamInstallPath { get; protected set; }
 
     [SupportedOSPlatform("windows")]
     private string? FindSteamLibraryWindows()
@@ -27,25 +27,38 @@ public class SteamLocator : IGameLocator
 
     private string? FindSteamLibraryUnix()
     {
-        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam", "steam");
-        return Directory.Exists(path) ? path : null;
+        var pathList = new[]
+        {
+            Path.Combine(".steam", "steam"),
+            Path.Combine(".var", "app", "com.valvesoftware.Steam", ".steam", "steam"),
+            Path.Combine("snap", "steam", "common", ".steam", "steam"),
+        };
+
+        foreach (string path in pathList)
+        {
+            string steamPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), path);
+            // Due to lack of permissions with flatpak, we will check for a file we need
+            if (File.Exists(Path.Combine(steamPath, "steamapps", "libraryfolders.vdf")))
+                return steamPath;
+        }
+        return null;
     }
 
     public string? FindDefaultSteamLibrary()
     {
-        if (mSteamPath == null)
+        if (SteamInstallPath == null)
         {
             if (OperatingSystem.IsWindows())
             {
-                mSteamPath = FindSteamLibraryWindows();
-                return mSteamPath;
+                SteamInstallPath = FindSteamLibraryWindows();
+                return SteamInstallPath;
             }
 
-            mSteamPath = FindSteamLibraryUnix();
-            return mSteamPath;
+            SteamInstallPath = FindSteamLibraryUnix();
+            return SteamInstallPath;
         }
 
-        return mSteamPath;
+        return SteamInstallPath;
     }
 
     public List<SteamGame> Locate()
@@ -94,7 +107,8 @@ public class SteamLocator : IGameLocator
                         {
                             ID = appid,
                             Name = name,
-                            Root = root
+                            Root = root,
+                            PrefixRoot = Path.Combine(library, "steamapps", "compatdata", appid, "pfx")
                         });
                     }
                 }

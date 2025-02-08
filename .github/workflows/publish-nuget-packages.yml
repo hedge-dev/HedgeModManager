@@ -1,0 +1,34 @@
+name: Publish NuGet Packages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Source/HedgeModManager/Libraries/**'
+
+jobs:
+  publish:
+    name: Publish Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Pack Libraries
+        working-directory: ./Source/HedgeModManager/Libraries
+        run: dotnet pack -c Release
+        
+      - name: Publish Packages
+        working-directory: ./Source
+        run: dotnet nuget push **/*.nupkg -s $NUGET_SOURCE -k $NUGET_AUTH_TOKEN --skip-duplicate
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
+          NUGET_SOURCE: https://api.nuget.org/v3/index.json

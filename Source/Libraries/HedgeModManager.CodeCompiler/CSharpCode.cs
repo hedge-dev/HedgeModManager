@@ -134,6 +134,8 @@ public class CSharpCode : ICode
                         var tokens = BasicLexer.ParseTokens(line.AsMemory(), x => !x.IsKind(SyntaxTokenKind.WhitespaceTrivia)).ToList();
                         currentCode.Header = tokens;
                         currentCode.Name = tokens[1].ValueOrText().ToString();
+                        if (string.IsNullOrEmpty(currentCode.ID))
+                            currentCode.ID = currentCode.Name;
 
                         for (int i = 2; i < tokens.Count; i++)
                         {
@@ -142,6 +144,12 @@ public class CSharpCode : ICode
                             if (text.Span.Equals("naked".AsSpan(), StringComparison.OrdinalIgnoreCase))
                             {
                                 currentCode.Naked = true;
+                            }
+
+                            if (text.Span.Equals("id".AsSpan(), StringComparison.OrdinalIgnoreCase))
+                            {
+                                i++;
+                                currentCode.ID = tokens[i].ValueOrText().ToString();
                             }
 
                             if (text.Span.Equals("in".AsSpan(), StringComparison.OrdinalIgnoreCase))
@@ -208,6 +216,18 @@ public class CSharpCode : ICode
             }
 
             return string.Empty;
+        }
+    }
+
+    public string GetFullName()
+    {
+        if (string.IsNullOrEmpty(Category))
+        {
+            return Name;
+        }
+        else
+        {
+            return $"{Category}/{Name}";
         }
     }
 
