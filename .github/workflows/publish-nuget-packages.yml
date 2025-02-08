@@ -19,7 +19,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Pack Libraries
-        working-directory: Source/HedgeModManager/Libraries
+        working-directory: Source/Libraries
         run: dotnet pack -c Release
         
       - name: Publish Packages
