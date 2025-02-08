@@ -19,11 +19,11 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Pack Libraries
-        working-directory: ./Source/HedgeModManager/Libraries
+        working-directory: Source/HedgeModManager/Libraries
         run: dotnet pack -c Release
         
       - name: Publish Packages
-        working-directory: ./Source
+        working-directory: Source
         run: dotnet nuget push **/*.nupkg -s $NUGET_SOURCE -k $NUGET_AUTH_TOKEN --skip-duplicate
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
