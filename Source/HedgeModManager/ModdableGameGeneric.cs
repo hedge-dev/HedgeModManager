@@ -1,56 +1,102 @@
 ﻿namespace HedgeModManager;
 using Foundation;
-using Text;
+using HedgeModManager.IO;
+using HedgeModManager.Properties;
 
 public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, IModdableGameTConfiguration<ModLoaderConfiguration>
 {
-    public string Platform { get; }
-    public string ID { get; }
-    public string Name { get; }
-    public string Root { get; init; }
-    public string? Executable { get; init; }
-    public string ModLoaderName { get; init; } = "Unknown";
-    public string ModLoaderFileName { get; init; } = string.Empty;
+    public IGame BaseGame { get; }
+
+    public string Platform => BaseGame.Platform;
+    public string ID => BaseGame.ID;
+    public string Name { get; set; }
+    public string Root { get; set; }
+    public string? Executable { get; set; }
+    public string DefaultDatabaseDirectory { get; set; } = "mods";
+    public string ModLoaderName { get; init; } = "None";
+    public string NativeOS { get; set; } = "Windows";
+    public string? PrefixRoot => BaseGame.PrefixRoot;
+    public bool SupportsDirectLaunch { get; set; }
+    public bool SupportsLauncher { get; set; }
+    public bool Is64Bit { get; set; } = true;
+    public string? LaunchCommand { get; set; } = null;
     public ModDatabaseGeneric ModDatabase { get; } = new ModDatabaseGeneric();
     public ModLoaderConfiguration ModLoaderConfiguration { get; set; } = new ModLoaderConfiguration();
+    public ModLoaderGeneric? ModLoader { get; set; }
 
     public ModdableGameGeneric(IGame game)
     {
-        Platform = game.Platform;
-        ID = game.ID;
+        BaseGame = game;
         Name = game.Name;
         Root = game.Root;
         Executable = game.Executable;
+        SupportsDirectLaunch = game.SupportsDirectLaunch;
+        SupportsLauncher = game.SupportsLauncher;
     }
 
-    public Task InitializeAsync()
+    public async Task DownloadCodes(string? url)
+    {
+        url ??= Resources.CommunityCodesURL;
+        if (url.EndsWith('/'))
+            url += $"{Name}.hmm";
+
+        string contents = await Network.Client.GetStringAsync(url);
+        string modsRoot = PathEx.GetDirectoryName(ModLoaderConfiguration.DatabasePath).ToString();
+
+        Directory.CreateDirectory(modsRoot);
+        File.WriteAllText(Path.Combine(modsRoot, ModDatabaseGeneric.MainCodesFileName), contents);
+    }
+
+    public async Task InitializeAsync()
     {
         try
         {
             // TODO: Change this
-            ModLoaderConfiguration.Parse(Ini.FromFile(Path.Combine(Root, "cpkredir.ini")));
+            await ModLoaderConfiguration.Load(Path.Combine(Root, "cpkredir.ini"));
+            string directory = PathEx.GetDirectoryName(ModLoaderConfiguration.DatabasePath).ToString();
+            if (!Directory.Exists(directory))
+            {
+                ModLoaderConfiguration.DatabasePath = string.Empty;
+            }
         }
         catch
         {
-            ModLoaderConfiguration.DatabasePath = Path.Combine(Root, "Mods", ModDatabaseGeneric.DefaultDatabaseName);
+            ModLoaderConfiguration.DatabasePath = string.Empty;
+        }
+
+        if (string.IsNullOrEmpty(ModLoaderConfiguration.DatabasePath))
+        {
+            ModLoaderConfiguration.DatabasePath = Path.Combine(Root, DefaultDatabaseDirectory, ModDatabaseGeneric.DefaultDatabaseName);
         }
 
         ModDatabase.LoadDatabase(ModLoaderConfiguration.DatabasePath);
-        return Task.CompletedTask;
     }
 
-    public Task<bool> InstallModLoaderAsync()
+    public async Task<bool> InstallModLoaderAsync()
     {
-        return Task.FromResult(false);
+        if (ModLoader != null)
+        {
+            if (ModLoader.IsInstalled())
+            {
+                return await ModLoader.UninstallAsync();
+            }
+            else
+            {
+                return await ModLoader.InstallAsync();
+            }
+        }
+        return true;
     }
 
     public bool IsModLoaderInstalled()
     {
-        if (string.IsNullOrEmpty(ModLoaderFileName))
+        if (ModLoader != null)
         {
-            return false;
+            return ModLoader.IsInstalled();
         }
-
-        return File.Exists(Path.Combine(Root, ModLoaderFileName));
+        return true;
     }
+
+    public async Task Run(string? launchArgs, bool useLauncher) =>
+        await BaseGame.Run(launchArgs, useLauncher);
 }

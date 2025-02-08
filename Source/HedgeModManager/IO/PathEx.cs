@@ -35,4 +35,10 @@ public static class PathEx
         }
         return GetFileName(text[..index]);
     }
+
+    public static string CleanFileName(string text)
+    {
+        var invalidChars = Path.GetInvalidFileNameChars();
+        return new(text.Select(c => invalidChars.Contains(c) ? '_' : c).ToArray());
+    }
 }
