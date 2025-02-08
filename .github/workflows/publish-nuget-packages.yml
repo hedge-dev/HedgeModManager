@@ -1,11 +1,7 @@
 name: Publish NuGet Packages
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'Source/HedgeModManager/Libraries/**'
+  workflow_dispatch:
 
 jobs:
   publish:
