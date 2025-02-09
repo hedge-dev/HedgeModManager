@@ -71,7 +71,7 @@
           <c:SidebarButton Type="Normal" Click="OnRunClicked" Icon="{DynamicResource Geometry.Play}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
         </StackPanel>
         <TextBlock Text="{Binding AppVersion}"
-                   Margin="0,16,0,0" TextWrapping="Wrap"
+                   Margin="16,16,16,0" TextWrapping="Wrap"
                    TextAlignment="Center"
                    HorizontalAlignment="Center" />
       </StackPanel>

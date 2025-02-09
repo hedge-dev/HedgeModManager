@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using HedgeModManager.UI.Events;
 using static HedgeModManager.UI.Languages.Language;
 
@@ -50,6 +51,12 @@ public partial class MessageBoxModal : WindowModal
         button.Click += handler;
 
         ButtonStackPanel.Children.Add(button);
+        return this;
+    }
+
+    public MessageBoxModal SetDanger()
+    {
+        AltBackgroundColor = Color.FromArgb(0x7F, 0x50, 0, 0);
         return this;
     }
 }

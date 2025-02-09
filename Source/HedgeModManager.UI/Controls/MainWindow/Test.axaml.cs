@@ -206,8 +206,7 @@ public partial class Test : UserControl
 
     private async void ExportLog_Click(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is MainWindowViewModel viewModel)
-            await MainWindowViewModel.ExportLog(this);
+        await MainWindowViewModel.ExportLog(this);
     }
 
     private void CreateDownload_Click(object? sender, RoutedEventArgs e)

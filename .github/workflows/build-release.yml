@@ -6,7 +6,11 @@ on:
       version: 
         description: 'Version to build'
         required: true
-        default: '8.0.0.1'
+        default: '8.0.0.0'
+      prerelease:
+        description: 'Prerelease'
+        required: true
+        type: boolean
 
 env:
   PROJECT_PATH: ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj
@@ -73,8 +77,6 @@ jobs:
         run: flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{ env.FLATPAK_ID }}-autobuild.yml
 
       - name: Build Flatpak Bundle
-        env:
-          APP_VERSION: ${{ github.event.inputs.version }}
         run: flatpak build-bundle repo ./flatpak/${{env.FLATPAK_ID}}.flatpak ${{env.FLATPAK_ID}}
 
       - name: Prepare Release
@@ -89,6 +91,7 @@ jobs:
           files: |
             ./release/*
           draft: true
+          prerelease: ${{ github.event.inputs.prerelease }}
           name: Hedge Mod Manager ${{ github.event.inputs.version }}
           tag_name: ${{ github.event.inputs.version }}
           body: |

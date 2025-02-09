@@ -14,6 +14,7 @@ env:
   DOTNET_VERSION: 8
   DOTNET_CLI_HOME: /tmp/.dotnet
   FREEDESKTOP_VERSION: 24.08
+  APP_VERSION: 8.0.0.${{github.run_number}}
 
 jobs:
   build:
@@ -46,7 +47,7 @@ jobs:
         run: dotnet restore ${{ env.PROJECT_PATH }}
 
       - name: ${{ matrix.rid }} Build
-        run: dotnet publish -p:PublishProfile=${{ matrix.rid }} -c Release -o ./output/${{ matrix.rid }} ${{ env.PROJECT_PATH }}
+        run: dotnet publish -p:DefineConstants=AUTOBUILD -p:PublishProfile=${{ matrix.rid }} -c Release -o ./output/${{ matrix.rid }} ${{ env.PROJECT_PATH }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -88,8 +89,6 @@ jobs:
           python3 flatpak-dotnet-generator.py ./flatpak/nuget-sources.json ${{env.PROJECT_PATH}} --dotnet ${{env.DOTNET_VERSION}} --freedesktop ${{env.FREEDESKTOP_VERSION}}
 
       - name: Build Flatpak
-        env:
-          APP_VERSION: ${{ github.event.inputs.version }}
         run: flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{ env.FLATPAK_ID }}-autobuild.yml
 
       - name: Build Flatpak Bundle

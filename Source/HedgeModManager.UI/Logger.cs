@@ -47,12 +47,12 @@ public partial class UILogger : ObservableObject, ILogger
     public class Log
     {
         public LogType Type { get; set; }
-        public DateTime DateTime { get; set; } = DateTime.Now;
+        public DateTime DateTime { get; set; }
         public string Message { get; set; } = string.Empty;
 
         public Log()
         {
-            DateTime = DateTime.Now;
+            DateTime = DateTime.UtcNow;
         }
 
         public Log(LogType type, string message) : this()

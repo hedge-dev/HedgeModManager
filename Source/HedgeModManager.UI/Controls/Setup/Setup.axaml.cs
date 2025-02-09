@@ -25,6 +25,11 @@ public partial class Setup : UserControl
         if (viewModel.CurrentTabInfo != null)
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
+            // TODO: Make a proper welcome screen
+            viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Save Log File", Buttons.Y, async (b) =>
+            {
+                await MainWindowViewModel.ExportLog(this);
+            }));
             viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Common.Button.Back", Buttons.B, (b) =>
             {
                 MainTabControl.SelectedIndex--;
@@ -46,6 +51,12 @@ public partial class Setup : UserControl
                 MainTabControl.SelectedIndex++;
             }));
         }
+    }
+
+    private async void ExportLog_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+            await MainWindowViewModel.ExportLog(this);
     }
 
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)

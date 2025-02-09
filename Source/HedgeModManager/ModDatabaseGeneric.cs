@@ -52,10 +52,25 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         {
             if (code.Enabled)
             {
-                enabledCodes.Add(code.ID);
+                if (!string.IsNullOrEmpty(code.ID))
+                {
+                    enabledCodes.Add(code.ID);
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(code.Category))
+                    {
+                        enabledCodes.Add($"{code.Category}/{code.Name}");
+                    }
+                    else
+                    {
+                        enabledCodes.Add(code.Name);
+                    }
+                }
             }
         }
 
+        mainSection.Set("ManifestVersion", 1.1);
         mainSection.Set("ReverseLoadOrder", 1);
         mainSection.SetList("ActiveMod", enabledMods);
         mainSection.SetList("FavoriteMod", favoriteMods);

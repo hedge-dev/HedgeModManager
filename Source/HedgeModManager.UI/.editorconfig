@@ -1,0 +1,14 @@
+root = true
+
+[*.cs]
+# Basic rules
+trim_trailing_whitespace = true
+
+# Indentation rules
+indent_style = space
+indent_size = 4
+
+# New line rules
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+insert_final_newline = false:none

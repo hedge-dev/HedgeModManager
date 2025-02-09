@@ -12,12 +12,8 @@
               SelectionChanged="OnSelectionChanged">
     <TabItem Header="Welcome">
       <StackPanel Margin="16,16,0,0">
-        <TextBlock Margin="5">Welcome</TextBlock>
-      </StackPanel>
-    </TabItem>
-    <TabItem Header="Games">
-      <StackPanel Margin="16,16,0,0">
-        <TextBlock Margin="5">Welcome 2</TextBlock>
+        <TextBlock Margin="5">No games found!</TextBlock>
+        <TextBlock Margin="5">Press Save Log File</TextBlock>
       </StackPanel>
     </TabItem>
     <TabControl.Styles>

@@ -101,6 +101,7 @@ public partial class ModInfoModal : WindowModal
         {
             viewModel.Modals.RemoveAt(viewModel.Modals.Count - 1);
         });
+        modal.SetDanger();
 
         modal.Open(viewModel);
     }

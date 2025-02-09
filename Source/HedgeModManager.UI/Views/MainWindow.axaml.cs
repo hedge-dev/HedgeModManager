@@ -115,7 +115,7 @@ public partial class MainWindow : Window
                     ViewModel.Modals.Clear();
                     ViewModel.IsBusy = true;
 
-                    Logger.Information($"Locating loading config...");
+                    Logger.Information($"Loading config...");
                     await ViewModel.Config.LoadAsync();
 
                     Logger.Information($"Loading URI handlers...");

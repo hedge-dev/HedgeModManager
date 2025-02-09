@@ -7,20 +7,16 @@
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="150"
              x:Class="HedgeModManager.UI.Controls.Modal">
   <Grid>
-    <Border Background="Black" Opacity="0.5"
-            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            PointerPressed="OnPointerPressed">
-      <Border.Transitions>
-        <Transitions>
-          <DoubleTransition Property="Opacity" Duration="0:0:0.5"/>
-        </Transitions>
-        </Border.Transitions>
-        <Border.Styles>
-        <Style Selector="Border">
-          <Setter Property="Opacity" Value="0.9"/>
-        </Style>
-      </Border.Styles>
-    </Border>
+    <Rectangle HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               PointerPressed="OnPointerPressed">
+      <Rectangle.Fill>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+          <GradientStop Color="#7F000000" Offset="0.3" />
+          <GradientStop Color="{Binding AltBackgroundColor, RelativeSource={RelativeSource AncestorType=c:Modal}}" Offset="1" />
+        </LinearGradientBrush>
+      </Rectangle.Fill>
+    </Rectangle>
     <Border Background="{DynamicResource Modal.BackgroundBrush}"
             BorderBrush="{DynamicResource Modal.BorderBrush}"
             BorderThickness="1" CornerRadius="20"

@@ -1,8 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using HedgeModManager.UI.ViewModels;
 
 namespace HedgeModManager.UI.Controls.Modals;
@@ -23,6 +25,10 @@ public partial class WindowModal : UserControl
 
     public static readonly StyledProperty<object?> ButtonsProperty =
         AvaloniaProperty.Register<WindowModal, object?>(nameof(Buttons));
+
+    public static readonly StyledProperty<Color> AltBackgroundColorProperty =
+        AvaloniaProperty.Register<Modal, Color>(nameof(AltBackgroundColor),
+            Color.FromArgb(0x7F, 0, 0, 0));
 
     public string Title
     {
@@ -54,6 +60,12 @@ public partial class WindowModal : UserControl
         set => SetValue(ButtonsProperty, value);
     }
 
+    public Color AltBackgroundColor
+    {
+        get => GetValue(AltBackgroundColorProperty);
+        set => SetValue(AltBackgroundColorProperty, value);
+    }
+
     public WindowModal()
     {
         AvaloniaXamlLoader.Load(this);
@@ -69,6 +81,11 @@ public partial class WindowModal : UserControl
     public void Open(MainWindowViewModel viewModel)
     {
         Modal baseModal = new(this, new Thickness(0));
+        baseModal.Bind(Modal.AltBackgroundColorProperty, new Binding(nameof(AltBackgroundColor))
+        {
+            Source = this,
+            Mode = BindingMode.TwoWay
+        });
         if (LargeWindow)
         {
             baseModal.SizeChanged += (object? sender, SizeChangedEventArgs e) =>

@@ -179,15 +179,15 @@ public sealed class Program
 
     public static string GetFormattedAppVersion()
     {
-        var version = GetAppVersion();
+        string unstableType = "beta";
+#if AUTOBUILD
+        unstableType = "dev";
+#endif
+
+        var version = Assembly.GetExecutingAssembly().GetName().Version ?? Version.Parse("0");
         if (version.Revision == 0)
             return $"{version.Major}.{version.Minor}.{version.Build}";
-        return $"{version.Major}.{version.Minor}.{version.Build}-beta{version.Revision}";
-    }
-
-    public static Version GetAppVersion()
-    {
-        return Assembly.GetExecutingAssembly().GetName().Version ?? Version.Parse("0");
+        return $"{version.Major}.{version.Minor}.{version.Build} {unstableType} {version.Revision}";
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

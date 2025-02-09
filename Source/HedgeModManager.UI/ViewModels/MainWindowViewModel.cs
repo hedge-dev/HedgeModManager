@@ -77,6 +77,7 @@ public partial class MainWindowViewModel : ViewModelBase
             LastLog = lastLog == null ? "" : lastLog.Message;
         };
         Logger.Information($"Starting HedgeModManager {AppVersion}...");
+        Logger.Information($"Startup Date: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} (UTC)");
         Logger.Debug($"IsWindows: {OperatingSystem.IsWindows()}");
         Logger.Debug($"IsLinux: {OperatingSystem.IsLinux()}");
         Logger.Debug($"RID: {RuntimeInformation.RuntimeIdentifier}");
@@ -586,6 +587,7 @@ public partial class MainWindowViewModel : ViewModelBase
             await ExportLog(messageBox);
             messageBox.Close();
         });
+        messageBox.SetDanger();
         messageBox.Open(this);
     }
 
