@@ -6,6 +6,7 @@ using HedgeModManager.CodeCompiler;
 using HedgeModManager.UI.ViewModels;
 using Avalonia.Markup.Xaml;
 using Avalonia;
+using HedgeModManager.UI.Input;
 
 namespace HedgeModManager.UI.Views;
 
@@ -58,7 +59,7 @@ public partial class MainWindow : Window
             ViewModel.WindowState = ViewModel.Config.LastWindowState;
     }
 
-    private async void Window_Loaded(object? sender, RoutedEventArgs e)
+    private void Window_Loaded(object? sender, RoutedEventArgs e)
     {
         if (ViewModel == null)
             return;
@@ -71,11 +72,12 @@ public partial class MainWindow : Window
 
         LoadGames();
 
-        if (Program.StartupCommands.Count > 0)
-            await ViewModel.ProcessCommands(Program.StartupCommands);
-
-        _ = Dispatcher.UIThread.InvokeAsync(ViewModel.StartServer);
-        await ViewModel.OnStartUp();
+        _ = Dispatcher.UIThread.Invoke(async () =>
+        {
+            if (Program.StartupCommands.Count > 0)
+                await ViewModel.ProcessCommandsAsync(Program.StartupCommands);
+            await ViewModel.OnStartUpAsync();
+        });
 
         AddHandler(DragDrop.DropEvent, OnDrop);
         AddHandler(DragDrop.DragOverEvent, OnDragOver);
@@ -89,10 +91,11 @@ public partial class MainWindow : Window
         ViewModel.CurrentTabInfo = ViewModel.TabInfos[ViewModel.SelectedTabIndex];
     }
 
-    private async void OnKeyDown(object? sender, KeyEventArgs e)
+    private void OnKeyDown(object? sender, KeyEventArgs e)
     {
         bool toggleFullscreen = e.KeyModifiers == KeyModifiers.Alt && e.Key == Key.Enter;
         bool isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        bool isAlt = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
         if (ViewModel == null)
             return;
 
@@ -116,7 +119,7 @@ public partial class MainWindow : Window
                     ViewModel.IsBusy = true;
 
                     Logger.Information($"Loading config...");
-                    await ViewModel.Config.LoadAsync();
+                    _ = Dispatcher.UIThread.Invoke(ViewModel.Config.LoadAsync);
 
                     Logger.Information($"Loading URI handlers...");
                     Program.InstallURIHandler();
@@ -129,7 +132,7 @@ public partial class MainWindow : Window
                 else
                 {
                     if (ViewModel.SelectedGame != null)
-                        await ViewModel.SelectedGame.Game.InitializeAsync();
+                        _ = Dispatcher.UIThread.Invoke(ViewModel.SelectedGame.Game.InitializeAsync);
                     ViewModel.RefreshUI();
                     Logger.Debug($"Refreshed game");
                 }
@@ -138,6 +141,56 @@ public partial class MainWindow : Window
                 toggleFullscreen = true;
                 break;
             default:
+                if (ViewModel.Config.TestKeyboardInput)
+                {
+                    var button = Buttons.None;
+
+                    switch (e.Key)
+                    {
+                        case Key.Left:
+                            if (isShift)
+                                button = Buttons.X;
+                            else if (isAlt)
+                                button = Buttons.LB;
+                            else
+                                button = Buttons.Left;
+                            break;
+                        case Key.Right:
+                            if (isShift)
+                                button = Buttons.B;
+                            else if (isAlt)
+                                button = Buttons.RB;
+                            else
+                                button = Buttons.Right;
+                            break;
+                        case Key.Up:
+                            if (isShift)
+                                button = Buttons.Y;
+                            else
+                                button = Buttons.Up;
+                            break;
+                        case Key.Down:
+                            if (isShift)
+                                button = Buttons.A;
+                            else
+                                button = Buttons.Down;
+                            break;
+                        case Key.Enter:
+                            if (isShift)
+                                button = Buttons.Start;
+                            else
+                                button = Buttons.A;
+                            break;
+                        case Key.Back:
+                            button = Buttons.Back;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (button != Buttons.None)
+                        _ = Dispatcher.UIThread.Invoke(async () => await ViewModel.OnInputDownAsync(button));
+                }
                 break;
         }
 

@@ -40,9 +40,19 @@ public class LinuxCompatibility
 
                 if (entry.FullName.EndsWith('/'))
                 {
-                    if (!Directory.Exists(destinationPath))
+                    // Untested, tests from HMM 7 to 8 is needed
+                    if (Directory.Exists(path) || File.Exists(path))
                     {
-                        Directory.CreateDirectory(destinationPath);
+                        var attributes = new FileInfo(path).Attributes;
+                        if (attributes.HasFlag(FileAttributes.ReparsePoint))
+                        {
+                            Logger.Debug($"Symlink detected, unlinking \"{path}\"");
+                            File.Delete(path);
+                        }
+                        else
+                        {
+                            Directory.Delete(path, true);
+                        }
                     }
                     continue;
                 }

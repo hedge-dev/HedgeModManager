@@ -1,6 +1,6 @@
 ﻿namespace HedgeModManager.UI;
 
-public enum Buttons
+public enum ButtonsOLD
 {
     A,
     B,

@@ -12,23 +12,23 @@ public partial class FooterButton : ButtonUserControl
     public static readonly StyledProperty<Geometry> IconProperty =
         AvaloniaProperty.Register<FooterButton, Geometry>(nameof(Icon));
 
-    public static readonly StyledProperty<Buttons> ButtonProperty =
-        AvaloniaProperty.Register<FooterButton, Buttons>(nameof(Button));
+    public static readonly StyledProperty<ButtonsOLD> ButtonProperty =
+        AvaloniaProperty.Register<FooterButton, ButtonsOLD>(nameof(Button));
 
-    public static Dictionary<Buttons, string> ButtonMappingXbox = new()
+    public static Dictionary<ButtonsOLD, string> ButtonMappingXbox = new()
     {
-        { Buttons.A, "Geometry.A" },
-        { Buttons.B, "Geometry.B" },
-        { Buttons.X, "Geometry.X" },
-        { Buttons.Y, "Geometry.Y" },
+        { ButtonsOLD.A, "Geometry.A" },
+        { ButtonsOLD.B, "Geometry.B" },
+        { ButtonsOLD.X, "Geometry.X" },
+        { ButtonsOLD.Y, "Geometry.Y" },
     };
 
-    public static Dictionary<Buttons, string> ButtonMappingPS = new()
+    public static Dictionary<ButtonsOLD, string> ButtonMappingPS = new()
     {
-        { Buttons.A, "Geometry.PSCross" },
-        { Buttons.B, "Geometry.PSCircle" },
-        { Buttons.X, "Geometry.PSSquare" },
-        { Buttons.Y, "Geometry.PSTriangle" },
+        { ButtonsOLD.A, "Geometry.PSCross" },
+        { ButtonsOLD.B, "Geometry.PSCircle" },
+        { ButtonsOLD.X, "Geometry.PSSquare" },
+        { ButtonsOLD.Y, "Geometry.PSTriangle" },
     };
 
     public Geometry Icon
@@ -37,7 +37,7 @@ public partial class FooterButton : ButtonUserControl
         set => SetValue(IconProperty, value);
     }
 
-    public Buttons Button
+    public ButtonsOLD Button
     {
         get => GetValue(ButtonProperty);
         set => SetValue(ButtonProperty, value);

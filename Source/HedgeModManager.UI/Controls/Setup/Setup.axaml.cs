@@ -26,17 +26,17 @@ public partial class Setup : UserControl
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
             // TODO: Make a proper welcome screen
-            viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Save Log File", Buttons.Y, async (b) =>
+            viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Save Log File", ButtonsOLD.Y, async (b) =>
             {
-                await MainWindowViewModel.ExportLog(this);
+                await MainWindowViewModel.ExportLogAsync(this);
             }));
-            viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Common.Button.Back", Buttons.B, (b) =>
+            viewModel.CurrentTabInfo.Buttons.Add(BackButton = new("Common.Button.Back", ButtonsOLD.B, (b) =>
             {
                 MainTabControl.SelectedIndex--;
             }, MainTabControl.SelectedIndex != 0));
             string nextButtonName = MainTabControl.SelectedIndex == MainTabControl.ItemCount - 1 ?
                 "Common.Button.Finish" : "Common.Button.Next";
-            viewModel.CurrentTabInfo.Buttons.Add(NextButton = new(nextButtonName, Buttons.A, async (b) =>
+            viewModel.CurrentTabInfo.Buttons.Add(NextButton = new(nextButtonName, ButtonsOLD.A, async (b) =>
             {
                 if (MainTabControl.SelectedIndex == MainTabControl.ItemCount - 1)
                 {
@@ -46,7 +46,7 @@ public partial class Setup : UserControl
                         viewModel.Config.IsSetupCompleted = true;
                         viewModel.SelectedTabIndex = 2;
                     }
-                    await viewModel.Save(false);
+                    await viewModel.SaveAsync(false);
                 }
                 MainTabControl.SelectedIndex++;
             }));
@@ -56,7 +56,7 @@ public partial class Setup : UserControl
     private async void ExportLog_Click(object? sender, RoutedEventArgs e)
     {
         if (DataContext is MainWindowViewModel viewModel)
-            await MainWindowViewModel.ExportLog(this);
+            await MainWindowViewModel.ExportLogAsync(this);
     }
 
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)

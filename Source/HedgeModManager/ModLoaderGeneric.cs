@@ -108,15 +108,9 @@ public class ModLoaderGeneric : IModLoader
             }
         }
 
-        string path = GetInstallPath();
-        if (await Download(null, path))
+        string path = GetCachePath();
+        if (!await Download(null, path))
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(GetCachePath())!);
-            File.Copy(path, GetCachePath(), true);
-        }
-        else
-        {
-            path = GetCachePath();
             if (!File.Exists(path))
             {
                 Logger.Error($"No mod loader found in cache!");
@@ -162,7 +156,7 @@ public class ModLoaderGeneric : IModLoader
         {
             if (path != GetInstallPath())
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                Directory.CreateDirectory(Path.GetDirectoryName(GetInstallPath())!);
                 File.Copy(path, GetInstallPath(), true);
             }
         }

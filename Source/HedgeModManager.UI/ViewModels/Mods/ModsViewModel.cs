@@ -11,6 +11,7 @@ namespace HedgeModManager.UI.ViewModels.Mods
         [ObservableProperty] private bool _showCode = false;
         [ObservableProperty] private bool _showFavorite = false;
         [ObservableProperty] private string? _centerText = "Mods.Text.Loading";
+        [ObservableProperty] private int _selectedModIndex = -1;
 
         public ObservableCollection<string> Authors { get; set; } = [];
         public ObservableCollection<ModEntryViewModel> ModsList { get; set; } = [];
@@ -65,6 +66,17 @@ namespace HedgeModManager.UI.ViewModels.Mods
                     }
                 }
                 UpdateText();
+            }
+
+            if (e.PropertyName == nameof(SelectedModIndex))
+            {
+                var selectedMod = ModsList.Where(x => x.IsVisible).Skip(SelectedModIndex).FirstOrDefault();
+                if (selectedMod != null)
+                {
+                    int index = ModsList.IndexOf(selectedMod);
+                    for (int i = 0; i < ModsList.Count; i++)
+                        ModsList[i].IsSelected = i == SelectedModIndex;
+                }
             }
             base.OnPropertyChanged(e);
         }

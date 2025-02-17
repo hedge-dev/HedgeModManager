@@ -57,7 +57,7 @@ public partial class Settings : UserControl
             viewModel.CurrentTabInfo.Buttons.Clear();
             if (!viewModel.IsGamescope)
             {
-                viewModel.CurrentTabInfo.Buttons.Add(new("Settings.Button.ToggleFullscreen", Buttons.X, (b) =>
+                viewModel.CurrentTabInfo.Buttons.Add(new("Settings.Button.ToggleFullscreen", ButtonsOLD.X, (b) =>
                 {
                     if (viewModel.WindowState == WindowState.FullScreen)
                         viewModel.WindowState = WindowState.Normal;
@@ -131,7 +131,7 @@ public partial class Settings : UserControl
             }
 
             ViewModel.ModsDirectory = path;
-            await mainViewModel.Save();
+            await mainViewModel.SaveAsync();
             mainViewModel.RefreshUI();
         }
     }
@@ -167,7 +167,7 @@ public partial class Settings : UserControl
         if (_isInstalling)
             return;
         _isInstalling = true;
-        await mainViewModel.InstallModLoader();
+        await mainViewModel.InstallModLoaderAsync();
         ViewModel.Update();
         _isInstalling = false;
     }
@@ -238,7 +238,7 @@ public partial class Settings : UserControl
         if (button != null)
             button.IsEnabled = false;
         if (DataContext is MainWindowViewModel mainViewModel)
-            await mainViewModel.CheckForManagerUpdates();
+            await mainViewModel.CheckForManagerUpdatesAsync();
         if (button != null)
             button.IsEnabled = true;
         ViewModel.CheckManagerUpdatesText = "Settings.Button.CheckUpdates";
@@ -251,7 +251,7 @@ public partial class Settings : UserControl
         if (button != null)
             button.IsEnabled = false;
         if (DataContext is MainWindowViewModel mainViewModel)
-            await mainViewModel.CheckForModLoaderUpdates();
+            await mainViewModel.CheckForModLoaderUpdatesAsync();
         if (button != null)
             button.IsEnabled = true;
         ViewModel.CheckLoaderUpdatesText = "Settings.Button.CheckUpdates";
@@ -264,7 +264,7 @@ public partial class Settings : UserControl
         if (button != null)
             button.IsEnabled = false;
         if (DataContext is MainWindowViewModel mainViewModel)
-            await mainViewModel.CheckForAllModUpdates();
+            await mainViewModel.CheckForAllModUpdatesAsync();
         if (button != null)
             button.IsEnabled = true;
         ViewModel.CheckModUpdatesText = "Settings.Button.CheckUpdates";
@@ -277,7 +277,7 @@ public partial class Settings : UserControl
         if (button != null)
             button.IsEnabled = false;
         if (DataContext is MainWindowViewModel mainViewModel)
-            await mainViewModel.UpdateCodes(true, false);
+            await mainViewModel.UpdateCodesAsync(true, false);
         if (button != null)
             button.IsEnabled = true;
         ViewModel.CheckCodeUpdatesText = "Settings.Button.CheckUpdates";

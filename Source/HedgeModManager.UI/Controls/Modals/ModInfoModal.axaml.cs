@@ -69,7 +69,7 @@ public partial class ModInfoModal : WindowModal
         var viewModel = DataContext as MainWindowViewModel;
         if (viewModel == null)
             return;
-        await viewModel.CheckForModUpdates(ModViewModel.Mod, true);
+        await viewModel.CheckForModUpdatesAsync(ModViewModel.Mod, true);
     }
 
     private void OnDeleteClick(object? sender, RoutedEventArgs e)

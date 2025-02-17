@@ -8,6 +8,7 @@ using HedgeModManager.UI.CLI;
 using HedgeModManager.UI.Config;
 using HedgeModManager.UI.Controls;
 using HedgeModManager.UI.Controls.Modals;
+using HedgeModManager.UI.Input;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
 using System.Collections.ObjectModel;
@@ -33,6 +34,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public CancellationTokenSource ServerCancellationTokenSource { get; set; } = new();
     public bool IsFullscreen => WindowState == WindowState.FullScreen;
     public bool IsGamescope { get; set; }
+    public Action<Buttons>? CurrentInputPressedHandler { get; set; }
 
     private ModProfile _lastSelectedProfile = ModProfile.Default;
 
@@ -86,13 +88,13 @@ public partial class MainWindowViewModel : ViewModelBase
         Logger.Debug($"IsDebugBuild: {Program.IsDebugBuild}");
     }
 
-    public async Task OnStartUp()
+    public async Task OnStartUpAsync()
     {
         if (Config.LastUpdateCheck.AddMinutes(20) < DateTime.Now &&
             !Design.IsDesignMode && !Program.IsDebugBuild)
         {
-            await CheckForManagerUpdates();
-            await CheckForModLoaderUpdates();
+            await CheckForManagerUpdatesAsync();
+            await CheckForModLoaderUpdatesAsync();
             try
             {
                 Config.LastUpdateCheck = DateTime.Now;
@@ -102,7 +104,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    public async Task CheckForManagerUpdates()
+    public async Task CheckForManagerUpdatesAsync()
     {
         await new Download(Localize("Download.Text.CheckManagerUpdate"), true)
         .OnRun(async (d, c) =>
@@ -155,12 +157,12 @@ public partial class MainWindowViewModel : ViewModelBase
         }).RunAsync(this);
     }
 
-    public Task CheckForModLoaderUpdates()
+    public Task CheckForModLoaderUpdatesAsync()
     {
         return Task.CompletedTask;
     }
 
-    public async Task CheckForAllModUpdates()
+    public async Task CheckForAllModUpdatesAsync()
     {
         if (SelectedGame == null)
             return;
@@ -179,7 +181,7 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 if (c.IsCancellationRequested)
                     break;
-                await CheckForModUpdates(mod, false, c);
+                await CheckForModUpdatesAsync(mod, false, c);
                 progress.ReportAdd(1);
                 d.Name = Localize("CheckModUpdate", progress.Progress, progress.ProgressMax);
             }
@@ -193,7 +195,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }).RunAsync(this);
     }
 
-    public async Task<UpdateInfo?> CheckForModUpdates(IMod mod, bool promptUpdate = false, CancellationToken c = default)
+    public async Task<UpdateInfo?> CheckForModUpdatesAsync(IMod mod, bool promptUpdate = false, CancellationToken c = default)
     {
         try
         {
@@ -233,7 +235,7 @@ public partial class MainWindowViewModel : ViewModelBase
         return null;
     }
 
-    public async Task LoadGame()
+    public async Task LoadGameAsync()
     {
         try
         {
@@ -254,14 +256,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
             Logger.Debug($"Loading profiles...");
             if (game.ModDatabase is ModDatabaseGeneric modsDB)
-                Profiles = new(await LoadProfiles(game) ?? []);
+                Profiles = new(await LoadProfilesAsync(game) ?? []);
             _lastSelectedProfile = Profiles.FirstOrDefault() ?? ModProfile.Default;
             SelectedProfile = _lastSelectedProfile;
             Logger.Debug($"Loaded {Profiles.Count} profile(s)");
 
             Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
 
-            _ = UpdateCodes(false, true);
+            _ = UpdateCodesAsync(false, true);
             RefreshUI();
         }
         catch (Exception e)
@@ -271,7 +273,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    public async Task InstallModLoader(bool? install = null)
+    public async Task InstallModLoaderAsync(bool? install = null)
     {
         IsBusy = true;
         await CreateSimpleDownload("Download.Text.InstallModLoader", "Failed to install modloader",
@@ -303,7 +305,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// Loads all the mod configurations for the current selected profile.
     /// It is important to have the selected game already initialised.
     /// </summary>
-    public async Task SwitchProfile()
+    public async Task SwitchProfileAsync()
     {
         var lastProfile = _lastSelectedProfile;
         var currentProfile = SelectedProfile;
@@ -343,11 +345,11 @@ public partial class MainWindowViewModel : ViewModelBase
         Logger.Debug($"Switched profile {_lastSelectedProfile.Name} -> {SelectedProfile.Name}");
         _lastSelectedProfile = SelectedProfile;
 
-        await Save(false);
+        await SaveAsync(false);
         IsBusy = false;
     }
 
-    public async Task<List<ModProfile>?> LoadProfiles(IModdableGame game)
+    public async Task<List<ModProfile>?> LoadProfilesAsync(IModdableGame game)
     {
         string filePath = Path.Combine(game.Root, "profiles.json");
         // Profiles are only supported for ModDatabaseGeneric
@@ -368,7 +370,7 @@ public partial class MainWindowViewModel : ViewModelBase
         return profiles ?? [ModProfile.Default];
     }
 
-    public async Task Save(bool setBusy = true)
+    public async Task SaveAsync(bool setBusy = true)
     {
         if (setBusy)
             IsBusy = true;
@@ -426,12 +428,14 @@ public partial class MainWindowViewModel : ViewModelBase
             IsBusy = false;
     }
 
-    public async Task RunGame()
+    public async Task RunGameAsync()
     {
         if (SelectedGame != null)
         {
             try
             {
+                if (IsGamescope)
+                    MessageBoxModal.CreateOK("Modal.Title.Information", "Modal.Message.GamescopeError").Open(this);
                 await SelectedGame.Game.Run(null, true);
                 await Task.Delay(5000);
             }
@@ -443,12 +447,20 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    public async Task SaveAndRun()
+    public async Task SaveAndRunAsync()
     {
         IsBusy = true;
-        await Save(false);
-        await RunGame();
+        await SaveAsync(false);
+        await RunGameAsync();
         IsBusy = false;
+    }
+
+    /// <summary>
+    /// Closes the application by calling the close event on the main window
+    /// </summary>
+    public void Close()
+    {
+        (Application.Current as App)?.MainWindow?.Close();
     }
 
     public void StartSetup()
@@ -478,17 +490,20 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             if (dependencies.Count == 0)
                 return;
-            Logger.Debug($"Enabling {dependencies.Count} dependencies");
+            Logger.Debug($"Found {dependencies.Count} dependencies");
             foreach (var dependency in dependencies)
             {
                 var mod = database.Mods.FirstOrDefault(x => x.ID == dependency.ID);
                 if (mod == null)
                 {
-                    Logger.Debug($"  Missing {dependency.Title}");
+                    Logger.Debug($"  Missing {dependency.Title}!");
                     continue;
                 }
-                Logger.Debug($"  Enabling {mod.Title}");
-                mod.Enabled = true;
+                if (!mod.Enabled)
+                {
+                    Logger.Debug($"  Enabling {mod.Title}...");
+                    mod.Enabled = true;
+                }
             }
             UpdateModsList();
         }
@@ -510,7 +525,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    public async Task UpdateCodes(bool force, bool append)
+    public async Task UpdateCodesAsync(bool force, bool append)
     {
         if (SelectedGame != null && SelectedGame.Game is ModdableGameGeneric gameGeneric &&
             gameGeneric.ModLoaderConfiguration is ModLoaderConfiguration config)
@@ -584,7 +599,7 @@ public partial class MainWindowViewModel : ViewModelBase
         messageBox.AddButton("Common.Button.OK", (s, e) => messageBox.Close());
         messageBox.AddButton("Modal.Button.ExportLog", async (s, e) =>
         {
-            await ExportLog(messageBox);
+            await ExportLogAsync(messageBox);
             messageBox.Close();
         });
         messageBox.SetDanger();
@@ -601,7 +616,43 @@ public partial class MainWindowViewModel : ViewModelBase
         return Array.FindIndex(TabInfos, x => x.Name == name);
     }
 
-    public static async Task ExportLog(Visual visual)
+    public async Task OnInputDownAsync(Buttons button)
+    {
+        if (button == Buttons.None)
+            return;
+
+        if (Modals.Count > 0)
+        {
+            // TODO: Handle inputs
+            return;
+        }
+
+        if (button == Buttons.Start)
+        {
+            await RunGameAsync();
+            return;
+        }
+        if (button == Buttons.LB)
+        {
+            if (SelectedTabIndex > 2)
+                SelectedTabIndex--;
+            else
+                SelectedTabIndex = Config.TestModeEnabled ? 6 : 5;
+            return;
+        }
+        if (button == Buttons.RB)
+        {
+            if (SelectedTabIndex < (Config.TestModeEnabled ? 6 : 5))
+                SelectedTabIndex++;
+            else
+                SelectedTabIndex = 2;
+            return;
+        }
+
+        CurrentInputPressedHandler?.Invoke(button);
+    }
+
+    public static async Task ExportLogAsync(Visual visual)
     {
         string log = UILogger.Export();
 
@@ -631,7 +682,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    public async Task InstallMod(Visual visual, UIGame? game)
+    public async Task InstallModAsync(Visual visual, UIGame? game)
     {
         var topLevel = TopLevel.GetTopLevel(visual);
         if (topLevel == null)
@@ -759,7 +810,7 @@ public partial class MainWindowViewModel : ViewModelBase
             });
     }
 
-    public async Task ProcessCommands(List<ICliCommand> commands)
+    public async Task ProcessCommandsAsync(List<ICliCommand> commands)
     {
         Logger.Debug($"Processing {commands.Count} command(s)");
         foreach (var command in commands)
@@ -769,7 +820,8 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    public async Task StartServer()
+    // TODO: Look into server crashing after some time
+    public async Task StartServerAsync()
     {
         try
         {
@@ -790,7 +842,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 Logger.Debug("Message deserialised");
                 var args = CommandLine.ParseArguments(argsStr);
                 var (continueStartup, commands) = CommandLine.ExecuteArguments(args);
-                await ProcessCommands(commands);
+                await ProcessCommandsAsync(commands);
                 Logger.Debug("Message processed");
             }
         }
@@ -812,12 +864,12 @@ public partial class MainWindowViewModel : ViewModelBase
         ServerCancellationTokenSource.Cancel();
     }
 
-    protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SelectedGame))
-            await LoadGame();
+            _ = LoadGameAsync();
         if (e.PropertyName == nameof(SelectedProfile))
-            await SwitchProfile();
+            _ = SwitchProfileAsync();
         if (e.PropertyName == nameof(WindowState))
             OnPropertyChanged(nameof(IsFullscreen));
         base.OnPropertyChanged(e);

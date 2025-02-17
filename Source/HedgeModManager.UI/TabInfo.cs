@@ -18,10 +18,10 @@ public partial class TabInfo : ObservableObject
         private Action<TabButton>? _onPress;
 
         [ObservableProperty] private string _name = "Button";
-        [ObservableProperty] private Buttons _button = UI.Buttons.A;
+        [ObservableProperty] private ButtonsOLD _button = UI.ButtonsOLD.A;
         [ObservableProperty] private bool _isEnabled = true;
 
-        public TabButton(string name, Buttons button, Action<TabButton>? onPress, bool enabled = true)
+        public TabButton(string name, ButtonsOLD button, Action<TabButton>? onPress, bool enabled = true)
         {
             Name = name;
             Button = button;

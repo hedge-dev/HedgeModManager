@@ -119,10 +119,10 @@ public partial class Codes : UserControl
             //{
             //    await MainViewModel.SaveAndRun();
             //}));
-            MainViewModel.CurrentTabInfo.Buttons.Add(new("Codes.Button.UpdateCodes", Buttons.X, async (b) =>
+            MainViewModel.CurrentTabInfo.Buttons.Add(new("Codes.Button.UpdateCodes", ButtonsOLD.X, async (b) =>
             {
                 b.IsEnabled = false;
-                await MainViewModel.UpdateCodes(true, false);
+                await MainViewModel.UpdateCodesAsync(true, false);
                 b.IsEnabled = true;
             }));
             //MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Select", Buttons.A, (b) =>

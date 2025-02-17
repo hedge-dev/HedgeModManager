@@ -18,6 +18,7 @@
   </Design.DataContext>
   <Border Margin="0,4,0,4" Cursor="Hand" ClipToBounds="True"
           Classes.enabled="{Binding ModEnabled}" Classes.mainBorder="True"
+          Classes.selected="{Binding IsSelected}"
           Height="48" CornerRadius="12" IsVisible="{Binding IsVisible}"
           BorderBrush="{DynamicResource Button.BorderBrush}" BorderThickness="1"
           PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased"
@@ -56,6 +57,9 @@
         <Setter Property="Opacity" Value="0.5" />
         <Setter Property="Background" Value="{DynamicResource BackgroundL1Brush}" />
         <Style Selector="^:pointerover">
+          <Setter Property="Background" Value="{DynamicResource Button.HoverBrush}"/>
+        </Style>
+        <Style Selector="^.selected">
           <Setter Property="Background" Value="{DynamicResource Button.HoverBrush}"/>
         </Style>
         <Style Selector="^.enabled">

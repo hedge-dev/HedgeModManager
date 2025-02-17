@@ -27,7 +27,7 @@ public partial class About : UserControl
         if (viewModel.CurrentTabInfo != null)
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
-            viewModel.CurrentTabInfo.Buttons.Add(new("About.Button.GitHub", Buttons.Y, (b) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("About.Button.GitHub", ButtonsOLD.Y, (b) =>
             {
                 Process.Start(new ProcessStartInfo
                 {

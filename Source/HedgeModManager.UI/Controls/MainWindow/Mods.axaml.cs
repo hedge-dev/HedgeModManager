@@ -81,6 +81,39 @@ public partial class Mods : UserControl
         ModsViewModel.UpdateText();
     }
 
+    private void OnInputPressed(Input.Buttons button)
+    {
+        int limit = ModsViewModel.ModsList.Count(x => x.IsVisible);
+
+        switch (button)
+        {
+            case Input.Buttons.Up:
+                if (limit == 0)
+                    return;
+
+                if (ModsViewModel.SelectedModIndex > 0)
+                    ModsViewModel.SelectedModIndex--;
+                else
+                    ModsViewModel.SelectedModIndex = limit - 1;
+                break;
+            case Input.Buttons.Down:
+                if (limit == 0)
+                    return;
+
+                if (ModsViewModel.SelectedModIndex < limit - 1)
+                    ModsViewModel.SelectedModIndex++;
+                else
+                    ModsViewModel.SelectedModIndex = 0;
+                break;
+            case Input.Buttons.A:
+                if (ModsViewModel.SelectedModIndex != -1)
+                    ModsViewModel.ModsList[ModsViewModel.SelectedModIndex].ModEnabled = !ModsViewModel.ModsList[ModsViewModel.SelectedModIndex].ModEnabled;
+                break;
+            default:
+                break;
+        }
+    }
+
     private void OnFilterClick(object? sender, RoutedEventArgs e)
     {
         if (sender is ModEntryFeatureButton button)
@@ -100,30 +133,17 @@ public partial class Mods : UserControl
 
         AuthorComboBox.SelectedIndex = 0;
 
+        // Register handler
+        MainViewModel.CurrentInputPressedHandler = OnInputPressed;
+
         // Add buttons
         if (MainViewModel.CurrentTabInfo != null)
         {
             MainViewModel.CurrentTabInfo.Buttons.Clear();
-            MainViewModel.CurrentTabInfo.Buttons.Add(new("Mods.Button.InstallMod", Buttons.Back, async (b) =>
+            MainViewModel.CurrentTabInfo.Buttons.Add(new("Mods.Button.InstallMod", ButtonsOLD.Back, async (b) =>
             {
-                await MainViewModel.InstallMod(this, null);
+                await MainViewModel.InstallModAsync(this, null);
             }));
-        //    MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.SavePlay", Buttons.Y, async (b) =>
-        //    {
-        //        await MainViewModel.SaveAndRun();
-        //    }));
-        //    MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Menu", Buttons.B, (b) =>
-        //    {
-        //        Logger.Information("Menu Pressed");
-        //    }));
-        //    MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Options", Buttons.X, (b) =>
-        //    {
-        //        Logger.Information("Options Pressed");
-        //    }));
-        //    MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Select", Buttons.A, (b) =>
-        //    {
-        //        Logger.Information("Select Pressed");
-        //    }));
         }
     }
 
@@ -167,6 +187,10 @@ public partial class Mods : UserControl
 
     private void OnPointerMoved(object? sender, PointerEventArgs e)
     {
+        // Unselect if cursor moved
+        if (ModsViewModel.SelectedModIndex != -1)
+            ModsViewModel.SelectedModIndex = -1;
+
         var container = ModsViewModel.ModsList
             .Select(x => ModItemControl.ContainerFromItem(x) as ContentPresenter)
             .FirstOrDefault(x => x?.Child?.DataContext is ModEntryViewModel { IsDraging: true });

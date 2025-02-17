@@ -21,6 +21,9 @@ public partial class ProgramConfig : ViewModelBase
     [ObservableProperty] private WindowState _lastWindowState = WindowState.Normal;
     [ObservableProperty] private string[] _lastSeenLanguages = [];
 
+    // Test Flags
+    [ObservableProperty] private bool _testKeyboardInput = false;
+
     private string GetConfigFilePath()
     {
         return Path.Combine(Paths.GetConfigPath(), "ProgramConfig.json");

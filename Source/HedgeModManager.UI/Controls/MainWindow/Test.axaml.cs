@@ -34,11 +34,11 @@ public partial class Test : UserControl
         if (viewModel.CurrentTabInfo != null)
         {
             viewModel.CurrentTabInfo.Buttons.Clear();
-            viewModel.CurrentTabInfo.Buttons.Add(new("Save and Play", Buttons.Y, async (b) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("Save and Play", ButtonsOLD.Y, async (b) =>
             {
-                await viewModel.SaveAndRun();
+                await viewModel.SaveAndRunAsync();
             }));
-            viewModel.CurrentTabInfo.Buttons.Add(new("Change Theme", Buttons.Y, (b) =>
+            viewModel.CurrentTabInfo.Buttons.Add(new("Change Theme", ButtonsOLD.Y, (b) =>
             {
                 if (Application.Current != null)
                 {
@@ -206,7 +206,7 @@ public partial class Test : UserControl
 
     private async void ExportLog_Click(object? sender, RoutedEventArgs e)
     {
-        await MainWindowViewModel.ExportLog(this);
+        await MainWindowViewModel.ExportLogAsync(this);
     }
 
     private void CreateDownload_Click(object? sender, RoutedEventArgs e)
@@ -243,7 +243,7 @@ public partial class Test : UserControl
     private async void InstallMod_Click(object? sender, RoutedEventArgs e)
     {
         if (DataContext is MainWindowViewModel viewModel)
-            await viewModel.InstallMod(this, null);
+            await viewModel.InstallModAsync(this, null);
     }
 
     private void DownloadCancel_Click(object? sender, RoutedEventArgs e)

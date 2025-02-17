@@ -26,6 +26,7 @@ public partial class ModEntryViewModel : ViewModelBase
     [ObservableProperty] private IBrush? _favoriteBrush;
     [ObservableProperty] private bool _isDraging = false;
     [ObservableProperty] private Point _dragOffset = new();
+    [ObservableProperty] private bool _isSelected = false;
 
     private Regex? _search;
 
