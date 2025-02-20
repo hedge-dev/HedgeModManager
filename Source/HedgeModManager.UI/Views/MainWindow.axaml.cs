@@ -101,6 +101,10 @@ public partial class MainWindow : Window
 
         switch (e.Key)
         {
+            case Key.F1:
+                if (isShift)
+                    _ = Dispatcher.UIThread.Invoke(() => MainWindowViewModel.ExportLogAsync(this));
+                break;
             case Key.F3:
                 ViewModel.Config.TestModeEnabled = !ViewModel.Config.TestModeEnabled;
                 Logger.Debug($"Set test mode to {ViewModel.Config.TestModeEnabled}");
