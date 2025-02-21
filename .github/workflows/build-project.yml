@@ -47,7 +47,7 @@ jobs:
         run: dotnet restore ${{ env.PROJECT_PATH }}
 
       - name: ${{ matrix.rid }} Build
-        run: dotnet publish -p:DefineConstants=AUTOBUILD -p:PublishProfile=${{ matrix.rid }} -c Release -o ./output/${{ matrix.rid }} ${{ env.PROJECT_PATH }}
+        run: dotnet publish -p:DefineConstants=AUTOBUILD -p:PublishProfile=${{ matrix.rid }} -p:AssemblyVersion=${{ env.APP_VERSION }} -p:FileVersion=${{ env.APP_VERSION}} -c Release -o ./output/${{ matrix.rid }} ${{ env.PROJECT_PATH }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -92,8 +92,6 @@ jobs:
         run: flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{ env.FLATPAK_ID }}-autobuild.yml
 
       - name: Build Flatpak Bundle
-        env:
-          APP_VERSION: ${{ github.event.inputs.version }}
         run: flatpak build-bundle repo ./flatpak/${{env.FLATPAK_ID}}.flatpak ${{env.FLATPAK_ID}}
 
       - name: Upload Flatpak Bundle
