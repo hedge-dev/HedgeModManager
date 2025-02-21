@@ -298,6 +298,10 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
                 IsBusy = false;
                 Dispatcher.UIThread.Invoke(RefreshUI);
+            }).OnError((d, e) =>
+            {
+                OpenErrorMessage("Modal.Title.InstallError", "Modal.Message.ModLoaderInstallError", "Failed to install modloader", e);
+                return Task.CompletedTask;
             }).RunAsync(this);
     }
 

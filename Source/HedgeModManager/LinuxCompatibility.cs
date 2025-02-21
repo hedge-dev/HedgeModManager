@@ -41,17 +41,17 @@ public class LinuxCompatibility
                 if (entry.FullName.EndsWith('/'))
                 {
                     // Untested, tests from HMM 7 to 8 is needed
-                    if (Directory.Exists(path) || File.Exists(path))
+                    if (Directory.Exists(destinationPath) || File.Exists(destinationPath))
                     {
-                        var attributes = new FileInfo(path).Attributes;
+                        var attributes = new FileInfo(destinationPath).Attributes;
                         if (attributes.HasFlag(FileAttributes.ReparsePoint))
                         {
-                            Logger.Debug($"Symlink detected, unlinking \"{path}\"");
-                            File.Delete(path);
+                            Logger.Debug($"Symlink detected, unlinking \"{destinationPath}\"");
+                            File.Delete(destinationPath);
                         }
                         else
                         {
-                            Directory.Delete(path, true);
+                            Directory.Delete(destinationPath, true);
                         }
                     }
                     continue;
@@ -63,6 +63,7 @@ public class LinuxCompatibility
                     File.Delete(destinationPath);
                 }
 
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
                 entry.ExtractToFile(destinationPath, true);
             }
             Logger.Debug($"Extracted .NET runtime");
