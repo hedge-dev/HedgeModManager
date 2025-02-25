@@ -239,6 +239,7 @@ public partial class Settings : UserControl
             button.IsEnabled = false;
         if (DataContext is MainWindowViewModel mainViewModel)
             await mainViewModel.CheckForManagerUpdatesAsync();
+        ViewModel.Update();
         if (button != null)
             button.IsEnabled = true;
         ViewModel.CheckManagerUpdatesText = "Settings.Button.CheckUpdates";

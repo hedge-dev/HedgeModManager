@@ -1,5 +1,6 @@
 ﻿namespace HedgeModManager;
 using HedgeModManager.Properties;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -41,7 +42,7 @@ public class LinuxCompatibility
                 if (entry.FullName.EndsWith('/'))
                 {
                     // Untested, tests from HMM 7 to 8 is needed
-                    if (Directory.Exists(destinationPath) || File.Exists(destinationPath))
+                    if (File.Exists(destinationPath))
                     {
                         var attributes = new FileInfo(destinationPath).Attributes;
                         if (attributes.HasFlag(FileAttributes.ReparsePoint))
@@ -51,7 +52,7 @@ public class LinuxCompatibility
                         }
                         else
                         {
-                            Directory.Delete(destinationPath, true);
+                            Logger.Warning($"File with the same name as the directory exists!");
                         }
                     }
                     continue;
@@ -122,13 +123,29 @@ public class LinuxCompatibility
         return true;
     }
 
-    public static bool IsPrefixValid(string? path)
+    public static bool IsPrefixValid([NotNullWhen(true)] string? path)
     {
-        if (path == null)
+        if (string.IsNullOrEmpty(path))
         {
             return false;
         }
 
         return Directory.Exists(path);
+    }
+
+    public static bool IsPrefixPatched([NotNullWhen(true)] string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            return false;
+        }
+
+        string reg = Path.Combine(path, "system.reg");
+        if (Path.Exists(reg))
+        {
+            return File.ReadAllText(reg).Contains("\"UseRyuJIT\"=dword:00000001");
+        }
+
+        return File.Exists(reg);
     }
 }

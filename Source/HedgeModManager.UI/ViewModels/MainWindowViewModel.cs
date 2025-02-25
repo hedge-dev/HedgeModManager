@@ -94,7 +94,6 @@ public partial class MainWindowViewModel : ViewModelBase
             !Design.IsDesignMode && !Program.IsDebugBuild)
         {
             await CheckForManagerUpdatesAsync();
-            await CheckForModLoaderUpdatesAsync();
             try
             {
                 Config.LastUpdateCheck = DateTime.Now;
@@ -102,6 +101,7 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             catch { }
         }
+        await CheckForModLoaderUpdatesAsync();
     }
 
     public async Task CheckForManagerUpdatesAsync()
@@ -157,9 +157,39 @@ public partial class MainWindowViewModel : ViewModelBase
         }).RunAsync(this);
     }
 
-    public Task CheckForModLoaderUpdatesAsync()
+    public async Task CheckForModLoaderUpdatesAsync()
     {
-        return Task.CompletedTask;
+        await new Download(Localize("Download.Text.CheckLoaderUpdate"))
+        .OnRun(async (d, c) =>
+        {
+            d.ReportMax(-1);
+
+            var game = GetModdableGameGeneric();
+            if (game == null)
+            {
+                Logger.Debug("ModLoader updates are only supported on ModdableGameGeneric");
+                return;
+            }
+            if (game.ModLoader == null)
+            {
+                Logger.Debug("Game's mod loader is null");
+                return;
+            }
+
+            // TODO: Show changelog
+            bool hasUpdate = await game.ModLoader.CheckForUpdatesAsync();
+            if (hasUpdate)
+                await game.ModLoader.InstallAsync(false);
+        }).OnError((d, e) =>
+        {
+            OpenErrorMessage("Modal.Title.UpdateError", "Modal.Message.UpdateCheckError",
+                "Failed to check for mod loader updates", e);
+            return Task.CompletedTask;
+        }).OnFinally((d) =>
+        {
+            d.Destroy();
+            return Task.CompletedTask;
+        }).RunAsync(this);
     }
 
     public async Task CheckForAllModUpdatesAsync()
@@ -183,7 +213,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     break;
                 await CheckForModUpdatesAsync(mod, false, c);
                 progress.ReportAdd(1);
-                d.Name = Localize("CheckModUpdate", progress.Progress, progress.ProgressMax);
+                d.Name = Localize("Download.Text.CheckModUpdate", progress.Progress, progress.ProgressMax);
             }
             d.Destroy();
         }).OnError((d, e) =>
@@ -251,9 +281,18 @@ public partial class MainWindowViewModel : ViewModelBase
             Logger.Debug($"  Root: {game.Root}");
             Logger.Debug($"  Exec: {game.Executable}");
             Logger.Debug($"  N OS: {game.NativeOS}");
+            Logger.Debug($"  Type: {game.GetType().Name}");
             await game.InitializeAsync();
             Logger.Debug($"Initialised game");
 
+            if (game is ModdableGameGeneric gameGeneric)
+            {
+                if (gameGeneric.ModLoader != null)
+                {
+                    Logger.Debug($"ModLoader.IsInstalled: {gameGeneric.ModLoader.IsInstalled()}");
+                    Logger.Debug($"ModLoader.GetInstalledVersion: {gameGeneric.ModLoader.GetInstalledVersion() ?? "null"}");
+                }
+            }
             Logger.Debug($"Loading profiles...");
             if (game.ModDatabase is ModDatabaseGeneric modsDB)
                 Profiles = new(await LoadProfilesAsync(game) ?? []);
@@ -263,7 +302,11 @@ public partial class MainWindowViewModel : ViewModelBase
 
             Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
 
-            _ = UpdateCodesAsync(false, true);
+            _ = Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                await UpdateCodesAsync(false, true);
+                await CheckForModLoaderUpdatesAsync();
+            });
             RefreshUI();
         }
         catch (Exception e)
@@ -794,6 +837,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         download.PropertyChanged += (s, e) => Dispatcher.UIThread.Invoke(UpdateDownload);
         Downloads.Add(download);
+        Dispatcher.UIThread.Invoke(UpdateDownload);
     }
 
     public static Download CreateSimpleDownload(string name, string errorMessage, Func<Download, DownloadProgress, CancellationToken, Task> callback)

@@ -11,8 +11,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
-    <PackageReference Include="SharpCompress" Version="0.38.0" />
-    <PackageReference Include="ValveKeyValue" Version="0.9.0.267" />
+    <PackageReference Include="PeNet" Version="4.1.1" />
+    <PackageReference Include="SharpCompress" Version="0.39.0" />
+    <PackageReference Include="ValveKeyValue" Version="0.12.0.391" />
   </ItemGroup>
 
   <ItemGroup>

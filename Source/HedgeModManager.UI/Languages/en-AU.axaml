@@ -45,7 +45,7 @@
 
   <!-- Other -->
   <system:String x:Key="Download.Text.CheckManagerUpdate">Checking for Hedge Mod Manager updates...</system:String>
-  <system:String x:Key="Download.Text.CheckMLUpdate"     >Updating mod loaders... {0} / {1}</system:String>
+  <system:String x:Key="Download.Text.CheckLoaderUpdate" >Updating mod loaders...</system:String>
   <system:String x:Key="Download.Text.CheckModUpdate"    >Checking for mod updates... {0} / {1}</system:String>
   <system:String x:Key="Download.Text.DownloadCodes"     >Downloading Codes...</system:String>
   <system:String x:Key="Download.Text.DownloadMod"       >Downloading {0}...</system:String>

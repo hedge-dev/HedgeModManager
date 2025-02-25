@@ -51,7 +51,7 @@
         </cs:SettingsEntry>
         <cs:SettingsEntry Icon="Abacus"
                           Title="{DynamicResource Settings.Title.ModLoader}"
-                          Description="{DynamicResource Settings.Description.ModLoader}">
+                          Description="{Binding ViewModel.ModLoaderDescription, RelativeSource={RelativeSource AncestorType=cs:Settings}}">
           <cs:SettingsEntry.Data>
             <StackPanel Orientation="Horizontal">
               <cb:Button MinWidth="105"

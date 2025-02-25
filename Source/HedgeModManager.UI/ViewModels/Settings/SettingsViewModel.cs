@@ -5,6 +5,7 @@ using HedgeModManager.IO;
 using HedgeModManager.UI.Languages;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.ViewModels.Settings;
 
@@ -130,6 +131,17 @@ public partial class SettingsViewModel : ViewModelBase
 
     public bool SupportsProton => (Game?.NativeOS == "Windows" && OperatingSystem.IsLinux() && !string.IsNullOrEmpty(Game.PrefixRoot)) || MainViewModel == null;
 
+    public string ModLoaderDescription
+    {
+        get
+        {
+            string text = Localize("Settings.Description.ModLoader");
+            if (Game == null || Game.ModLoader == null || !Game.ModLoader.IsInstalled())
+                return text;
+            return $"{text} ({Game.ModLoader.GetInstalledVersion()})";
+        }
+    }
+
     public SettingsViewModel()
     {
         UpdateThemes();
@@ -153,6 +165,7 @@ public partial class SettingsViewModel : ViewModelBase
         OnPropertyChanged(nameof(SupportsMultipleLaunchMethods));
         OnPropertyChanged(nameof(SupportsProton));
         OnPropertyChanged(nameof(SelectedLanguage));
+        OnPropertyChanged(nameof(ModLoaderDescription));
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)

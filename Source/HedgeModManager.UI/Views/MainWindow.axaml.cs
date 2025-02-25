@@ -144,6 +144,10 @@ public partial class MainWindow : Window
             case Key.F11:
                 toggleFullscreen = true;
                 break;
+            case Key.Escape:
+                if (ViewModel.Modals.Count > 0)
+                    ViewModel.Modals.RemoveAt(ViewModel.Modals.Count - 1);
+                break;
             default:
                 if (ViewModel.Config.TestKeyboardInput)
                 {

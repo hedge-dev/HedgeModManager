@@ -139,4 +139,7 @@
   <data name="dotnetReg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dotnet.reg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="ModLoaderManifestURL" xml:space="preserve">
+    <value>https://raw.githubusercontent.com/thesupersonic16/HedgeModManager/refs/heads/rewrite/HedgeModManager/Resources/ModLoader/Loaders.ini</value>
+  </data>
 </root>

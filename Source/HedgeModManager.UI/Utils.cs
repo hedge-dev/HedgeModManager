@@ -53,4 +53,10 @@ public static class Utils
     {
         return Uri.UnescapeDataString(uri.AbsolutePath);
     }
+
+    public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+    {
+        foreach (var item in source)
+            action(item);
+    }
 }
