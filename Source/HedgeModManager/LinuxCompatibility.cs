@@ -116,9 +116,9 @@ public class LinuxCompatibility
             return false;
         }
 
-        string regPatch = Encoding.Unicode.GetString(Resources.dotnetReg);
+        string regPatch = Encoding.UTF8.GetString(Resources.dotnetReg);
 
-        await File.AppendAllTextAsync(reg, regPatch);
+        await File.AppendAllTextAsync(reg, regPatch, Encoding.UTF8);
         Logger.Debug($"File written");
         return true;
     }
