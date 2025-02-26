@@ -28,8 +28,8 @@ public class Updater
         // Check Flathub if running under a Flatpak
         if (!string.IsNullOrEmpty(Program.FlatpakID))
         {
-            Logger.Debug($"Checking for updates for {Program.FlatpakID}");
-            var app = await Network.Get<FlathubApp>($"https://flathub.org/api/v1/apps/{Program.FlatpakID}");
+            Logger.Debug($"Checking for updates for {Program.FlatpakID} (branch: beta)");
+            var app = await Network.Get<FlathubApp>($"https://beta.flathub.org/api/v1/apps/{Program.FlatpakID}");
             if (app == null)
             {
                 Logger.Error("Failed to check for updates");

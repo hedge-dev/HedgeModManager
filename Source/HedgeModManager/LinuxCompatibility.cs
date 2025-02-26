@@ -146,6 +146,6 @@ public class LinuxCompatibility
             return File.ReadAllText(reg).Contains("\"UseRyuJIT\"=dword:00000001");
         }
 
-        return File.Exists(reg);
+        return false;
     }
 }

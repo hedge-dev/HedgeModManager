@@ -183,12 +183,13 @@ public partial class Settings : UserControl
 
         if (Directory.Exists(prefixPath))
         {
-            var messageBox = new MessageBoxModal("Modal.Title.Confirm", "Settings.Message.ClearPrefix");
+            var messageBox = new MessageBoxModal("Modal.Title.Confirm", "Modal.Message.ClearPrefix");
             messageBox.AddButton("Common.Button.Yes", (s, a) =>
             {
                 if (Directory.Exists(prefixPath))
                     Directory.Delete(prefixPath, true);
                 messageBox.Close();
+                MessageBoxModal.CreateOK("Modal.Title.Information", "Modal.Message.ClearPrefixComplete").Open(mainViewModel);
             });
             messageBox.AddButton("Common.Button.No", (s, a) => messageBox.Close());
             messageBox.Open(mainViewModel);
@@ -208,6 +209,8 @@ public partial class Settings : UserControl
                     return;
 
                 await LinuxCompatibility.InstallRuntimeToPrefix(
+                    mainViewModel.SelectedGame.Game.PrefixRoot);
+                await LinuxCompatibility.AddDotnetRegPatch(
                     mainViewModel.SelectedGame.Game.PrefixRoot);
             }).OnFinally((d) =>
             {
