@@ -41,6 +41,8 @@ modules:
       - type: dir
         path: ../
       - ./nuget-sources.json
+    secret-env:
+      - APP_VERSION
     build-commands:
       - dotnet publish Source/HedgeModManager.UI/HedgeModManager.UI.csproj -c Release -p:DefineConstants=AUTOBUILD -p:AssemblyVersion=${APP_VERSION} -p:FileVersion=${APP_VERSION} --no-self-contained --source ./nuget-sources
       - mkdir -p ${FLATPAK_DEST}/bin
