@@ -43,6 +43,8 @@ modules:
         disable-shallow-clone: true
         url: https://github.com/hedge-dev/HedgeModManager.git
       - ./nuget-sources.json
+    secret-env:
+      - APP_VERSION
     build-commands:
       - dotnet publish Source/HedgeModManager.UI/HedgeModManager.UI.csproj -c Release --no-self-contained --source ./nuget-sources
       - mkdir -p ${FLATPAK_DEST}/bin
