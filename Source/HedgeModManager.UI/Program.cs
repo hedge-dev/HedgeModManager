@@ -135,7 +135,7 @@ public sealed class Program
         var editedArgs = new List<string>(args);
         if (editedArgs.Count > 0 && 
             editedArgs[0].StartsWith("hedgemm"))
-            editedArgs.Insert(0, "-schema");
+            editedArgs.Insert(0, "--schema");
 
         var arguments = CommandLine.ParseArguments(args);
         var (continueStartup, commands) = CommandLine.ExecuteArguments(arguments);
