@@ -77,6 +77,7 @@ public partial class MainWindow : Window
             if (Program.StartupCommands.Count > 0)
                 await ViewModel.ProcessCommandsAsync(Program.StartupCommands);
             await ViewModel.OnStartUpAsync();
+            await ViewModel.StartServerAsync();
         });
 
         AddHandler(DragDrop.DropEvent, OnDrop);

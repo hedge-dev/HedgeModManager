@@ -874,11 +874,14 @@ public partial class MainWindowViewModel : ViewModelBase
         try
         {
             var c = ServerCancellationTokenSource.Token;
+            Logger.Debug("Starting server");
+            ServerStatus = 1;
             while (ServerStatus == 1)
             {
                 using var server = new NamedPipeServerStream(Program.PipeName, PipeDirection.In, 
                     NamedPipeServerStream.MaxAllowedServerInstances,
                     PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
+                Logger.Debug("Waiting for connection");
                 await server.WaitForConnectionAsync(c);
                 Logger.Debug("Recieved connection");
                 using var reader = new StreamReader(server);
