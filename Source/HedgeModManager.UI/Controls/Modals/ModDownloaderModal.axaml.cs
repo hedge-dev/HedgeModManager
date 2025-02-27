@@ -81,7 +81,7 @@ public partial class ModDownloaderModal : WindowModal
                 return;
             }
 
-            string downloadPath = Path.GetTempFileName();
+            string downloadPath = Paths.GetUniqueTempPath();
 
             await new Download(Localize("Download.Text.DownloadMod", downloadInfo.Name), true, -1).OnRun(async (d, c) =>
             {

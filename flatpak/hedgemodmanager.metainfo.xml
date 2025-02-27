@@ -36,6 +36,17 @@
     </ul>
   </description>
 
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/hedge-dev/HedgeModManager/245c7fb001d95568b89b7952a8e13a74ab3d6483/data/screenshot01.png</image>
+      <caption>Mods tab showing the currently installed and enabled mods</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/hedge-dev/HedgeModManager/245c7fb001d95568b89b7952a8e13a74ab3d6483/data/screenshot01.png</image>
+      <caption>Settings tab showing the game, mod loader and manager settings</caption>
+    </screenshot>
+  </screenshots>
+
   <releases>
     <release version="8.0.0" date="2025-03-02">
       <description>

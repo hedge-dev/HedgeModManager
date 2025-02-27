@@ -21,6 +21,14 @@ public static class Paths
             companyName, productName);
     }
 
+    public static void CreateDirectories()
+    {
+        Directory.CreateDirectory(GetProgramPath());
+        Directory.CreateDirectory(GetCachePath());
+        Directory.CreateDirectory(GetConfigPath());
+        Directory.CreateDirectory(GetTempPath());
+    }
+
     public static string GetCachePath()
     {
         return Path.Combine(GetProgramPath(), "Cache");
@@ -34,6 +42,11 @@ public static class Paths
     public static string GetTempPath()
     {
         return Path.Combine(GetProgramPath(), "Temp");
+    }
+
+    public static string GetUniqueTempPath()
+    {
+        return Path.Combine(GetTempPath(), Guid.NewGuid().ToString());
     }
 
     public static string GetActualUserConfigPath()

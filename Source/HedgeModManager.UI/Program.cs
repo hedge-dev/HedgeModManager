@@ -123,6 +123,7 @@ public sealed class Program
             }
         }
 
+        Paths.CreateDirectories();
         Network.UserAgent = UserAgent;
         Network.Initialize();
 
