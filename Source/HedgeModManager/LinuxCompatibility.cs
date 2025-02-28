@@ -159,7 +159,7 @@ public class LinuxCompatibility
         // Root path
         if (path.StartsWith("/"))
         {
-            return "Z:\\" + path.Replace("/", "\\");
+            return "Z:" + path.Replace("/", "\\");
         }
 
         // Unknown path
@@ -176,7 +176,7 @@ public class LinuxCompatibility
         // Root path
         if (path.StartsWith("Z:\\"))
         {
-            return "/" + path[3..].Replace("\\", "/");
+            return path[2..].Replace("\\", "/");
         }
 
         // Unknown path
