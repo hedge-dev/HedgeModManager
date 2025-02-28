@@ -10,6 +10,7 @@ public class ModLoaderConfiguration : IModLoaderConfiguration
     public bool EnableSaveFileRedirection { get; set; } = false;
     public string DatabasePath { get; set; } = string.Empty;
     public string LogType { get; set; } = "none";
+    public string NativeOS { get; set; } = "Windows";
 
     public void Parse(Ini ini)
     {
@@ -19,6 +20,12 @@ public class ModLoaderConfiguration : IModLoaderConfiguration
             EnableSaveFileRedirection = group.Get<int>("EnableSaveFileRedirection") != 0;
             
             DatabasePath = group.Get<string>("ModsDbIni");
+
+            if (OperatingSystem.IsLinux() && NativeOS == "Windows")
+            {
+                DatabasePath = LinuxCompatibility.ToUnixPath(DatabasePath);
+            }
+
             LogType = group.Get<string>("LogType");
         }
     }
@@ -28,7 +35,14 @@ public class ModLoaderConfiguration : IModLoaderConfiguration
         var group = ini.GetOrAddValue(LegacySectionName);
         group.Set("Enabled", Enabled ? 1 : 0);
         group.Set("EnableSaveFileRedirection", EnableSaveFileRedirection ? 1 : 0);
-        group.Set("ModsDbIni", DatabasePath);
+        if (OperatingSystem.IsLinux() && NativeOS == "Windows")
+        {
+            group.Set("ModsDbIni", LinuxCompatibility.ToWinePath(DatabasePath));
+        }
+        else
+        {
+            group.Set("ModsDbIni", DatabasePath);
+        }
         group.Set("LogType", LogType);
     }
 

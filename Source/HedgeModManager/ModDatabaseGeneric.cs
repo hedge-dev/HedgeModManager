@@ -19,6 +19,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
     public List<ModGeneric> Mods { get; set; } = [];
     public List<CSharpCode> Codes { get; set; } = [];
     public bool SupportsCodeCompilation { get; set; } = true;
+    public string NativeOS { get; set; } = "Windows";
 
     public async Task Save()
     {
@@ -45,7 +46,13 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
                 favoriteMods.Add(id.ToString());
             }
 
-            modsSection.Set(id.ToString(), Path.Combine(mod.Root, ModGeneric.ConfigName));
+            string modPath = Path.Combine(mod.Root, ModGeneric.ConfigName);
+            if (OperatingSystem.IsLinux() && NativeOS == "Windows")
+            {
+                modPath = LinuxCompatibility.ToWinePath(modPath);
+            }
+
+            modsSection.Set(id.ToString(), modPath);
         }
 
         foreach (var code in Codes)

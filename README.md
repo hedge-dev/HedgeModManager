@@ -72,7 +72,7 @@ Download the Flatpak bundle (file ending with .flatpak) from the [releases page]
 ### Bug/Issue Reporting
 Unless written and submitted properly for tracking, issues wwill need to be posted in the [discussion forum](https://github.com/hedge-dev/HedgeModManager/discussions).
 
-Please avoid creating issues in the Issues tab unless you know what you are doing.
+Please avoid creating issues in the Issues tab unless you know what you are doing. Incorrect reporting of issues with the Issues tab will lead to the issue being closed.
 
 Make sure to explain in as much detail as you can on what you have done that caused the issue and if you are able to reproduce the same error/crash. If reproducable, explain in steps what you did. Please also use common sense.
 

@@ -148,4 +148,39 @@ public class LinuxCompatibility
 
         return false;
     }
+
+    public static string ToWinePath(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            return string.Empty;
+        }
+
+        // Root path
+        if (path.StartsWith("/"))
+        {
+            return "Z:\\" + path.Replace("/", "\\");
+        }
+
+        // Unknown path
+        return path.Replace("/", "\\");
+    }
+
+    public static string ToUnixPath(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            return string.Empty;
+        }
+
+        // Root path
+        if (path.StartsWith("Z:\\"))
+        {
+            return "/" + path[3..].Replace("\\", "/");
+        }
+
+        // Unknown path
+        return path.Replace("\\", "/");
+    }
+
 }
