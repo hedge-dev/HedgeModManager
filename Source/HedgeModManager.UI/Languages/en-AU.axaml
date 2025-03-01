@@ -7,6 +7,7 @@
   <system:String x:Key="Common.Program.Sub">A program designed to assist with loading Hedgehog Engine mods.</system:String>
 
   <!-- Common Game -->
+  <system:String x:Key="Common.Game.UnleashedRecompiled" >Unleashed Recompiled</system:String>
   <system:String x:Key="Common.Game.SonicGenerations"    >Sonic Generations (2011)</system:String>
   <system:String x:Key="Common.Game.SonicLostWorld"      >Sonic Lost World</system:String>
   <system:String x:Key="Common.Game.SonicForces"         >Sonic Forces</system:String>

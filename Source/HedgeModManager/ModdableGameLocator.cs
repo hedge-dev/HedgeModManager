@@ -2,13 +2,26 @@
 using Foundation;
 using HedgeModManager.Epic;
 using HedgeModManager.Properties;
+using Microsoft.Win32;
 using Steam;
+using System.IO;
 using System.Linq;
 
 public class ModdableGameLocator
 {
     public static readonly List<GameInfo> ModdableGameList =
     [
+        new()
+        {
+            ID = "UnleashedRecompiled",
+            SupportsCodes = false,
+            PlatformInfos = new()
+            {
+                { "Windows", new (string.Empty, "SOFTWARE\\UnleashedRecomp") },
+                { "Flatpak",  new ("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")},
+                { "Desktop",  new ("UnleashedRecomp", "unleashedrecomp")}
+            }
+        },
         new()
         {
             ID = "SonicGenerations",
@@ -199,6 +212,89 @@ public class ModdableGameLocator
                         gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
                     if (gameInfo.ModDatabaseDirectoryName != null)
                         game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
+                    games.Add(game);
+                }
+            }
+            if (gameInfo.PlatformInfos.TryGetValue("Windows", out var windowsInfo) &&
+                OperatingSystem.IsWindows())
+            {
+                string root = string.Empty;
+                string exe = string.Empty;
+                try
+                {
+                    // "Executable" is used to hold the registry key
+                    var key = Registry.CurrentUser.OpenSubKey(windowsInfo.Executable);
+                    if (key != null)
+                    {
+                        exe = key.GetValue("ExecutableFilePath") as string ?? string.Empty;
+                        root = key.GetValue("RootDirectoryPath") as string ?? string.Empty;
+                        if (string.IsNullOrEmpty(root))
+                            root = Path.GetDirectoryName(exe)!;
+                    }
+                    key?.Close();
+                }
+                catch { }
+
+                if (Directory.Exists(root) && File.Exists(exe))
+                {
+                    var gameSimple = new GameSimple(
+                        "Windows", string.Empty, gameInfo.ID,
+                        root, Path.GetFileName(exe), "Windows", exe, string.Empty);
+
+                    var game = new ModdableGameGeneric(gameSimple)
+                    {
+                        SupportsDirectLaunch = true,
+                        SupportsLauncher = false,
+                        Is64Bit = gameInfo.Is64Bit
+                    };
+                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                    games.Add(game);
+                }
+            }
+            if (gameInfo.PlatformInfos.TryGetValue("Flatpak", out var flatpakInfo))
+            {
+                string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    ".var/app", flatpakInfo.ID);
+
+                if (Directory.Exists(root))
+                {
+                    // Use custom path for SWA
+                    if (gameInfo.ID == "UnleashedRecompiled")
+                        root = Path.Combine(Paths.GetActualUserConfigPath(), "UnleashedRecomp");
+
+                    var gameSimple = new GameSimple(
+                        "Flatpak", flatpakInfo.ID, gameInfo.ID,
+                        root, Path.GetFileName(flatpakInfo.Executable), "Linux",
+                        "xdg-open", $"{flatpakInfo.Executable}:");
+
+                    var game = new ModdableGameGeneric(gameSimple)
+                    {
+                        SupportsDirectLaunch = true,
+                        SupportsLauncher = false,
+                        Is64Bit = gameInfo.Is64Bit
+                    };
+                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                    games.Add(game);
+                }
+            }
+            if (OperatingSystem.IsLinux() && gameInfo.PlatformInfos.TryGetValue("Desktop", out var desktopInfo))
+            {
+                string root = Path.Combine(Paths.GetActualUserConfigPath(), desktopInfo.ID);
+
+                if (Directory.Exists(root))
+                {
+                    var gameSimple = new GameSimple(
+                        "Desktop", desktopInfo.ID, gameInfo.ID,
+                        root, Path.GetFileName(desktopInfo.Executable), "Linux",
+                        "xdg-open", $"{desktopInfo.Executable}:");
+
+                    var game = new ModdableGameGeneric(gameSimple)
+                    {
+                        SupportsDirectLaunch = true,
+                        SupportsLauncher = false,
+                        Is64Bit = gameInfo.Is64Bit
+                    };
+                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
                     games.Add(game);
                 }
             }

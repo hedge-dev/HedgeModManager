@@ -8,6 +8,7 @@ public static class GameBanana
 {
     public static readonly Dictionary<string, string[]> GameIDMappings = new()
     {
+        { "hedgemmswa",          [ "UnleashedRecompiled" ] },
         { "hedgemmgens",         [ "SonicGenerations" ] },
         { "hedgemmlw",           [ "SonicLostWorld" ] },
         { "hedgemmforces",       [ "SonicForces" ] },
