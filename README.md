@@ -22,6 +22,7 @@ A mod manager for Hedgehog Engine games on PC.
 ### Current Supported Games
 |                                                                                                                   | Game                       | Store |
 | ----------------------------------------------------------------------------------------------------------------- | -------------------------- | ----- |
+| <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/UnleashedRecompiled.png" />  | Unleashed Recompiled       |       |
 | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicGenerations.png" />     | Sonic Generations (2011)   | [Steam](https://store.steampowered.com/app/71340) |
 | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicLostWorld.png" />       | Sonic Lost World           | [Steam](https://store.steampowered.com/app/329440) |
 | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicForces.png" />          | Sonic Forces               | [Steam](https://store.steampowered.com/app/637100) |
