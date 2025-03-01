@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:HedgeModManager.UI.Controls.Settings"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="64"
+             x:Class="HedgeModManager.UI.Controls.Settings.SettingsEntry"
+             Loaded="OnLoaded">
+  <Border ClipToBounds="True"
+          Background="{DynamicResource BackgroundL1Brush}"
+          Height="64" CornerRadius="20"
+          Padding="20,0,20,0"
+          HorizontalAlignment="Stretch">
+    <Grid RowDefinitions="*,*" ColumnDefinitions="Auto,Auto,*,Auto">
+      <materialIcons:MaterialIcon Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                                  Kind="{Binding Icon, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
+                                  Foreground="{DynamicResource Text.NormalBrush}"
+                                  Width="32" Height="32" Margin="0,0,24,0"
+                                  VerticalAlignment="Center" />
+      <TextBlock Grid.Row="0" Grid.Column="1"
+                 Text="{Binding Title, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
+                 Foreground="{DynamicResource Text.NormalBrush}"
+                 VerticalAlignment="Bottom"
+                 IsVisible="{Binding Description, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}, Converter={StaticResource EmptyBoolConverter}, ConverterParameter={x:True}}" />
+      <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                 Text="{Binding Title, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
+                 Foreground="{DynamicResource Text.NormalBrush}"
+                 VerticalAlignment="Center"
+                 IsVisible="{Binding Description, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}, Converter={StaticResource EmptyBoolConverter}}" />
+      <TextBlock Grid.Row="1" Grid.Column="1"
+                 Text="{Binding Description, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
+                 Foreground="{DynamicResource Text.SubBrush}"
+                 VerticalAlignment="Top" />
+      <TextBlock Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                 Text="{Binding Value, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
+                 Foreground="{DynamicResource Text.DisabledBrush}"
+                 Margin="22,0,0,0"
+                 VerticalAlignment="Center" />
+      <ContentPresenter Grid.Row="0" Grid.Column="3" Grid.RowSpan="2"
+                        Content="{Binding Data, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
+                        VerticalContentAlignment="Center" />
+    </Grid>
+  </Border>
+</UserControl>

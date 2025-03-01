@@ -1,0 +1,102 @@
+<local:WindowModal xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:html="using:TheArtOfDev.HtmlRenderer.Avalonia"
+             xmlns:local="using:HedgeModManager.UI.Controls.Modals"
+             xmlns:m="using:HedgeModManager.UI.Models"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="540"
+             x:Class="HedgeModManager.UI.Controls.Modals.ModDownloaderModal"
+             x:DataType="vm:MainWindowViewModel"
+             Loaded="OnInitialized"
+             MinWidth="400" MinHeight="200"
+             UseTitlePadding="False"
+             LargeWindow="True">
+  <local:WindowModal.Buttons>
+    <StackPanel HorizontalAlignment="Right">
+      <cb:Button Text="Common.Button.Download"
+                 Icon="Download" UseIcon="True"
+                 IsEnabled="{Binding ViewModel.Ready, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}}"
+                 Click="OnDownloadClick" />
+      <cb:Button Text="Common.Button.Cancel"
+                 Click="OnCancelClick" />
+    </StackPanel>
+  </local:WindowModal.Buttons>
+  <local:WindowModal.Data>
+    <Grid>
+      <Grid IsVisible="{Binding ViewModel.Loading, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}}">
+        <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="{DynamicResource Common.Text.Loading}"
+                     FontSize="28" FontWeight="Bold"
+                     Margin="0,0,0,20"
+                     HorizontalAlignment="Center" />
+          <ProgressBar IsIndeterminate="True" Height="10"
+                       Foreground="{DynamicResource ProgressBar.ForegroundBrush}"
+                       Background="{DynamicResource ProgressBar.BackgroundBrush}">
+            <ProgressBar.RenderTransform>
+              <ScaleTransform ScaleX="0.5" />
+            </ProgressBar.RenderTransform>
+          </ProgressBar>
+        </StackPanel>
+      </Grid>
+      <Grid RowDefinitions="144,*,Auto"
+            IsVisible="{Binding ViewModel.Loading, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}, Converter={StaticResource InvertedBoolConverter}}"
+            Background="{DynamicResource Common.Background1Brush}">
+        <!-- Banner -->
+        <Viewbox Stretch="UniformToFill">
+          <Image Grid.Row="0"
+                 Source="{Binding ViewModel.Banner, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}}"
+                 HorizontalAlignment="Stretch" />
+        </Viewbox>
+        <Rectangle>
+          <Rectangle.Fill>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#ED000000" Offset="0" />
+              <GradientStop Color="#99000000" Offset="1" />
+            </LinearGradientBrush>
+          </Rectangle.Fill>
+        </Rectangle>
+        <StackPanel VerticalAlignment="Bottom">
+          <TextBlock Text="{Binding ViewModel.Name, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}, Converter={StaticResource StringLocalizeConverter}}"
+                      Foreground="{DynamicResource Text.NormalBrush}"
+                      Margin="28,0,0,8" FontSize="30" FontWeight="Bold" />
+          <TextBlock Text="{Binding ViewModel.Author, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}, Converter={StaticResource StringLocalizeConverter}}"
+                      Foreground="{DynamicResource Text.SubBrush}"
+                      Margin="28,0,0,18" FontSize="16" />
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal" >
+          <TextBlock Text="{Binding ViewModel.TargetGameName, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}, Converter={StaticResource StringLocalizeConverter}}"
+                      Foreground="{DynamicResource Text.SubBrush}"
+                      Margin="0,0,16,18"
+                      FontSize="16" FontStyle="Italic"
+                      VerticalAlignment="Bottom" />
+          <Border Width="44" Height="44"
+                  Margin="0,0,16,16"
+                  CornerRadius="8" ClipToBounds="True">
+            <Image Source="{Binding ViewModel.GameIcon, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}}"/>
+          </Border>
+        </StackPanel>
+    
+        <!-- Middle -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+          <Border Grid.Column="0" Margin="20"
+                  Background="{DynamicResource BackgroundL2Brush}" CornerRadius="20"
+                  HorizontalAlignment="Stretch">
+            <ScrollViewer Margin="8,0,0,8">
+              <html:HtmlPanel Margin="0,0,8,0"
+                              Text="{Binding ViewModel.Description, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}}">
+              </html:HtmlPanel>
+            </ScrollViewer>
+          </Border>
+        </Grid>
+      </Grid>
+    </Grid>
+  </local:WindowModal.Data>
+</local:WindowModal>

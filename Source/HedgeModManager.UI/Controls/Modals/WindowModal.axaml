@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:html="using:TheArtOfDev.HtmlRenderer.Avalonia"
+             xmlns:local="using:HedgeModManager.UI.Controls.Modals"
+             xmlns:m="using:HedgeModManager.UI.Models"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="540"
+             x:Class="HedgeModManager.UI.Controls.Modals.WindowModal"
+             Background="{DynamicResource Common.Background0Brush}"
+             MinWidth="400" MinHeight="200">
+  <Grid>
+    <Grid.Background>
+      <ImageBrush Opacity="0.1"
+                  Source="avares://HedgeModManager.UI/Assets/Graphics/logo_bw.png">
+      </ImageBrush>
+    </Grid.Background>
+    <!-- Content -->
+    <Border x:Name="ContentBorder">
+      <Grid RowDefinitions="*,Auto">
+        <ContentPresenter Grid.Row="0"
+                          Content="{Binding Data, RelativeSource={RelativeSource AncestorType=local:WindowModal}}" />
+        <Border Grid.Row="1" Margin="20,12,20,20">
+          <ContentPresenter Content="{Binding Buttons, RelativeSource={RelativeSource AncestorType=local:WindowModal}}" />
+        </Border>
+      </Grid>
+    </Border>
+ 
+    <!-- Title -->
+    <Label Margin="0,10,0,0"
+           Content="{Binding Title, RelativeSource={RelativeSource AncestorType=local:WindowModal}, Converter={StaticResource StringLocalizeConverter}}"
+           FontSize="16" FontWeight="Bold"
+           HorizontalAlignment="Center" />
+    <!--    <cp:ButtonUserControl Margin="18"
+                          HorizontalAlignment="Right" VerticalAlignment="Top"
+                          Click="OnCloseClick">
+      <Border>
+        <materialIcons:MaterialIcon Kind="Close" Width="32" Height="32"
+                                    Foreground="{DynamicResource Text.NormalBrush}" />
+      </Border>
+      <cp:ButtonUserControl.Styles>
+        <Style Selector="Border">
+          <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource Button.PressedBrush}" />
+          </Style>
+        </Style>
+        <Style Selector=":pressed Border">
+          <Setter Property="Background" Value="{DynamicResource Button.PressedBrush}" />
+        </Style>
+      </cp:ButtonUserControl.Styles>
+    </cp:ButtonUserControl>-->
+  </Grid>
+</UserControl>

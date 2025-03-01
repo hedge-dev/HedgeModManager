@@ -39,7 +39,18 @@ public class ModGeneric : IMod
 
     public void Parse(Ini file)
     {
-        if (file.TryGetValue("Desc", out var descSection))
+        IniGroup? descSection = null;
+        if (file.Groups.TryGetValue("Desc", out IniGroup? desc))
+        {
+            descSection = desc;
+        }
+        else if (file.Groups.TryGetValue("Details", out IniGroup? details))
+        {
+            descSection = details;
+            IsReadOnly = true;
+        }
+
+        if (descSection != null)
         {
             Title = descSection.Get("Title", string.Empty);
             Version = descSection.Get("Version", string.Empty);

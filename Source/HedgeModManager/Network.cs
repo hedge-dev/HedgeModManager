@@ -83,7 +83,9 @@ public static class Network
             string cachePath = Path.Combine(Paths.GetCachePath(), cacheFileName!);
             if (File.Exists(cachePath))
             {
-                File.Copy(cachePath, outPath, true);
+                // TODO: Find better solution as this can fail if paths are written differenly but are the same file
+                if (!cachePath.ToLowerInvariant().Equals(outPath.ToLowerInvariant()))
+                    File.Copy(cachePath, outPath, true);
                 return true;
             }
         }
@@ -181,5 +183,42 @@ public static class Network
         memoryStream.Position = 0;
         Logger.Debug("Download completed");
         return memoryStream;
+    }
+
+    /// <summary>
+    /// Downloads a file into memory as a string
+    /// </summary>
+    /// <param name="url">URL to send request to</param>
+    /// <param name="progress">IProgress<long> to report download progress to</param>
+    /// <param name="c">Cancellation token</param>
+    /// <returns>A string containing the data from the download</returns>
+    public static async Task<string?> DownloadString(string url, CancellationToken c = default) =>
+        await DownloadString(CreateUri(url), c);
+
+    /// <summary>
+    /// Downloads a file into memory as a string
+    /// </summary>
+    /// <param name="uri">URI to send request to</param>
+    /// <param name="progress">IProgress<long> to report download progress to</param>
+    /// <param name="c">Cancellation token</param>
+    /// <returns>A string containing the data from the download</returns>
+    public static async Task<string?> DownloadString(Uri? uri, CancellationToken c = default)
+    {
+        if (uri == null)
+            return null;
+
+        Logger.Debug($"Beginning Download {uri}");
+        Logger.Debug("Waiting for headers...");
+        var response = await Client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, c);
+        if (!response.IsSuccessStatusCode)
+        {
+            Logger.Debug($"Got error status code: {response.StatusCode}");
+            return null;
+        }
+
+        Logger.Debug("Downloading string...");
+        string result = await response.Content.ReadAsStringAsync(c);
+        Logger.Debug("Download completed");
+        return result;
     }
 }

@@ -1,0 +1,169 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+  <!-- Common Program -->
+  <system:String x:Key="Common.Program.Name">Hedge Mod Manager</system:String>
+  <system:String x:Key="Common.Program.Sub">A program designed to assist with loading Hedgehog Engine mods.</system:String>
+
+  <!-- Common Game -->
+  <system:String x:Key="Common.Game.UnleashedRecompiled" >Unleashed Recompiled</system:String>
+  <system:String x:Key="Common.Game.SonicGenerations"    >Sonic Generations (2011)</system:String>
+  <system:String x:Key="Common.Game.SonicLostWorld"      >Sonic Lost World</system:String>
+  <system:String x:Key="Common.Game.SonicForces"         >Sonic Forces</system:String>
+  <system:String x:Key="Common.Game.PuyoPuyoTetris2"     >Puyo Puyo Tetris 2</system:String>
+  <system:String x:Key="Common.Game.Tokyo2020"           >Olympic Games Tokyo 2020</system:String>
+  <system:String x:Key="Common.Game.SonicColorsUltimate" >Sonic Colours: Ultimate</system:String>
+  <system:String x:Key="Common.Game.SonicOrigins"        >Sonic Origins</system:String>
+  <system:String x:Key="Common.Game.SonicFrontiers"      >Sonic Frontiers</system:String>
+  <system:String x:Key="Common.Game.SonicGenerations2024">Sonic Generations (2024)</system:String>
+  <system:String x:Key="Common.Game.ShadowGenerations"   >Shadow Generations</system:String>
+
+  <!-- Common Text -->
+  <system:String x:Key="Common.Text.Loading">Loading...</system:String>
+
+  <!-- Common Buttons -->
+  <system:String x:Key="Common.Button.Back"    >Back</system:String>
+  <system:String x:Key="Common.Button.Cancel"  >Cancel</system:String>
+  <system:String x:Key="Common.Button.Close"   >Close</system:String>
+  <system:String x:Key="Common.Button.Delete"  >Delete</system:String>
+  <system:String x:Key="Common.Button.Download">Download</system:String>
+  <system:String x:Key="Common.Button.Exit"    >Exit</system:String>
+  <system:String x:Key="Common.Button.Finish"  >Finish</system:String>
+  <system:String x:Key="Common.Button.Ignore"  >Ignore</system:String>
+  <system:String x:Key="Common.Button.Install" >Install</system:String>
+  <system:String x:Key="Common.Button.Menu"    >Menu</system:String>
+  <system:String x:Key="Common.Button.Next"    >Next</system:String>
+  <system:String x:Key="Common.Button.No"      >No</system:String>
+  <system:String x:Key="Common.Button.OK"      >OK</system:String>
+  <system:String x:Key="Common.Button.Options" >Options</system:String>
+  <system:String x:Key="Common.Button.Retry"   >Retry</system:String>
+  <system:String x:Key="Common.Button.Save"    >Save</system:String>
+  <system:String x:Key="Common.Button.SavePlay">Save and Play</system:String>
+  <system:String x:Key="Common.Button.Select"  >Select</system:String>
+  <system:String x:Key="Common.Button.Update"  >Update</system:String>
+  <system:String x:Key="Common.Button.Yes"     >Yes</system:String>
+
+  <!-- Other -->
+  <system:String x:Key="Download.Text.CheckManagerUpdate">Checking for Hedge Mod Manager updates...</system:String>
+  <system:String x:Key="Download.Text.CheckLoaderUpdate" >Updating mod loaders...</system:String>
+  <system:String x:Key="Download.Text.CheckModUpdate"    >Checking for mod updates... {0} / {1}</system:String>
+  <system:String x:Key="Download.Text.DownloadCodes"     >Downloading Codes...</system:String>
+  <system:String x:Key="Download.Text.DownloadMod"       >Downloading {0}...</system:String>
+  <system:String x:Key="Download.Text.InstallMod"        >Installing {0}...</system:String>
+  <system:String x:Key="Download.Text.InstallModMultiple">Installing {0} mods...</system:String>
+  <system:String x:Key="Download.Text.InstallModLoader"  >Installing mod loader...</system:String>
+  <system:String x:Key="Download.Text.InstallRuntime"    >Installing runtime...</system:String>
+  <system:String x:Key="Download.Text.SwitchProfileSave" >Switching profiles... (Backing up)</system:String>
+  <system:String x:Key="Download.Text.SwitchProfileLoad" >Switching profiles... (Restoring)</system:String>
+  <system:String x:Key="Download.Text.UpdateManager0"    >Downloading updates...</system:String>
+  <system:String x:Key="Download.Text.UpdateManager1"    >Extracting update...</system:String>
+  <system:String x:Key="Theme.Name.Dark"                 >Cool Dark</system:String>
+  <system:String x:Key="Theme.Name.Darker"               >Neutral Dark</system:String>
+
+  <!-- Mods -->
+  <system:String x:Key="Mods.Button.Configure"  >Configure</system:String>
+  <system:String x:Key="Mods.Button.Delete"     >Delete</system:String>
+  <system:String x:Key="Mods.Button.Favorite"   >Favourite</system:String>
+  <system:String x:Key="Mods.Button.Favorited"  >Favourited</system:String>
+  <system:String x:Key="Mods.Button.InstallMod" >Install Mod</system:String>
+  <system:String x:Key="Mods.Button.Open"       >Open Directory</system:String>
+  <system:String x:Key="Mods.Button.Update"     >Update</system:String>
+  <system:String x:Key="Mods.Text.Loading"      >Loading Mods...</system:String>
+  <system:String xml:space="preserve" x:Key="Mods.Text.NoResults">No Results.&#x0a;Filtering is enabled.</system:String>
+  <system:String xml:space="preserve" x:Key="Mods.Text.NoMods">..There is not a lot here.&#x0a;Go get some mods!</system:String>
+
+  <!-- Codes -->
+  <system:String x:Key="Codes.Button.UpdateCodes">Update Community Codes</system:String>
+
+  <!-- Settings -->
+  <system:String x:Key="Settings.Button.ChangeModsDir"       >Change</system:String>
+  <system:String x:Key="Settings.Button.CheckUpdates"        >Check</system:String>
+  <system:String x:Key="Settings.Button.CheckingUpdates"     >Checking...</system:String>
+  <system:String x:Key="Settings.Button.ClearPrefix"         >Delete</system:String>
+  <system:String x:Key="Settings.Button.InstallML"           >Install</system:String>
+  <system:String x:Key="Settings.Button.ReinstallRuntime"    >Reinstall</system:String>
+  <system:String x:Key="Settings.Button.UninstallML"         >Uninstall</system:String>
+  <system:String x:Key="Settings.Button.OpenGameDir"         >Open Game Directory</system:String>
+  <system:String x:Key="Settings.Button.OpenModsDir"         >Open</system:String>
+  <system:String x:Key="Settings.Button.OpenPrefixDir"       >Open</system:String>
+  <system:String x:Key="Settings.Button.ToggleFullscreen"    >Toggle Fullscreen</system:String>
+  <system:String xml:space="preserve" x:Key="Settings.Header.GameML">Game &amp; Mod Loader</system:String>
+  <system:String x:Key="Settings.Header.Manager"             >Hedge Mod Manager</system:String>
+  <system:String x:Key="Settings.Header.Text"                >Settings</system:String>
+  <system:String x:Key="Settings.Title.Profile"              >Profile</system:String>
+  <system:String x:Key="Settings.Description.DebugConsole"   >Enable to display mod loader debug messages.</system:String>
+  <system:String x:Key="Settings.Description.ModLoader"      >Enable and install to load mods.</system:String>
+  <system:String x:Key="Settings.Description.Launcher"       >Launch the game using the associated game launcher.</system:String>
+  <system:String x:Key="Settings.Description.Profile"        >Quickly change the enabled mods using user-defined presets.</system:String>
+  <system:String x:Key="Settings.Description.Proton"         >Tools for managing the Windows compatibility layer.</system:String>
+  <system:String x:Key="Settings.Description.SaveRedirection">Use a copy of your save file to prevent mods from affecting your regular progress.</system:String>
+  <system:String x:Key="Settings.Description.UpdateCodes"    >Automatically check for code update on startup and game change.</system:String>
+  <system:String x:Key="Settings.Description.UpdateManager"  >Automatically check for Hedge Mod Manager updates on startup.</system:String>
+  <system:String x:Key="Settings.Description.UpdateML"       >Automatically check for mod loader updates on startup and game change.</system:String>
+  <system:String x:Key="Settings.Description.UpdateMod"      >Automatically check for mod updates on startup and game change.</system:String>
+  <system:String x:Key="Settings.Title.DebugConsole"         >Enable Debug Console</system:String>
+  <system:String x:Key="Settings.Title.Language"             >Language</system:String>
+  <system:String x:Key="Settings.Title.Launcher"             >Use Game Launcher</system:String>
+  <system:String x:Key="Settings.Title.ModsDir"              >Mods Directory</system:String>
+  <system:String x:Key="Settings.Title.ModLoader"            >Mod Loader</system:String>
+  <system:String x:Key="Settings.Title.Proton"               >Proton</system:String>
+  <system:String x:Key="Settings.Title.SaveRedirection"      >Redirect Default Save File</system:String>
+  <system:String x:Key="Settings.Title.Theme"                >Theme</system:String>
+  <system:String x:Key="Settings.Title.UpdateCodes"          >Check for code updates</system:String>
+  <system:String x:Key="Settings.Title.UpdateManager"        >Check for Hedge Mod Manager updates</system:String>
+  <system:String x:Key="Settings.Title.UpdateML"             >Check for mod loader updates</system:String>
+  <system:String x:Key="Settings.Title.UpdateMod"            >Check for mod updates</system:String>
+
+  <!-- About -->
+  <system:String x:Key="About.Program.Sub"  >Requires legally owned copies of the supported games.</system:String>
+  <system:String x:Key="About.Button.GitHub">GitHub</system:String>
+  <system:String x:Key="About.Header.Authors">Authors and Contributors</system:String>
+  <system:String x:Key="About.Header.Translators">Translation Roles</system:String>
+  <system:String x:Key="About.Header.SupportedGames">Supported Games</system:String>
+
+  <!-- Modal -->
+  <system:String x:Key="Modal.Button.ExportLog"        >Save Log File</system:String>
+  <system:String x:Key="Modal.Header.Credits"          >Credits</system:String>
+  <system:String x:Key="Modal.Header.Description"      >Description</system:String>
+  <system:String x:Key="Modal.Header.AboutMod"         >{0} v{1}</system:String>
+  <system:String x:Key="Modal.Header.AboutModAuthor"   >Authored by {0} on {1}</system:String>
+  <system:String x:Key="Modal.Text.TargetGame"         >For {0}</system:String>
+  <system:String x:Key="Modal.Title.AboutMod"          >About {0}</system:String>
+  <system:String x:Key="Modal.Title.Confirm"           >Confirmation</system:String>
+  <system:String x:Key="Modal.Title.DownloadError"     >Download Error</system:String>
+  <system:String x:Key="Modal.Title.DownloadMod"       >Download {0}</system:String>
+  <system:String x:Key="Modal.Title.DownloadModLoading">Download Mod</system:String>
+  <system:String x:Key="Modal.Title.Games"             >Games</system:String>
+  <system:String x:Key="Modal.Title.Information"       >Information</system:String>
+  <system:String x:Key="Modal.Title.InstallError"      >Install Error</system:String>
+  <system:String x:Key="Modal.Title.LoadError"         >Load Error</system:String>
+  <system:String x:Key="Modal.Title.SaveError"         >Save Error</system:String>
+  <system:String x:Key="Modal.Title.SelectMods"        >Select Mods Directory...</system:String>
+  <system:String x:Key="Modal.Title.SelectModsFailed"  >Invalid Mods Directory</system:String>
+  <system:String x:Key="Modal.Title.UpdateError"       >Update Error</system:String>
+  <system:String x:Key="Modal.Title.UpdateMod"         >Update Available</system:String>
+  <system:String x:Key="Modal.Title.UpdateManager"     >Hedge Mod Manager Update</system:String>
+  <system:String x:Key="Modal.Title.RunError"          >Launch Error</system:String>
+  <system:String x:Key="Modal.Title.ConfigureMod"      >Configure {0}</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.ClearPrefix">Are you sure you want to delete the game prefix?&#x0a;&#x0a;Please make sure you are aware of the effects of&#x0a;deleting prefixes for the selected game.&#x0a;&#x0a;This action cannot be undone!</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.ClearPrefixComplete">Prefix deleted successfully.&#x0a;&#x0a;Make sure to relaunch the game on Steam to regenerate the prefix.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.DeleteMod">Are you sure you want to delete &quot;{0}&quot;?&#x0a;This action cannot be undone!</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.DownloadError">Failed to download mod.&quot; Please try again later.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.ExitConfirm">Are you sure you want to exit Hedge Mod Manager?</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.GameLoadError">An error occurred when Hedge Mod Manager was trying&#x0a;to load mod data.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.GameMissingError">Hedge Mod Manager is unable to install &quot;{0}&quot;&#x0a;due to {1} not being found.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.GameNoAccess">Hedge Mod Manager does not have write&#x0a;access to the game files.&#x0a;&#x0a;Please make sure the game files are writable.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.GamescopeError">Mod configuration has been saved.&#x0a;&#x0a;Hedge Mod Manager currently cannot launch games while in Gaming Mode.&#x0a;&#x0a;Please exit Hedge Mod Manager then launch the game.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.InstallError">Failed to install mod. Check log for exception.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.ModLoaderInstallError">An error occurred while trying to install the mod loader.&#x0a;&#x0a;Check log for exception.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.PkgUpdate">Please update Hedge Mod Manager using your system's package manager.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.SelectModsError">Hedge Mod Manager does not have permissions to the selected directory.&#x0a;&#x0a;Please select another directory.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.UpdateMod">There is an update available for {0}.&#x0a;&#x0a;Would you like to update the mod?</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.UnknownSaveError">Hedge Mod Manager was unable to save&#x0a;due to an unknown error.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.UnknownUpdateError">An error occurred when trying to prepare&#x0a;for updating.&#x0a;&#x0a;Please try again later.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.UnknownRunError">Hedge Mod Manager was unable to launch&#x0a;the game due to an unknown error.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.UpdateCheckError">An error occurred while checking for updates.</system:String>
+
+
+</ResourceDictionary>

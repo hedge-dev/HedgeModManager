@@ -1,0 +1,75 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HedgeModManager.UI.ViewModels"
+        xmlns:c="using:HedgeModManager.UI.Controls"
+        xmlns:ca="using:HedgeModManager.UI.Controls.About"
+        xmlns:cc="using:HedgeModManager.UI.Controls.Codes"
+        xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
+        xmlns:cmw="using:HedgeModManager.UI.Controls.MainWindow"
+        xmlns:setup="using:HedgeModManager.UI.Controls.Setup"
+        xmlns:settings="using:HedgeModManager.UI.Controls.Settings"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+        x:Class="HedgeModManager.UI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/icon.ico"
+        Title="{DynamicResource Common.Program.Name}"
+        MinWidth="1089" MinHeight="613"
+        Background="Black" FontSize="14"
+        DragDrop.AllowDrop="True" WindowState="{Binding WindowState}"
+        Loaded="Window_Loaded"
+        KeyDown="OnKeyDown">
+  <!-- FontFamily="{StaticResource NunitoFont}"-->
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+  <Grid RowDefinitions="*,Auto" ColumnDefinitions="Auto,*"
+        Background="{DynamicResource BackgroundL1Brush}">
+    <c:Sidebar Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" />
+    <c:Footer Grid.Row="1" Grid.Column="1" />
+    <TabControl Grid.Row="0" Grid.Column="1"
+                SelectedIndex="{Binding SelectedTabIndex}"
+                SelectionChanged="OnTabChanged"
+                Background="{DynamicResource BackgroundL0Brush}"
+                CornerRadius="0,0,0,8">
+      <TabItem Header="Loading">
+        <TextBlock Text="{DynamicResource Common.Text.Loading}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </TabItem>
+      <TabItem Header="Setup">
+        <setup:Setup />
+      </TabItem>
+      <TabItem Header="Mods">
+        <cmw:Mods />
+      </TabItem>
+      <TabItem Header="Codes">
+        <cc:Codes />
+      </TabItem>
+      <TabItem Header="Settings">
+        <settings:Settings 
+                           Game="{Binding SelectedGame}"
+                           Profile="{Binding SelectedProfile}"/>
+      </TabItem>
+      <TabItem Header="About">
+        <ca:About />
+      </TabItem>
+      <TabItem Header="Test">
+        <cmw:Test />
+      </TabItem>
+      <TabControl.Styles>
+        <Style Selector="TabControl > Border > DockPanel > ItemsPresenter">
+          <Setter Property="IsVisible" Value="False" />
+        </Style>
+      </TabControl.Styles>
+    </TabControl>
+      <ItemsControl ItemsSource="{Binding Modals}" Grid.RowSpan="2" Grid.ColumnSpan="2">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <Grid />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+      </ItemsControl>
+  </Grid>
+
+</Window>

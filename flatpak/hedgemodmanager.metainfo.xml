@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.hedge_dev.hedgemodmanager</id>
+  
+  <name>Hedge Mod Manager</name>
+  <summary>Manage mods for HE Sonic games</summary>
+  <developer_name>hedge-dev</developer_name>
+  <url type="homepage">https://github.com/hedge-dev/HedgeModManager</url>
+  <url type="bugtracker">https://github.com/hedge-dev/HedgeModManager/issues</url>
+  <url type="help">https://github.com/hedge-dev/HedgeModManager/discussions</url>
+  <url type="vcs-browser">https://github.com/hedge-dev/HedgeModManager</url>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">mild</content_attribute>
+  </content_rating>
+
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+
+  <description>
+    <p>Hedge Mod Manager is a GUI tool built to allow users to easily install and manage mods for various Hedgehog Engine games released on PC systems.</p>
+    <p>Supported games:</p>
+    <ul>
+      <li>Sonic Generations (2011)</li>
+      <li>Sonic Lost World</li>
+      <li>Sonic Forces</li>
+      <li>Puyo Puyo Tetris 2</li>
+      <li>Olympic Games Tokyo 2020</li>
+      <li>Sonic Colours: Ultimate</li>
+      <li>Sonic Origins</li>
+      <li>Sonic Frontiers</li>
+      <li>Shadow Generations</li>
+      <li>Sonic Generations (2024)</li>
+    </ul>
+  </description>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/hedge-dev/HedgeModManager/245c7fb001d95568b89b7952a8e13a74ab3d6483/data/screenshot01.png</image>
+      <caption>Mods tab showing the currently installed and enabled mods</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/hedge-dev/HedgeModManager/245c7fb001d95568b89b7952a8e13a74ab3d6483/data/screenshot01.png</image>
+      <caption>Settings tab showing the game, mod loader and manager settings</caption>
+    </screenshot>
+  </screenshots>
+
+  <releases>
+    <release version="8.0.0" date="2025-03-02">
+      <description>
+        <p>Initial release of v8.0.0</p>
+      </description>
+    </release>
+  </releases>
+
+  <launchable type="desktop-id">io.github.hedge_dev.hedgemodmanager.desktop</launchable>
+</component>

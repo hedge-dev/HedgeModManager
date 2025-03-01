@@ -116,6 +116,15 @@ namespace HedgeModManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com/thesupersonic16/HedgeModManager/refs/heads/rewrite/HedgeModManager/Resources/ModLoader/Loaders.ini.
+        /// </summary>
+        internal static string ModLoaderManifestURL {
+            get {
+                return ResourceManager.GetString("ModLoaderManifestURL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://github.com/thesupersonic16/HedgeModManager/raw/rewrite/HedgeModManager/Resources/ModLoader/RainbowModLoader.dll.
         /// </summary>
         internal static string RMLDownloadURL {

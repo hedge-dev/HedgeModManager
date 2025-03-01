@@ -11,13 +11,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
-    <PackageReference Include="SharpCompress" Version="0.38.0" />
-    <PackageReference Include="ValveKeyValue" Version="0.9.0.267" />
+    <PackageReference Include="PeNet" Version="4.1.1" />
+    <PackageReference Include="SharpCompress" Version="0.39.0" />
+    <PackageReference Include="ValveKeyValue" Version="0.12.0.391" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Libraries\HedgeModManager.CodeCompiler\HedgeModManager.CodeCompiler.csproj" />
     <ProjectReference Include="..\Libraries\HedgeModManager.Diagnostics\HedgeModManager.Diagnostics.csproj" />
+    <ProjectReference Include="..\Libraries\HedgeModManager.Epic\HedgeModManager.Epic.csproj" />
     <ProjectReference Include="..\Libraries\HedgeModManager.Foundation\HedgeModManager.Foundation.csproj" />
     <ProjectReference Include="..\Libraries\HedgeModManager.Steam\HedgeModManager.Steam.csproj" />
     <ProjectReference Include="..\Libraries\HedgeModManager.Text\HedgeModManager.Text.csproj" />

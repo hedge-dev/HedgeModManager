@@ -1,0 +1,59 @@
+<cp:ButtonUserControl xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:c="using:HedgeModManager.UI.Controls"
+                      xmlns:cm="using:HedgeModManager.UI.Controls.Mods"
+                      xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:m="using:HedgeModManager.UI.Models"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      mc:Ignorable="d" d:DesignWidth="52" d:DesignHeight="52"
+                      x:Class="HedgeModManager.UI.Controls.Mods.ModEntryFeatureButton"
+                      Classes.mainButton="True"
+                      Initialized="OnInitialized">
+  <Border Cursor="Hand" ClipToBounds="True"
+          Classes.buttonBorder="True"
+          Classes.buttonEnabled="{Binding Enabled, RelativeSource={RelativeSource AncestorType=cm:ModEntryFeatureButton}}"
+          Width="48" Height="48"
+          CornerRadius="12"
+          PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased">
+      <Viewbox Stretch="Uniform" Width="24" Height="24" VerticalAlignment="Center">
+        <Path Data="{Binding Icon, RelativeSource={RelativeSource AncestorType=cm:ModEntryFeatureButton}}"
+              Fill="{Binding Fill, RelativeSource={RelativeSource AncestorType=cm:ModEntryFeatureButton}}">
+          <Path.Transitions>
+            <Transitions>
+              <BrushTransition Property="Fill" Duration="0:0:0.1"/>
+            </Transitions>
+          </Path.Transitions>
+        </Path>
+      </Viewbox>
+    <Border.Transitions>
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.1"/>
+      </Transitions>
+    </Border.Transitions>
+    <Border.Styles>
+      <Style Selector="Border.buttonBorder">
+        <Setter Property="Opacity" Value="0.3" />
+        <Setter Property="Background" Value="#00000000" />
+        <Style Selector="^:pointerover">
+          <Setter Property="Background" Value="{DynamicResource Button.HoverL2Brush}"/>
+        </Style>
+        <Style Selector="^.buttonEnabled">
+          <Setter Property="Opacity" Value="1"/>
+        </Style>
+      </Style>
+      <Style Selector="cm|ModEntryFeatureButton.mainButton:pressed Border.buttonBorder">
+        <Setter Property="Background" Value="{DynamicResource Button.PressedL2Brush}"/>
+      </Style>
+      <Style Selector=":disabled Border.buttonBorder">
+        <Setter Property="Opacity" Value="0.5" />
+      </Style>
+      <Style Selector="Path">
+        <Setter Property="Fill" Value="{DynamicResource ForegroundBrush}" />
+      </Style>
+      <Style Selector="Border.buttonBorder:pointerover Path">
+        <Setter Property="Fill" Value="{DynamicResource TextHoverBrush}"/>
+      </Style>
+    </Border.Styles>
+  </Border>
+</cp:ButtonUserControl>

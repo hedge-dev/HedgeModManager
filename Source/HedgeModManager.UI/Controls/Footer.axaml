@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignHeight="80" d:DesignWidth="720"
+             x:Class="HedgeModManager.UI.Controls.Footer"
+             x:DataType="vm:MainWindowViewModel">
+  <Border Background="{DynamicResource BackgroundL1Brush}"
+          Height="48" HorizontalAlignment="Stretch">
+    <Grid>
+      <StackPanel Margin="24,0,0,0" Orientation="Horizontal"
+                  HorizontalAlignment="Left" VerticalAlignment="Center">
+        <TextBlock Text="{Binding Message}" FontSize="14"
+                   VerticalAlignment="Center" />
+        <ProgressBar Height="24" Margin="24,0,0,0"
+                     Value="{Binding OverallProgress}"
+                     IsIndeterminate="{Binding ProgressIndeterminate}"
+                     ShowProgressText="{Binding ProgressIndeterminate, Converter={StaticResource InvertedBoolConverter}}"
+                     Minimum="0"
+                     Maximum="{Binding OverallProgressMax}"
+                     Foreground="Green"
+                     IsVisible="{Binding ShowProgressBar}" />
+      </StackPanel>
+      <ItemsControl ItemsSource="{Binding CurrentTabInfo.Buttons}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Margin="0,0,6,0" HorizontalAlignment="Right" Orientation="Horizontal" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <c:FooterButton />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </Grid>
+  </Border>
+</UserControl>

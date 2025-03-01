@@ -5,6 +5,8 @@ using HedgeModManager.Properties;
 
 public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, IModdableGameTConfiguration<ModLoaderConfiguration>
 {
+    private string _nativeOS = "Windows";
+
     public IGame BaseGame { get; }
 
     public string Platform => BaseGame.Platform;
@@ -14,7 +16,6 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
     public string? Executable { get; set; }
     public string DefaultDatabaseDirectory { get; set; } = "mods";
     public string ModLoaderName { get; init; } = "None";
-    public string NativeOS { get; set; } = "Windows";
     public string? PrefixRoot => BaseGame.PrefixRoot;
     public bool SupportsDirectLaunch { get; set; }
     public bool SupportsLauncher { get; set; }
@@ -23,6 +24,16 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
     public ModDatabaseGeneric ModDatabase { get; } = new ModDatabaseGeneric();
     public ModLoaderConfiguration ModLoaderConfiguration { get; set; } = new ModLoaderConfiguration();
     public ModLoaderGeneric? ModLoader { get; set; }
+    public string NativeOS
+    {
+        get => _nativeOS;
+        set
+        {
+            _nativeOS = value;
+            ModDatabase.NativeOS = value;
+            ModLoaderConfiguration.NativeOS = value;
+        }
+    }
 
     public ModdableGameGeneric(IGame game)
     {

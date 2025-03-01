@@ -1,0 +1,106 @@
+name: Build Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version: 
+        description: 'Version to build'
+        required: true
+        default: '8.0.0.0'
+      prerelease:
+        description: 'Prerelease'
+        required: true
+        type: boolean
+
+env:
+  PROJECT_PATH: ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj
+  FLATPAK_ID: io.github.hedge_dev.hedgemodmanager
+  GENERATOR_URL: https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/refs/heads/master/dotnet/flatpak-dotnet-generator.py
+  DOTNET_VERSION: 8
+  DOTNET_CLI_HOME: /tmp/.dotnet
+  FREEDESKTOP_VERSION: 24.08
+
+jobs:
+  build-all:
+    name: Build All
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }} SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}.0.x
+
+      - name: Install Flatpak Builder
+        run: |
+          sudo apt-get update
+          sudo apt-get install flatpak-builder -y
+      
+      - name: Setup Flatpak Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/flatpak/runtime/
+          key: flatpak-${{ env.FREEDESKTOP_VERSION }}
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }} Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DOTNET_CLI_HOME }}
+          key: dotnet-${{ env.DOTNET_VERSION }}
+  
+      - name: Setup Flatpak
+        run: |
+          flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install --user -y flathub org.freedesktop.Sdk//${{env.FREEDESKTOP_VERSION}}
+          flatpak install --user -y flathub org.freedesktop.Sdk.Extension.dotnet${{env.DOTNET_VERSION}}//${{env.FREEDESKTOP_VERSION}}
+
+      - name: Restore Packages
+        run: dotnet restore ${{env.PROJECT_PATH}}  
+
+      - name: Generate NuGet Sources
+        run: |
+          curl -o flatpak-dotnet-generator.py ${{env.GENERATOR_URL}}
+          chmod +x flatpak-dotnet-generator.py
+          python3 flatpak-dotnet-generator.py ./flatpak/nuget-sources.json ${{env.PROJECT_PATH}} --dotnet ${{env.DOTNET_VERSION}} --freedesktop ${{env.FREEDESKTOP_VERSION}}
+      
+      - name: win-x64 Build
+        run: dotnet publish -p:PublishProfile=win-x64 -c Release -p:AssemblyVersion=${{ github.event.inputs.version }} -p:FileVersion=${{ github.event.inputs.version }} -o ./output/win-x64 ${{env.PROJECT_PATH}}
+
+      - name: flatpak-x86_64 Build
+        env:
+          APP_VERSION: ${{ github.event.inputs.version }}
+        run: flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{ env.FLATPAK_ID }}-autobuild.yml
+
+      - name: Build Flatpak Bundle
+        run: flatpak build-bundle repo ./flatpak/${{env.FLATPAK_ID}}.flatpak ${{env.FLATPAK_ID}}
+
+      - name: Prepare Release
+        run: |
+          mkdir -p ./release
+          mv ./output/win-x64/HedgeModManager.UI.exe ./release/HedgeModManager.exe
+          mv ./flatpak/${{env.FLATPAK_ID}}.flatpak ./release/${{env.FLATPAK_ID}}.flatpak
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          files: |
+            ./release/*
+          draft: true
+          prerelease: ${{ github.event.inputs.prerelease }}
+          name: Hedge Mod Manager ${{ github.event.inputs.version }}
+          tag_name: ${{ github.event.inputs.version }}
+          body: |
+            ## Hedge Mod Manager (${{ github.event.inputs.version }})
+            - Added 
+            - Fixed 
+
+      - name: Upload NuGet Sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-sources.json
+          path: ./flatpak/nuget-sources.json

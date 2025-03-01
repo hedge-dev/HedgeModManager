@@ -19,7 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager.Diagnostics
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager.CoreLib", "Libraries\HedgeModManager.CoreLib\HedgeModManager.CoreLib.csproj", "{938F4CD7-210B-438B-85B1-DE2D1354FD80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HedgeModManager.Steam", "Libraries\HedgeModManager.Steam\HedgeModManager.Steam.csproj", "{7FCC52DA-69A8-4CDD-8826-569572A25A6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HedgeModManager.Steam", "Libraries\HedgeModManager.Steam\HedgeModManager.Steam.csproj", "{7FCC52DA-69A8-4CDD-8826-569572A25A6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HedgeModManager.UI", "HedgeModManager.UI\HedgeModManager.UI.csproj", "{308B16AE-0E04-4698-9EB4-54C934E10690}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HedgeModManager.Epic", "Libraries\HedgeModManager.Epic\HedgeModManager.Epic.csproj", "{D9414A40-140C-4538-8BFA-8CB6F96F483A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +63,14 @@ Global
 		{7FCC52DA-69A8-4CDD-8826-569572A25A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FCC52DA-69A8-4CDD-8826-569572A25A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FCC52DA-69A8-4CDD-8826-569572A25A6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{308B16AE-0E04-4698-9EB4-54C934E10690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{308B16AE-0E04-4698-9EB4-54C934E10690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{308B16AE-0E04-4698-9EB4-54C934E10690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{308B16AE-0E04-4698-9EB4-54C934E10690}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9414A40-140C-4538-8BFA-8CB6F96F483A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9414A40-140C-4538-8BFA-8CB6F96F483A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9414A40-140C-4538-8BFA-8CB6F96F483A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9414A40-140C-4538-8BFA-8CB6F96F483A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +82,7 @@ Global
 		{D0094A94-1C86-41CD-A9E8-24196AE753D5} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
 		{938F4CD7-210B-438B-85B1-DE2D1354FD80} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
 		{7FCC52DA-69A8-4CDD-8826-569572A25A6C} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
+		{D9414A40-140C-4538-8BFA-8CB6F96F483A} = {0C624CCE-BE50-4485-A599-5E7FEA002A26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {870A5800-4496-4A82-9494-C5083296D996}

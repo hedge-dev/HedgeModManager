@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cp="using:HedgeModManager.UI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="150"
+             x:Class="HedgeModManager.UI.Controls.Modals.GameSelectModal"
+             x:DataType="vm:MainWindowViewModel">
+
+    <StackPanel>
+      <TextBlock Text="{DynamicResource Modal.Title.Games}" FontSize="32" Margin="0,0,0,4" HorizontalAlignment="Center" />
+      <ScrollViewer MaxHeight="320" Margin="4,4,0,4">
+        <ItemsControl ItemsSource="{Binding Games}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <cp:GameSelectButton Game="{Binding}" Margin="0,0,4,0"
+                                   Click="OnGameClick" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="150"
+             x:Class="HedgeModManager.UI.Controls.Modal">
+  <Grid>
+    <Rectangle HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               PointerPressed="OnPointerPressed">
+      <Rectangle.Fill>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+          <GradientStop Color="#7F000000" Offset="0.3" />
+          <GradientStop Color="{Binding AltBackgroundColor, RelativeSource={RelativeSource AncestorType=c:Modal}}" Offset="1" />
+        </LinearGradientBrush>
+      </Rectangle.Fill>
+    </Rectangle>
+    <Border Background="{DynamicResource Modal.BackgroundBrush}"
+            BorderBrush="{DynamicResource Modal.BorderBrush}"
+            BorderThickness="1" CornerRadius="20"
+            Padding="{Binding BorderPadding, RelativeSource={RelativeSource AncestorType=c:Modal}}" Margin="80"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            >
+      <Border CornerRadius="20" ClipToBounds="True">
+        <ContentPresenter Content="{Binding Control, RelativeSource={RelativeSource AncestorType=c:Modal}}" />
+      </Border>
+    </Border>
+  </Grid>
+</UserControl>

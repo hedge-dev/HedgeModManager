@@ -1,0 +1,47 @@
+<local:WindowModal xmlns="https://github.com/avaloniaui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:c="using:HedgeModManager.UI.Controls"
+                   xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+                   xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
+                   xmlns:cp="using:HedgeModManager.UI.Controls"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:html="using:TheArtOfDev.HtmlRenderer.Avalonia"
+                   xmlns:local="using:HedgeModManager.UI.Controls.Modals"
+                   xmlns:m="using:HedgeModManager.UI.Models"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
+                   xmlns:vm="using:HedgeModManager.UI.ViewModels"
+                   mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="506"
+                   x:Class="HedgeModManager.UI.Controls.Modals.ModInfoModal"
+                   x:DataType="vm:MainWindowViewModel"
+                   Initialized="OnInitialized"
+                   Background="{DynamicResource BackgroundL1Brush}"
+                   MinWidth="500" MinHeight="250"
+                   UseTitlePadding="True"
+                   LargeWindow="True">
+  <local:WindowModal.Buttons>
+    <StackPanel>
+      <cb:Button Text="{DynamicResource Mods.Button.Open}" Click="OnOpenClick" />
+      <cb:Button Text="{Binding InfoViewModel.FavoriteButtonText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource StringLocalizeConverter}}" Click="OnFavoriteClick" />
+      <cb:Button Text="{DynamicResource Mods.Button.Configure}" Click="OnConfigureClick" IsEnabled="{Binding ModViewModel.HasConfig, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}" />
+      <cb:Button Text="{DynamicResource Mods.Button.Update}" IsEnabled="{Binding ModViewModel.Mod.Updater, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource NullBoolConverter}}" Click="OnUpdateClick" />
+      <cb:Button Text="{DynamicResource Mods.Button.Delete}" Click="OnDeleteClick" />
+    </StackPanel>
+  </local:WindowModal.Buttons>
+  <local:WindowModal.Data>
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+      <StackPanel Grid.Row="0" Margin="24,16,24,4">
+        <TextBlock
+                   Text="{Binding InfoViewModel.ModText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
+                   FontSize="32" HorizontalAlignment="Center" />
+        <TextBlock
+                   Text="{Binding InfoViewModel.AuthorText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
+                   FontSize="16" HorizontalAlignment="Center" />
+      </StackPanel>
+      <cb:Separator Grid.Row="1" />
+      <html:HtmlPanel Grid.Row="2" Margin="24,16,24,16"
+                      Text="{Binding InfoViewModel.Description, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
+                      HorizontalAlignment="Center" />
+    </Grid>
+  </local:WindowModal.Data>
+</local:WindowModal>

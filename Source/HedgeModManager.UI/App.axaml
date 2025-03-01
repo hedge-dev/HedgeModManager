@@ -1,0 +1,34 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="HedgeModManager.UI.App"
+             xmlns:local="using:HedgeModManager.UI"
+             xmlns:themes="using:HedgeModManager.UI.Themes"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
+             RequestedThemeVariant="{x:Static themes:Themes.Darker}">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/Themes/Themes.axaml" />
+        <MergeResourceInclude Source="/Languages/Language.axaml" />
+        <MergeResourceInclude Source="/Languages/en-AU.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+    <FontFamily x:Key="NunitoFont">/Assets/Fonts#Nunito</FontFamily>
+    <local:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    <local:NullBoolConverter x:Key="NullBoolConverter"/>
+    <local:EmptyBoolConverter x:Key="EmptyBoolConverter"/>
+    <local:LogStringConverter x:Key="LogStringConverter"/>
+    <local:StringLocalizeConverter x:Key="StringLocalizeConverter"/>
+  </Application.Resources>
+
+  <Application.DataTemplates>
+    <local:ViewLocator/>
+  </Application.DataTemplates>
+  
+  <Application.Styles>
+    <FluentTheme />
+    <materialIcons:MaterialIconStyles />
+  </Application.Styles>
+</Application>

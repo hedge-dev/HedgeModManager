@@ -1,6 +1,9 @@
 ﻿using HedgeModManager.CoreLib;
 using HedgeModManager.Foundation;
 using HedgeModManager.IO;
+using HedgeModManager.Properties;
+using HedgeModManager.Text;
+using PeNet;
 using System.IO.Compression;
 
 namespace HedgeModManager;
@@ -23,7 +26,7 @@ public class ModLoaderGeneric : IModLoader
         FileName = fileName ?? $"{Name}.bin";
         DownloadURL = downloadURL;
         string extention = Path.GetExtension(DownloadURL) ?? ".dll";
-        DownloadFileName = $"{PathEx.CleanFileName(Name)}.{extention}";
+        DownloadFileName = $"{PathEx.CleanFileName(Name)}{extention}";
         Is64Bit = is64Bit;
     }
 
@@ -37,86 +40,123 @@ public class ModLoaderGeneric : IModLoader
         return Path.Combine(Game.Root, FileName);
     }
 
-    public async Task<bool> Download(IProgress<long>? progress, string path)
+    public async Task<bool> Download(IProgress<long>? progress, string path, bool useCache)
     {
         if (!string.IsNullOrEmpty(DownloadURL))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
             Logger.Information($"Downloading {Name}...");
-            try
-            {
-                var client = new HttpClient();
-                var response = await client.GetAsync(DownloadURL, HttpCompletionOption.ResponseHeadersRead);
-                if (!response.IsSuccessStatusCode)
-                {
-                    Logger.Error($"Failed to download mod loader. Code: {response.StatusCode}");
-                    return false;
-                }
-
-                using var stream = await response.Content.ReadAsStreamAsync();
-                using var fileStream = File.Create(path);
-
-                var buffer = new byte[1048576];
-                int bytesRead = 0;
-                long totalBytesRead = 0L;
-
-                while ((bytesRead = await stream.ReadAsync(buffer)) > 0)
-                {
-                    await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-                    progress?.Report(totalBytesRead += bytesRead);
-                }
-
-                Logger.Information($"Finished downloading {Name}");
-            }
-            catch (Exception e)
-            {
-                // Clean up
-                if (File.Exists(path))
-                {
-                    File.Delete(path);
-                }
-
-                Logger.Error($"Failed to download mod loader");
-                Logger.Error(e);
-                return false;
-            }
+            await Network.DownloadFile(DownloadURL, path, useCache ? Path.Combine("ModLoaders", DownloadFileName) : null, progress);
             return true;
         }
         Logger.Error($"Failed to download mod loader. No download URL");
         return false;
     }
 
-    public async Task<bool> InstallAsync()
+    public string? GetInstalledVersion()
+    {
+        if (string.IsNullOrEmpty(FileName))
+        {
+            Logger.Debug("Null mod loader requested");
+            return null;
+        }
+
+        if (!File.Exists(GetInstallPath()))
+        {
+            Logger.Debug("Mod loader not found");
+            return null;
+        }
+
+        var peFile = new PeFile(GetInstallPath());
+        var resources = peFile.Resources;
+        if (resources != null)
+        {
+            Logger.Debug("Found resources");
+            var versionInfo = resources.VsVersionInfo;
+            if (versionInfo != null)
+            {
+                Logger.Debug("Found version info");
+                uint ls = versionInfo.VsFixedFileInfo.DwProductVersionLS;
+                uint ms = versionInfo.VsFixedFileInfo.DwProductVersionMS;
+                string versionStr = $"{ms >> 16}.{ms & 0xFFFF}.{ls >> 16}.{ls & 0xFFFF}";
+                Logger.Debug($"Version: {versionStr}");
+                return versionStr;
+            }
+            else
+            {
+                Logger.Debug("No version info found");
+            }
+        }
+        else
+        {
+            Logger.Debug("No resources found");
+        }
+        return null;
+    }
+
+    public async Task<bool> CheckForUpdatesAsync()
+    {
+        // Currently using HMM 7 mod loader updates
+        string? manifestData = await Network.DownloadString(Resources.ModLoaderManifestURL);
+        if (string.IsNullOrEmpty(manifestData))
+        {
+            Logger.Error("Failed to download mod loader manifest");
+            return false;
+        }
+
+        var ini = Ini.FromText(manifestData);
+        if (ini == null)
+        {
+            Logger.Error("Failed to parse mod loader manifest");
+            return false;
+        }
+
+        if (ini.TryGetValue(Name, out var group))
+        {
+            string version = group.Get<string>("LoaderVersion");
+            var fullVersion = string.Join('.', version.Split('.').Concat(Enumerable.Repeat("0", 4)).Take(4));
+            //string changeLog = group.Get<string>("LoaderChangeLog");
+            return fullVersion != GetInstalledVersion();
+        }
+
+        return false;
+    }
+
+    public async Task<bool> InstallAsync() => await InstallAsync(true);
+
+    public async Task<bool> InstallAsync(bool useCache)
     {
         // Prepare prefix
-        if (OperatingSystem.IsLinux() && NativeOS == "Windows" && Is64Bit)
+        if (!OperatingSystem.IsWindows() && NativeOS == "Windows" && Is64Bit)
         {
             Logger.Information("Setting up prefix...");
             string? prefix = Game.PrefixRoot;
             Logger.Debug($"Prefix: {prefix}");
-            if (LinuxCompatibility.IsPrefixValid(prefix))
+            bool isPrefixValid = LinuxCompatibility.IsPrefixValid(prefix);
+            bool isPrefixPatched = LinuxCompatibility.IsPrefixPatched(prefix);
+            Logger.Debug($"IsPrefixValid: {isPrefixValid}");
+            Logger.Debug($"IsPrefixPatched: {isPrefixPatched}");
+            if (isPrefixValid && !isPrefixPatched)
             {
                 await LinuxCompatibility.InstallRuntimeToPrefix(prefix);
                 Logger.Information("Applying patches to prefix...");
                 await LinuxCompatibility.AddDllOverride(prefix, FileName.Replace(".dll", ""));
             }
-            else
+            else if (!isPrefixValid)
             {
                 Logger.Error("Prefix missing! Please run the game atleast once");
                 // Abort
                 return false;
             }
+            else
+            {
+                Logger.Debug("Prefix is already patched");
+            }
         }
 
-        string path = GetInstallPath();
-        if (await Download(null, path))
+        string path = GetCachePath();
+        if (!await Download(null, path, useCache))
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(GetCachePath())!);
-            File.Copy(path, GetCachePath(), true);
-        }
-        else
-        {
-            path = GetCachePath();
             if (!File.Exists(path))
             {
                 Logger.Error($"No mod loader found in cache!");
@@ -162,7 +202,7 @@ public class ModLoaderGeneric : IModLoader
         {
             if (path != GetInstallPath())
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                Directory.CreateDirectory(Path.GetDirectoryName(GetInstallPath())!);
                 File.Copy(path, GetInstallPath(), true);
             }
         }

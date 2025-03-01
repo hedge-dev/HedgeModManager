@@ -8,6 +8,8 @@ public interface IModLoader
     public IModdableGame Game { get; }
 
     public bool IsInstalled();
+    public string? GetInstalledVersion();
+    public Task<bool> CheckForUpdatesAsync();
     public Task<bool> InstallAsync();
     public Task<bool> UninstallAsync();
 }

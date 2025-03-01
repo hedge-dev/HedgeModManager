@@ -1,5 +1,6 @@
 ﻿namespace HedgeModManager;
 using HedgeModManager.Properties;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -40,9 +41,19 @@ public class LinuxCompatibility
 
                 if (entry.FullName.EndsWith('/'))
                 {
-                    if (!Directory.Exists(destinationPath))
+                    // Untested, tests from HMM 7 to 8 is needed
+                    if (File.Exists(destinationPath))
                     {
-                        Directory.CreateDirectory(destinationPath);
+                        var attributes = new FileInfo(destinationPath).Attributes;
+                        if (attributes.HasFlag(FileAttributes.ReparsePoint))
+                        {
+                            Logger.Debug($"Symlink detected, unlinking \"{destinationPath}\"");
+                            File.Delete(destinationPath);
+                        }
+                        else
+                        {
+                            Logger.Warning($"File with the same name as the directory exists!");
+                        }
                     }
                     continue;
                 }
@@ -53,6 +64,7 @@ public class LinuxCompatibility
                     File.Delete(destinationPath);
                 }
 
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
                 entry.ExtractToFile(destinationPath, true);
             }
             Logger.Debug($"Extracted .NET runtime");
@@ -104,20 +116,71 @@ public class LinuxCompatibility
             return false;
         }
 
-        string regPatch = Encoding.Unicode.GetString(Resources.dotnetReg);
+        string regPatch = Encoding.UTF8.GetString(Resources.dotnetReg);
 
-        await File.AppendAllTextAsync(reg, regPatch);
+        await File.AppendAllTextAsync(reg, regPatch, Encoding.UTF8);
         Logger.Debug($"File written");
         return true;
     }
 
-    public static bool IsPrefixValid(string? path)
+    public static bool IsPrefixValid([NotNullWhen(true)] string? path)
     {
-        if (path == null)
+        if (string.IsNullOrEmpty(path))
         {
             return false;
         }
 
         return Directory.Exists(path);
     }
+
+    public static bool IsPrefixPatched([NotNullWhen(true)] string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            return false;
+        }
+
+        string reg = Path.Combine(path, "system.reg");
+        if (Path.Exists(reg))
+        {
+            return File.ReadAllText(reg).Contains("\"UseRyuJIT\"=dword:00000001");
+        }
+
+        return false;
+    }
+
+    public static string ToWinePath(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            return string.Empty;
+        }
+
+        // Root path
+        if (path.StartsWith("/"))
+        {
+            return "Z:" + path.Replace("/", "\\");
+        }
+
+        // Unknown path
+        return path.Replace("/", "\\");
+    }
+
+    public static string ToUnixPath(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            return string.Empty;
+        }
+
+        // Root path
+        if (path.StartsWith("Z:\\"))
+        {
+            return path[2..].Replace("\\", "/");
+        }
+
+        // Unknown path
+        return path.Replace("\\", "/");
+    }
+
 }
