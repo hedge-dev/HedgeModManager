@@ -62,18 +62,18 @@ Download the Flatpak bundle (file ending with .flatpak) from the [releases page]
 
   You can drag and drop the mod archive into Hedge Mod Manager's window and it will scan and install the mods for you. If the mods are found on GameBanana, you can click the 1-Click button to open the installer within Hedge Mod Manager.
 
+- I need tech support, where do I post it?
+
+  In the [discussion forum](https://github.com/hedge-dev/HedgeModManager/discussions).
+
 - I got an error/crash popup, what should I do?
 
-  Press "Save Log File" and save the file, then report the issue with the log file attached in the [discussion forum](https://github.com/hedge-dev/HedgeModManager/discussions) as mentioned in [Bug/Issue Reporting](#bugissue-reporting).
-  
-  If you have gotten a crash, copy all the text and send it in the support channel as mentioned above.
+  Press "Save Log File" and save the file, then report the issue with the log file attached as written in [Bug/Issue Reporting](#bugissue-reporting) applies for crashes aswell.
 
   Avoid trying to report the same issue multiple times.
 
 ### Bug/Issue Reporting
-Unless written and submitted properly for tracking, issues will need to be posted in the [discussion forum](https://github.com/hedge-dev/HedgeModManager/discussions).
-
-Please avoid creating issues in the Issues tab unless you know what you are doing. Incorrect reporting of issues with the Issues tab will lead to the issue being closed.
+Please make sure all issues contain all the information in a concise form for both the title and body.
 
 Make sure to explain in as much detail as you can on what you have done that caused the issue and if you are able to reproduce the same error/crash. If reproducable, explain in steps what you did. Please also use common sense.
 
