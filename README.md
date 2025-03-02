@@ -22,7 +22,6 @@ A mod manager for Hedgehog Engine games on PC.
 ### Current Supported Games
 |                                                                                                                   | Game                       | Store |
 | ----------------------------------------------------------------------------------------------------------------- | -------------------------- | ----- |
-| <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/UnleashedRecompiled.png" />  | Unleashed Recompiled       |       |
 | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicGenerations.png" />     | Sonic Generations (2011)   | [Steam](https://store.steampowered.com/app/71340) |
 | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicLostWorld.png" />       | Sonic Lost World           | [Steam](https://store.steampowered.com/app/329440) |
 | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicForces.png" />          | Sonic Forces               | [Steam](https://store.steampowered.com/app/637100) |
@@ -32,7 +31,8 @@ A mod manager for Hedgehog Engine games on PC.
 | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicOrigins.png" />         | Sonic Origins              | [Steam](https://store.steampowered.com/app/1794960), [Epic Games](https://store.epicgames.com/en-US/p/sonic-origins) |
 | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicFrontiers.png" />       | Sonic Frontiers            | [Steam](https://store.steampowered.com/app/1237320), [Epic Games](https://store.epicgames.com/en-US/p/sonic-frontiers) |
 | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/ShadowGenerations.png" />    | Shadow Generations         | [Steam](https://store.steampowered.com/app/2513280), [Epic Games](https://store.epicgames.com/en-US/p/sonic-x-shadow-generations) |
-| <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicGenerations2024.png" /> | Sonic Generations (2024)   | [Steam](https://store.steampowered.com/app/2513280), [Epic Games](https://store.epicgames.com/en-US/p/sonic-x-shadow-generations) |
+| <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/UnleashedRecompiled.png" />  | Unleashed Recompiled       | [GitHub](https://github.com/hedge-dev/UnleashedRecomp) |
+<!-- | <img width="48" align="center" src="/Source/HedgeModManager.UI/Assets/Graphics/Icons/SonicGenerations2024.png" /> | Sonic Generations (2024)   | [Steam](https://store.steampowered.com/app/2513280), [Epic Games](https://store.epicgames.com/en-US/p/sonic-x-shadow-generations) | -->
 
 ### Installation
 #### Windows
