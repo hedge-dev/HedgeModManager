@@ -141,9 +141,10 @@ public class LinuxCompatibility
         }
 
         string reg = Path.Combine(path, "system.reg");
-        if (Path.Exists(reg))
+        if (File.Exists(reg))
         {
-            return File.ReadAllText(reg).Contains("\"UseRyuJIT\"=dword:00000001");
+            string text = File.ReadAllText(reg, Encoding.UTF8);
+            return text.Contains("\"UseRyuJIT\"=dword:00000001", StringComparison.Ordinal);
         }
 
         return false;
