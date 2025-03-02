@@ -5,11 +5,11 @@ sdk: org.freedesktop.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.dotnet8
 build-options:
-  prepend-path: "/usr/lib/sdk/dotnet8/bin"
-  append-ld-library-path: "/usr/lib/sdk/dotnet8/lib"
-  prepend-pkg-config-path: "/usr/lib/sdk/dotnet8/lib/pkgconfig"
+  prepend-path: /usr/lib/sdk/dotnet8/bin
+  append-ld-library-path: /usr/lib/sdk/dotnet8/lib
+  prepend-pkg-config-path: /usr/lib/sdk/dotnet8/lib/pkgconfig
 
-command: /app/bin/HedgeModManager.UI
+command: HedgeModManager.UI
 
 finish-args:
   - --socket=x11
@@ -41,27 +41,13 @@ modules:
   - name: app
     buildsystem: simple
     sources:
-      - type: git
-        branch: ui
-        disable-shallow-clone: true
-        url: https://github.com/hedge-dev/HedgeModManager.git
+      - type: dir
+        path: ../
       - ./nuget-sources.json
-    secret-env:
-      - APP_VERSION
     build-commands:
       - dotnet publish Source/HedgeModManager.UI/HedgeModManager.UI.csproj -c Release --no-self-contained --source ./nuget-sources
       - mkdir -p ${FLATPAK_DEST}/bin
       - cp -r Source/HedgeModManager.UI/bin/Release/net8.0/publish/* ${FLATPAK_DEST}/bin
-  - name: metadata
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 hedgemodmanager.png /app/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png
-      - install -Dm644 hedgemodmanager.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
-      - install -Dm644 hedgemodmanager.desktop /app/share/applications/${FLATPAK_ID}.desktop
-    sources:
-      - type: file
-        path: hedgemodmanager.png
-      - type: file
-        path: hedgemodmanager.metainfo.xml
-      - type: file
-        path: hedgemodmanager.desktop
+      - install -Dm644 flatpak/hedgemodmanager.png ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png
+      - install -Dm644 flatpak/hedgemodmanager.metainfo.xml ${FLATPAK_DEST}/share/metainfo/${FLATPAK_ID}.metainfo.xml
+      - install -Dm644 flatpak/hedgemodmanager.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop

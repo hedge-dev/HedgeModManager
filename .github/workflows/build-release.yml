@@ -74,7 +74,7 @@ jobs:
       - name: flatpak-x86_64 Build
         env:
           APP_VERSION: ${{ github.event.inputs.version }}
-        run: flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{ env.FLATPAK_ID }}-autobuild.yml
+        run: flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{ env.FLATPAK_ID }}.yml
 
       - name: Build Flatpak Bundle
         run: flatpak build-bundle repo ./flatpak/${{env.FLATPAK_ID}}.flatpak ${{env.FLATPAK_ID}}
