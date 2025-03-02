@@ -43,6 +43,7 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
         Executable = game.Executable;
         SupportsDirectLaunch = game.SupportsDirectLaunch;
         SupportsLauncher = game.SupportsLauncher;
+        NativeOS = game.NativeOS;
     }
 
     public async Task DownloadCodes(string? url)
