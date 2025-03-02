@@ -94,7 +94,7 @@ public class LinuxCompatibility
         }
 
         string dllOverrides = $"[Software\\\\Wine\\\\DllOverrides]\n\"{name}\"=\"native,builtin\"\n";
-        await File.AppendAllTextAsync(reg, dllOverrides);
+        await File.AppendAllTextAsync(reg, dllOverrides, Encoding.UTF8);
         Logger.Debug($"File written");
         return true;
     }
