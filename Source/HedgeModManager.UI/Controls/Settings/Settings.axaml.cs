@@ -205,13 +205,23 @@ public partial class Settings : UserControl
         await MainWindowViewModel.CreateSimpleDownload("Download.Text.InstallRuntime", "Failed to install runtime",
             async (d, p, c) =>
             {
-                if (mainViewModel.SelectedGame == null)
+                var game = mainViewModel.GetModdableGameGeneric();
+                if (game == null)
+                {
+                    Logger.Warning("Only ModdableGameGeneric supports mod loader patches");
                     return;
+                }
+                if (game.PrefixRoot == null)
+                {
+                    Logger.Warning("Selected game has no prefix root");
+                    return;
+                }
+                if (game.Is64Bit)
+                    await LinuxCompatibility.InstallRuntimeToPrefix(game.PrefixRoot);
 
-                await LinuxCompatibility.InstallRuntimeToPrefix(
-                    mainViewModel.SelectedGame.Game.PrefixRoot);
-                await LinuxCompatibility.AddDotnetRegPatch(
-                    mainViewModel.SelectedGame.Game.PrefixRoot);
+                if (game.ModLoader != null)
+                    await LinuxCompatibility.AddDllOverride(game.PrefixRoot, game.ModLoader.Name.Replace(".dll", ""));
+
             }).OnFinally((d) =>
             {
                 mainViewModel.IsBusy = false;

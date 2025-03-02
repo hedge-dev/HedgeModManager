@@ -127,30 +127,33 @@ public class ModLoaderGeneric : IModLoader
     public async Task<bool> InstallAsync(bool useCache)
     {
         // Prepare prefix
-        if (!OperatingSystem.IsWindows() && NativeOS == "Windows" && Is64Bit)
+        if (!OperatingSystem.IsWindows() && NativeOS == "Windows")
         {
             Logger.Information("Setting up prefix...");
             string? prefix = Game.PrefixRoot;
             Logger.Debug($"Prefix: {prefix}");
             bool isPrefixValid = LinuxCompatibility.IsPrefixValid(prefix);
-            bool isPrefixPatched = LinuxCompatibility.IsPrefixPatched(prefix);
             Logger.Debug($"IsPrefixValid: {isPrefixValid}");
-            Logger.Debug($"IsPrefixPatched: {isPrefixPatched}");
-            if (isPrefixValid && !isPrefixPatched)
+            if (Is64Bit)
             {
-                await LinuxCompatibility.InstallRuntimeToPrefix(prefix);
-                Logger.Information("Applying patches to prefix...");
+                bool isPrefixPatched = LinuxCompatibility.IsPrefixPatched(prefix);
+                Logger.Debug($"IsPrefixPatched: {isPrefixPatched}");
+                if (isPrefixValid && !isPrefixPatched)
+                {
+                    Logger.Information("Applying patches to prefix...");
+                    await LinuxCompatibility.InstallRuntimeToPrefix(prefix);
+                }
+            }
+            if (isPrefixValid)
+            {
+                Logger.Information("Applying overrides to prefix...");
                 await LinuxCompatibility.AddDllOverride(prefix, FileName.Replace(".dll", ""));
             }
-            else if (!isPrefixValid)
+            else
             {
                 Logger.Error("Prefix missing! Please run the game atleast once");
                 // Abort
                 return false;
-            }
-            else
-            {
-                Logger.Debug("Prefix is already patched");
             }
         }
 

@@ -50,7 +50,7 @@ Download the Flatpak bundle (file ending with .flatpak) from the [releases page]
 > [!IMPORTANT]
 > Currently Hedge Mod Manager only supports specific types of Steam and Heroic installations. This should not be an issue if you are using SteamOS.
 > 
-> For Steam, it must be a flatpak install within the home directory or a native Steam install with a link from `~/.steam`.
+> For Steam, a Steam install with a link at `~/.steam` or `~/.local/share/Steam`.
 > 
 > For Heroic, it must be a flatpak install within the home directory. 
 
@@ -64,13 +64,15 @@ Download the Flatpak bundle (file ending with .flatpak) from the [releases page]
 
 - I need tech support, where do I post it?
 
-  In the [discussion forum](https://github.com/hedge-dev/HedgeModManager/discussions).
+  You can try posting it in Issues, just follow [Bug/Issue Reporting](#bugissue-reporting). 
 
 - I got an error/crash popup, what should I do?
 
   Press "Save Log File" and save the file, then report the issue with the log file attached as written in [Bug/Issue Reporting](#bugissue-reporting) applies for crashes aswell.
 
   Avoid trying to report the same issue multiple times.
+
+  Also write down all steps you've taken to try resolve the issue. If an issue arises on it's own, avoid deleting files unless been told as this could still be an issue with Hedge Mod Manager.
 
 ### Bug/Issue Reporting
 Please make sure all issues contain all the information in a concise form for both the title and body.
