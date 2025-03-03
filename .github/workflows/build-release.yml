@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       version: 
-        description: 'Version to build'
+        description: 'Version'
         required: true
-        default: '8.0.0.0'
+        default: '8.0.0.2'
+      tag: 
+        description: 'Tag'
+        required: true
+        default: '8.0.0-beta2'
       prerelease:
         description: 'Prerelease'
         required: true
@@ -92,10 +96,10 @@ jobs:
             ./release/*
           draft: true
           prerelease: ${{ github.event.inputs.prerelease }}
-          name: Hedge Mod Manager ${{ github.event.inputs.version }}
-          tag_name: ${{ github.event.inputs.version }}
+          name: Hedge Mod Manager ${{ github.event.inputs.tag }}
+          tag_name: ${{ github.event.inputs.tag }}
           body: |
-            ## Hedge Mod Manager (${{ github.event.inputs.version }})
+            ## Hedge Mod Manager (${{ github.event.inputs.tag }})
             - Added 
             - Fixed 
 
