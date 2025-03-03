@@ -18,12 +18,14 @@ public class ModLoaderGeneric : IModLoader
     public string DownloadFileName { get; set; }
     public string NativeOS { get; set; } = "Windows";
     public bool Is64Bit { get; set; } = true;
+    public string[] IncompatibleFileNames = [];
 
-    public ModLoaderGeneric(IModdableGame game, string name, string? fileName, string? downloadURL, bool is64Bit)
+    public ModLoaderGeneric(IModdableGame game, string name, string? fileName, string[] incompatibleFileNames, string? downloadURL, bool is64Bit)
     {
         Game = game;
         Name = name;
         FileName = fileName ?? $"{Name}.bin";
+        IncompatibleFileNames = incompatibleFileNames;
         DownloadURL = downloadURL;
         string extention = Path.GetExtension(DownloadURL) ?? ".dll";
         DownloadFileName = $"{PathEx.CleanFileName(Name)}{extention}";
@@ -207,6 +209,17 @@ public class ModLoaderGeneric : IModLoader
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(GetInstallPath())!);
                 File.Copy(path, GetInstallPath(), true);
+            }
+        }
+
+        // Remove incompatible files
+        foreach (var file in IncompatibleFileNames)
+        {
+            string filePath = Path.Combine(Game.Root, file);
+            if (File.Exists(filePath))
+            {
+                Logger.Information($"Removing incompatible file: {file}");
+                File.Delete(filePath);
             }
         }
 

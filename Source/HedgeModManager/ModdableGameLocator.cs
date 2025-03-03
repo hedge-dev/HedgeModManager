@@ -13,20 +13,10 @@ public class ModdableGameLocator
     [
         new()
         {
-            ID = "UnleashedRecompiled",
-            SupportsCodes = false,
-            PlatformInfos = new()
-            {
-                { "Windows", new (string.Empty, "SOFTWARE\\UnleashedRecomp") },
-                { "Flatpak",  new ("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")},
-                { "Desktop",  new ("UnleashedRecomp", "unleashedrecomp")}
-            }
-        },
-        new()
-        {
             ID = "SonicGenerations",
             ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
+            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             Is64Bit = false,
             PlatformInfos = new()
@@ -39,6 +29,7 @@ public class ModdableGameLocator
             ID = "SonicLostWorld",
             ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
+            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             Is64Bit = false,
             PlatformInfos = new() { { "Steam", new ("329440", "slw.exe") } }
@@ -48,6 +39,7 @@ public class ModdableGameLocator
             ID = "SonicForces",
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
+            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("637100", Path.Combine("build", "main", "projects", "exec", "Sonic Forces.exe")) } }
         },
@@ -129,6 +121,17 @@ public class ModdableGameLocator
                 { "Steam", new ("2513280", "SONIC_X_SHADOW_GENERATIONS.exe") },
                 { "Epic", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe") }
             }
+        },
+        new()
+        {
+            ID = "UnleashedRecompiled",
+            SupportsCodes = false,
+            PlatformInfos = new()
+            {
+                { "Windows", new (string.Empty, "SOFTWARE\\UnleashedRecomp") },
+                { "Flatpak",  new ("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")},
+                { "Desktop",  new ("UnleashedRecomp", "unleashedrecomp")}
+            }
         }
     ];
 
@@ -189,7 +192,8 @@ public class ModdableGameLocator
                     };
                     game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
                     game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName, 
-                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
+                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderIncompatibleFileNames,
+                        gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
                     if (gameInfo.ModDatabaseDirectoryName != null)
                         game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
                     games.Add(game);
@@ -210,7 +214,8 @@ public class ModdableGameLocator
                     };
                     game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
                     game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName,
-                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
+                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderIncompatibleFileNames,
+                        gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
                     if (gameInfo.ModDatabaseDirectoryName != null)
                         game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
                     games.Add(game);
@@ -310,6 +315,7 @@ public class ModdableGameLocator
         public string? ModLoaderName { get; init; }
         public string? ModLoaderFileName { get; init; }
         public string? ModLoaderDownloadURL { get; init; }
+        public string[] ModLoaderIncompatibleFileNames { get; set; } = [];
         public string? ModDatabaseDirectoryName { get; init; }
         public bool Is64Bit { get; init; } = true;
         public bool SupportsCodes { get; init; } = true;
