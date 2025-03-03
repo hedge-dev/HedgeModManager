@@ -96,7 +96,7 @@ public class ModGeneric : IMod
             var server = mainSection.Get("UpdateServer", string.Empty);
             if (!string.IsNullOrEmpty(server))
             {
-                if (Uri.TryCreate(server, UriKind.RelativeOrAbsolute, out Uri? uri))
+                if (Uri.TryCreate(server, UriKind.Absolute, out Uri? uri))
                 {
                     Updater = new UpdateSourceGMI<ModGeneric>(this, uri);
                 }
