@@ -96,7 +96,14 @@ public class ModGeneric : IMod
             var server = mainSection.Get("UpdateServer", string.Empty);
             if (!string.IsNullOrEmpty(server))
             {
-                Updater = new UpdateSourceGMI<ModGeneric>(this, new Uri(server));
+                if (Uri.TryCreate(server, UriKind.RelativeOrAbsolute, out Uri? uri))
+                {
+                    Updater = new UpdateSourceGMI<ModGeneric>(this, uri);
+                }
+                else
+                {
+                    logError($"Invalid Update URI ({server})");
+                }
             }
 
             var codeFiles = mainSection.Get("CodeFile", string.Empty);
@@ -129,22 +136,21 @@ public class ModGeneric : IMod
             foreach (var dependency in dependencies)
             {
                 var splits = dependency.Split('|');
-                if (splits.Length == 4)
+                if (splits.Length >= 3)
                 {
                     Dependencies.Add(new ModDependency()
                     {
                         ID = splits[0],
                         Title = splits[1],
                         Url = splits[2],
-                        Version = splits[3]
+                        Version = splits.Length > 3 ? splits[3] : string.Empty
                     });
                 }
                 else
                 {
-                    logError($"Split count != 4 ({splits.Length})");
+                    logError($"Split count < 3 ({splits.Length})");
                 }
             }
-
         }
 
         if (string.IsNullOrEmpty(ID))
