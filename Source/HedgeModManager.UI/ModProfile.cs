@@ -84,8 +84,9 @@ public class ModProfile
             if (schema == null)
                 continue;
 
+            bool isWindows = database.NativeOS == "Windows";
             await schema.Load(Path.Combine(mod.Root, "profiles", FileName));
-            await schema.Save(Path.Combine(mod.Root, schema.IniFile));
+            await schema.Save(Path.Combine(mod.Root, schema.IniFile), isWindows);
         }
         progress.Report(mods.Count);
     }

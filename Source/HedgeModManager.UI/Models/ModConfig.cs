@@ -123,9 +123,10 @@ public class ModConfig
         }
     }
 
-    public async Task Save(string iniPath, bool useExisting = true)
+    public async Task Save(string iniPath, bool isWindows, bool useExisting = true)
     {
         var ini = new Ini();
+        string lineEnding = isWindows ? "\r\n" : Environment.NewLine;
 
         // Reuse existing config if exists
         if (useExisting && File.Exists(iniPath))
@@ -139,7 +140,7 @@ public class ModConfig
         }
 
         Directory.CreateDirectory(Path.GetDirectoryName(iniPath)!);
-        await File.WriteAllTextAsync(iniPath, ini.Serialize());
+        await File.WriteAllTextAsync(iniPath, ini.Serialize().ReplaceLineEndings(lineEnding));
     }
 
     public void GenerateSchemaExample()

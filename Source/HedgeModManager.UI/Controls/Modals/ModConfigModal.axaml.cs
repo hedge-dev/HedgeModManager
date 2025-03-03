@@ -174,8 +174,14 @@ public partial class ModConfigModal : UserControl
 
     private async void OnSaveClick(object? sender, RoutedEventArgs e)
     {
-        if (!string.IsNullOrEmpty(ConfigIniPath))
-            await ConfigViewModel.Config.Save(ConfigIniPath);
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            bool isWindows = viewModel.SelectedGame != null &&
+                viewModel.SelectedGame.Game.NativeOS == "Windows";
+            if (!string.IsNullOrEmpty(ConfigIniPath))
+                await ConfigViewModel.Config.Save(ConfigIniPath, isWindows);
+        }
+
         Close();
     }
 
