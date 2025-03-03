@@ -18,7 +18,12 @@ public class SteamLocator : IGameLocator
             var path = key.GetValue("InstallPath")?.ToString();
             if (!string.IsNullOrEmpty(path))
             {
-                return path;
+                if (Directory.Exists(path))
+                {
+                    return path;
+                }
+
+                //Logger.Warning($"Steam path found, but \"{path}\" does not exist!");
             }
         }
 

@@ -103,7 +103,8 @@ public class ModdableGameLocator
                 { "Epic", new ("c5ca98fa240c4eb796835f97126df8e7", "SonicFrontiers.exe") }
             }
         },
-        new()
+        // NOTE: Mod loader is not ready yet
+        /*new()
         {
             ID = "SonicGenerations2024",
             ModLoaderName = "HE2ModLoader",
@@ -115,7 +116,7 @@ public class ModdableGameLocator
                 { "Steam", new ("2513280", "SONIC_GENERATIONS.exe") },
                 { "Epic", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_GENERATIONS.exe") }
             }
-        },
+        },*/
         new()
         {
             ID = "ShadowGenerations",

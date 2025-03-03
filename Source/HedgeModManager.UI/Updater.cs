@@ -63,17 +63,15 @@ public class Updater
             if (release == null)
             {
                 Logger.Error("Failed to check for updates");
-                // TODO: Swap these nearing release
-                //return (null, UpdateCheckStatus.Error);
-                return (null, UpdateCheckStatus.NoUpdate);
+                return (null, UpdateCheckStatus.Error);
             }
 
-            Logger.Debug($"Current Version: {Program.ApplicationVersion}");
+            Logger.Debug($"Current Version: {Program.ApplicationTagName}");
             Logger.Debug($"New Version: {release.TagName}");
 
-            if (release.TagName != Program.ApplicationVersion)
+            if (release.TagName != Program.ApplicationTagName)
             {
-                Logger.Debug("Current version is older");
+                Logger.Debug("Current version does not match");
                 // Find Asset
                 var asset = release.Assets.FirstOrDefault(x => x!.Name.Equals(GetUpdatePackageName()),
                     release.Assets.FirstOrDefault(x => x.Name.Contains(RuntimeInformation.RuntimeIdentifier)));
@@ -96,7 +94,7 @@ public class Updater
             }
             else
             {
-                Logger.Debug("Current version is newer");
+                Logger.Debug("Current version matches latest");
                 return (null, UpdateCheckStatus.NoUpdate);
             }
         }

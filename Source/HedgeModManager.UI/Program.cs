@@ -30,7 +30,8 @@ public sealed class Program
     public static string PipeName = $"{ApplicationCompany}\\{ApplicationName}";
     public static string InstallLocation = Path.GetDirectoryName(AppContext.BaseDirectory)!;
     public static string? FlatpakID = null;
-    public static string ApplicationVersion = GetFormattedAppVersion(); 
+    public static string ApplicationVersion = GetFormattedAppVersion();
+    public static string ApplicationTagName = GetTagName();
 #if DEBUG
     public const bool IsDebugBuild = true;
 #else
@@ -189,6 +190,17 @@ public sealed class Program
         if (version.Revision == 0)
             return $"{version.Major}.{version.Minor}.{version.Build}";
         return $"{version.Major}.{version.Minor}.{version.Build} {unstableType} {version.Revision}";
+    }
+
+    public static string GetTagName()
+    {
+        string unstableType = "beta";
+#if AUTOBUILD
+        unstableType = "dev";
+#endif
+
+        var version = Assembly.GetExecutingAssembly().GetName().Version ?? Version.Parse("0");
+        return $"{version.Major}.{version.Minor}.{version.Build}-{unstableType}{version.Revision}";
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
