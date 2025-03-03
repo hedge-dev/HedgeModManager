@@ -84,7 +84,14 @@ public class Ini
                             continue;
                         }
 
-                        currentGroup.Set(key.ToString(), value.ToString());
+                        if (int.TryParse(value, out var intValue))
+                        {
+                            currentGroup.Set(key.ToString(), intValue);
+                        }
+                        else
+                        {
+                            currentGroup.Set(key.ToString(), value.ToString());
+                        }
                         break;
                     }
             }
