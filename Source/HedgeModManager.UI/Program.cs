@@ -107,6 +107,12 @@ public sealed class Program
             PipeName = guidAttribute?.Value ?? PipeName;
             CurrentMutex = new Mutex(true, mutexID, out bool createdNew);
 
+            var newArgs = new List<string>(args);
+            if (newArgs.Count > 0 &&
+                newArgs[0].StartsWith("hedgemm"))
+                newArgs.Insert(0, "--schema");
+            args = [.. newArgs];
+
             if (!createdNew)
             {
                 // Focus the existing instance if no arguments are passed
@@ -130,14 +136,6 @@ public sealed class Program
 
         if (Environment.GetEnvironmentVariable("FLATPAK_ID") is string flatpakID)
             FlatpakID = flatpakID;
-
-        // GB workaround
-        // Checks if the first argument is "hedgemm", not "hedgemm:". If it is,
-        //  it will add "-gb" to the arguments as it is assumed that a GB URI was passed.
-        var editedArgs = new List<string>(args);
-        if (editedArgs.Count > 0 && 
-            editedArgs[0].StartsWith("hedgemm"))
-            editedArgs.Insert(0, "--schema");
 
         var arguments = CommandLine.ParseArguments(args);
         var (continueStartup, commands) = CommandLine.ExecuteArguments(arguments);
