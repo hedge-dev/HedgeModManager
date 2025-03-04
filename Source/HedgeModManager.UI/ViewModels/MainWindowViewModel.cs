@@ -299,9 +299,13 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
             }
             Logger.Debug($"Loading profiles...");
-            if (game.ModDatabase is ModDatabaseGeneric modsDB)
+            _lastSelectedProfile = ModProfile.Default;
+            if (game.ModLoaderConfiguration is ModLoaderConfiguration config)
+            {
                 Profiles = new(await LoadProfilesAsync(game) ?? []);
-            _lastSelectedProfile = Profiles.FirstOrDefault() ?? ModProfile.Default;
+                _lastSelectedProfile = Profiles
+                    .FirstOrDefault(x => Path.GetFileName(config.DatabasePath) == x.ModDBPath) ?? _lastSelectedProfile;
+            }
             SelectedProfile = _lastSelectedProfile;
             Logger.Debug($"Loaded {Profiles.Count} profile(s)");
 
@@ -396,6 +400,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
         Logger.Debug($"Switched profile {_lastSelectedProfile.Name} -> {SelectedProfile.Name}");
         _lastSelectedProfile = SelectedProfile;
+
+        if (moddableGameGeneric.ModLoaderConfiguration is ModLoaderConfiguration config)
+        {
+            config.DatabasePath = Path.Combine(Path.GetDirectoryName(config.DatabasePath)!, SelectedProfile.ModDBPath);
+            await config.Save(Path.Combine(moddableGameGeneric.Root, "cpkredir.ini"));
+            moddableGameGeneric.ModDatabase.LoadDatabase(config.DatabasePath);
+            RefreshUI();
+        }
 
         await SaveAsync(false);
         IsBusy = false;

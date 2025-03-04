@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
-using HedgeModManager.CoreLib;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
