@@ -1,6 +1,6 @@
 ﻿namespace HedgeModManager.Updates;
 using Foundation;
-using HedgeModManager.Text;
+using CoreLib;
 using System.Threading;
 
 public class UpdateSourceGMI<TMod> : IUpdateSource where TMod : IMod
@@ -11,7 +11,6 @@ public class UpdateSourceGMI<TMod> : IUpdateSource where TMod : IMod
     public string Host => Url.Host;
     public ModUpdateClient Client { get; set; }
     public TMod Mod { get; set; }
-    public SemaphoreSlim Semaphore = new(3);
 
     public UpdateSourceGMI(TMod mod, Uri url)
     {
@@ -34,7 +33,7 @@ public class UpdateSourceGMI<TMod> : IUpdateSource where TMod : IMod
         return new UpdateInfo(latest, changelog);
     }
 
-    public async Task PerformUpdateAsync(CancellationToken cancellationToken)
+    public async Task PerformUpdateAsync(IProgress<long>? progress, CancellationToken cancellationToken)
     {
         Logger.Debug("Downloading command list...");
         var response = await Client.GetAsync(CommandListFileName, cancellationToken).ConfigureAwait(false);
@@ -42,6 +41,8 @@ public class UpdateSourceGMI<TMod> : IUpdateSource where TMod : IMod
 
         string text = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var lines = text.Replace("\r", "").Trim().Split('\n');
+        progress?.ReportMax(lines.Length);
+        progress?.Report(0);
         Logger.Debug($"Received {lines.Length} lines (trimmed)");
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -60,34 +61,32 @@ public class UpdateSourceGMI<TMod> : IUpdateSource where TMod : IMod
             string type = line[..line.IndexOf(' ')];
             string path = line[(line.IndexOf(' ') + 1)..];
 
-            await Semaphore.WaitAsync(cancellationToken);
-            _ = Task.Run(async () =>
+            int attemptsLeft = 3;
+            while (attemptsLeft > 0)
             {
-                int attemptsLeft = 3;
-                while (attemptsLeft > 0)
+                try
                 {
-                    try
-                    {
-                        await ProcessCommand(type, path, cancellationToken);
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        attemptsLeft--;
-                        Logger.Error(ex);
-                        if (attemptsLeft == 0)
-                            Logger.Error("Command process failed 3 times, skipping!");
-                        else
-                        {
-                            Logger.Error($"Command process failed, retrying ({attemptsLeft} attempts left)");
-                            await Task.Delay(1000, cancellationToken);
-                        }
-                    }
+                    await ProcessCommand(type, path, cancellationToken);
+                    break;
+                }
+                catch (Exception ex)
+                {
                     if (cancellationToken.IsCancellationRequested)
                         break;
+                    attemptsLeft--;
+                    Logger.Error(ex);
+                    if (attemptsLeft == 0)
+                        Logger.Error("Command process failed 3 times, skipping!");
+                    else
+                    {
+                        Logger.Error($"Command process failed, retrying ({attemptsLeft} attempts left)");
+                        await Task.Delay(1000, cancellationToken);
+                    }
                 }
-                Semaphore.Release();
-            }, cancellationToken);
+                if (cancellationToken.IsCancellationRequested)
+                    break;
+            }
+            progress?.ReportAdd(1);
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿namespace HedgeModManager;
 using CodeCompiler;
 using CodeCompiler.PreProcessor;
+using CoreLib;
 using Foundation;
 using System.IO;
 using Text;

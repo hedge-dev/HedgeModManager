@@ -247,7 +247,12 @@ public partial class MainWindowViewModel : ViewModelBase
                             Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
                             Logger.Information($"Update clicked for {mod.Title}");
                             messageBox.Close();
-                            await mod.Updater.PerformUpdateAsync(c);
+                            await CreateSimpleDownload(Localize("Download.Text.UpdateMod", mod.Title),
+                                "Failed to update mod", "Modal.Title.UpdateError", Localize("Modal.Message.UpdateModError", mod.Title),
+                                async (d, p, c) =>
+                                {
+                                    await mod.Updater.PerformUpdateAsync(p, c);
+                                }).RunAsync(this);
                             Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
                             RefreshGame();
                         });
@@ -840,7 +845,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Dispatcher.UIThread.Invoke(UpdateDownload);
     }
 
-    public static Download CreateSimpleDownload(string name, string errorMessage, Func<Download, DownloadProgress, CancellationToken, Task> callback)
+    public static Download CreateSimpleDownload(string name, string errorMessage, string? errorTitle, string? errorBody, Func<Download, DownloadProgress, CancellationToken, Task> callback)
     {
         return new Download(Localize(name), true)
             .OnRun(async (d, c) =>
@@ -851,11 +856,24 @@ public partial class MainWindowViewModel : ViewModelBase
                 d.Destroy();
             }).OnError((d, e) =>
             {
-                Logger.Error(e);
-                Logger.Error(errorMessage);
+                if (errorTitle != null && errorBody != null && d.MainViewModel != null)
+                    d.MainViewModel.OpenErrorMessage(errorTitle, errorBody, errorMessage, e);
+                else
+                {
+                    Logger.Error(e);
+                    Logger.Error(errorMessage);
+                }
+                return Task.CompletedTask;
+            }).OnFinally((d) =>
+            {
                 d.Destroy();
                 return Task.CompletedTask;
             });
+    }
+
+    public static Download CreateSimpleDownload(string name, string errorMessage, Func<Download, DownloadProgress, CancellationToken, Task> callback)
+    {
+        return CreateSimpleDownload(name, errorMessage, null, null, callback);
     }
 
     public async Task ProcessCommandsAsync(List<ICliCommand> commands)

@@ -1,7 +1,7 @@
-﻿using HedgeModManager.UI.Models;
+﻿namespace HedgeModManager.UI;
+using CoreLib;
 using System.Text.Json.Serialization;
-
-namespace HedgeModManager.UI;
+using UI.Models;
 
 public class ModProfile
 {

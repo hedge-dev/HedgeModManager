@@ -1,12 +1,11 @@
-﻿using HedgeModManager.CoreLib;
-using HedgeModManager.Foundation;
-using HedgeModManager.IO;
-using HedgeModManager.Properties;
-using HedgeModManager.Text;
+﻿namespace HedgeModManager;
+using CoreLib;
+using Foundation;
+using IO;
+using Properties;
+using Text;
 using PeNet;
 using System.IO.Compression;
-
-namespace HedgeModManager;
 
 public class ModLoaderGeneric : IModLoader
 {

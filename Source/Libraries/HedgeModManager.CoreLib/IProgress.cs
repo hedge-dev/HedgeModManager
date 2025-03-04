@@ -1,4 +1,4 @@
-﻿namespace HedgeModManager;
+﻿namespace HedgeModManager.CoreLib;
 
 public interface IProgress<T>
 {

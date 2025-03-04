@@ -1,6 +1,7 @@
-﻿using System.Text.Json;
+﻿namespace HedgeModManager;
 
-namespace HedgeModManager;
+using CoreLib;
+using System.Text.Json;
 
 public static class Network
 {

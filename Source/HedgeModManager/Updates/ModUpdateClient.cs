@@ -1,4 +1,5 @@
 ﻿namespace HedgeModManager.Updates;
+using System.Net;
 using System.Text;
 using Text;
 
@@ -9,6 +10,8 @@ public class ModUpdateClient : HttpClient
     public ModUpdateClient(Uri baseUri)
     {
         BaseAddress = baseUri;
+        DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Network.UserAgent);
+        Timeout = TimeSpan.FromMinutes(8);
     }
 
     public async Task<string> GetLatestVersion(CancellationToken cancellationToken = default)

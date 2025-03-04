@@ -1,7 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using HedgeModManager.UI.ViewModels;
-
-namespace HedgeModManager.UI.Models;
+﻿namespace HedgeModManager.UI.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
+using UI.ViewModels;
 
 public partial class Download : ObservableObject
 {
@@ -147,7 +146,7 @@ public partial class Download : ObservableObject
 
     public void ReportMax(long value) => ProgressMax = value;
 
-    public partial class DownloadProgress : ObservableObject, IProgress<long>
+    public partial class DownloadProgress : ObservableObject, CoreLib.IProgress<long>
     {
         [ObservableProperty] public long _progress = 0;
         [ObservableProperty] public long _progressMax = -1;

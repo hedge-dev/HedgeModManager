@@ -58,6 +58,7 @@
   <system:String x:Key="Download.Text.SwitchProfileLoad" >Switching profiles... (Restoring)</system:String>
   <system:String x:Key="Download.Text.UpdateManager0"    >Downloading updates...</system:String>
   <system:String x:Key="Download.Text.UpdateManager1"    >Extracting update...</system:String>
+  <system:String x:Key="Download.Text.UpdateMod"         >Updating {0}...</system:String>
   <system:String x:Key="Theme.Name.Dark"                 >Cool Dark</system:String>
   <system:String x:Key="Theme.Name.Darker"               >Neutral Dark</system:String>
 
@@ -160,6 +161,7 @@
   <system:String xml:space="preserve" x:Key="Modal.Message.PkgUpdate">Please update Hedge Mod Manager using your system's package manager.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.SelectModsError">Hedge Mod Manager does not have permissions to the selected directory.&#x0a;&#x0a;Please select another directory.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UpdateMod">There is an update available for {0}.&#x0a;&#x0a;Would you like to update the mod?</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.UpdateModError">An unknown error occurred while updating &quot;{0}&quot;.&#x0a;&#x0a;Please try again later.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownSaveError">Hedge Mod Manager was unable to save&#x0a;due to an unknown error.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownUpdateError">An error occurred when trying to prepare&#x0a;for updating.&#x0a;&#x0a;Please try again later.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownRunError">Hedge Mod Manager was unable to launch&#x0a;the game due to an unknown error.</system:String>
