@@ -26,7 +26,8 @@ public class ModConfig
         public List<string> Description { get; set; } = [];
         public string DisplayName { get; set; } = "Config Name";
         public string Type { get; set; } = "string";
-        public object Value { get; set; } = string.Empty;
+        [JsonConverter(typeof(StringDynamicConverter))]
+        public dynamic Value { get; set; } = string.Empty;
         [JsonConverter(typeof(StringDoubleConverter))]
         public double? MinValue { get; set; }
         [JsonConverter(typeof(StringDoubleConverter))]
@@ -40,7 +41,8 @@ public class ModConfig
     public class ConfigEnum
     {
         public string DisplayName { get; set; } = "Enum";
-        public string Value { get; set; } = "Item";
+        [JsonConverter(typeof(StringDynamicConverter))]
+        public dynamic Value { get; set; } = "Item";
         public List<string> Description { get; set; } = [];
 
         public override string ToString() => DisplayName;
@@ -83,7 +85,7 @@ public class ModConfig
                 if (valString != null)
                 {
                     // Convert types
-                    switch (element.Name)
+                    switch (element.Type)
                     {
                         case "bool":
                             if (bool.TryParse(valString, out bool valVool))
@@ -104,7 +106,17 @@ public class ModConfig
                                 element.Value = (int)element.DefaultValue;
                             break;
                         default:
-                            element.Value = valString;
+                            // Check enums
+                            if (Enums.TryGetValue(element.Type, out List<ConfigEnum>? enumList))
+                            {
+                                var enumVal = enumList.FirstOrDefault(x => x.Value.ToString() == valString);
+                                if (enumVal != null)
+                                    element.Value = enumVal.Value;
+                                else
+                                    element.Value = element.DefaultValue ?? string.Empty;
+                            }
+                            else
+                                element.Value = valString;
                             break;
                     }
                 }

@@ -76,7 +76,7 @@ public partial class ModConfigModal : UserControl
             default:
                 if (modConfig.Enums.TryGetValue(element.Type, out List<ModConfig.ConfigEnum>? value))
                 {
-                    var selectedValue = value.FirstOrDefault(x => x.Value == element.Value?.ToString());
+                    var selectedValue = value.FirstOrDefault(x => x.Value?.ToString() == element.Value?.ToString());
 
                     var comboBox = new ComboBox
                     {
