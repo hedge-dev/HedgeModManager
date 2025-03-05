@@ -101,7 +101,6 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             catch { }
         }
-        await CheckForModLoaderUpdatesAsync();
     }
 
     public async Task CheckForManagerUpdatesAsync()

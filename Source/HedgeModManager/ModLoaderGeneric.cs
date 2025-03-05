@@ -72,16 +72,12 @@ public class ModLoaderGeneric : IModLoader
         var resources = peFile.Resources;
         if (resources != null)
         {
-            Logger.Debug("Found resources");
             var versionInfo = resources.VsVersionInfo;
             if (versionInfo != null)
             {
-                Logger.Debug("Found version info");
                 uint ls = versionInfo.VsFixedFileInfo.DwProductVersionLS;
                 uint ms = versionInfo.VsFixedFileInfo.DwProductVersionMS;
-                string versionStr = $"{ms >> 16}.{ms & 0xFFFF}.{ls >> 16}.{ls & 0xFFFF}";
-                Logger.Debug($"Version: {versionStr}");
-                return versionStr;
+                return $"{ms >> 16}.{ms & 0xFFFF}.{ls >> 16}.{ls & 0xFFFF}";
             }
             else
             {
