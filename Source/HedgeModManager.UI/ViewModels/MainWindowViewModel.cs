@@ -444,27 +444,12 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 try
                 {
-                    // Ensure enabled mods are on top of disabled mods
-                    var orderedMods = Mods.OrderBy(x => !x.Enabled).ToList();
-
-                    var indices = new Dictionary<IMod, int>();
-                    for (int i = 0; i < orderedMods.Count; i++)
-                        indices[orderedMods[i]] = i;
-
-                    for (int i = 0; i < Mods.Count; i++)
-                    {
-                        var newIndex = indices[Mods[i]];
-
-                        if (i != newIndex)
-                        {
-                            Mods.Move(i, newIndex);
-                            // Move back
-                            i = Math.Min(i, newIndex) - 1;
-                        }
-                    }
-
                     // Resolve mod dependencies
                     CheckAndInstallModDependencies();
+
+                    // Ensure enabled mods are on top of disabled mods
+                    // TODO: Find a method to reorder without full update
+                    Mods = new (SelectedGame.Game.ModDatabase.Mods.OrderBy(x => !x.Enabled));
 
                     await SelectedGame.Game.ModDatabase.Save();
                     if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)
