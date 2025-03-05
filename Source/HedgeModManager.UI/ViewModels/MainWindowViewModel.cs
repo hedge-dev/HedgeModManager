@@ -45,7 +45,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private string _lastLog = "";
     [ObservableProperty] private string _message = "";
     [ObservableProperty] private TabInfo? _currentTabInfo;
-    [ObservableProperty] private TabInfo[] _tabInfos = 
+    [ObservableProperty] private TabInfo[] _tabInfos =
         [new ("Loading"), new("Setup"), new("Mods"), new("Codes"), new("Settings"), new("About"), new("Test")];
     [ObservableProperty] private ObservableCollection<Modal> _modals = [];
     [ObservableProperty] private ObservableCollection<IMod> _mods = [];
@@ -82,6 +82,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Logger.Information($"Startup Date: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} (UTC)");
         Logger.Debug($"IsWindows: {OperatingSystem.IsWindows()}");
         Logger.Debug($"IsLinux: {OperatingSystem.IsLinux()}");
+        Logger.Debug($"IsMacos: {OperatingSystem.IsMacOS()}");
         Logger.Debug($"RID: {RuntimeInformation.RuntimeIdentifier}");
         Logger.Debug($"FlatpakID: \"{Program.FlatpakID}\" ({!string.IsNullOrEmpty(Program.FlatpakID)})");
         Logger.Debug($"InstallLocation: {Program.InstallLocation}");
@@ -109,7 +110,7 @@ public partial class MainWindowViewModel : ViewModelBase
         .OnRun(async (d, c) =>
         {
             d.CreateProgress().ReportMax(-1);
-            
+
             var (update, status) = await Updater.CheckForUpdates();
             if (update == null)
             {
@@ -337,7 +338,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     var gameGeneric = GetModdableGameGeneric();
                     if (gameGeneric == null || gameGeneric.ModLoader == null)
                         return;
-                    
+
                     if (install == true)
                         _ = await gameGeneric.ModLoader.InstallAsync();
                     else
@@ -385,7 +386,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         IsBusy = true;
 
-        await CreateSimpleDownload("Download.Text.SwitchProfileSave", "Failed to switch profiles", 
+        await CreateSimpleDownload("Download.Text.SwitchProfileSave", "Failed to switch profiles",
             async (d, p, c) =>
             {
                 var backupProgress = d.CreateProgress();
@@ -453,7 +454,19 @@ public partial class MainWindowViewModel : ViewModelBase
 
                     await SelectedGame.Game.ModDatabase.Save();
                     if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)
-                        await config.Save(Path.Combine(SelectedGame.Game.Root, "cpkredir.ini"));
+                    {
+                        // For macos, save under the user's Application Support directory.
+                        if (OperatingSystem.IsMacOS())
+                        {
+                            var appSupportDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                            Console.WriteLine( appSupportDir);
+                            await config.Save(Path.Combine( appSupportDir,SelectedGame.Game.Executable, "cpkredir.ini"));
+                        }
+                        else
+                        {
+                          await config.Save(Path.Combine(SelectedGame.Game.Root, "cpkredir.ini"));
+                        }
+                    }
                 }
                 catch (UnauthorizedAccessException e)
                 {
@@ -889,7 +902,7 @@ public partial class MainWindowViewModel : ViewModelBase
             ServerStatus = 1;
             while (ServerStatus == 1)
             {
-                using var server = new NamedPipeServerStream(Program.PipeName, PipeDirection.In, 
+                using var server = new NamedPipeServerStream(Program.PipeName, PipeDirection.In,
                     NamedPipeServerStream.MaxAllowedServerInstances,
                     PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
                 Logger.Debug("Waiting for connection");

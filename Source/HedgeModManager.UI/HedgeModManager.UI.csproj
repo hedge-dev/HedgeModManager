@@ -7,8 +7,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
-    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">8.0.0.2</AssemblyVersion>
-    <FileVersion Condition="'$(FileVersion)' == ''">8.0.0.2</FileVersion>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">8.0.0.3</AssemblyVersion>
+    <FileVersion Condition="'$(FileVersion)' == ''">8.0.0.3</FileVersion>
   </PropertyGroup>
   <PropertyGroup Label="Avalonia">
     <AvaloniaXamlReportImportance>Low</AvaloniaXamlReportImportance>
@@ -60,4 +60,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNet.Bundle" Version="0.9.13" />
+  </ItemGroup>
+  
 </Project>

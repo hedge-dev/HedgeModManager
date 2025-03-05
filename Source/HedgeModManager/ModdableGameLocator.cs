@@ -1,4 +1,5 @@
 ﻿namespace HedgeModManager;
+
 using Foundation;
 using HedgeModManager.Epic;
 using HedgeModManager.Properties;
@@ -16,12 +17,12 @@ public class ModdableGameLocator
             ID = "SonicGenerations",
             ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
-            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
+            ModLoaderIncompatibleFileNames = ["dinput8.dll"],
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             Is64Bit = false,
             PlatformInfos = new()
             {
-                { "Steam", new ("71340", "SonicGenerations.exe") }
+                { "Steam", new("71340", "SonicGenerations.exe") }
             }
         },
         new()
@@ -29,17 +30,17 @@ public class ModdableGameLocator
             ID = "SonicLostWorld",
             ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
-            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
+            ModLoaderIncompatibleFileNames = ["dinput8.dll"],
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             Is64Bit = false,
-            PlatformInfos = new() { { "Steam", new ("329440", "slw.exe") } }
+            PlatformInfos = new() { { "Steam", new("329440", "slw.exe") } }
         },
         new()
         {
             ID = "SonicForces",
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
-            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
+            ModLoaderIncompatibleFileNames = ["dinput8.dll"],
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", new ("637100", Path.Combine("build", "main", "projects", "exec", "Sonic Forces.exe")) } }
         },
@@ -49,7 +50,7 @@ public class ModdableGameLocator
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "dinput8.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
-            PlatformInfos = new() { { "Steam", new ("1259790", "PuyoPuyoTetris2.exe") } }
+            PlatformInfos = new() { { "Steam", new("1259790", "PuyoPuyoTetris2.exe") } }
         },
         new()
         {
@@ -57,7 +58,7 @@ public class ModdableGameLocator
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "dinput8.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
-            PlatformInfos = new() { { "Steam", new ("981890", "musashi.exe") } }
+            PlatformInfos = new() { { "Steam", new("981890", "musashi.exe") } }
         },
         new()
         {
@@ -91,8 +92,8 @@ public class ModdableGameLocator
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new()
             {
-                { "Steam", new ("1237320", "SonicFrontiers.exe") },
-                { "Epic", new ("c5ca98fa240c4eb796835f97126df8e7", "SonicFrontiers.exe") }
+                { "Steam", new("1237320", "SonicFrontiers.exe") },
+                { "Epic", new("c5ca98fa240c4eb796835f97126df8e7", "SonicFrontiers.exe") }
             }
         },
         // NOTE: Mod loader is not ready yet
@@ -118,8 +119,8 @@ public class ModdableGameLocator
             ModDatabaseDirectoryName = "mods_shadow",
             PlatformInfos = new()
             {
-                { "Steam", new ("2513280", "SONIC_X_SHADOW_GENERATIONS.exe") },
-                { "Epic", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe") }
+                { "Steam", new("2513280", "SONIC_X_SHADOW_GENERATIONS.exe") },
+                { "Epic", new("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe") }
             }
         },
         new()
@@ -128,9 +129,10 @@ public class ModdableGameLocator
             SupportsCodes = false,
             PlatformInfos = new()
             {
-                { "Windows", new (string.Empty, "SOFTWARE\\UnleashedRecomp") },
-                { "Flatpak",  new ("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")},
-                { "Desktop",  new ("UnleashedRecomp", "unleashedrecomp")}
+                { "Windows", new(string.Empty, "SOFTWARE\\UnleashedRecomp") },
+                { "Flatpak", new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp") },
+                { "Desktop", new("UnleashedRecomp", "unleashedrecomp") },
+                { "Macos", new("UnleashedRecomp", "UnleashedRecomp") },
             }
         }
     ];
@@ -191,7 +193,7 @@ public class ModdableGameLocator
                         Is64Bit = gameInfo.Is64Bit
                     };
                     game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
-                    game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName, 
+                    game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName,
                         gameInfo.ModLoaderFileName, gameInfo.ModLoaderIncompatibleFileNames,
                         gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
                     if (gameInfo.ModDatabaseDirectoryName != null)
@@ -303,6 +305,24 @@ public class ModdableGameLocator
                     game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
                     games.Add(game);
                 }
+            }
+            if (OperatingSystem.IsMacOS() && gameInfo.PlatformInfos.TryGetValue("Macos", out var macosDesktopInfo))
+            {
+                // The root is actually not necessary on macos
+             
+                var gameSimple = new GameSimple(
+                    "Macos", macosDesktopInfo.ID, gameInfo.ID,
+                    "/Applications", macosDesktopInfo.Executable, "Macos", ""
+                    , "");
+
+                var game = new ModdableGameGeneric(gameSimple)
+                {
+                    SupportsDirectLaunch = true,
+                    SupportsLauncher = false,
+                    Is64Bit = gameInfo.Is64Bit
+                };
+                game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                games.Add(game);
             }
         }
 
