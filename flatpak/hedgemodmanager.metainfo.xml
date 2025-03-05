@@ -25,7 +25,6 @@
     <p>Hedge Mod Manager is a GUI tool built to allow users to easily install and manage mods for various Hedgehog Engine games released on PC systems.</p>
     <p>Supported games:</p>
     <ul>
-      <li>Unleashed Recompiled</li>
       <li>Sonic Generations (2011)</li>
       <li>Sonic Lost World</li>
       <li>Sonic Forces</li>
@@ -36,6 +35,7 @@
       <li>Sonic Frontiers</li>
       <li>Shadow Generations</li>
       <li>Sonic Generations (2024)</li>
+      <li>Unleashed Recompiled</li>
     </ul>
   </description>
 
@@ -51,6 +51,18 @@
   </screenshots>
 
   <releases>
+    <release version="8.0.0-beta3" date="2025-03-06">
+      <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta3</url>
+      <description>
+        <ul>
+          <li>Fixed mod updater</li>
+          <li>Fixed mod parser</li>
+          <li>Fixed issues with mod configuration</li>
+          <li>Fixed profile switching</li>
+          <li>Fixed dependency checker</li>
+        </ul>
+      </description>
+    </release>
     <release version="8.0.0-beta2" date="2025-03-04">
       <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta2</url>
       <description>
