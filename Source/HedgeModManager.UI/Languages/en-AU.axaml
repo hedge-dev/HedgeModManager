@@ -82,6 +82,7 @@
   <system:String x:Key="Settings.Button.CheckUpdates"        >Check</system:String>
   <system:String x:Key="Settings.Button.CheckingUpdates"     >Checking...</system:String>
   <system:String x:Key="Settings.Button.ClearPrefix"         >Delete</system:String>
+  <system:String x:Key="Settings.Button.ExportLog"           >Save Log File</system:String>
   <system:String x:Key="Settings.Button.InstallML"           >Install</system:String>
   <system:String x:Key="Settings.Button.ReinstallRuntime"    >Reinstall</system:String>
   <system:String x:Key="Settings.Button.UninstallML"         >Uninstall</system:String>

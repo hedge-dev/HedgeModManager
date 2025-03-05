@@ -137,9 +137,14 @@ public partial class MainWindow : Window
                 else
                 {
                     if (ViewModel.SelectedGame != null)
-                        _ = Dispatcher.UIThread.Invoke(ViewModel.SelectedGame.Game.InitializeAsync);
-                    ViewModel.RefreshUI();
-                    Logger.Debug($"Refreshed game");
+                    {
+                        _ = Dispatcher.UIThread.Invoke(async () =>
+                        {
+                            await ViewModel.SelectedGame.Game.InitializeAsync();
+                            ViewModel.RefreshUI();
+                            Logger.Debug($"Refreshed game");
+                        });
+                    }
                 }
                 break;
             case Key.F11:
