@@ -34,6 +34,7 @@ public class ModDependencyReport(IMod rootMod)
         {
             return;
         }
+        dependencies.Add(modDependency);
 
         var mod = database.Mods.FirstOrDefault(x => x.ID == modDependency.ID);
 
@@ -41,9 +42,13 @@ public class ModDependencyReport(IMod rootMod)
         {
             foreach (var dep in mod.Dependencies)
             {
+                // Dont search already searched dependencies
+                if (dependencies.Any(x => x.ID == dep.ID))
+                {
+                    continue;
+                }
                 CollectDependencies(dependencies, database, dep);
             }
         }
-        dependencies.Add(modDependency);
     }
 }
