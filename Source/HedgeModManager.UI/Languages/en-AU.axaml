@@ -140,6 +140,7 @@
   <system:String x:Key="Modal.Title.Information"       >Information</system:String>
   <system:String x:Key="Modal.Title.InstallError"      >Install Error</system:String>
   <system:String x:Key="Modal.Title.LoadError"         >Load Error</system:String>
+  <system:String x:Key="Modal.Title.MissingDependency" >Missing Dependencies</system:String>
   <system:String x:Key="Modal.Title.SaveError"         >Save Error</system:String>
   <system:String x:Key="Modal.Title.SelectMods"        >Select Mods Directory...</system:String>
   <system:String x:Key="Modal.Title.SelectModsFailed"  >Invalid Mods Directory</system:String>
@@ -158,6 +159,7 @@
   <system:String xml:space="preserve" x:Key="Modal.Message.GameNoAccess">Hedge Mod Manager does not have write&#x0a;access to the game files.&#x0a;&#x0a;Please make sure the game files are writable.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.GamescopeError">Mod configuration has been saved.&#x0a;&#x0a;Hedge Mod Manager currently cannot launch games while in Gaming Mode.&#x0a;&#x0a;Please exit Hedge Mod Manager then launch the game.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.InstallError">Failed to install mod. Check log for exception.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.MissingDependency">The mods listed below are missing and are required to play.&#x0a;&#x0a;{0}</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.ModLoaderInstallError">An error occurred while trying to install the mod loader.&#x0a;&#x0a;Check log for exception.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.PkgUpdate">Please update Hedge Mod Manager using your system's package manager.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.SelectModsError">Hedge Mod Manager does not have permissions to the selected directory.&#x0a;&#x0a;Please select another directory.</system:String>

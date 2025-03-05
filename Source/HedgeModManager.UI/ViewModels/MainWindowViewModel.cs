@@ -561,14 +561,11 @@ public partial class MainWindowViewModel : ViewModelBase
             foreach (var dependency in missing)
                 Logger.Debug($"  {dependency.Title}");
 
-            // TODO: Show what mods is missing
-            var messageBox = new MessageBoxModal("Modal.Title.InstallDependencies", Localize("Modal.Message.InstallDependencies"));
-            messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
-            messageBox.AddButton("Common.Button.Install", (s, e) =>
-            {
-                Logger.Debug("Install clicked for dependency install");
-                messageBox.Close();
-            });
+            // TODO: Automate installation of missing dependencies
+            string modListStr = string.Join(Environment.NewLine, missing.Select(x => $"- {x.Title} | {x.Version}")); ;
+
+            var messageBox = new MessageBoxModal("Modal.Title.MissingDependency", Localize("Modal.Message.MissingDependency", modListStr));
+            messageBox.AddButton("Common.Button.OK", (s, e) => messageBox.Close());
             messageBox.Open(this);
         }
     }
