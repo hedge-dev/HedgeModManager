@@ -31,7 +31,12 @@ public class EpicLocator : IGameLocator
             searchPaths.Add(Path.Combine(appdata, "heroic"));
             searchPaths.Add(Path.Combine("heroic"));
         }
-        
+
+        if (OperatingSystem.IsMacOS())
+        {
+            searchPaths.Add(Path.Combine(appdata, "heroic"));
+        }
+
         if (OperatingSystem.IsLinux())
         {
             // Heroic Games Launcher (Flatpak)
