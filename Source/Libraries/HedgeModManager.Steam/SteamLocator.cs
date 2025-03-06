@@ -3,6 +3,7 @@ using System.Runtime.Versioning;
 using Microsoft.Win32;
 using Foundation;
 using System.IO;
+using System.Collections.Generic;
 
 public class SteamLocator : IGameLocator
 {
@@ -68,6 +69,30 @@ public class SteamLocator : IGameLocator
         return SteamInstallPath;
     }
 
+    public static string? LocateSteamPrefix(string appid, IReadOnlyList<string> compatDirs)
+    {
+        if (!OperatingSystem.IsLinux())
+            return null;
+
+        foreach (var compatDir in compatDirs)
+        {
+            var protonDir = Path.Combine(compatDir, appid);
+            if (Directory.Exists(protonDir))
+            {
+                return Path.Combine(protonDir, "pfx");
+            }
+        }
+
+        if (compatDirs.Count > 0)
+        {
+            Logger.Debug($"Using default prefix for appid {appid}");
+            return Path.Combine(compatDirs[0], appid, "pfx");
+        }
+
+        Logger.Warning($"Could not locate Steam prefix for appid {appid}");
+        return null;
+    }
+
     public List<SteamGame> Locate()
     {
         var games = new List<SteamGame>();
@@ -78,6 +103,16 @@ public class SteamLocator : IGameLocator
         }
 
         var folders = ValveDataFile.FromFile(Path.Combine(library, "steamapps", "libraryfolders.vdf"));
+        var compatDirs = new List<string>();
+
+        if (OperatingSystem.IsLinux())
+        {
+            var compatDataDir = Path.Combine(library, "steamapps", "compatdata");
+            if (Directory.Exists(compatDataDir))
+            {
+                compatDirs.Add(compatDataDir);
+            }
+        }
 
         foreach (var folder in folders)
         {
@@ -115,7 +150,7 @@ public class SteamLocator : IGameLocator
                             ID = appid,
                             Name = name,
                             Root = root,
-                            PrefixRoot = Path.Combine(library, "steamapps", "compatdata", appid, "pfx")
+                            PrefixRoot = LocateSteamPrefix(appid, compatDirs)
                         });
                     }
                 }
