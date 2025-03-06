@@ -1,5 +1,7 @@
 ﻿namespace HedgeModManager;
-using HedgeModManager.Properties;
+
+using Foundation;
+using Properties;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;

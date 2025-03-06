@@ -1,6 +1,7 @@
 ﻿namespace HedgeModManager;
 
 using CoreLib;
+using Foundation;
 using System.Text.Json;
 
 public static class Network

@@ -1,6 +1,4 @@
-﻿using HedgeModManager.Foundation;
-
-namespace HedgeModManager;
+﻿namespace HedgeModManager.Foundation;
 
 public class Logger
 {

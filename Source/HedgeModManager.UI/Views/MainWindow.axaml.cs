@@ -5,8 +5,8 @@ using Avalonia.Threading;
 using HedgeModManager.CodeCompiler;
 using HedgeModManager.UI.ViewModels;
 using Avalonia.Markup.Xaml;
-using Avalonia;
 using HedgeModManager.UI.Input;
+using HedgeModManager.Foundation;
 
 namespace HedgeModManager.UI.Views;
 

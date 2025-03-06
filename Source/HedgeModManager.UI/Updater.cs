@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using HedgeModManager.Foundation;
 using HedgeModManager.GitHub;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;

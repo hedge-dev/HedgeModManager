@@ -2,6 +2,7 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using HedgeModManager.Foundation;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 using static HedgeModManager.UI.Languages.Language;

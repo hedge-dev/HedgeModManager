@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
+using HedgeModManager.Foundation;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.Views;

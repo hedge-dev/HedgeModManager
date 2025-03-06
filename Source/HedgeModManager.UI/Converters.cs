@@ -1,5 +1,6 @@
 ﻿using Avalonia.Data;
 using Avalonia.Data.Converters;
+using HedgeModManager.Foundation;
 using System.Globalization;
 using static HedgeModManager.UI.Languages.Language;
 

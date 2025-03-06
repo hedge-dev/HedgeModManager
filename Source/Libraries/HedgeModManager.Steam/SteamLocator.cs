@@ -2,6 +2,7 @@
 using System.Runtime.Versioning;
 using Microsoft.Win32;
 using Foundation;
+using System.IO;
 
 public class SteamLocator : IGameLocator
 {
@@ -23,7 +24,7 @@ public class SteamLocator : IGameLocator
                     return path;
                 }
 
-                //Logger.Warning($"Steam path found, but \"{path}\" does not exist!");
+                Logger.Warning($"Steam path found, but \"{path}\" does not exist!");
             }
         }
 
