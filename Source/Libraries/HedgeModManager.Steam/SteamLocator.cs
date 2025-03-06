@@ -128,6 +128,22 @@ public class SteamLocator : IGameLocator
                 continue;
             }
 
+            // Paths will be encoded by Windows steam and will need to be adapted for macOS Paths.
+            // C:\ is equivalent to the Wine prefix.
+            // Any other drive letter should be removed and treated as raw Unix path.
+            if (OperatingSystem.IsMacOS())
+            {
+                if (path.StartsWith(@"C:\"))
+                {
+                    path = SteamInstallPath;
+                }
+                else
+                {
+                    // Remove drive letter and replace slashes
+                    path = path[2..].Replace(@"\", "/");
+                }
+            }
+
             var libPath = Path.Combine(path, "steamapps");
             foreach (var app in apps)
             {
