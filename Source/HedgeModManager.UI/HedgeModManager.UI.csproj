@@ -40,6 +40,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Markdig" Version="0.40.0" />
     <PackageReference Include="Material.Icons.Avalonia" Version="2.2.0" />
+    <PackageReference Include="DotNet.Bundle" Version="0.9.13" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,8 +62,18 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DotNet.Bundle" Version="0.9.13" />
-  </ItemGroup>
+  <PropertyGroup>
+    <UseAppHost>true</UseAppHost>
+    <CFBundleShortVersionString>8.0.0</CFBundleShortVersionString>
+    <CFBundleShortVersionString>Assets\AppIcon.icns</CFBundleShortVersionString>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
   
 </Project>
