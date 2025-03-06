@@ -15,6 +15,7 @@ A mod manager for Hedgehog Engine games on PC.
 - [Installation](#installation)
   - [Windows](#windows)
   - [Linux/Steam Deck](#linuxsteam-deck)
+- [Building](#building)
 - [Frequently Asked Questions](#frequently-asked-questions)
 - [Bug/Issue Reporting](#bugissue-reporting)
 - [Contribute](#contribute)
@@ -56,6 +57,9 @@ Download the Flatpak bundle (file ending with .flatpak) from the [releases page]
 
 > [!NOTE]
 > Currently Hedge Mod Manager is not officially available to be downloaded from any package managers.
+
+### Building
+[Check out the building instructions here](/docs/BUILDING.md).
 
 ### Frequently Asked Questions
 - Where can I install mods?
