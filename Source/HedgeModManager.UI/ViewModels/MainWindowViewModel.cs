@@ -291,6 +291,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Logger.Debug($"  Root: {game.Root}");
             Logger.Debug($"  Exec: {game.Executable}");
             Logger.Debug($"  N OS: {game.NativeOS}");
+            Logger.Debug($"   PFX: {game.PrefixRoot}");
             Logger.Debug($"  Type: {game.GetType().Name}");
             await game.InitializeAsync();
             Logger.Debug($"Initialised game");

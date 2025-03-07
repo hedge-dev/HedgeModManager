@@ -105,12 +105,21 @@ public class SteamLocator : IGameLocator
         var folders = ValveDataFile.FromFile(Path.Combine(library, "steamapps", "libraryfolders.vdf"));
         var compatDirs = new List<string>();
 
-        if (OperatingSystem.IsLinux())
+        foreach (var folder in folders)
         {
-            var compatDataDir = Path.Combine(library, "steamapps", "compatdata");
-            if (Directory.Exists(compatDataDir))
+            var path = folder.GetCaseInsensitive("path").GetString();
+            if (string.IsNullOrEmpty(path))
             {
-                compatDirs.Add(compatDataDir);
+                continue;
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                var compatDataDir = Path.Combine(path, "steamapps", "compatdata");
+                if (Directory.Exists(compatDataDir))
+                {
+                    compatDirs.Add(compatDataDir);
+                }
             }
         }
 
