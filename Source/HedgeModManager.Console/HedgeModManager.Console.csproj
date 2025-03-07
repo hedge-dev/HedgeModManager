@@ -12,8 +12,4 @@
     <ProjectReference Include="..\HedgeModManager\HedgeModManager.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DotNet.Bundle" Version="0.9.13" />
-  </ItemGroup>
-
 </Project>

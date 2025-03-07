@@ -23,7 +23,6 @@
     <ProjectReference Include="..\Libraries\HedgeModManager.Foundation\HedgeModManager.Foundation.csproj" />
     <ProjectReference Include="..\Libraries\HedgeModManager.Steam\HedgeModManager.Steam.csproj" />
     <ProjectReference Include="..\Libraries\HedgeModManager.Text\HedgeModManager.Text.csproj" />
-    <PackageReference Include="DotNet.Bundle" Version="0.9.13" />
   </ItemGroup>
 
   <ItemGroup>
