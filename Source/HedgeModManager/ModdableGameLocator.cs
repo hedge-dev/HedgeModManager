@@ -132,7 +132,8 @@ public class ModdableGameLocator
                 { "Windows", new(string.Empty, "SOFTWARE\\UnleashedRecomp") },
                 { "Flatpak", new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp") },
                 { "Desktop", new("UnleashedRecomp", "unleashedrecomp") },
-                { "Macos", new("UnleashedRecomp", "UnleashedRecomp") },
+                // Uncomment to detect on mac
+                //{ "Macos", new("UnleashedRecomp", "UnleashedRecomp") },
             }
         }
     ];
