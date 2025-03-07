@@ -33,6 +33,15 @@ cat > "$APP_NAME/Contents/Info.plist" << EOF
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
     <dict>
+        <key>CFBundleURLTypes</key>
+        <array>
+          <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+              <string>hedgemmswa</string>
+            </array>
+          </dict>
+        </array>
         <key>CFBundleIconFile</key>
         <string>AppIcon.icns</string>
         <key>CFBundleIdentifier</key>
