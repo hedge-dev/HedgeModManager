@@ -7,6 +7,7 @@ using HedgeModManager.UI.ViewModels;
 using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.Input;
 using HedgeModManager.Foundation;
+using Avalonia;
 
 namespace HedgeModManager.UI.Views;
 

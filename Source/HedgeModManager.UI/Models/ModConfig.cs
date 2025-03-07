@@ -151,6 +151,13 @@ public class ModConfig
                 iniGroup[element.Name] = element.Value;
         }
 
+        // Fix issue with counts being strings
+        foreach (var group in ini.Groups)
+            foreach (var key in group.Value)
+                if (key.Key.EndsWith("Count") && key.Value is string value)
+                    if (int.TryParse(value, out int count))
+                        group.Value[key.Key] = count;
+
         Directory.CreateDirectory(Path.GetDirectoryName(iniPath)!);
         await File.WriteAllTextAsync(iniPath, ini.Serialize().ReplaceLineEndings(lineEnding));
     }
