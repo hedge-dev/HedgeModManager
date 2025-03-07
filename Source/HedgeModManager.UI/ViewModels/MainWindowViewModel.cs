@@ -455,7 +455,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
                     // Ensure enabled mods are on top of disabled mods
                     // TODO: Find a method to reorder without full update
-                    Mods = new (SelectedGame.Game.ModDatabase.Mods.OrderBy(x => !x.Enabled));
+                    if (SelectedGame.Game.ModDatabase is ModDatabaseGeneric modsDB)
+                        Mods = new(modsDB.Mods = new(modsDB.Mods.OrderBy(x => !x.Enabled)));
 
                     await SelectedGame.Game.ModDatabase.Save();
                     if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)
