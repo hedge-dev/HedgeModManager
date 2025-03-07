@@ -3,7 +3,15 @@ using System.Diagnostics;
 
 namespace HedgeModManager;
 
-public class GameSimple(string platform, string id, string name, string root, string? executable, string nativeOS, string launchCommand, string launchCommandArgs) : IGame
+public class GameSimple(
+    string platform,
+    string id,
+    string name,
+    string root,
+    string? executable,
+    string nativeOS,
+    string launchCommand,
+    string launchCommandArgs) : IGame
 {
     public string Platform { get; set; } = platform;
     public string ID { get; set; } = id;
@@ -20,14 +28,28 @@ public class GameSimple(string platform, string id, string name, string root, st
     public Task Run(string? launchArgs, bool useLauncher)
     {
         launchArgs ??= LaunchCommandArgs;
-        
-        Process.Start(new ProcessStartInfo
+        if (OperatingSystem.IsMacOS())
         {
-            FileName = LaunchCommand,
-            Arguments = launchArgs ?? string.Empty,
-            WorkingDirectory = Root,
-            UseShellExecute = true
-        });
+            // The command to launch macos apps is
+            // open -a path/to/my/app/appname
+            // When the app is inside the Application folder only the app's name is needed.
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "open",
+                Arguments = $"-a {Executable}",
+                UseShellExecute = false
+            });
+        }
+        else
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = LaunchCommand,
+                Arguments = launchArgs ?? string.Empty,
+                WorkingDirectory = Root,
+                UseShellExecute = true
+            });
+        }
 
         return Task.CompletedTask;
     }
