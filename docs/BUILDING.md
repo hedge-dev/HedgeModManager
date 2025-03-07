@@ -9,10 +9,14 @@ git clone https://github.com/hedge-dev/HedgeModManager.git
 
 ###  Macos
 
-1. Navigate to HedgeModManager.UI
+1. Navigate to the root of the project
 2. Run the build command
 ```bash
-dotnet msbuild -t:BundleApp -p:RuntimeIdentifier=osx-arm64 -p:UseAppHost=true -property:Configuration=Release -p:PublishSingleFile=true
+ dotnet publish -p:PublishProfile=osx-arm64 -c Release -p:AssemblyVersion=8.0.3 -p:FileVersion=8.0.3 -o ./output/osx-arm64 ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj -p:UseAppHost=true
 ```
-3. Navigate to /bin/Release/net8.0/osx-arm64/publish
+```bash 
+    cd macos
+    /bin/bash macos/generate-bundle.bash com.hedge_dev.hedgemodmanager 8.0.3
+```
+3. Navigate to /output/osx-arm64
 4. Start HedgeModManager.app
