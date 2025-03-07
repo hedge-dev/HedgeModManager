@@ -46,16 +46,23 @@ Download the Windows binary from the [releases page](https://github.com/hedge-de
 > Currently Hedge Mod Manager does not support Epic Games Launcher. Until this feature gets implemented you will need to use [Heroic Games Launcher](https://heroicgameslauncher.com/) for playing games from Epic Games. 
 
 #### Linux/Steam Deck
-Download the Flatpak bundle (file ending with .flatpak) from the [releases page](https://github.com/hedge-dev/HedgeModManager/releases), then open the bundle file using your Flatpak compatible package manager like Discover for KDE/Steam Deck. For CLI installs use the `flatpak --user install` command.
+The recommended method of installing Hedge Mod Manager is through software managers which use Flathub like KDE Discover on the Steam Deck.
 > [!IMPORTANT]
+> At the time of writing builds on Flathub by default will not detect games from Epic Games and Steam installed using Flatpak. To fix this you will need to override the permissions with the following commands:
+> ```
+> flatpak override --user --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps:create io.github.hedge_dev.hedgemodmanager
+> flatpak override --user --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/GamesConfig:ro io.github.hedge_dev.hedgemodmanager
+> flatpak override --user --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/legendaryConfig/legendary:ro io.github.hedge_dev.hedgemodmanager
+> 
+> ```
+
+Flatpak bundles are also available from the [releases page](https://github.com/hedge-dev/HedgeModManager/releases). Use the `flatpak --user install` command to install these.
+> [!NOTE]
 > Currently Hedge Mod Manager only supports specific types of Steam and Heroic installations. This should not be an issue if you are using SteamOS.
 > 
 > For Steam, a Steam install with a link at `~/.steam` or `~/.local/share/Steam`.
 > 
 > For Heroic, it must be a flatpak install within the home directory. 
-
-> [!NOTE]
-> Currently Hedge Mod Manager is not officially available to be downloaded from any package managers.
 
 ### Frequently Asked Questions
 - Where can I install mods?

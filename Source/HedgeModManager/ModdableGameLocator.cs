@@ -88,6 +88,7 @@ public class ModdableGameLocator
             ID = "SonicFrontiers",
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
+            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new()
             {
@@ -286,8 +287,10 @@ public class ModdableGameLocator
             if (OperatingSystem.IsLinux() && gameInfo.PlatformInfos.TryGetValue("Desktop", out var desktopInfo))
             {
                 string root = Path.Combine(Paths.GetActualUserConfigPath(), desktopInfo.ID);
+                string desktopPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    ".local", "share","applications", $"{desktopInfo.ID}.desktop");
 
-                if (Directory.Exists(root))
+                if (Directory.Exists(root) && File.Exists(desktopPath))
                 {
                     var gameSimple = new GameSimple(
                         "Desktop", desktopInfo.ID, gameInfo.ID,

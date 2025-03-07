@@ -80,8 +80,14 @@ public partial class MainWindowViewModel : ViewModelBase
         };
         Logger.Information($"Starting HedgeModManager {AppVersion}...");
         Logger.Information($"Startup Date: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} (UTC)");
-        Logger.Debug($"IsWindows: {OperatingSystem.IsWindows()}");
-        Logger.Debug($"IsLinux: {OperatingSystem.IsLinux()}");
+        string os = "Unknown";
+        if (OperatingSystem.IsWindows())
+            os = "Windows";
+        else if (OperatingSystem.IsLinux())
+            os = "Linux"; // Excludes Android
+        else if (OperatingSystem.IsMacOS())
+            os = "macOS";
+        Logger.Debug($"OS: {os}");
         Logger.Debug($"RID: {RuntimeInformation.RuntimeIdentifier}");
         Logger.Debug($"FlatpakID: \"{Program.FlatpakID}\" ({!string.IsNullOrEmpty(Program.FlatpakID)})");
         Logger.Debug($"InstallLocation: {Program.InstallLocation}");
@@ -158,7 +164,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public async Task CheckForModLoaderUpdatesAsync()
     {
-        await new Download(Localize("Download.Text.CheckLoaderUpdate"))
+        await new Download(Localize("Download.Text.CheckLoaderUpdate"), true)
         .OnRun(async (d, c) =>
         {
             d.ReportMax(-1);

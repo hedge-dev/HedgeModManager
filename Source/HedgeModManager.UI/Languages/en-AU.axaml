@@ -161,7 +161,6 @@
   <system:String xml:space="preserve" x:Key="Modal.Message.InstallError">Failed to install mod. Check log for exception.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.MissingDependency">The mods listed below are missing and are required to play.&#x0a;&#x0a;{0}</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.ModLoaderInstallError">An error occurred while trying to install the mod loader.&#x0a;&#x0a;Check log for exception.</system:String>
-  <system:String xml:space="preserve" x:Key="Modal.Message.PkgUpdate">Please update Hedge Mod Manager using your system's package manager.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.SelectModsError">Hedge Mod Manager does not have permissions to the selected directory.&#x0a;&#x0a;Please select another directory.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UpdateMod">There is an update available for {0}.&#x0a;&#x0a;Would you like to update the mod?</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UpdateModError">An unknown error occurred while updating &quot;{0}&quot;.&#x0a;&#x0a;Please try again later.</system:String>
