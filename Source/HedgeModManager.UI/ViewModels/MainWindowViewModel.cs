@@ -459,7 +459,6 @@ public partial class MainWindowViewModel : ViewModelBase
                         if (OperatingSystem.IsMacOS())
                         {
                             var appSupportDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-                            Console.WriteLine( appSupportDir);
                             await config.Save(Path.Combine( appSupportDir,SelectedGame.Game.Executable, "cpkredir.ini"));
                         }
                         else
