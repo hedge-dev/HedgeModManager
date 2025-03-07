@@ -82,7 +82,7 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
             string mainPath = Path.Combine(Root, DefaultDatabaseDirectory, ModDatabaseGeneric.DefaultDatabaseName);
             string altPath = Path.Combine(Root, "Mods", ModDatabaseGeneric.DefaultDatabaseName);
 
-            if (!Directory.Exists(mainPath) && Directory.Exists(altPath))
+            if (!File.Exists(mainPath) && File.Exists(altPath))
             {
                 mainPath = altPath;
             }
