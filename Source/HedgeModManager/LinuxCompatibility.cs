@@ -46,10 +46,12 @@ public class LinuxCompatibility
                     var fileinfo = new FileInfo(destinationPath);
                     if (fileinfo.Exists)
                     {
+                        // Remove slash from the end
+                        destinationPath = destinationPath[..^1];
                         if (fileinfo.Attributes.HasFlag(FileAttributes.ReparsePoint))
                         {
                             Logger.Debug($"Symlink detected, unlinking \"{destinationPath}\"");
-                            Directory.Delete(destinationPath);
+                            File.Delete(destinationPath);
                         }
                         else
                         {
