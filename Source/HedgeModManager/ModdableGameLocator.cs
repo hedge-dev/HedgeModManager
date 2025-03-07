@@ -258,14 +258,15 @@ public class ModdableGameLocator
                     games.Add(game);
                 }
             }
+            // NOTE: This detection method is heavily flawed.
             if (gameInfo.PlatformInfos.TryGetValue("Flatpak", out var flatpakInfo))
             {
                 string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                     ".var/app", flatpakInfo.ID);
 
-                if (Directory.Exists(root))
+                if (Directory.Exists(Path.Combine(root, "data")))
                 {
-                    // Use custom path for SWA
+                    // Use custom path for Unleashed Recompiled
                     if (gameInfo.ID == "UnleashedRecompiled")
                         root = Path.Combine(Paths.GetActualUserConfigPath(), "UnleashedRecomp");
 

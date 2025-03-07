@@ -16,6 +16,7 @@ finish-args:
   # UnleashedRecomp permissions
   - --filesystem=~/.config/UnleashedRecomp
   - --filesystem=~/.local/share/applications/UnleashedRecomp.desktop:ro
+  - --filesystem=~/.var/app/io.github.hedge_dev.unleashedrecomp:ro
   # Create permissions are required for accessing the mod loader, game and for patching game prefixes
   # Steam permissions
   - --filesystem=~/.steam/steam/steamapps

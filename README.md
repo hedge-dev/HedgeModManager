@@ -37,7 +37,7 @@ A mod manager for Hedgehog Engine games on PC.
 ### Installation
 #### Windows
 Download the Windows binary from the [releases page](https://github.com/hedge-dev/HedgeModManager/releases) and store it anywhere. Avoid using multiple copies such as placing a copy of Hedge Mod Manager in every game folder.
-> [!IMPORTANT]
+> [!NOTE]
 > .NET 8 Runtime or newer is required to run Hedge Mod Manager. This can be downloaded [here](https://dotnet.microsoft.com/en-us/download/dotnet/9.0).
 >
 > Make sure you are downloading the **Installer** of **.NET Runtime**. For most systems the **x64** **Installer** is the correct option. 
@@ -48,13 +48,11 @@ Download the Windows binary from the [releases page](https://github.com/hedge-de
 #### Linux/Steam Deck
 The recommended method of installing Hedge Mod Manager is through software managers which use Flathub like KDE Discover on the Steam Deck.
 > [!IMPORTANT]
-> At the time of writing builds on Flathub by default will not detect games from Epic Games and Steam installed using Flatpak. To fix this you will need to override the permissions with the following commands:
+> At the time of writing builds on Flathub by default will not detect flatpak versions of Heroic, Steam and Unleashed Recompiled. To fix this you will need to override the permissions with the following command:
 > ```
-> flatpak override --user --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps:create io.github.hedge_dev.hedgemodmanager
-> flatpak override --user --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/GamesConfig:ro io.github.hedge_dev.hedgemodmanager
-> flatpak override --user --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/legendaryConfig/legendary:ro io.github.hedge_dev.hedgemodmanager
-> 
+> flatpak override --user --filesystem=~/.var/app/io.github.hedge_dev.unleashedrecomp:ro --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/GamesConfig:ro --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/legendaryConfig/legendary:ro io.github.hedge_dev.hedgemodmanager
 > ```
+> Running this command will give Hedge Mod Manager permissions to access to the flatpaks paths listed above.
 
 Flatpak bundles are also available from the [releases page](https://github.com/hedge-dev/HedgeModManager/releases). Use the `flatpak --user install` command to install these.
 > [!NOTE]
