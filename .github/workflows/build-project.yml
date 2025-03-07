@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        rid: [linux-x64, win-x64]
+        rid: [linux-x64, win-x64, osx-arm64]
 
     steps:
       - name: Checkout Repository
