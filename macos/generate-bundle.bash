@@ -39,6 +39,16 @@ cat > "$APP_NAME/Contents/Info.plist" << EOF
             <key>CFBundleURLSchemes</key>
             <array>
               <string>hedgemmswa</string>
+              <string>hedgemmgens</string>
+              <string>hedgemmlw</string>
+              <string>hedgemmforces</string>
+              <string>hedgemmtenpex</string>
+              <string>hedgemmmusashi</string>
+              <string>hedgemmrainbow</string>
+              <string>hedgemmhite</string>
+              <string>hedgemmrangers</string>
+              <string>hedgemmmillersonic</string>
+              <string>hedgemmmillershadow</string>
             </array>
           </dict>
         </array>
@@ -59,7 +69,7 @@ cat > "$APP_NAME/Contents/Info.plist" << EOF
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>$1</string>
+        <string>${VERSION}</string>
         <key>NSHighResolutionCapable</key>
         <true/>
     </dict>

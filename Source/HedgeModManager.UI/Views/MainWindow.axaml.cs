@@ -6,7 +6,10 @@ using HedgeModManager.CodeCompiler;
 using HedgeModManager.UI.ViewModels;
 using Avalonia.Markup.Xaml;
 using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using HedgeModManager.UI.CLI;
 using HedgeModManager.UI.Input;
+
 
 namespace HedgeModManager.UI.Views;
 
@@ -39,7 +42,7 @@ public partial class MainWindow : Window
             // Select the last selected game or first game
             ViewModel.SelectedGame = ViewModel.Games
                 .FirstOrDefault(x => x != null && Path.Combine(x.Game.Root, x.Game.Executable ?? "")
-                == ViewModel.Config.LastSelectedPath, ViewModel.Games.FirstOrDefault());
+                    == ViewModel.Config.LastSelectedPath, ViewModel.Games.FirstOrDefault());
         }
 
         // Set to true until we create a setup
@@ -69,6 +72,8 @@ public partial class MainWindow : Window
 
         Logger.Information($"Loading URI handlers...");
         Program.InstallURIHandler();
+        if (OperatingSystem.IsMacOS())
+            Program.ListenForUriSchemeMac((commands) => _ = ViewModel.ProcessCommandsAsync(commands));
 
         LoadGames();
 
@@ -146,6 +151,7 @@ public partial class MainWindow : Window
                         });
                     }
                 }
+
                 break;
             case Key.F11:
                 toggleFullscreen = true;
@@ -205,6 +211,7 @@ public partial class MainWindow : Window
                     if (button != Buttons.None)
                         _ = Dispatcher.UIThread.Invoke(async () => await ViewModel.OnInputDownAsync(button));
                 }
+
                 break;
         }
 
