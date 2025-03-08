@@ -14,7 +14,7 @@ git clone https://github.com/hedge-dev/HedgeModManager.git
 ```bash
  dotnet publish -p:PublishProfile=osx-arm64 -c Release -p:AssemblyVersion=8.0.3 -p:FileVersion=8.0.3 -o ./output/osx-arm64 ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj -p:UseAppHost=true
 ```
-```bash 
+```zsh 
     cd macos
     /bin/bash generate-bundle.bash com.hedge_dev.hedgemodmanager 8.0.3
 ```
