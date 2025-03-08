@@ -3,12 +3,17 @@
   <id>io.github.hedge_dev.hedgemodmanager</id>
   
   <name>Hedge Mod Manager</name>
-  <summary>Manage mods for HE Sonic games</summary>
+  <summary>Manage mods for Sonic games</summary>
   <developer_name>hedge-dev</developer_name>
   <url type="homepage">https://github.com/hedge-dev/HedgeModManager</url>
   <url type="bugtracker">https://github.com/hedge-dev/HedgeModManager/issues</url>
   <url type="help">https://github.com/hedge-dev/HedgeModManager/issues</url>
   <url type="vcs-browser">https://github.com/hedge-dev/HedgeModManager</url>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#3e7e9e</color>
+    <color type="primary" scheme_preference="dark">#003068</color>
+  </branding>
   
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT</project_license>
@@ -22,7 +27,7 @@
   </supports>
 
   <description>
-    <p>Hedge Mod Manager is a GUI tool built to allow users to easily install and manage mods for various Hedgehog Engine games released on PC systems.</p>
+    <p>Hedge Mod Manager is an easy-to-use tool that helps you install and manage game mods for Sonic games on PC.</p>
     <p>Supported games:</p>
     <ul>
       <li>Sonic Generations (2011)</li>
@@ -51,6 +56,21 @@
   </screenshots>
 
   <releases>
+    <release version="8.0.0-beta4" date="2025-03-08">
+      <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta4</url>
+      <description>
+        <ul>
+          <li>Fixed update checker</li>
+          <li>Fixed prefix searching</li>
+          <li>Fixed game detection</li>
+          <li>Fixed INI count type</li>
+          <li>Fixed mods list not updating correctly</li>
+          <li>Fixed multiple mod loader install issues</li>
+          <li>Fixed load order being reversed</li>
+          <li>Fixed mods directory name casing issue</li>
+        </ul>
+      </description>
+    </release>
     <release version="8.0.0-beta3" date="2025-03-06">
       <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta3</url>
       <description>
@@ -72,12 +92,6 @@
           <li>Fixed GameBanana downloader</li>
           <li>Fixed mod loader conflict issue</li>
         </ul>
-      </description>
-    </release>
-    <release version="8.0.0-beta1" date="2025-03-02">
-      <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta1</url>
-      <description>
-        <p>Initial release of v8.0.0 beta 1</p>
       </description>
     </release>
   </releases>

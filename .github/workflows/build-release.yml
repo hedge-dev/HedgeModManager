@@ -6,11 +6,11 @@ on:
       version: 
         description: 'Version'
         required: true
-        default: '8.0.0.3'
+        default: '8.0.0.4'
       tag: 
         description: 'Tag'
         required: true
-        default: '8.0.0-beta3'
+        default: '8.0.0-beta4'
       prerelease:
         description: 'Prerelease'
         required: true
