@@ -1,7 +1,7 @@
 # Building from source
 
 ## 1. Clone the repository
-```bash
+```zsh
 git clone https://github.com/hedge-dev/HedgeModManager.git
 ```
 
@@ -11,7 +11,7 @@ git clone https://github.com/hedge-dev/HedgeModManager.git
 
 1. Navigate to the root of the project
 2. Run the build command
-```bash
+```zsh
  dotnet publish -p:PublishProfile=osx-arm64 -c Release -p:AssemblyVersion=8.0.3 -p:FileVersion=8.0.3 -o ./output/osx-arm64 ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj -p:UseAppHost=true
 ```
 ```zsh 
