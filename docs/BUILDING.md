@@ -16,7 +16,7 @@ git clone https://github.com/hedge-dev/HedgeModManager.git
 ```
 ```bash 
     cd macos
-    /bin/bash macos/generate-bundle.bash com.hedge_dev.hedgemodmanager 8.0.3
+    /bin/bash generate-bundle.bash com.hedge_dev.hedgemodmanager 8.0.3
 ```
 3. Navigate to /output/osx-arm64
 4. Start HedgeModManager.app
