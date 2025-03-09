@@ -75,6 +75,9 @@ jobs:
       - name: win-x64 Build
         run: dotnet publish -p:PublishProfile=win-x64 -c Release -p:AssemblyVersion=${{ github.event.inputs.version }} -p:FileVersion=${{ github.event.inputs.version }} -o ./output/win-x64 ${{env.PROJECT_PATH}}
 
+      - name: osx-arm64 Build
+        run: dotnet publish -p:PublishProfile=osx-arm64 -c Release -p:AssemblyVersion=${{ github.event.inputs.version }} -p:FileVersion=${{ github.event.inputs.version }} -o ./output/osx-arm64 ${{env.PROJECT_PATH}}
+
       - name: flatpak-x86_64 Build
         env:
           APP_VERSION: ${{ github.event.inputs.version }}
@@ -87,6 +90,7 @@ jobs:
         run: |
           mkdir -p ./release
           mv ./output/win-x64/HedgeModManager.UI.exe ./release/HedgeModManager.exe
+          mv ./output/osx-arm64/HedgeModManager.UI ./release/HedgeModManager
           mv ./flatpak/${{env.FLATPAK_ID}}.flatpak ./release/${{env.FLATPAK_ID}}.flatpak
 
       - name: Create Release
