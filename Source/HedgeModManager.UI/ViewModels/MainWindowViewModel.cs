@@ -182,8 +182,9 @@ public partial class MainWindowViewModel : ViewModelBase
             }
 
             // TODO: Show changelog
+            bool installed = game.ModLoader.IsInstalled();
             bool hasUpdate = await game.ModLoader.CheckForUpdatesAsync();
-            if (hasUpdate)
+            if (hasUpdate && installed)
                 await game.ModLoader.InstallAsync(false);
         }).OnError((d, e) =>
         {
