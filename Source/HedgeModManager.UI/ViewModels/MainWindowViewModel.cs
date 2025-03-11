@@ -172,12 +172,12 @@ public partial class MainWindowViewModel : ViewModelBase
             var game = GetModdableGameGeneric();
             if (game == null)
             {
-                Logger.Debug("ModLoader updates are only supported on ModdableGameGeneric");
+                Logger.Debug("Mod loader updates are only supported on ModdableGameGeneric");
                 return;
             }
             if (game.ModLoader == null)
             {
-                Logger.Debug("Game's mod loader is null");
+                Logger.Debug("Game does not use an external mod loader");
                 return;
             }
 

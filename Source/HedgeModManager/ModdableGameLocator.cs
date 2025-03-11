@@ -21,7 +21,7 @@ public class ModdableGameLocator
             Is64Bit = false,
             PlatformInfos = new()
             {
-                { "Steam", new ("71340", "SonicGenerations.exe") }
+                { "Steam", [new ("71340", "SonicGenerations.exe")] }
             }
         },
         new()
@@ -32,7 +32,7 @@ public class ModdableGameLocator
             ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             Is64Bit = false,
-            PlatformInfos = new() { { "Steam", new ("329440", "slw.exe") } }
+            PlatformInfos = new() { { "Steam", [new ("329440", "slw.exe")] } }
         },
         new()
         {
@@ -41,7 +41,7 @@ public class ModdableGameLocator
             ModLoaderFileName = "d3d11.dll",
             ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
-            PlatformInfos = new() { { "Steam", new ("637100", Path.Combine("build", "main", "projects", "exec", "Sonic Forces.exe")) } }
+            PlatformInfos = new() { { "Steam", [new ("637100", Path.Combine("build", "main", "projects", "exec", "Sonic Forces.exe"))] } }
         },
         new()
         {
@@ -49,7 +49,7 @@ public class ModdableGameLocator
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "dinput8.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
-            PlatformInfos = new() { { "Steam", new ("1259790", "PuyoPuyoTetris2.exe") } }
+            PlatformInfos = new() { { "Steam", [new("1259790", "PuyoPuyoTetris2.exe")] } }
         },
         new()
         {
@@ -57,7 +57,7 @@ public class ModdableGameLocator
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "dinput8.dll",
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
-            PlatformInfos = new() { { "Steam", new ("981890", "musashi.exe") } }
+            PlatformInfos = new() { { "Steam", [new("981890", "musashi.exe")] } }
         },
         new()
         {
@@ -67,8 +67,8 @@ public class ModdableGameLocator
             ModLoaderDownloadURL = Resources.RMLDownloadURL,
             PlatformInfos = new()
             {
-                { "Steam", new ("2055290", Path.Combine("exec", "SonicColorsUltimate.exe")) },
-                { "Epic", new ("e5071e19d08c45a6bdda5d92fbd0a03e", Path.Combine("rainbow Shipping", "Sonic Colors - Ultimate.exe")) }
+                { "Steam", [new("2055290", Path.Combine("exec", "SonicColorsUltimate.exe"))] },
+                { "Epic", [new ("e5071e19d08c45a6bdda5d92fbd0a03e", Path.Combine("rainbow Shipping", "Sonic Colors - Ultimate.exe"))] }
             }
         },
         new()
@@ -79,8 +79,8 @@ public class ModdableGameLocator
             ModLoaderDownloadURL = Resources.HMLDownloadURL,
             PlatformInfos = new()
             {
-                { "Steam", new ("1794960", Path.Combine("build", "main", "projects", "exec", "SonicOrigins.exe")) },
-                { "Epic", new ("5070a8e44cf74ba3b9a4ca0c0dce5cf1", Path.Combine("build", "main", "projects", "exec", "SonicOrigins.exe")) }
+                { "Steam", [new("1794960", Path.Combine("build", "main", "projects", "exec", "SonicOrigins.exe"))] },
+                { "Epic", [new ("5070a8e44cf74ba3b9a4ca0c0dce5cf1", Path.Combine("build", "main", "projects", "exec", "SonicOrigins.exe"))] }
             }
         },
         new()
@@ -92,8 +92,8 @@ public class ModdableGameLocator
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new()
             {
-                { "Steam", new ("1237320", "SonicFrontiers.exe") },
-                { "Epic", new ("c5ca98fa240c4eb796835f97126df8e7", "SonicFrontiers.exe") }
+                { "Steam", [new("1237320", "SonicFrontiers.exe")] },
+                { "Epic", [new("c5ca98fa240c4eb796835f97126df8e7", "SonicFrontiers.exe")] }
             }
         },
         // NOTE: Mod loader is not ready yet
@@ -106,8 +106,8 @@ public class ModdableGameLocator
             ModDatabaseDirectoryName = "mods_sonic",
             PlatformInfos = new()
             {
-                { "Steam", new ("2513280", "SONIC_GENERATIONS.exe") },
-                { "Epic", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_GENERATIONS.exe") }
+                { "Steam", [new ("2513280", "SONIC_GENERATIONS.exe")] },
+                { "Epic", [new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_GENERATIONS.exe") }
             }
         },*/
         new()
@@ -119,8 +119,8 @@ public class ModdableGameLocator
             ModDatabaseDirectoryName = "mods_shadow",
             PlatformInfos = new()
             {
-                { "Steam", new ("2513280", "SONIC_X_SHADOW_GENERATIONS.exe") },
-                { "Epic", new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe") }
+                { "Steam", [new("2513280", "SONIC_X_SHADOW_GENERATIONS.exe")] },
+                { "Epic", [new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe")] }
             }
         },
         new()
@@ -129,9 +129,9 @@ public class ModdableGameLocator
             SupportsCodes = false,
             PlatformInfos = new()
             {
-                { "Windows", new (string.Empty, "SOFTWARE\\UnleashedRecomp") },
-                { "Flatpak",  new ("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")},
-                { "Desktop",  new ("UnleashedRecomp", "unleashedrecomp")}
+                { "Windows", [new (string.Empty, "SOFTWARE\\UnleashedRecomp")] },
+                { "Flatpak", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")] },
+                { "Desktop", [new ("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] }
             }
         }
     ];
@@ -152,7 +152,7 @@ public class ModdableGameLocator
             {
                 if (ModdableGameList.Any(gameinfo => 
                     gameinfo.PlatformInfos.Any(platformInfo => 
-                    platformInfo.Key == "Steam" && platformInfo.Value.ID == game.ID)))
+                    platformInfo.Key == "Steam" && platformInfo.Value.Any(platformEntry => platformEntry.ID == game.ID))))
                 {
                     Logger.Debug($"    {game.ID} - {game.Root}");
                 }
@@ -180,132 +180,156 @@ public class ModdableGameLocator
         {
             if (gameInfo.PlatformInfos.TryGetValue("Steam", out var steamInfo))
             {
-                var steamGame = steamGames.FirstOrDefault(x => x.ID == steamInfo.ID);
-                if (steamGame != null)
+                foreach (var entry in steamInfo)
                 {
-                    var game = new ModdableGameGeneric(steamGame)
+                    var steamGame = steamGames.FirstOrDefault(x => x.ID == entry.ID);
+                    if (steamGame != null)
                     {
-                        Name = gameInfo.ID,
-                        Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, steamInfo.Executable))!,
-                        Executable = steamInfo.Executable,
-                        ModLoaderName = gameInfo.ModLoaderName ?? "None",
-                        Is64Bit = gameInfo.Is64Bit
-                    };
-                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
-                    game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName, 
-                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderIncompatibleFileNames,
-                        gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
-                    if (gameInfo.ModDatabaseDirectoryName != null)
-                        game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
-                    games.Add(game);
+                        var game = new ModdableGameGeneric(steamGame)
+                        {
+                            Name = gameInfo.ID,
+                            Root = Path.GetDirectoryName(Path.Combine(steamGame.Root, entry.Executable))!,
+                            Executable = entry.Executable,
+                            ModLoaderName = gameInfo.ModLoaderName ?? "None",
+                            Is64Bit = gameInfo.Is64Bit
+                        };
+                        game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                        game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName,
+                            gameInfo.ModLoaderFileName, gameInfo.ModLoaderIncompatibleFileNames,
+                            gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
+                        if (gameInfo.ModDatabaseDirectoryName != null)
+                            game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
+                        games.Add(game);
+                    }
                 }
             }
             if (gameInfo.PlatformInfos.TryGetValue("Epic", out var epicInfo))
             {
-                var epicGame = epicGames.FirstOrDefault(x => x.ID == epicInfo.ID);
-                if (epicGame != null)
+                foreach (var entry in epicInfo)
                 {
-                    var game = new ModdableGameGeneric(epicGame)
+                    var epicGame = epicGames.FirstOrDefault(x => x.ID == entry.ID);
+                    if (epicGame != null)
                     {
-                        Name = gameInfo.ID,
-                        Root = Path.GetDirectoryName(Path.Combine(epicGame.Root, epicGame.Executable ?? epicInfo.Executable))!,
-                        Executable = epicGame.Executable ?? epicInfo.Executable,
-                        ModLoaderName = gameInfo.ModLoaderName ?? "None",
-                        Is64Bit = gameInfo.Is64Bit
-                    };
-                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
-                    game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName,
-                        gameInfo.ModLoaderFileName, gameInfo.ModLoaderIncompatibleFileNames,
-                        gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
-                    if (gameInfo.ModDatabaseDirectoryName != null)
-                        game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
-                    games.Add(game);
+                        var game = new ModdableGameGeneric(epicGame)
+                        {
+                            Name = gameInfo.ID,
+                            Root = Path.GetDirectoryName(Path.Combine(epicGame.Root, epicGame.Executable ?? entry.Executable))!,
+                            Executable = epicGame.Executable ?? entry.Executable,
+                            ModLoaderName = gameInfo.ModLoaderName ?? "None",
+                            Is64Bit = gameInfo.Is64Bit
+                        };
+                        game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                        game.ModLoader = new ModLoaderGeneric(game, game.ModLoaderName,
+                            gameInfo.ModLoaderFileName, gameInfo.ModLoaderIncompatibleFileNames,
+                            gameInfo.ModLoaderDownloadURL, gameInfo.Is64Bit);
+                        if (gameInfo.ModDatabaseDirectoryName != null)
+                            game.DefaultDatabaseDirectory = gameInfo.ModDatabaseDirectoryName;
+                        games.Add(game);
+                    }
                 }
             }
             if (gameInfo.PlatformInfos.TryGetValue("Windows", out var windowsInfo) &&
                 OperatingSystem.IsWindows())
             {
-                string root = string.Empty;
-                string exe = string.Empty;
-                try
+                foreach (var entry in windowsInfo)
                 {
-                    // "Executable" is used to hold the registry key
-                    var key = Registry.CurrentUser.OpenSubKey(windowsInfo.Executable);
-                    if (key != null)
+                    string root = string.Empty;
+                    string exe = string.Empty;
+                    try
                     {
-                        exe = key.GetValue("ExecutableFilePath") as string ?? string.Empty;
-                        root = key.GetValue("RootDirectoryPath") as string ?? string.Empty;
-                        if (string.IsNullOrEmpty(root))
-                            root = Path.GetDirectoryName(exe)!;
+                        // "Executable" is used to hold the registry key
+                        var key = Registry.CurrentUser.OpenSubKey(entry.Executable);
+                        if (key != null)
+                        {
+                            exe = key.GetValue("ExecutableFilePath") as string ?? string.Empty;
+                            root = key.GetValue("RootDirectoryPath") as string ?? string.Empty;
+                            if (string.IsNullOrEmpty(root))
+                                root = Path.GetDirectoryName(exe)!;
+                        }
+                        key?.Close();
                     }
-                    key?.Close();
-                }
-                catch { }
+                    catch { }
 
-                if (Directory.Exists(root) && File.Exists(exe))
-                {
-                    var gameSimple = new GameSimple(
-                        "Windows", string.Empty, gameInfo.ID,
-                        root, Path.GetFileName(exe), "Windows", exe, string.Empty);
-
-                    var game = new ModdableGameGeneric(gameSimple)
+                    if (Directory.Exists(root) && File.Exists(exe))
                     {
-                        SupportsDirectLaunch = true,
-                        SupportsLauncher = false,
-                        Is64Bit = gameInfo.Is64Bit
-                    };
-                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
-                    games.Add(game);
+                        var gameSimple = new GameSimple(
+                            "Windows", string.Empty, gameInfo.ID,
+                            root, Path.GetFileName(exe), "Windows", exe, string.Empty);
+
+                        var game = new ModdableGameGeneric(gameSimple)
+                        {
+                            SupportsDirectLaunch = true,
+                            SupportsLauncher = false,
+                            Is64Bit = gameInfo.Is64Bit
+                        };
+                        game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                        games.Add(game);
+                    }
                 }
             }
             // NOTE: This detection method is heavily flawed.
             if (gameInfo.PlatformInfos.TryGetValue("Flatpak", out var flatpakInfo))
             {
-                string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    ".var/app", flatpakInfo.ID);
-
-                if (Directory.Exists(Path.Combine(root, "data")))
+                foreach (var entry in flatpakInfo)
                 {
-                    // Use custom path for Unleashed Recompiled
-                    if (gameInfo.ID == "UnleashedRecompiled")
-                        root = Path.Combine(Paths.GetActualUserConfigPath(), "UnleashedRecomp");
+                    string root = Path.Combine(Paths.GetUserHomePath(), ".var/app", entry.ID);
 
-                    var gameSimple = new GameSimple(
-                        "Flatpak", flatpakInfo.ID, gameInfo.ID,
-                        root, Path.GetFileName(flatpakInfo.Executable), "Linux",
-                        "xdg-open", $"{flatpakInfo.Executable}:");
-
-                    var game = new ModdableGameGeneric(gameSimple)
+                    if (Directory.Exists(Path.Combine(root, "data")))
                     {
-                        SupportsDirectLaunch = true,
-                        SupportsLauncher = false,
-                        Is64Bit = gameInfo.Is64Bit
-                    };
-                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
-                    games.Add(game);
+                        // Use custom path for Unleashed Recompiled
+                        if (gameInfo.ID == "UnleashedRecompiled")
+                            root = Path.Combine(Paths.GetUserConfigPath(), "UnleashedRecomp");
+
+                        var gameSimple = new GameSimple(
+                            "Flatpak", entry.ID, gameInfo.ID,
+                            root, Path.GetFileName(entry.Executable), "Linux",
+                            "xdg-open", $"{entry.Executable}:");
+
+                        var game = new ModdableGameGeneric(gameSimple)
+                        {
+                            SupportsDirectLaunch = true,
+                            SupportsLauncher = false,
+                            Is64Bit = gameInfo.Is64Bit
+                        };
+                        game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                        games.Add(game);
+                    }
                 }
             }
             if (OperatingSystem.IsLinux() && gameInfo.PlatformInfos.TryGetValue("Desktop", out var desktopInfo))
             {
-                string root = Path.Combine(Paths.GetActualUserConfigPath(), desktopInfo.ID);
-                string desktopPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    ".local", "share","applications", $"{desktopInfo.ID}.desktop");
-
-                if (Directory.Exists(root) && File.Exists(desktopPath))
+                foreach (var entry in desktopInfo)
                 {
-                    var gameSimple = new GameSimple(
-                        "Desktop", desktopInfo.ID, gameInfo.ID,
-                        root, Path.GetFileName(desktopInfo.Executable), "Linux",
-                        "xdg-open", $"{desktopInfo.Executable}:");
+                    string root = Path.Combine(Paths.GetUserConfigPath(), entry.ID);
 
-                    var game = new ModdableGameGeneric(gameSimple)
+                    string[] searchPaths = [Paths.GetUserDataPath(), .. Paths.GetProgramDataPaths()];
+                    foreach (var searchPath in searchPaths)
                     {
-                        SupportsDirectLaunch = true,
-                        SupportsLauncher = false,
-                        Is64Bit = gameInfo.Is64Bit
-                    };
-                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
-                    games.Add(game);
+                        string path = Path.Combine(searchPath, "applications", $"{entry.ID}.desktop");
+                        if (Directory.Exists(root) && File.Exists(path))
+                        {
+                            var gameSimple = new GameSimple(
+                                "Desktop", entry.ID, gameInfo.ID,
+                                root, Path.GetFileName(entry.Executable), "Linux",
+                                "xdg-open", $"{entry.Executable}:");
+
+                            var game = new ModdableGameGeneric(gameSimple)
+                            {
+                                SupportsDirectLaunch = true,
+                                SupportsLauncher = false,
+                                Is64Bit = gameInfo.Is64Bit
+                            };
+                            game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                            if (!games.Any(games => games.ID == game.ID))
+                            {
+                                games.Add(game);
+                            }
+                            else
+                            {
+                                Logger.Debug($"Game \"{game.ID}\" at \"{path}\" already exists");
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -323,7 +347,7 @@ public class ModdableGameLocator
         public string? ModDatabaseDirectoryName { get; init; }
         public bool Is64Bit { get; init; } = true;
         public bool SupportsCodes { get; init; } = true;
-        public required Dictionary<string, GamePlatformInfo> PlatformInfos { get; init; }
+        public required Dictionary<string, List<GamePlatformInfo>> PlatformInfos { get; init; }
     }
 
     public record struct GamePlatformInfo(string ID, string Executable)
