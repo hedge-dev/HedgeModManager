@@ -74,19 +74,15 @@ public static class Paths
             Logger.Error("Failed to read or parse $XDG_DATA_DIRS");
         }
 
-        // Also add host paths if running in Flatpak
-        if (IsFlatpak)
+        // Also add host paths for Flatpak
+        List<string> newPaths = [];
+        foreach (var path in paths)
         {
-            List<string> newPaths = [];
-            foreach (var path in paths)
-            {
-                if (!path.StartsWith("/run/host"))
-                    newPaths.Add(Path.Combine("/run/host", path));
-            }
-            paths.AddRange(newPaths);
+            if (!path.StartsWith("/run/host"))
+                newPaths.Add("/run/host" + path);
         }
 
-        return [.. paths];
+        return [.. paths, .. newPaths];
     }
 
     /// <summary>

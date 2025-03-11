@@ -176,6 +176,11 @@ public class ModdableGameLocator
             Logger.Debug("Heroic not found!");
         }
 
+        if (OperatingSystem.IsLinux())
+        {
+            Logger.Debug("XDG Data paths: " + string.Join(':', Paths.GetProgramDataPaths()));
+        }
+
         foreach (var gameInfo in ModdableGameList)
         {
             if (gameInfo.PlatformInfos.TryGetValue("Steam", out var steamInfo))
