@@ -106,8 +106,8 @@ public class ModdableGameLocator
             ModDatabaseDirectoryName = "mods_sonic",
             PlatformInfos = new()
             {
-                { "Steam", [new ("2513280", "SONIC_GENERATIONS.exe")] },
-                { "Epic", [new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_GENERATIONS.exe") }
+                { "Steam", [new("2513280", "SONIC_GENERATIONS.exe")] },
+                { "Epic", [new("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_GENERATIONS.exe") }
             }
         },*/
         new()
@@ -120,7 +120,7 @@ public class ModdableGameLocator
             PlatformInfos = new()
             {
                 { "Steam", [new("2513280", "SONIC_X_SHADOW_GENERATIONS.exe")] },
-                { "Epic", [new ("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe")] }
+                { "Epic", [new("a88805d3fbec4ca9bfc248105f6adb0a", "SONIC_X_SHADOW_GENERATIONS.exe")] }
             }
         },
         new()
@@ -129,9 +129,9 @@ public class ModdableGameLocator
             SupportsCodes = false,
             PlatformInfos = new()
             {
-                { "Windows", [new (string.Empty, "SOFTWARE\\UnleashedRecomp")] },
+                { "Windows", [new(string.Empty, "SOFTWARE\\UnleashedRecomp")] },
                 { "Flatpak", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")] },
-                { "Desktop", [new ("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] }
+                { "Desktop", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] }
             }
         }
     ];
@@ -301,12 +301,15 @@ public class ModdableGameLocator
                 foreach (var entry in desktopInfo)
                 {
                     string root = Path.Combine(Paths.GetUserConfigPath(), entry.ID);
+                    // Use custom path for Unleashed Recompiled
+                    if (gameInfo.ID == "UnleashedRecompiled")
+                        root = Path.Combine(Paths.GetUserConfigPath(), "UnleashedRecomp");
 
                     string[] searchPaths = [Paths.GetUserDataPath(), .. Paths.GetProgramDataPaths()];
                     foreach (var searchPath in searchPaths)
                     {
                         string path = Path.Combine(searchPath, "applications", $"{entry.ID}.desktop");
-                        if (Directory.Exists(root) && File.Exists(path))
+                        if (File.Exists(path))
                         {
                             var gameSimple = new GameSimple(
                                 "Desktop", entry.ID, gameInfo.ID,

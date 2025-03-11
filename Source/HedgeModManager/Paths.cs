@@ -8,7 +8,7 @@ public static class Paths
 {
     private static Assembly HMMAssembly = typeof(Paths).Assembly;
     private static string? ProgramPath = null;
-    private static bool IsFlatpak = Environment.GetEnvironmentVariable("FLATPAK_ID") != null;
+    private static bool IsFlatpak => Environment.GetEnvironmentVariable("FLATPAK_ID") != null;
 
     public static string GetProgramPath()
     {
@@ -67,7 +67,7 @@ public static class Paths
         try
         {
             if (Environment.GetEnvironmentVariable("XDG_DATA_DIRS") is string dirs && !string.IsNullOrEmpty(dirs))
-                paths = [.. dirs.Split(":")];
+                paths = [.. dirs.Split(":", StringSplitOptions.RemoveEmptyEntries)];
         }
         catch
         {
