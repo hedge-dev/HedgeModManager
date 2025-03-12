@@ -8,7 +8,6 @@ public static class Paths
 {
     private static Assembly HMMAssembly = typeof(Paths).Assembly;
     private static string? ProgramPath = null;
-    private static bool IsFlatpak => Environment.GetEnvironmentVariable("FLATPAK_ID") != null;
 
     public static string GetProgramPath()
     {
@@ -126,7 +125,7 @@ public static class Paths
         if (Environment.GetEnvironmentVariable($"HOST_XDG_{xdgName}") is string hostDir && !string.IsNullOrEmpty(hostDir))
             return hostDir;
 
-        if (!IsFlatpak && Environment.GetEnvironmentVariable($"XDG_{xdgName}") is string dir && !string.IsNullOrEmpty(dir))
+        if (!Helpers.IsFlatpak && Environment.GetEnvironmentVariable($"XDG_{xdgName}") is string dir && !string.IsNullOrEmpty(dir))
             return dir;
 
         if (!string.IsNullOrEmpty(fromHome) && Environment.GetEnvironmentVariable("HOME") is string home)

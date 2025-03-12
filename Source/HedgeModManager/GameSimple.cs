@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace HedgeModManager;
 
-public class GameSimple(string platform, string id, string name, string root, string? executable, string nativeOS, string launchCommand, string launchCommandArgs) : IGame
+public class GameSimple(string platform, string id, string name, string root, string? executable, string nativeOS, string? launchCommandDirect, string? launchCommandLauncher, string? launchRoot) : IGame
 {
     public string Platform { get; set; } = platform;
     public string ID { get; set; } = id;
@@ -12,23 +12,44 @@ public class GameSimple(string platform, string id, string name, string root, st
     public string? Executable { get; set; } = executable;
     public string NativeOS { get; set; } = nativeOS;
     public string? PrefixRoot { get; set; } = null;
-    public string LaunchCommand { get; set; } = launchCommand;
-    public string LaunchCommandArgs { get; set; } = launchCommandArgs;
-    public bool SupportsDirectLaunch { get; set; }
-    public bool SupportsLauncher { get; set; }
+    public bool SupportsDirectLaunch => !string.IsNullOrEmpty(LaunchCommandDirect);
+    public bool SupportsLauncher => !string.IsNullOrEmpty(LaunchCommandLauncher);
+    public string? LaunchCommandDirect { get; set; } = launchCommandDirect;
+    public string? LaunchCommandLauncher { get; set; } = launchCommandLauncher;
+    public string? LaunchRoot { get; set; } = launchRoot;
 
     public Task Run(string? launchArgs, bool useLauncher)
     {
-        launchArgs ??= LaunchCommandArgs;
-        
+        string? command = LaunchCommandDirect;
+        if (useLauncher || string.IsNullOrEmpty(command))
+            command = LaunchCommandLauncher ?? command;
+
+        // No valid commands
+        if (string.IsNullOrEmpty(command))
+            return Task.CompletedTask;
+
+        (string executable, string? arguments) = ConvertCommandLine(command);
+
         Process.Start(new ProcessStartInfo
         {
-            FileName = LaunchCommand,
-            Arguments = launchArgs ?? string.Empty,
-            WorkingDirectory = Root,
+            FileName = executable,
+            Arguments = arguments ?? launchArgs ?? string.Empty,
+            WorkingDirectory = LaunchRoot ?? Root,
             UseShellExecute = true
         });
 
         return Task.CompletedTask;
+    }
+
+    public static (string, string?) ConvertCommandLine(string command)
+    {
+        string replacedLine = command.Replace("\\ ", "\x01");
+        if (replacedLine.Contains(' '))
+        {
+            string executable = replacedLine[..replacedLine.IndexOf(' ')].Replace("\x01", " ");
+            string arguments = replacedLine[(replacedLine.IndexOf(' ') + 1)..].Replace("\x01", " ");
+            return (executable, arguments);
+        }
+        return (command.Replace("\\ ", " "), null);
     }
 }
