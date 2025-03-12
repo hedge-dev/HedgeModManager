@@ -2,6 +2,7 @@
 using Foundation;
 using HedgeModManager.Epic;
 using HedgeModManager.Properties;
+using HedgeModManager.Text;
 using Microsoft.Win32;
 using Steam;
 using System.IO;
@@ -259,7 +260,7 @@ public class ModdableGameLocator
                     {
                         var gameSimple = new GameSimple(
                             "Windows", string.Empty, gameInfo.ID,
-                            root, Path.GetFileName(exe), "Windows", exe, string.Empty);
+                            root, Path.GetFileName(exe), "Windows", exe.Replace(" ", "\\ "), null, null);
 
                         var game = new ModdableGameGeneric(gameSimple)
                         {
@@ -288,7 +289,7 @@ public class ModdableGameLocator
                         var gameSimple = new GameSimple(
                             "Flatpak", entry.ID, gameInfo.ID,
                             root, Path.GetFileName(entry.Executable), "Linux",
-                            "xdg-open", $"{entry.Executable}:");
+                            null, $"xdg-open {entry.Executable}:", null);
 
                         var game = new ModdableGameGeneric(gameSimple)
                         {
@@ -316,15 +317,64 @@ public class ModdableGameLocator
                         string path = Path.Combine(searchPath, "applications", $"{entry.ID}.desktop");
                         if (File.Exists(path))
                         {
+                            string directCmd = $"xdg-open {entry.Executable}:";
+                            string? launcherCmd = null;
+                            string launchRoot = root;
+
+                            // Parse desktop
+                            try
+                            {
+                                Logger.Debug($"Reading desktop at \"{path}\"");
+                                var desktopIni = Ini.FromFile(path);
+                                if (desktopIni.TryGetValue("Desktop Entry", out var iniGroup))
+                                {
+                                    string MimeTypes = iniGroup.Get("MimeType", string.Empty);
+                                    if (!string.IsNullOrEmpty(MimeTypes))
+                                    {
+                                        var splits = MimeTypes.Split(';');
+                                        foreach (var split in splits)
+                                        {
+                                            if (split.StartsWith("x-scheme-handler/"))
+                                            {
+                                                launcherCmd = $"xdg-open {split.Split('/')[1]}:";
+                                                Logger.Debug($"  Launcher command: {launcherCmd}");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Logger.Debug("  No MIME types");
+                                    }
+                                    directCmd = iniGroup.Get("Exec", directCmd);
+                                    Logger.Debug($"  Direct command: {directCmd}");
+                                    launchRoot = iniGroup.Get("Path", launchRoot);
+                                    Logger.Debug($"  Launch Root: {launchRoot}");
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error($"Failed to parse desktop file at \"{path}\"");
+                                Logger.Error(e);
+                            }
+
+                            // Force launcher in Flatpak
+                            if (Helpers.IsFlatpak)
+                            {
+                                if (launcherCmd != null)
+                                    directCmd = launcherCmd;
+                                // Setting launcher to null to prevent the option within UI
+                                launcherCmd = null;
+                            }
+
                             var gameSimple = new GameSimple(
                                 "Desktop", entry.ID, gameInfo.ID,
                                 root, Path.GetFileName(entry.Executable), "Linux",
-                                "xdg-open", $"{entry.Executable}:");
+                                directCmd, launcherCmd, launchRoot);
 
                             var game = new ModdableGameGeneric(gameSimple)
                             {
-                                SupportsDirectLaunch = true,
-                                SupportsLauncher = false,
                                 Is64Bit = gameInfo.Is64Bit
                             };
                             game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
