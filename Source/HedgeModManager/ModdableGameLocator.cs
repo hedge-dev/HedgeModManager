@@ -4,6 +4,7 @@ using HedgeModManager.Epic;
 using HedgeModManager.Properties;
 using Microsoft.Win32;
 using Steam;
+using Text;
 using System.IO;
 using System.Linq;
 
@@ -316,10 +317,15 @@ public class ModdableGameLocator
                         string path = Path.Combine(searchPath, "applications", $"{entry.ID}.desktop");
                         if (File.Exists(path))
                         {
+                            var ini = Ini.FromFile(path);
+                            ini.TryGetValue("Desktop Entry", out var desktopEntry);
+                            var rootPath = desktopEntry.Get<string>("Path", root);
+                            var execPath = desktopEntry.Get<string>("Exec", entry.Executable);
+
                             var gameSimple = new GameSimple(
                                 "Desktop", entry.ID, gameInfo.ID,
-                                root, Path.GetFileName(entry.Executable), "Linux",
-                                "xdg-open", $"{entry.Executable}:");
+                                rootPath, Path.GetFileName(execPath), "Linux",
+                                execPath, $"{entry.Executable}:");
 
                             var game = new ModdableGameGeneric(gameSimple)
                             {
