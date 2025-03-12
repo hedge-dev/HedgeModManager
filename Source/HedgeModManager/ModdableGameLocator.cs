@@ -375,8 +375,6 @@ public class ModdableGameLocator
 
                             var game = new ModdableGameGeneric(gameSimple)
                             {
-                                SupportsDirectLaunch = true,
-                                SupportsLauncher = false,
                                 Is64Bit = gameInfo.Is64Bit
                             };
                             game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
