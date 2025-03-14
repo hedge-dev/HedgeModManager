@@ -77,10 +77,10 @@ public class ModConfig
             {
                 string? valString = null;
                 iniGroup.TryGetValue(element.Name, out object? obj);
-                if (obj == null || obj is not string)
+                if (obj == null)
                     valString = element.DefaultValue?.ToString();
                 else
-                    valString = obj as string;
+                    valString = obj?.ToString();
 
                 if (valString != null)
                 {
