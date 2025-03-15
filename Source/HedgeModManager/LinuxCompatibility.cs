@@ -10,30 +10,30 @@ using System.Text;
 public class LinuxCompatibility
 {
     /// <summary>
-    /// Installs the .NET runtime to the prefix
+    /// Installs the required runtime to the prefix
     /// </summary>
     /// <param name="path">Path to the prefix root directory</param>
     public static async Task<bool> InstallRuntimeToPrefix(string? path)
     {
-        Logger.Debug($"Installing .NET runtime to {path}");
+        Logger.Debug($"Installing runtime files to {path}");
         if (path == null)
         {
             return false;
         }
 
         // Download runtime
-        Logger.Information($"Downloading .NET runtime");
-        var stream = await Network.Download(Resources.DotnetDownloadURL, "dotnetFrameworkRuntime.zip", null);
+        Logger.Information($"Downloading runtime files (x64)");
+        var stream = await Network.Download(Resources.ExtraProtonFiles64DownloadURL, "extra-proton-files-x64.zip", null);
         if (stream == null)
         {
-            Logger.Error($"Failed to download runtime");
+            Logger.Error($"Failed to download runtime files");
             return false;
         }
 
-        Logger.Information($"Installing .NET runtime");
+        Logger.Information($"Extracting runtime files");
         string cDrive = Path.Combine(path, "drive_c");
         using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
-        Logger.Debug("Opened zip");
+        Logger.Debug("Opened archive");
 
         await Task.Run(() =>
         {
@@ -70,11 +70,12 @@ public class LinuxCompatibility
                 Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
                 entry.ExtractToFile(destinationPath, true);
             }
-            Logger.Debug($"Extracted .NET runtime");
+            Logger.Debug("Finish extracting runtime files");
         });
         await stream.DisposeAsync();
 
-        await AddDotnetRegPatch(path);
+        await AddProtonRegistryPatch(path);
+        await AddDllOverride(path, "d3dcompiler_47");
 
         return true;
     }
@@ -102,12 +103,12 @@ public class LinuxCompatibility
         return true;
     }
 
-    public static async Task<bool> AddDotnetRegPatch(string? path)
+    public static async Task<bool> AddProtonRegistryPatch(string? path)
     {
-        Logger.Debug($"Adding .NET Framework registry patch to {path}");
+        Logger.Debug($"Applying Proton registry patch to {path}");
         if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
         {
-            Logger.Debug($"Prefix is missing!");
+            Logger.Debug("Prefix is missing!");
             return false;
         }
 
@@ -115,14 +116,14 @@ public class LinuxCompatibility
 
         if (!Path.Exists(reg))
         {
-            Logger.Debug($"Prefix is not initialised!");
+            Logger.Debug("Prefix is not initialised!");
             return false;
         }
 
         string regPatch = Encoding.UTF8.GetString(Resources.dotnetReg);
 
         await File.AppendAllTextAsync(reg, regPatch, Encoding.UTF8);
-        Logger.Debug($"File written");
+        Logger.Debug("Finished applying Proton registry patches");
         return true;
     }
 

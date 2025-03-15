@@ -68,13 +68,14 @@ namespace HedgeModManager.Properties {
                 return ResourceManager.GetString("CommunityCodesURL", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to https://github.com/hedge-dev/HedgeModManager/raw/refs/heads/ui/Source/HedgeModManager/Resources/dotnetFrameworkRuntime.zip.
+        ///   Looks up a localized string similar to https://github.com/thesupersonic16/HedgeModManagerResources/raw/refs/heads/main/extra-proton-files-x64.zip.
         /// </summary>
-        internal static string DotnetDownloadURL {
+        internal static string ExtraProtonFiles64DownloadURL
+        {
             get {
-                return ResourceManager.GetString("DotnetDownloadURL", resourceCulture);
+                return ResourceManager.GetString("ExtraProtonFiles64DownloadURL", resourceCulture);
             }
         }
         
