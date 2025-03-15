@@ -4,6 +4,6 @@ Exec=/app/bin/HedgeModManager.UI %u
 Type=Application
 Icon=io.github.hedge_dev.hedgemodmanager
 Categories=Game;
-Comment=Configure mods for various Hedgehog Engine games
+Comment=Manage mods for Sonic games
 Keywords=hedgehog;mod;loader;manager;sonic
 MimeType=x-scheme-handler/hedgemm;x-scheme-handler/hedgemmswa;x-scheme-handler/hedgemmgens;x-scheme-handler/hedgemmlw;x-scheme-handler/hedgemmforces;x-scheme-handler/hedgemmtenpex;x-scheme-handler/hedgemmmusashi;x-scheme-handler/hedgemmrainbow;x-scheme-handler/hedgemmhite;x-scheme-handler/hedgemmrangers;x-scheme-handler/hedgemmmillersonic;x-scheme-handler/hedgemmmillershadow
