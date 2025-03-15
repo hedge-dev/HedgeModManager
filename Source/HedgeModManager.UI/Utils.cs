@@ -4,6 +4,7 @@ using Avalonia.Media.Immutable;
 using Avalonia.Platform;
 using HedgeModManager.UI.Properties;
 using Markdig;
+using System.Diagnostics;
 
 namespace HedgeModManager.UI;
 
@@ -52,6 +53,15 @@ public static class Utils
     public static string ConvertToPath(this Uri uri)
     {
         return Uri.UnescapeDataString(uri.AbsolutePath);
+    }
+
+    public static void OpenURL(string url)
+    {
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = url,
+            UseShellExecute = true
+        });
     }
 
     public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)

@@ -130,6 +130,7 @@
   <system:String x:Key="Modal.Header.Description"      >Description</system:String>
   <system:String x:Key="Modal.Header.AboutMod"         >{0} v{1}</system:String>
   <system:String x:Key="Modal.Header.AboutModAuthor"   >Authored by {0} on {1}</system:String>
+  <system:String x:Key="Modal.Text.GameMissing"        >Missing Unleashed Recompiled?</system:String>
   <system:String x:Key="Modal.Text.TargetGame"         >For {0}</system:String>
   <system:String x:Key="Modal.Title.AboutMod"          >About {0}</system:String>
   <system:String x:Key="Modal.Title.Confirm"           >Confirmation</system:String>

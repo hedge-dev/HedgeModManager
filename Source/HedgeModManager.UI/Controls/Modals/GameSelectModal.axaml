@@ -1,14 +1,17 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
              xmlns:cp="using:HedgeModManager.UI.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="150"
+             mc:Ignorable="d" d:DesignWidth="340" d:DesignHeight="408"
+             Background="{DynamicResource Common.Background0Brush}"
              x:Class="HedgeModManager.UI.Controls.Modals.GameSelectModal"
-             x:DataType="vm:MainWindowViewModel">
-
+             x:DataType="vm:MainWindowViewModel"
+             Loaded="OnLoaded">
     <StackPanel>
       <TextBlock Text="{DynamicResource Modal.Title.Games}" FontSize="32" Margin="0,0,0,4" HorizontalAlignment="Center" />
       <ScrollViewer MaxHeight="320" Margin="4,4,0,4">
@@ -21,5 +24,12 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </ScrollViewer>
+      <StackPanel Margin="4" Orientation="Horizontal" IsVisible="{Binding IsGameMissing, RelativeSource={RelativeSource AncestorType=cm:GameSelectModal}}">
+        <TextBlock Text="{DynamicResource Modal.Text.GameMissing}" TextDecorations="Underline" Cursor="Hand"
+                   Margin="4"
+                   PointerReleased="OnGameMissingPointerReleased"/>
+        <materialIcons:MaterialIcon Kind="OpenInNew" Foreground="{DynamicResource Text.NormalBrush}" />
+
+      </StackPanel>
     </StackPanel>
 </UserControl>
