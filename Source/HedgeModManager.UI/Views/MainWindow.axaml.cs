@@ -98,6 +98,7 @@ public partial class MainWindow : Window
         bool toggleFullscreen = e.KeyModifiers == KeyModifiers.Alt && e.Key == Key.Enter;
         bool isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
         bool isAlt = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
+        bool isQuit = e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Q;
         if (ViewModel == null)
             return;
 
@@ -216,6 +217,10 @@ public partial class MainWindow : Window
             else
                 ViewModel.WindowState = WindowState.FullScreen;
             ViewModel.Config.LastWindowState = ViewModel.WindowState;
+        }
+        else if (isQuit)
+        {
+            Close();
         }
     }
 
