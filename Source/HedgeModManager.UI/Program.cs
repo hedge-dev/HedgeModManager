@@ -24,7 +24,6 @@ public sealed class Program
 
     public static readonly string GitHubRepoOwner = "hedge-dev";
     public static readonly string GitHubRepoName = "HedgeModManager";
-    public static string UserAgent = $"Mozilla/5.0 (compatible; {ApplicationName}/{ApplicationVersion})";
 
     // Will become the GUID if exists
     public static string PipeName = $"{ApplicationCompany}\\{ApplicationName}";
@@ -38,6 +37,7 @@ public sealed class Program
     public const bool IsDebugBuild = false;
 #endif
 
+    public static string UserAgent = $"Mozilla/5.0 (compatible; {ApplicationName}/{ApplicationVersion})";
     public static Mutex? CurrentMutex = null;
     public static List<ICliCommand> StartupCommands = [];
 
@@ -131,8 +131,7 @@ public sealed class Program
         }
 
         Paths.CreateDirectories();
-        Network.UserAgent = UserAgent;
-        Network.Initialize();
+        Network.Initialize(UserAgent);
 
         if (Environment.GetEnvironmentVariable("FLATPAK_ID") is string flatpakID)
             FlatpakID = flatpakID;
