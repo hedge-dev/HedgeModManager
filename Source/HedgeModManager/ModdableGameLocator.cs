@@ -397,7 +397,7 @@ public class ModdableGameLocator
                 foreach (var entry in macOsInfo)
                 {
                     string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    "Library", "Application Support", entry.ID);
+                    "Library", "Application Support", entry.Executable);
                     if (Directory.Exists(root))
                     {
                         var gameSimple = new GameSimple(
@@ -406,8 +406,6 @@ public class ModdableGameLocator
                             null, $"open -a {entry.Executable}", null);
                         var game = new ModdableGameGeneric(gameSimple)
                         {
-                            SupportsDirectLaunch = true,
-                            SupportsLauncher = false,
                             Is64Bit = gameInfo.Is64Bit
                         };
                         game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
