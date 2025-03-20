@@ -7,20 +7,20 @@ git clone https://github.com/hedge-dev/HedgeModManager.git
 
 ## 2. Build the project
 
-###  Macos
+###  macOS
 
 1. Navigate to the root of the project
 2. Run the build command
 ```zsh
-dotnet publish -p:PublishProfile=osx-arm64 -c Release -p:AssemblyVersion=8.0.0 -p:FileVersion=8.0.0 -o ./output/macos/osx-arm64 ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj -p:UseAppHost=true
+dotnet publish -p:PublishProfile=osx-arm64 -c Release -o ./output/macos/osx-arm64 ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj -p:UseAppHost=true
 ```
-Navigate to `/macos`
+3. Navigate to `macos`
 ```zsh
 cd macos
 ```
-Run the following command to create the app bundle.
+4. Run the following command to create the app bundle.
 ```zsh
 /bin/bash generate-bundle.bash 8.0.4
 ```
-3. Navigate to `/output/macos`
-4. Run `HedgeModManager.app`
+5. Navigate to `../output/macos`
+6. Run `HedgeModManager.app`
