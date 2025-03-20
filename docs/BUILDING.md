@@ -20,7 +20,7 @@ cd macos
 ```
 4. Run the following command to create the app bundle.
 ```zsh
-/bin/bash generate-bundle.bash 8.0.4
+/bin/bash generate-bundle.bash
 ```
 5. Navigate to `../output/macos`
 6. Run `HedgeModManager.app`
