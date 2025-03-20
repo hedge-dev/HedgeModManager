@@ -24,9 +24,13 @@ bld/
 bin/
 [Bb]in/
 [Oo]bj/
+output/
 
 # Visual Studio 2015 cache/options directory
 .vs/
+
+Source/.idea
+
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -215,3 +219,4 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 Ignored/
+.DS_Store

@@ -4,7 +4,8 @@
              xmlns:local="using:HedgeModManager.UI"
              xmlns:themes="using:HedgeModManager.UI.Themes"
              xmlns:materialIcons="using:Material.Icons.Avalonia"
-             RequestedThemeVariant="{x:Static themes:Themes.Darker}">
+             RequestedThemeVariant="{x:Static themes:Themes.Darker}"
+             Name="Hedge Mod Manager">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
   <Application.Resources>

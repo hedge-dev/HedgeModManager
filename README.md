@@ -15,6 +15,7 @@ A mod manager for Hedgehog Engine games on PC.
 - [Installation](#installation)
   - [Windows](#windows)
   - [Linux/Steam Deck](#linuxsteam-deck)
+- [Building](#building)
 - [Frequently Asked Questions](#frequently-asked-questions)
 - [Bug/Issue Reporting](#bugissue-reporting)
 - [Contribute](#contribute)
@@ -61,6 +62,9 @@ Flatpak bundles are also available from the [releases page](https://github.com/h
 > For Steam, a Steam install with a link at `~/.steam` or `~/.local/share/Steam`.
 > 
 > For Heroic, it must be a flatpak install within the home directory. 
+
+### Building
+For building from source, please check the [building instructions](/docs/BUILDING.md) page.
 
 ### Frequently Asked Questions
 - Where can I install mods?
