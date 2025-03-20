@@ -1,13 +1,5 @@
 #!/bin/bash
-
-# Check if version argument is provided
-if [ $# -eq 0 ]; then
-  echo "Error: Please provide a version number as arguments."
-  echo "Usage: $0 <version_number>"
-  exit 1
-fi
-
-VERSION="$1"
+VERSION=${1:-"1.0.0"}
 
 APP_NAME="../output/macos/HedgeModManager.app"
 PLIST_PATH="./Info.plist" 
