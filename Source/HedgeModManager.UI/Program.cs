@@ -180,7 +180,7 @@ public sealed class Program
     [SupportedOSPlatform("macos")]
     public static void ListenForUriSchemeMac(Action<List<ICliCommand>> callback)
     {
-        // Use Avalonia IActivatableLifetime to listen for OpenUri events on Macos
+        // Use Avalonia IActivatableLifetime to listen for OpenUri events on macOS
         if (Application.Current?.TryGetFeature(typeof(IActivatableLifetime)) is { } activatableLifetime)
         {
             ((IActivatableLifetime)activatableLifetime).Activated += async (s, a) =>
