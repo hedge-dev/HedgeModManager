@@ -9,7 +9,6 @@ using HedgeModManager.UI.Input;
 using HedgeModManager.Foundation;
 using Avalonia;
 
-
 namespace HedgeModManager.UI.Views;
 
 public partial class MainWindow : Window
