@@ -9,9 +9,9 @@ fi
 
 VERSION="$1"
 
-APP_NAME="../output/HedgeModManager.app"
+APP_NAME="../output/macos/HedgeModManager.app"
 PLIST_PATH="./Info.plist" 
-PUBLISH_OUTPUT_DIRECTORY="../output/osx-arm64/."
+PUBLISH_OUTPUT_DIRECTORY="../output/macos/osx-arm64/."
 
 ICON_FILE="./AppIcon.icns"
 
