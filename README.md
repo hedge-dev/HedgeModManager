@@ -63,11 +63,8 @@ Flatpak bundles are also available from the [releases page](https://github.com/h
 > 
 > For Heroic, it must be a flatpak install within the home directory. 
 
-> [!NOTE]
-> Currently Hedge Mod Manager is not officially available to be downloaded from any package managers.
-
 ### Building
-[Check out the building instructions here](/docs/BUILDING.md).
+For building from source, please check the [building instructions](/docs/BUILDING.md) page.
 
 ### Frequently Asked Questions
 - Where can I install mods?
