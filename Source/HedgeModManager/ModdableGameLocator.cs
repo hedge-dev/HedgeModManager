@@ -397,7 +397,7 @@ public class ModdableGameLocator
                 foreach (var entry in macOsInfo)
                 {
                     string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    "Library", "Application Support", "UnleashedRecomp");
+                    "Library", "Application Support", entry.ID);
                     if (Directory.Exists(root))
                     {
                         var gameSimple = new GameSimple(
