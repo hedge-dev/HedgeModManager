@@ -79,7 +79,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         }
 
         mainSection.Set("ManifestVersion", 1.1);
-        mainSection.Set("ReverseLoadOrder", 1);
+        mainSection.Set("ReverseLoadOrder", 0);
         mainSection.SetList("ActiveMod", enabledMods);
         mainSection.SetList("FavoriteMod", favoriteMods);
         codesSection.SetList("Code", enabledCodes);

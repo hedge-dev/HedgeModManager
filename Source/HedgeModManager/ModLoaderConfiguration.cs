@@ -5,10 +5,13 @@ using Text;
 public class ModLoaderConfiguration : IModLoaderConfiguration
 {
     public const string LegacySectionName = "CPKREDIR";
+    public const string LegacySaveFileName = "cpkredir.sav";
 
     public bool Enabled { get; set; } = true;
     public bool EnableSaveFileRedirection { get; set; } = false;
     public string DatabasePath { get; set; } = string.Empty;
+    public string SaveFileFallback { get; set; } = LegacySaveFileName;
+    public string SaveFileOverride { get; set; } = string.Empty;
     public string LogType { get; set; } = "none";
     public string NativeOS { get; set; } = "Windows";
 
@@ -20,6 +23,9 @@ public class ModLoaderConfiguration : IModLoaderConfiguration
             EnableSaveFileRedirection = group.Get<int>("EnableSaveFileRedirection") != 0;
             
             DatabasePath = group.Get<string>("ModsDbIni");
+            // TODO: Use save file name from game info
+            SaveFileFallback = group.Get("SaveFileFallback", SaveFileFallback);
+            SaveFileOverride = group.Get("SaveFileOverride", string.Empty);
 
             if (OperatingSystem.IsLinux() && NativeOS == "Windows")
             {
@@ -43,6 +49,8 @@ public class ModLoaderConfiguration : IModLoaderConfiguration
         {
             group.Set("ModsDbIni", DatabasePath);
         }
+        group.Set("SaveFileFallback", SaveFileFallback);
+        group.Set("SaveFileOverride", SaveFileOverride);
         group.Set("LogType", LogType);
     }
 

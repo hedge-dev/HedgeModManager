@@ -77,10 +77,10 @@ public class ModConfig
             {
                 string? valString = null;
                 iniGroup.TryGetValue(element.Name, out object? obj);
-                if (obj == null || obj is not string)
+                if (obj == null)
                     valString = element.DefaultValue?.ToString();
                 else
-                    valString = obj as string;
+                    valString = obj?.ToString();
 
                 if (valString != null)
                 {
@@ -150,6 +150,13 @@ public class ModConfig
             foreach (var element in group.Elements)
                 iniGroup[element.Name] = element.Value;
         }
+
+        // Fix issue with counts being strings
+        foreach (var group in ini.Groups)
+            foreach (var key in group.Value)
+                if (key.Key.EndsWith("Count") && key.Value is string value)
+                    if (int.TryParse(value, out int count))
+                        group.Value[key.Key] = count;
 
         Directory.CreateDirectory(Path.GetDirectoryName(iniPath)!);
         await File.WriteAllTextAsync(iniPath, ini.Serialize().ReplaceLineEndings(lineEnding));

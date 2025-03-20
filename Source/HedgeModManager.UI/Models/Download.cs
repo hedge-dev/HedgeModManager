@@ -1,5 +1,6 @@
 ﻿namespace HedgeModManager.UI.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using HedgeModManager.Foundation;
 using UI.ViewModels;
 
 public partial class Download : ObservableObject

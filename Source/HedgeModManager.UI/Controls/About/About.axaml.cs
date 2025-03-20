@@ -3,7 +3,6 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.About;
-using System.Diagnostics;
 
 namespace HedgeModManager.UI.Controls.About;
 
@@ -29,11 +28,7 @@ public partial class About : UserControl
             viewModel.CurrentTabInfo.Buttons.Clear();
             viewModel.CurrentTabInfo.Buttons.Add(new("About.Button.GitHub", ButtonsOLD.Y, (b) =>
             {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = $"https://github.com/{Program.GitHubRepoOwner}/{Program.GitHubRepoName}",
-                    UseShellExecute = true
-                });
+                Utils.OpenURL($"https://github.com/{Program.GitHubRepoOwner}/{Program.GitHubRepoName}");
             }));
         }
     }

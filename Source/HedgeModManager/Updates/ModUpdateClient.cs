@@ -1,5 +1,4 @@
 ﻿namespace HedgeModManager.Updates;
-using System.Net;
 using System.Text;
 using Text;
 
@@ -10,7 +9,7 @@ public class ModUpdateClient : HttpClient
     public ModUpdateClient(Uri baseUri)
     {
         BaseAddress = baseUri;
-        DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Network.UserAgent);
+        DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Network.GetUserAgent());
         Timeout = TimeSpan.FromMinutes(8);
     }
 

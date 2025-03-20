@@ -5,10 +5,9 @@ using Avalonia.Threading;
 using HedgeModManager.CodeCompiler;
 using HedgeModManager.UI.ViewModels;
 using Avalonia.Markup.Xaml;
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using HedgeModManager.UI.CLI;
 using HedgeModManager.UI.Input;
+using HedgeModManager.Foundation;
+using Avalonia;
 
 
 namespace HedgeModManager.UI.Views;
@@ -102,6 +101,7 @@ public partial class MainWindow : Window
         bool toggleFullscreen = e.KeyModifiers == KeyModifiers.Alt && e.Key == Key.Enter;
         bool isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
         bool isAlt = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
+        bool isQuit = e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Q;
         if (ViewModel == null)
             return;
 
@@ -222,6 +222,10 @@ public partial class MainWindow : Window
             else
                 ViewModel.WindowState = WindowState.FullScreen;
             ViewModel.Config.LastWindowState = ViewModel.WindowState;
+        }
+        else if (isQuit)
+        {
+            Close();
         }
     }
 

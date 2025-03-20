@@ -80,9 +80,14 @@ public partial class MainWindowViewModel : ViewModelBase
         };
         Logger.Information($"Starting HedgeModManager {AppVersion}...");
         Logger.Information($"Startup Date: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} (UTC)");
-        Logger.Debug($"IsWindows: {OperatingSystem.IsWindows()}");
-        Logger.Debug($"IsLinux: {OperatingSystem.IsLinux()}");
-        Logger.Debug($"IsMacos: {OperatingSystem.IsMacOS()}");
+        string os = "Unknown";
+        if (OperatingSystem.IsWindows())
+            os = "Windows";
+        else if (OperatingSystem.IsLinux())
+            os = "Linux"; // Excludes Android
+        else if (OperatingSystem.IsMacOS())
+            os = "macOS";
+        Logger.Debug($"OS: {os}");
         Logger.Debug($"RID: {RuntimeInformation.RuntimeIdentifier}");
         Logger.Debug($"FlatpakID: \"{Program.FlatpakID}\" ({!string.IsNullOrEmpty(Program.FlatpakID)})");
         Logger.Debug($"InstallLocation: {Program.InstallLocation}");
@@ -159,7 +164,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public async Task CheckForModLoaderUpdatesAsync()
     {
-        await new Download(Localize("Download.Text.CheckLoaderUpdate"))
+        await new Download(Localize("Download.Text.CheckLoaderUpdate"), true)
         .OnRun(async (d, c) =>
         {
             d.ReportMax(-1);
@@ -167,18 +172,19 @@ public partial class MainWindowViewModel : ViewModelBase
             var game = GetModdableGameGeneric();
             if (game == null)
             {
-                Logger.Debug("ModLoader updates are only supported on ModdableGameGeneric");
+                Logger.Debug("Mod loader updates are only supported on ModdableGameGeneric");
                 return;
             }
             if (game.ModLoader == null)
             {
-                Logger.Debug("Game's mod loader is null");
+                Logger.Debug("Game does not use an external mod loader");
                 return;
             }
 
             // TODO: Show changelog
+            bool installed = game.ModLoader.IsInstalled();
             bool hasUpdate = await game.ModLoader.CheckForUpdatesAsync();
-            if (hasUpdate)
+            if (hasUpdate && installed)
                 await game.ModLoader.InstallAsync(false);
         }).OnError((d, e) =>
         {
@@ -286,6 +292,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Logger.Debug($"  Root: {game.Root}");
             Logger.Debug($"  Exec: {game.Executable}");
             Logger.Debug($"  N OS: {game.NativeOS}");
+            Logger.Debug($"   PFX: {game.PrefixRoot}");
             Logger.Debug($"  Type: {game.GetType().Name}");
             await game.InitializeAsync();
             Logger.Debug($"Initialised game");
@@ -450,7 +457,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
                     // Ensure enabled mods are on top of disabled mods
                     // TODO: Find a method to reorder without full update
-                    Mods = new (SelectedGame.Game.ModDatabase.Mods.OrderBy(x => !x.Enabled));
+                    if (SelectedGame.Game.ModDatabase is ModDatabaseGeneric modsDB)
+                        Mods = new(modsDB.Mods = new(modsDB.Mods.OrderBy(x => !x.Enabled)));
 
                     await SelectedGame.Game.ModDatabase.Save();
                     if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)

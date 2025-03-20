@@ -1,7 +1,5 @@
 ﻿namespace HedgeModManager;
-using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-using System.Reflection.Metadata;
 
 public static class MemoryExtensions
 {

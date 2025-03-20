@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using HedgeModManager.Foundation;
+using System.Reflection;
+using System.Runtime.Versioning;
 
 namespace HedgeModManager;
 
@@ -49,11 +51,86 @@ public static class Paths
         return Path.Combine(GetTempPath(), Guid.NewGuid().ToString());
     }
 
-    public static string GetActualUserConfigPath()
+    /// <summary>
+    /// Gets a list of shared program data directories<br/>
+    /// <br/>
+    /// This does not include the user's data directory<br/>
+    /// <br/>
+    /// Linux only<br/>
+    /// </summary>
+    [SupportedOSPlatform("linux")]
+    public static string[] GetProgramDataPaths()
+    {
+        List<string> paths = ["/usr/local/share", "/usr/share"];
+
+        try
+        {
+            if (Environment.GetEnvironmentVariable("XDG_DATA_DIRS") is string dirs && !string.IsNullOrEmpty(dirs))
+                paths = [.. dirs.Split(":", StringSplitOptions.RemoveEmptyEntries)];
+        }
+        catch
+        {
+            Logger.Error("Failed to read or parse $XDG_DATA_DIRS");
+        }
+
+        // Also add host paths for Flatpak
+        List<string> newPaths = [];
+        foreach (var path in paths)
+        {
+            if (!path.StartsWith("/run/host"))
+                newPaths.Add("/run/host" + path);
+        }
+
+        return [.. paths, .. newPaths];
+    }
+
+    /// <summary>
+    /// Gets the user's home directory<br/>
+    /// <br/>
+    /// On Windows, this is %USERPROFILE%<br/>
+    /// On Linux, this is $HOME<br/>
+    /// </summary>
+    public static string GetUserHomePath()
     {
         if (Environment.GetEnvironmentVariable("HOME") is string home)
-            return Path.Combine(home, ".config");
+            return home;
 
-        return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+    }
+
+    /// <summary>
+    /// Gets the user's data directory<br/>
+    /// <br/>
+    /// On Windows, this is %LOCALAPPDATA%<br/>
+    /// On Linux, this is $XDG_DATA_HOME or ~/.local/share<br/>
+    /// </summary>
+    public static string GetUserDataPath()
+    {
+        return GetUserPath("DATA", Path.Combine(".local", "share"), Environment.SpecialFolder.LocalApplicationData);
+    }
+
+    /// <summary>
+    /// Gets the user's config directory<br/>
+    /// <br/>
+    /// On Windows, this is %APPDATA%<br/>
+    /// On Linux, this is $XDG_CONFIG_HOME or ~/.config<br/>
+    /// </summary>
+    public static string GetUserConfigPath()
+    {
+        return GetUserPath("CONFIG", ".config", Environment.SpecialFolder.ApplicationData);
+    }
+
+    public static string GetUserPath(string xdgName, string? fromHome, Environment.SpecialFolder specialFolder)
+    {
+        if (Environment.GetEnvironmentVariable($"HOST_XDG_{xdgName}") is string hostDir && !string.IsNullOrEmpty(hostDir))
+            return hostDir;
+
+        if (!Helpers.IsFlatpak && Environment.GetEnvironmentVariable($"XDG_{xdgName}") is string dir && !string.IsNullOrEmpty(dir))
+            return dir;
+
+        if (!string.IsNullOrEmpty(fromHome) && Environment.GetEnvironmentVariable("HOME") is string home)
+            return Path.Combine(home, fromHome);
+
+        return Environment.GetFolderPath(specialFolder);
     }
 }

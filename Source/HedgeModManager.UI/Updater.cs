@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using HedgeModManager.Foundation;
 using HedgeModManager.GitHub;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
@@ -24,38 +25,8 @@ public class Updater
 
     public static async Task<(Update?, UpdateCheckStatus)> CheckForUpdates()
     {
-        // Check Flathub if running under a Flatpak
-        if (!string.IsNullOrEmpty(Program.FlatpakID))
-        {
-            Logger.Debug($"Checking for updates for {Program.FlatpakID}");
-            var app = await Network.Get<FlathubApp>($"https://flathub.org/api/v1/apps/{Program.FlatpakID}");
-            if (app == null)
-            {
-                Logger.Error("Failed to check for updates");
-                // TODO: Swap these nearing release
-                //return (null, UpdateCheckStatus.Error);
-                return (null, UpdateCheckStatus.NoUpdate);
-            }
-            Logger.Debug("Got Flathub data");
-            Logger.Debug($"Current Version: {Program.ApplicationVersion}");
-            Logger.Debug($"New Version: {app.CurrentReleaseVersion}");
-
-            if (app.CurrentReleaseVersion != Program.ApplicationVersion)
-            {
-                Logger.Debug("Current version is older");
-                return (new Update()
-                {
-                    Version = app.CurrentReleaseVersion!,
-                    Title = app.Name,
-                    Description = app.CurrentReleaseDescription,
-                    IsSingleExecutable = false
-                }, UpdateCheckStatus.UpdateAvailable);
-            }
-
-            Logger.Debug("Current version is newer");
-            return (null, UpdateCheckStatus.NoUpdate);
-        }
-        else
+        // Only check if not flatpak
+        if (string.IsNullOrEmpty(Program.FlatpakID))
         {
             var release = await GitHubAPI.GetRelease(Program.GitHubRepoOwner, Program.GitHubRepoName);
 
@@ -97,6 +68,7 @@ public class Updater
                 return (null, UpdateCheckStatus.NoUpdate);
             }
         }
+        return (null, UpdateCheckStatus.NoUpdate);
     }
 
     public static async Task BeginUpdate(Update update, MainWindowViewModel? mainViewModel)

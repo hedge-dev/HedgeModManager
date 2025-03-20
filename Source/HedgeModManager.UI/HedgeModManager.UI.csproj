@@ -7,8 +7,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
-    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">8.0.0.3</AssemblyVersion>
-    <FileVersion Condition="'$(FileVersion)' == ''">8.0.0.3</FileVersion>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">8.0.0.4</AssemblyVersion>
+    <FileVersion Condition="'$(FileVersion)' == ''">8.0.0.4</FileVersion>
   </PropertyGroup>
   <PropertyGroup Label="Avalonia">
     <AvaloniaXamlReportImportance>Low</AvaloniaXamlReportImportance>

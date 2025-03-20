@@ -6,6 +6,7 @@ using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using HedgeModManager.Foundation;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;

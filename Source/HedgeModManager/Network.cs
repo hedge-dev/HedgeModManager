@@ -1,21 +1,27 @@
 ﻿namespace HedgeModManager;
 
 using CoreLib;
+using Foundation;
 using System.Text.Json;
 
 public static class Network
 {
-    public static string UserAgent = $"Mozilla/5.0 (compatible; HedgeModManager)";
-    public static HttpClient Client = new();
+    public const string DefaultUserAgent = $"Mozilla/5.0 (compatible; HedgeModManager)";
+    public static HttpClient Client { get; set; } = new();
 
-    public static void Initialize()
+    public static void Initialize(string? userAgent = null)
     {
         Client?.Dispose();
         Client = new()
         {
-            DefaultRequestHeaders = {{ "User-Agent", UserAgent }}
+            DefaultRequestHeaders = {{ "User-Agent", userAgent ?? DefaultUserAgent } }
         };
     }
+
+    /// <summary>
+    /// Gets the current user agent, if not initialised the default user agent will be returned
+    /// </summary>
+    public static string GetUserAgent() => Client?.DefaultRequestHeaders.UserAgent.ToString() ?? DefaultUserAgent;
 
     public static Uri? CreateUri(string? uri) =>
             string.IsNullOrEmpty(uri) ? null : new Uri(uri, UriKind.RelativeOrAbsolute);

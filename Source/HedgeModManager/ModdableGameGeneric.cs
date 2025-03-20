@@ -78,7 +78,15 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
 
         if (string.IsNullOrEmpty(ModLoaderConfiguration.DatabasePath))
         {
-            ModLoaderConfiguration.DatabasePath = Path.Combine(Root, DefaultDatabaseDirectory, ModDatabaseGeneric.DefaultDatabaseName);
+            // mods / Mods workaround
+            string mainPath = Path.Combine(Root, DefaultDatabaseDirectory, ModDatabaseGeneric.DefaultDatabaseName);
+            string altPath = Path.Combine(Root, "Mods", ModDatabaseGeneric.DefaultDatabaseName);
+
+            if (!File.Exists(mainPath) && File.Exists(altPath))
+            {
+                mainPath = altPath;
+            }
+            ModLoaderConfiguration.DatabasePath = mainPath;
         }
 
         ModDatabase.LoadDatabase(ModLoaderConfiguration.DatabasePath);

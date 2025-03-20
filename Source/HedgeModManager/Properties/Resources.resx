@@ -129,8 +129,8 @@
   <data name="RMLDownloadURL" xml:space="preserve">
     <value>https://github.com/thesupersonic16/HedgeModManager/raw/rewrite/HedgeModManager/Resources/ModLoader/RainbowModLoader.dll</value>
   </data>
-  <data name="DotnetDownloadURL" xml:space="preserve">
-    <value>https://github.com/hedge-dev/HedgeModManager/raw/refs/heads/ui/Source/HedgeModManager/Resources/dotnetFrameworkRuntime.zip</value>
+  <data name="ExtraProtonFiles64DownloadURL" xml:space="preserve">
+    <value>https://github.com/thesupersonic16/HedgeModManagerResources/raw/refs/heads/main/extra-proton-files-x64.zip</value>
   </data>
   <data name="CommunityCodesURL" xml:space="preserve">
     <value>https://raw.githubusercontent.com/hedge-dev/HMMCodes/refs/heads/build/</value>

@@ -14,17 +14,18 @@ command: HedgeModManager.UI
 finish-args:
   - --socket=x11
   # UnleashedRecomp permissions
-  - --filesystem=~/.config/UnleashedRecomp:create
+  - --filesystem=~/.config/UnleashedRecomp
   - --filesystem=~/.local/share/applications/UnleashedRecomp.desktop:ro
+  - --filesystem=~/.var/app/io.github.hedge_dev.unleashedrecomp:ro
   # Create permissions are required for accessing the mod loader, game and for patching game prefixes
   # Steam permissions
-  - --filesystem=~/.steam/steam/steamapps:create
-  - --filesystem=~/.local/share/Steam/steamapps:create
-  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps:create
+  - --filesystem=~/.steam/steam/steamapps
+  - --filesystem=~/.local/share/Steam/steamapps
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps
   # Heroic permissions
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/GamesConfig:ro
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/legendaryConfig/legendary:ro
-  - --filesystem=~/Games/Heroic:create
+  - --filesystem=~/Games/Heroic
   # Common locations for game and mod files
   - --filesystem=/media
   - --filesystem=/run/media
