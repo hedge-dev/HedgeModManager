@@ -1,4 +1,5 @@
 ﻿namespace HedgeModManager;
+
 using Foundation;
 using HedgeModManager.Epic;
 using HedgeModManager.Properties;
@@ -17,7 +18,7 @@ public class ModdableGameLocator
             ID = "SonicGenerations",
             ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
-            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
+            ModLoaderIncompatibleFileNames = ["dinput8.dll"],
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             Is64Bit = false,
             PlatformInfos = new()
@@ -30,7 +31,7 @@ public class ModdableGameLocator
             ID = "SonicLostWorld",
             ModLoaderName = "HE1ModLoader",
             ModLoaderFileName = "d3d9.dll",
-            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
+            ModLoaderIncompatibleFileNames = ["dinput8.dll"],
             ModLoaderDownloadURL = Resources.HE1MLDownloadURL,
             Is64Bit = false,
             PlatformInfos = new() { { "Steam", [new ("329440", "slw.exe")] } }
@@ -40,7 +41,7 @@ public class ModdableGameLocator
             ID = "SonicForces",
             ModLoaderName = "HE2ModLoader",
             ModLoaderFileName = "d3d11.dll",
-            ModLoaderIncompatibleFileNames = [ "dinput8.dll" ],
+            ModLoaderIncompatibleFileNames = ["dinput8.dll"],
             ModLoaderDownloadURL = Resources.HE2MLDownloadURL,
             PlatformInfos = new() { { "Steam", [new ("637100", Path.Combine("build", "main", "projects", "exec", "Sonic Forces.exe"))] } }
         },
@@ -132,7 +133,8 @@ public class ModdableGameLocator
             {
                 { "Windows", [new(string.Empty, "SOFTWARE\\UnleashedRecomp")] },
                 { "Flatpak", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")] },
-                { "Desktop", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] }
+                { "Desktop", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] },
+                { "macOS", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] }
             }
         }
     ];
@@ -387,6 +389,27 @@ public class ModdableGameLocator
                                 Logger.Debug($"Game \"{game.ID}\" at \"{path}\" already exists");
                             }
                         }
+                    }
+                }
+            }
+            if (OperatingSystem.IsMacOS() && gameInfo.PlatformInfos.TryGetValue("macOS", out var macOsInfo))
+            {
+                foreach (var entry in macOsInfo)
+                {
+                    string root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    "Library", "Application Support", entry.Executable);
+                    if (Directory.Exists(root))
+                    {
+                        var gameSimple = new GameSimple(
+                            "macOS", entry.ID, gameInfo.ID,
+                            root, Path.GetFileName(entry.Executable), "macOS",
+                            null, $"open -a {entry.Executable}", null);
+                        var game = new ModdableGameGeneric(gameSimple)
+                        {
+                            Is64Bit = gameInfo.Is64Bit
+                        };
+                        game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                        games.Add(game);
                     }
                 }
             }

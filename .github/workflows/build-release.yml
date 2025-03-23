@@ -19,6 +19,7 @@ on:
 env:
   PROJECT_PATH: ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj
   FLATPAK_ID: io.github.hedge_dev.hedgemodmanager
+  MACOS_BUILD_SCRIPT: ./macos/generate-bundle.bash
   GENERATOR_URL: https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/refs/heads/master/dotnet/flatpak-dotnet-generator.py
   DOTNET_VERSION: 8
   DOTNET_CLI_HOME: /tmp/.dotnet
@@ -82,12 +83,19 @@ jobs:
 
       - name: Build Flatpak Bundle
         run: flatpak build-bundle repo ./flatpak/${{env.FLATPAK_ID}}.flatpak ${{env.FLATPAK_ID}}
+    
+      - name: osx-arm64 Build
+        run: dotnet publish -p:PublishProfile=osx-arm64 -c Release -p:AssemblyVersion=${{ github.event.inputs.version }} -p:FileVersion=${{ github.event.inputs.version }} -o ./output/macos/osx-arm64 ${{env.PROJECT_PATH}} -p:UseAppHost=true
+        
+      - name: Build osx-arm64 Bundle
+        run: /bin/bash ${{env.MACOS_BUILD_SCRIPT}} ${{ github.event.inputs.version }}
 
       - name: Prepare Release
         run: |
           mkdir -p ./release
           mv ./output/win-x64/HedgeModManager.UI.exe ./release/HedgeModManager.exe
           mv ./flatpak/${{env.FLATPAK_ID}}.flatpak ./release/${{env.FLATPAK_ID}}.flatpak
+          mv ./output/macos/HedgeModManager.app ./release/HedgeModManager.app
 
       - name: Create Release
         uses: softprops/action-gh-release@v2.2.1
