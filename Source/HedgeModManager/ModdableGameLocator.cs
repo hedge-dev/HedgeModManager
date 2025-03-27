@@ -1,4 +1,5 @@
 ﻿namespace HedgeModManager;
+using CoreLib;
 using Foundation;
 using HedgeModManager.Epic;
 using HedgeModManager.Properties;

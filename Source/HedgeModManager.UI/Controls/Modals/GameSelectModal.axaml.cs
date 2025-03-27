@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using HedgeModManager.Foundation;
+using HedgeModManager.CoreLib;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
 

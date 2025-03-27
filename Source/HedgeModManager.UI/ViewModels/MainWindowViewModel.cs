@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using HedgeModManager.CoreLib;
 using HedgeModManager.Foundation;
 using HedgeModManager.IO;
 using HedgeModManager.UI.CLI;
@@ -219,7 +220,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     break;
                 await CheckForModUpdatesAsync(mod, false, c);
                 progress.ReportAdd(1);
-                d.Name = Localize("Download.Text.CheckModUpdate", progress.Progress, progress.ProgressMax);
+                d.Name = Localize("Download.Text.CheckModUpdates", progress.Progress, progress.ProgressMax);
             }
             d.Destroy();
         }).OnError((d, e) =>
@@ -233,11 +234,21 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public async Task<UpdateInfo?> CheckForModUpdatesAsync(IMod mod, bool promptUpdate = false, CancellationToken c = default)
     {
+        IsBusy = true;
+        var download = new Download(Localize("Download.Text.CheckModUpdate"), true, -1);
+        download.Run(this);
         try
         {
-            if (await mod.Updater!.CheckForUpdatesAsync(c))
+            if (await mod.Updater!.CheckForUpdatesAsync(c) == true)
             {
                 var info = await mod.Updater.GetUpdateInfoAsync(c);
+                download.Destroy();
+                IsBusy = false;
+                if (info == null)
+                {
+                    Logger.Debug($"Got null update info for \"{mod.Title}\" while true for the update check");
+                    return null;
+                }
                 Logger.Debug($"Update found for {mod.Title}");
                 Logger.Debug($"  Current: {mod.Version}");
                 Logger.Debug($"  Latest: {info.Version}");
@@ -273,6 +284,8 @@ public partial class MainWindowViewModel : ViewModelBase
             Logger.Error($"Failed to check for updates for {mod.Title}");
             Logger.Error(e);
         }
+        download.Destroy();
+        IsBusy = false;
         return null;
     }
 

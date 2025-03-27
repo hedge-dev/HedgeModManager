@@ -10,8 +10,10 @@ using HedgeModManager.Foundation;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Models;
 using HedgeModManager.UI.ViewModels;
+using HedgeModManager.Updates;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace HedgeModManager.UI.Controls.MainWindow;
 
@@ -48,6 +50,50 @@ public partial class Test : UserControl
                     else
                         Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
                 }
+            }));
+            viewModel.CurrentTabInfo.Buttons.Add(new("Create Update", ButtonsOLD.Y, async (b) =>
+            {
+                var topLevel = TopLevel.GetTopLevel(this);
+                if (topLevel == null)
+                    return;
+
+                string startLocation = Path.GetDirectoryName(viewModel.GetModdableGameGeneric()?.ModLoaderConfiguration.DatabasePath) ?? string.Empty;
+                var folderPicker = await topLevel.StorageProvider.OpenFolderPickerAsync(new()
+                {
+                    Title = "Select source...",
+                    SuggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(new Uri(startLocation))
+                });
+
+                if (folderPicker == null || folderPicker.Count == 0)
+                    return;
+
+                var folder = folderPicker[0];
+                var updateManifest = new HMMUpdateManifest();
+                var update = new HMMUpdate(updateManifest);
+
+                await new Download("Creating update...", true)
+                    .OnRun(async (d, c) =>
+                    {
+                        var progress = d.CreateProgress();
+                        progress.ReportMax(-1);
+
+                        d.Name = "Scanning mod files...";
+                        await update.CreateFromDirectoryAsync(Utils.ConvertToPath(folder.Path), progress);
+                        d.Name = "Saving update...";
+                        progress.ReportMax(-1);
+                        string json = JsonSerializer.Serialize(updateManifest, HMMUpdate.JsonOptions);
+                        await File.WriteAllTextAsync(Path.Combine(Utils.ConvertToPath(folder.Path), "update_manifest.json"), json);
+                    }).OnError((d, e) =>
+                    {
+                        Logger.Error(e);
+                        Logger.Error($"Unexpected error while creating updates");
+                        return Task.CompletedTask;
+                    }).OnFinally((d) =>
+                    {
+                        d.Destroy();
+                        return Task.CompletedTask;
+                    }).RunAsync(viewModel);
+
             }));
         }
 

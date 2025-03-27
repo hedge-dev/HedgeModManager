@@ -1,4 +1,5 @@
-﻿namespace HedgeModManager.Foundation;
+﻿namespace HedgeModManager.CoreLib;
+using Foundation;
 
 public interface IMod
 {

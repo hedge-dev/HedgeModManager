@@ -4,6 +4,7 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using HedgeModManager.CoreLib;
 using HedgeModManager.Foundation;
 using System.ComponentModel;
 using System.Text.RegularExpressions;

@@ -1,4 +1,5 @@
-﻿namespace HedgeModManager.Foundation;
+﻿namespace HedgeModManager.CoreLib;
+using Foundation;
 
 public interface IModdableGameTDatabase<out TDatabase> : IModdableGame where TDatabase : IModDatabase
 {

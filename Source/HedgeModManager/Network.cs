@@ -31,10 +31,11 @@ public static class Network
     /// </summary>
     /// <typeparam name="T">Type to convert to</typeparam>
     /// <param name="url">URL to send request to</param>
+    /// <param name="options">JSON options</param>
     /// <param name="c">Cancellation token</param>
     /// <returns>Converted type from response, default if failed</returns>
-    public static async Task<T?> Get<T>(string url, CancellationToken c = default)
-        => await Get<T>(CreateUri(url), c);
+    public static async Task<T?> Get<T>(string url, JsonSerializerOptions? options = null, CancellationToken c = default)
+        => await Get<T>(CreateUri(url), options, c);
 
 
     /// <summary>
@@ -42,9 +43,10 @@ public static class Network
     /// </summary>
     /// <typeparam name="T">Type to convert to</typeparam>
     /// <param name="uri">URI to send request to</param>
+    /// <param name="options">JSON options</param>
     /// <param name="c">Cancellation token</param>
     /// <returns>Converted type from response, default if failed</returns>
-    public static async Task<T?> Get<T>(Uri? uri, CancellationToken c = default)
+    public static async Task<T?> Get<T>(Uri? uri, JsonSerializerOptions? options = null, CancellationToken c = default)
     {
         Logger.Debug($"Sending GET request to {uri} for {typeof(T).Name}");
         var response = await Client.GetAsync(uri, c);
@@ -55,7 +57,7 @@ public static class Network
         }
         var json = await response.Content.ReadAsStringAsync(c);
         Logger.Debug("Received data, deserialising...");
-        return JsonSerializer.Deserialize<T>(json);
+        return JsonSerializer.Deserialize<T>(json, options);
     }
 
     /// <summary>

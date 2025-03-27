@@ -2,30 +2,31 @@
 using Foundation;
 using CoreLib;
 using System.Threading;
+using System.Web;
 
-public class UpdateSourceGMI<TMod> : IUpdateSource where TMod : IMod
+public class UpdateSourceGMI : IUpdateSource
 {
     public const string CommandListFileName = "mod_files.txt";
 
     public Uri Url { get; set; }
     public string Host => Url.Host;
     public ModUpdateClient Client { get; set; }
-    public TMod Mod { get; set; }
+    public IMod Mod { get; set; }
 
-    public UpdateSourceGMI(TMod mod, Uri url)
+    public UpdateSourceGMI(IMod mod, Uri url)
     {
         Url = url;
         Mod = mod;
         Client = new ModUpdateClient(url);
     }
 
-    public async Task<bool> CheckForUpdatesAsync(CancellationToken cancellationToken)
+    public async Task<bool?> CheckForUpdatesAsync(CancellationToken cancellationToken)
     {
         var latest = await Client.GetLatestVersion(cancellationToken);
         return latest != Mod.Version;
     }
 
-    public async Task<UpdateInfo> GetUpdateInfoAsync(CancellationToken cancellationToken)
+    public async Task<UpdateInfo?> GetUpdateInfoAsync(CancellationToken cancellationToken)
     {
         var latest = await Client.GetLatestVersion(cancellationToken);
         var changelog = await Client.GetChangelog(cancellationToken);
@@ -97,7 +98,7 @@ public class UpdateSourceGMI<TMod> : IUpdateSource where TMod : IMod
         {
             case "add":
                 Logger.Information($"Downloading {path}...");
-                var data = await Client.GetByteArrayAsync(path, cancellationToken);
+                var data = await Client.GetByteArrayAsync(Helpers.EncodeURL(path), cancellationToken);
                 if (cancellationToken.IsCancellationRequested)
                     return;
                 string filePath = Path.Combine(Mod.Root, path);

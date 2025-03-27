@@ -1,5 +1,6 @@
 ﻿namespace HedgeModManager;
 using CodeCompiler;
+using CoreLib;
 using Foundation;
 using Updates;
 using Text;
@@ -98,7 +99,7 @@ public class ModGeneric : IMod
             {
                 if (Uri.TryCreate(server, UriKind.Absolute, out Uri? uri))
                 {
-                    Updater = new UpdateSourceGMI<ModGeneric>(this, uri);
+                    Updater = new UpdateSourceMulti(this, uri);
                 }
                 else
                 {

@@ -1,6 +1,6 @@
-﻿using HedgeModManager.Foundation;
-
-namespace HedgeModManager;
+﻿namespace HedgeModManager;
+using CoreLib;
+using Foundation;
 
 public class ModDependencyReport(IMod rootMod)
 {

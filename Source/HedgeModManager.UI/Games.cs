@@ -1,6 +1,6 @@
 ﻿using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using HedgeModManager.Foundation;
+using HedgeModManager.CoreLib;
 using HedgeModManager.UI.Models;
 
 namespace HedgeModManager.UI;

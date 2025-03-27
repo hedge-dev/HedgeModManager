@@ -1,6 +1,6 @@
 ﻿using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
-using HedgeModManager.Foundation;
+using HedgeModManager.CoreLib;
 
 namespace HedgeModManager.UI.Models;
 
