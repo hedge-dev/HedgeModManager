@@ -48,6 +48,6 @@ public static class Helpers
     /// </summary>
     public static string EncodeURL(string url)
     {
-        return Uri.EscapeDataString(url).Replace("%2f", "/");
+        return Uri.EscapeDataString(url).Replace("%2F", "/");
     }
 }
