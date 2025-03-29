@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using HedgeModManager.CodeCompiler;
+using HedgeModManager.Foundation;
 using HedgeModManager.UI.ViewModels;
 using HedgeModManager.UI.ViewModels.Codes;
 using System.Collections.ObjectModel;
@@ -22,49 +23,55 @@ public partial class Codes : UserControl
         AvaloniaXamlLoader.Load(this);
     }
 
-    //public void LogCodes(int level, CodeCategoryViewModel codeCategory)
-    //{
-    //    if (codeCategory != null)
-    //    {
-    //        Logger.Debug($"{new string(' ', level * 4)}{codeCategory.Name}/");
-    //        foreach (var category in codeCategory.Cateories)
-    //            LogCodes(level + 1, category);
-    //        foreach (var code in codeCategory.Codes)
-    //            Logger.Debug($"{new string(' ', level * 4)}{code.Code.Name}");
-    //    }
-    //}
+    public CodeCategoryViewModel CreateCategory(string path)
+    {
+        var split = path.Split('/');
+        CodeCategoryViewModel? currentCategory = null;
+        if (!(split.Length == 1 && string.IsNullOrEmpty(split[0])))
+        {
+            for (int i = 0; i < split.Length; ++i)
+            {
+                if (currentCategory == null)
+                {
+                    currentCategory = Cateories.FirstOrDefault(x => x.Name == split[i]);
+                    if (currentCategory == null)
+                    {
+                        currentCategory = new(null, split[i]);
+                        Cateories.Add(currentCategory);
+                    }
+                }
+                else
+                {
+                    var nextCategory = currentCategory.Categories.FirstOrDefault(x => x.Name == split[i]);
+                    if (nextCategory == null)
+                    {
+                        nextCategory = new(currentCategory, split[i]);
+                        currentCategory.Categories.Add(nextCategory);
+                    }
+                    currentCategory = nextCategory;
+                }
+            }
+        }
+        if (currentCategory == null)
+        {
+            currentCategory = new(null, "Uncategorized");
+            Cateories.Add(currentCategory);
+        }
 
-    //public ObservableCollection<CodeCategoryViewModel> MergeCategories(ObservableCollection<CodeCategoryViewModel> root)
-    //{
-    //    var categoryGroups = root.GroupBy(x => x.Name);
-    //    var categories = new ObservableCollection<CodeCategoryViewModel>();
-    //
-    //    // Merge codes
-    //    foreach (var group in categoryGroups)
-    //    {
-    //        var category = group.First();
-    //        categories.Add(category);
-    //
-    //        if (group.Count() == 1)
-    //            continue;
-    //
-    //        // Move Codes
-    //        group.Skip(1)
-    //             .SelectMany(x => x.Codes)
-    //             .ToList()
-    //             .ForEach(category.Codes.Add);
-    //
-    //        // Move sub categories
-    //        group.Skip(1)
-    //             .SelectMany(x => x.Cateories)
-    //             .ToList()
-    //             .ForEach(category.Cateories.Add);
-    //
-    //        //Merge sub categories
-    //        category.Cateories = MergeCategories(category.Cateories);
-    //    }
-    //    return categories;
-    //}
+        return currentCategory;
+    }
+
+    public void LogCodes(int level, CodeCategoryViewModel codeCategory)
+    {
+        if (codeCategory != null)
+        {
+            Logger.Debug($"{new string(' ', level * 2)}{codeCategory.Name}/");
+            foreach (var category in codeCategory.Categories)
+                LogCodes(level + 1, category);
+            foreach (var code in codeCategory.Codes)
+                Logger.Debug($"{new string(' ', (level + 1) * 2)}{code.Code.Name}");
+        }
+    }
 
     public void RefreshUI()
     {
@@ -75,7 +82,7 @@ public partial class Codes : UserControl
             return;
 
         MainViewModel.Codes
-            .Where(x => x.Type != Foundation.CodeType.Library && x is CSharpCode)
+            .Where(x => x.Type != CodeType.Library && x is CSharpCode)
             .Cast<CSharpCode>()
             .Select(x => new CodeEntryViewModel(x))
             .ToList()
@@ -94,41 +101,29 @@ public partial class Codes : UserControl
         MainViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
         RefreshUI();
 
-        //// Generate categories
-        //Cateories.Clear();
-        //MainViewModel.Codes
-        //    .Select(x => x as CSharpCode)
-        //    .Where(x => x != null)
-        //    .DistinctBy(x => x!.Category)
-        //    .Select(x => new CodeCategoryViewModel(null, x!.Category))
-        //    .ToList()
-        //    .ForEach(Cateories.Add);
-        //
-        //// Merge categories
-        //var cateories = MergeCategories(Cateories);
-        //
-        //// Test log
-        //foreach (var category in cateories)
-        //    LogCodes(0, category);
+        // Generate categories
+        Cateories.Clear();
+        foreach (var code in CodesList)
+        {
+            var category = CreateCategory(code.Code.Category);
+            category.Codes.Add(code);
+        }
+
+        // Test log
+        Logger.Debug("Codes:");
+        foreach (var category in Cateories)
+            LogCodes(1, category);
 
         // Add buttons
         if (MainViewModel.CurrentTabInfo != null)
         {
             MainViewModel.CurrentTabInfo.Buttons.Clear();
-            //MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.SavePlay", Buttons.Y, async (b) =>
-            //{
-            //    await MainViewModel.SaveAndRun();
-            //}));
             MainViewModel.CurrentTabInfo.Buttons.Add(new("Codes.Button.UpdateCodes", ButtonsOLD.X, async (b) =>
             {
                 b.IsEnabled = false;
                 await MainViewModel.UpdateCodesAsync(true, false);
                 b.IsEnabled = true;
             }));
-            //MainViewModel.CurrentTabInfo.Buttons.Add(new("Common.Button.Select", Buttons.A, (b) =>
-            //{
-            //    Logger.Information("Select Pressed");
-            //}));
         }
     }
 

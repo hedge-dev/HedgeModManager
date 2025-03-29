@@ -5,11 +5,11 @@ namespace HedgeModManager.UI.ViewModels.Codes;
 
 public partial class CodeCategoryViewModel : ViewModelBase
 {
-    private CodeCategoryViewModel? _parent;
     
     [ObservableProperty] private string _name = "Unnamed Category";
     [ObservableProperty] private bool _expanded = false;
-    [ObservableProperty] private ObservableCollection<CodeCategoryViewModel> _cateories = [];
+    [ObservableProperty] private CodeCategoryViewModel? _parent;
+    [ObservableProperty] private ObservableCollection<CodeCategoryViewModel> _categories = [];
     [ObservableProperty] private ObservableCollection<CodeEntryViewModel> _codes = [];
 
     public CodeCategoryViewModel(CodeCategoryViewModel? parent, string name)
@@ -22,7 +22,7 @@ public partial class CodeCategoryViewModel : ViewModelBase
         {
             string newCategoryName = name.Substring(firstIndex + 1);
             Name = name.Substring(0, firstIndex);
-            Cateories.Add(new CodeCategoryViewModel(this, newCategoryName));
+            Categories.Add(new CodeCategoryViewModel(this, newCategoryName));
         }
     }
 
@@ -31,6 +31,11 @@ public partial class CodeCategoryViewModel : ViewModelBase
         if (parent == null)
             return str;
 
-        return GetPathToRoot(parent._parent, parent.Name + "/" + str);
+        return GetPathToRoot(parent.Parent, parent.Name + "/" + str);
+    }
+
+    public override string ToString()
+    {
+        return GetPathToRoot(Parent, Name);
     }
 }

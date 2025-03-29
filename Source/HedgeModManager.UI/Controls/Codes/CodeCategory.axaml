@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cc="using:HedgeModManager.UI.Controls.Codes"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vmc="using:HedgeModManager.UI.ViewModels.Codes"
+             mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
+             x:Class="HedgeModManager.UI.Controls.Codes.CodeCategory"
+             x:DataType="vmc:CodeCategoryViewModel">
+  <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+    <TextBlock Text="&#x21B3;" FontWeight="Bold" />
+    <StackPanel Margin="16,0,0,0">
+      <TextBlock Text="{Binding Name}" Margin="0,0,0,2" FontWeight="Bold" />
+      <ItemsControl ItemsSource="{Binding Categories}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <cc:CodeCategory />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <ItemsControl ItemsSource="{Binding Codes}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <cb:CheckBox Text="{Binding Code.Name}" IsChecked="{Binding Enabled}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

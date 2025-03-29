@@ -18,13 +18,15 @@
                Text="Layout for this tab is not final."
                HorizontalAlignment="Center" />
     <ScrollViewer Grid.Row="1" Margin="12,4,12,12">
-      <ItemsControl ItemsSource="{Binding CodesList, RelativeSource={RelativeSource AncestorType=cc:Codes}}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <cb:CheckBox Text="{Binding Code.Name}" IsChecked="{Binding Enabled}" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+      <StackPanel>
+        <ItemsControl ItemsSource="{Binding Cateories, RelativeSource={RelativeSource AncestorType=cc:Codes}}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <cc:CodeCategory />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
     </ScrollViewer>
   </Grid>
 </UserControl>
