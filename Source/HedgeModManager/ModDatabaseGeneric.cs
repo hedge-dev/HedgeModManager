@@ -2,6 +2,7 @@
 using CodeCompiler;
 using CodeCompiler.PreProcessor;
 using CoreLib;
+using Diagnostics;
 using Foundation;
 using System.IO;
 using Text;
@@ -102,7 +103,37 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         {
             // TODO: Look into reporting back the results of the compilation
             await using var codeStream = File.Create(Path.Combine(Root, CompileCodesFileName));
-            await CodeProvider.CompileCodes(codes, codeStream, this);
+            var report = await CodeProvider.CompileCodes(codes, codeStream, this);
+            if (report != null && report.Blocks.Count != 0)
+            {
+                Logger.Warning("Code compilation messages:");
+                foreach (var block in report.Blocks)
+                {
+                    Logger.Warning($"  {block.Key}:");
+                    foreach (var message in block.Value)
+                    {
+                        switch (message.Severity)
+                        {
+                            case Severity.Information:
+                                Logger.Information($"    {message.Message}");
+                                break;
+                            case Severity.Warning:
+                                Logger.Warning($"    {message.Message}");
+                                break;
+                            case Severity.Error:
+                                Logger.Error($"    {message.Message}");
+                                break;
+                            default:
+                                Logger.Debug($"    {message.Message}");
+                                break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Logger.Information("Compiled codes");
+            }
         }
         await File.WriteAllTextAsync(Path.Combine(Root, Name), ini.Serialize());
     }
@@ -235,6 +266,18 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         var extraCodesPath = Path.Combine(directory, ExtraCodesFileName);
         LoadSingleCodeFile(codesPath);
         LoadSingleCodeFile(extraCodesPath);
+
+        // Load codes from work
+        var workCodesPath = Path.Combine(directory, ".hedgemm", "work", "Codes");
+        if (Directory.Exists(workCodesPath))
+        {
+            Logger.Debug($"Loading codes from work directory: ");
+            foreach (var file in Directory.EnumerateFiles(workCodesPath, "*.hmm", SearchOption.AllDirectories))
+            {
+                Logger.Debug($"  Loading \"{Path.GetRelativePath(workCodesPath, file)}\"");
+                LoadSingleCodeFile(file);
+            }
+        }
     }
 
     public void LoadSingleCodeFile(string path)
