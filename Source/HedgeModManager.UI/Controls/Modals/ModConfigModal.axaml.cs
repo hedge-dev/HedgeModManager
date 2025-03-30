@@ -19,6 +19,7 @@ public partial class ModConfigModal : UserControl
     public ModConfigViewModel ConfigViewModel { get; set; }
 
     public string Title { get; set; } = "Common.Text.Loading";
+    public bool PauseDescription { get; set; } = false;
 
     public string ConfigIniPath = string.Empty;
 
@@ -78,17 +79,40 @@ public partial class ModConfigModal : UserControl
                 {
                     var selectedValue = value.FirstOrDefault(x => x.Value?.ToString() == element.Value?.ToString());
 
+                    var items = value.Select(x => new ComboBoxItem()
+                    {
+                        Content = x.DisplayName,
+                        DataContext = x
+                    }).ToList();
+                    foreach (var item in items)
+                    {
+                        item.PointerMoved += (s, e) =>
+                        {
+                            if (item.DataContext is ModConfig.ConfigEnum configEnum)
+                                ConfigViewModel.Description = string.Join("\n", configEnum.Description);
+                            else
+                                ConfigViewModel.Description = "Error: DataContext is null";
+                        };
+                    }
+
                     var comboBox = new ComboBox
                     {
-                        ItemsSource = value,
-                        SelectedItem = selectedValue,
+                        ItemsSource = items,
+                        SelectedIndex = items.FindIndex(x => x.DataContext == selectedValue),
                         Foreground = App.GetStyleResource<ImmutableSolidColorBrush>("ForegroundBrush", this)
                     };
                     comboBox.SelectionChanged += (s, e) =>
                     {
+                        if (comboBox.SelectedItem is ComboBoxItem comboBoxItem)
+                        {
+                            if (comboBoxItem.DataContext is ModConfig.ConfigEnum itemConfigEnum)
+                                element.Value = itemConfigEnum.Value;
+                        }
                         if (comboBox.SelectedItem is ModConfig.ConfigEnum configEnum)
                             element.Value = configEnum.Value;
                     };
+                    comboBox.DropDownOpened += (s, e) => PauseDescription = true;
+                    comboBox.DropDownClosed += (s, e) => PauseDescription = false;
                     return comboBox;
                 }
                 return new Avalonia.Controls.TextBlock()
@@ -134,7 +158,8 @@ public partial class ModConfigModal : UserControl
                 };
                 grid.PointerMoved += (s, e) =>
                 {
-                    ConfigViewModel.Description = string.Join("\n", element.Description);
+                    if (!PauseDescription)
+                        ConfigViewModel.Description = string.Join("\n", element.Description);
                 };
                 grid.Children.Add(new Avalonia.Controls.TextBlock()
                 {
