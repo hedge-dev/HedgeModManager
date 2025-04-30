@@ -1,31 +1,107 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:cc="using:HedgeModManager.UI.Controls.Codes"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vmc="using:HedgeModManager.UI.ViewModels.Codes"
-             mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="390"
-             x:Class="HedgeModManager.UI.Controls.Codes.CodeCategory"
-             x:DataType="vmc:CodeCategoryViewModel">
-  <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-    <TextBlock Text="&#x21B3;" FontWeight="Bold" />
-    <StackPanel Margin="16,0,0,0">
-      <TextBlock Text="{Binding Name}" Margin="0,0,0,2" FontWeight="Bold" />
-      <ItemsControl ItemsSource="{Binding Categories}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <cc:CodeCategory />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-      <ItemsControl ItemsSource="{Binding Codes}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <cb:CheckBox Text="{Binding Code.Name}" IsChecked="{Binding Enabled}" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </StackPanel>
+<cp:ButtonUserControl xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:cc="using:HedgeModManager.UI.Controls.Codes"
+                      xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
+                      xmlns:materialIcons="using:Material.Icons.Avalonia"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:vmc="using:HedgeModManager.UI.ViewModels.Codes"
+                      mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="500"
+                      x:Class="HedgeModManager.UI.Controls.Codes.CodeCategory"
+                      x:DataType="vmc:CodeCategoryViewModel"
+                      Background="{DynamicResource BackgroundL0Brush}"
+                      Initialized="OnInitialized"
+                      Loaded="OnLoaded">
+  <StackPanel>
+    <Border Classes.codeCategory="True"
+            Classes.pressed="{Binding Pressed, RelativeSource={RelativeSource AncestorType=cc:CodeCategory}}"
+            Height="38" Margin="4" Cursor="Hand"
+            CornerRadius="12" BorderThickness="1"
+            PointerPressed="OnPointerPressed"
+            PointerReleased="OnPointerReleased"
+            PointerEntered="OnPointerEntered">
+      <StackPanel Margin="0,0,24,0" Orientation="Horizontal">
+        <materialIcons:MaterialIcon Kind="ChevronRight" Width="30" Height="30" Foreground="{DynamicResource Text.SubBrush}">
+          <materialIcons:MaterialIcon.RenderTransform>
+            <RotateTransform Angle="{Binding RotationAngle, RelativeSource={RelativeSource AncestorType=cc:CodeCategory}}" />
+          </materialIcons:MaterialIcon.RenderTransform>
+        </materialIcons:MaterialIcon>
+        <TextBlock Text="{Binding Name, Converter={StaticResource StringLocalizeConverter}}" VerticalAlignment="Center"/>
+      </StackPanel>
+      <Border.Transitions>
+        <Transitions>
+          <BrushTransition Property="Background" Duration="0:0:0.1"/>
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.1"/>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.1"/>
+        </Transitions>
+      </Border.Transitions>
+      <Border.Styles>
+        <Style Selector="Border.codeCategory">
+          <Setter Property="Opacity" Value="0.6" />
+          <Setter Property="Background" Value="{DynamicResource BackgroundL1Brush}" />
+          <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource Button.HoverBrush}"/>
+          </Style>
+          <Style Selector="^.pressed">
+            <Setter Property="Background" Value="{DynamicResource Button.PressedBrush}"/>
+          </Style>
+        </Style>
+      </Border.Styles>
+    </Border>
+    <ItemsControl ItemsSource="{Binding Categories}" IsVisible="{Binding Expanded}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Grid ColumnDefinitions="32,*">
+            <Grid Grid.Column="0" VerticalAlignment="Stretch">
+              <Border Classes.treeElement="True"
+                      Classes.isLastElement="{Binding IsLastElement}"
+                      Width="2"
+                      Background="{DynamicResource BackgroundL1Brush}">
+                <Border.Styles>
+                  <Style Selector="Border.treeElement">
+                    <Setter Property="Margin" Value="8,0,0,0" />
+                  </Style>
+                  <Style Selector="Border.treeElement.isLastElement">
+                    <Setter Property="Margin" Value="8,0,0,24" />
+                  </Style>
+                </Border.Styles>
+              </Border>
+              <Border Margin="22,22,0,0" Width="16" Height="2"
+                      VerticalAlignment="Top"
+                      Background="{DynamicResource BackgroundL1Brush}"/>
+            </Grid>
+            <cc:CodeCategory Grid.Column="1" />
+          </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <ItemsControl ItemsSource="{Binding Codes}" IsVisible="{Binding Expanded}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Grid ColumnDefinitions="32,*">
+            <Grid Grid.Column="0" VerticalAlignment="Stretch">
+              <Border Classes.treeElement="True"
+                      Classes.isLastElement="{Binding IsLastElement}"
+                      Width="2"
+                      Background="{DynamicResource BackgroundL1Brush}">
+                <Border.Styles>
+                  <Style Selector="Border.treeElement">
+                    <Setter Property="Margin" Value="8,0,0,0" />
+                  </Style>
+                  <Style Selector="Border.treeElement.isLastElement">
+                    <Setter Property="Margin" Value="8,0,0,24" />
+                  </Style>
+                </Border.Styles>
+              </Border>
+              <Border Margin="22,22,0,0" Width="16" Height="2"
+                      VerticalAlignment="Top"
+                      Background="{DynamicResource BackgroundL1Brush}"/>
+            </Grid>
+            <cc:CodeEntry Grid.Column="1" />
+          </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
   </StackPanel>
-</UserControl>
+</cp:ButtonUserControl>

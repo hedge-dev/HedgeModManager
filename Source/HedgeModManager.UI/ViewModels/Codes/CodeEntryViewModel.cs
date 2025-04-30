@@ -6,6 +6,9 @@ namespace HedgeModManager.UI.ViewModels.Codes;
 public partial class CodeEntryViewModel : ViewModelBase
 {
     [ObservableProperty] private CSharpCode _code;
+    [ObservableProperty] private bool _isLastElement = false;
+
+    public MainWindowViewModel MainViewModel { get; set; }
 
     public bool Enabled
     {
@@ -17,8 +20,9 @@ public partial class CodeEntryViewModel : ViewModelBase
         }
     }
 
-    public CodeEntryViewModel(CSharpCode code)
+    public CodeEntryViewModel(CSharpCode code, MainWindowViewModel viewModel)
     {
         Code = code;
+        MainViewModel = viewModel;
     }
 }

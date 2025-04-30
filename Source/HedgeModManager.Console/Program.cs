@@ -1,5 +1,6 @@
 ﻿using HedgeModManager;
 using HedgeModManager.CodeCompiler;
+using HedgeModManager.CoreLib;
 using HedgeModManager.Foundation;
 using HedgeModManager.Text;
 
@@ -139,10 +140,10 @@ async Task PrintUpdates()
         {
             Console.WriteLine($"Checking for {mod.Title} updates");
             var updates = await mod.Updater.CheckForUpdatesAsync();
-            if (updates)
+            if (updates == true)
             {
                 var info = await mod.Updater.GetUpdateInfoAsync();
-                Console.WriteLine($"[{mod.Title}] {mod.Version} -> {info.Version}");
+                Console.WriteLine($"[{mod.Title}] {mod.Version} -> {info?.Version}");
             }
         }
         catch

@@ -1,11 +1,10 @@
 ﻿using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
-using HedgeModManager.UI.ViewModels;
-using System.Text.Json;
+using HedgeModManager.Foundation;
 
 namespace HedgeModManager.UI.Config;
 
-public partial class ProgramConfig : ViewModelBase
+public partial class ProgramConfig : ConfigBase
 {
     // TODO: Make use of setup
     [ObservableProperty] private bool _isSetupCompleted = true;
@@ -19,75 +18,13 @@ public partial class ProgramConfig : ViewModelBase
     [ObservableProperty] private string? _language;
     [ObservableProperty] private DateTime _lastUpdateCheck = DateTime.MinValue;
     [ObservableProperty] private WindowState _lastWindowState = WindowState.Normal;
-    [ObservableProperty] private string[] _lastSeenLanguages = [];
+    [ObservableProperty] private List<string> _lastSeenLanguages = [];
 
     // Test Flags
     [ObservableProperty] private bool _testKeyboardInput = false;
 
-    private string GetConfigFilePath()
+    protected override string GetConfigFilePath()
     {
         return Path.Combine(Paths.GetConfigPath(), "ProgramConfig.json");
-    }
-
-    public void Load()
-    {
-        string filePath = GetConfigFilePath();
-        if (!File.Exists(filePath))
-            return;
-
-        string jsonData = File.ReadAllText(filePath);
-
-        var config = JsonSerializer.Deserialize<ProgramConfig>(jsonData, Program.JsonSerializerOptions);
-
-        // Copy data
-        if (config != null)
-        {
-            foreach (var property in GetType().GetProperties())
-                if (property.CanWrite)
-                    property.SetValue(this, property.GetValue(config));
-        }
-    }
-
-    public async Task LoadAsync()
-    {
-        string filePath = GetConfigFilePath();
-        if (!File.Exists(filePath))
-            return;
-
-        string jsonData = await File.ReadAllTextAsync(filePath);
-
-        var config = JsonSerializer.Deserialize<ProgramConfig>(jsonData, Program.JsonSerializerOptions);
-
-        // Copy data
-        if (config != null)
-        {
-            foreach (var property in GetType().GetProperties())
-                if (property.CanWrite)
-                    property.SetValue(this, property.GetValue(config));
-        }
-    }
-
-    public async Task SaveAsync()
-    {
-        string filePath = GetConfigFilePath();
-
-        string jsonData = JsonSerializer.Serialize(this, Program.JsonSerializerOptions);
-        try
-        {
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
-            await File.WriteAllTextAsync(filePath, jsonData);
-        }
-        catch
-        {
-            // TODO: Log error
-        }
-    }
-
-    public void Reset()
-    {
-        var config = new ProgramConfig();
-        foreach (var property in GetType().GetProperties())
-            if (property.CanWrite)
-                property.SetValue(this, property.GetValue(config));
     }
 }

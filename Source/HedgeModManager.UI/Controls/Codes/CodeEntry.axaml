@@ -1,0 +1,51 @@
+<cp:ButtonUserControl xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:cc="using:HedgeModManager.UI.Controls.Codes"
+                      xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:vmc="using:HedgeModManager.UI.ViewModels.Codes"
+                      mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="38"
+                      x:Class="HedgeModManager.UI.Controls.Codes.CodeEntry"
+                      x:DataType="vmc:CodeEntryViewModel"
+                      Initialized="OnInitialized">
+  <Border Classes.codeEntry="True"
+          Classes.enabled="{Binding Enabled}"
+          Classes.pressed="{Binding Pressed, RelativeSource={RelativeSource AncestorType=cc:CodeEntry}}"
+          Height="38" Margin="4,4,4,4" Cursor="Hand"
+          CornerRadius="12" BorderThickness="1"
+          PointerPressed="OnPointerPressed" PointerReleased="OnPointerReleased"
+          PointerEntered="OnPointerEntered">
+    <StackPanel Margin="0,0,24,0" Orientation="Horizontal">
+      <Viewbox Stretch="Uniform" Margin="0,0,-4,0">
+          <cb:CheckBox IsChecked="{Binding Enabled}" IsEnabled="False" />
+      </Viewbox>
+      <TextBlock Text="{Binding Code.Name, Converter={StaticResource StringLocalizeConverter}}" VerticalAlignment="Center"/>
+    </StackPanel>
+    <Border.Transitions>
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.1"/>
+        <BrushTransition Property="BorderBrush" Duration="0:0:0.1"/>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.1"/>
+      </Transitions>
+    </Border.Transitions>
+    <Border.Styles>
+      <Style Selector="Border.codeEntry">
+        <Setter Property="Opacity" Value="0.6" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundL1Brush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CodeEntry.BorderDisabledBrushBrush}" />
+        <Style Selector="^.enabled">
+          <Setter Property="BorderBrush" Value="{DynamicResource CodeEntry.BorderBrushBrush}" />
+          <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:pointerover">
+          <Setter Property="Background" Value="{DynamicResource Button.HoverBrush}"/>
+        </Style>
+        <Style Selector="^.pressed">
+          <Setter Property="Background" Value="{DynamicResource Button.PressedBrush}"/>
+        </Style>
+      </Style>
+    </Border.Styles>
+  </Border>
+</cp:ButtonUserControl>

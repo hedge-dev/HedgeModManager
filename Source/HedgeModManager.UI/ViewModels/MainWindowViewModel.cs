@@ -57,8 +57,10 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private double _overallProgressMax = 0d;
     [ObservableProperty] private bool _showProgressBar = false;
     [ObservableProperty] private bool _progressIndeterminate = false;
-    [ObservableProperty] private LanguageEntry? _selectedLanguage;
+    [ObservableProperty] private LanguageEntry? _selectedLanguage = null;
     [ObservableProperty] private WindowState _windowState = WindowState.Normal;
+    [ObservableProperty] private string _codeDescription = "Codes.Text.NoCodeSelected";
+    [ObservableProperty] private GameConfig? _selectedGameConfig = null;
 
     // Preview only
     public MainWindowViewModel() { }
@@ -331,6 +333,11 @@ public partial class MainWindowViewModel : ViewModelBase
 
             Config.LastSelectedPath = Path.Combine(game.Root, game.Executable ?? "");
 
+            SelectedGameConfig = new GameConfig(game);
+            Logger.Debug("Loading game config...");
+            await SelectedGameConfig.LoadAsync();
+
+            Logger.Debug("Updating UI");
             _ = Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await UpdateCodesAsync(false, true);
@@ -460,7 +467,14 @@ public partial class MainWindowViewModel : ViewModelBase
             IsBusy = true;
         try
         {
+            Logger.Debug("Saving program config...");
             await Config.SaveAsync();
+            if (SelectedGameConfig != null)
+            {
+                Logger.Debug("Saving game config...");
+                await SelectedGameConfig.SaveAsync();
+            }
+
             if (SelectedGame != null)
             {
                 try

@@ -97,6 +97,10 @@ public partial class App : Application
 
             Logger.Information($"Loading config...");
             viewModel.Config.Load();
+
+            // TODO: Check for new languages
+            viewModel.Config.LastSeenLanguages = [.. languages.Select(x => x.Code)];
+
             RequestedThemeVariant = Themes.Themes.GetTheme(viewModel.Config.Theme);
 
             ChangeLanguage(viewModel.SelectedLanguage =

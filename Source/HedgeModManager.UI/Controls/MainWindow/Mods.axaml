@@ -18,7 +18,7 @@
   <Border Margin="12">
     <Grid RowDefinitions="Auto,*">
       <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="50,2*,*,*,Auto">        
-        <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Watermark="Search Mods..."
+        <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Watermark="{DynamicResource Mods.Text.Search}"
                  FontSize="14" Height="28"
                  Text="{Binding Search, RelativeSource={RelativeSource AncestorType=cmw:Mods}}"
                  Margin="0,0,8,0"

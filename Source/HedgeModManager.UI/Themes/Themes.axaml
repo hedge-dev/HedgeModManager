@@ -56,6 +56,9 @@
       <SolidColorBrush x:Key='ProgressBar.BackgroundBrush'>#222222</SolidColorBrush>
       <SolidColorBrush x:Key='ProgressBar.ForegroundBrush'>#525252</SolidColorBrush>
 
+      <SolidColorBrush x:Key='CodeEntry.BorderBrushBrush'>#4E5052</SolidColorBrush>
+      <SolidColorBrush x:Key='CodeEntry.BorderDisabledBrushBrush'>#12151F</SolidColorBrush>
+
       <!-- Control Themes -->
       <SolidColorBrush x:Key="NormalBackgroundBrush">#202020</SolidColorBrush>
       <SolidColorBrush x:Key="PointerOverBackgroundBrush">#2D2D2F</SolidColorBrush>
@@ -117,6 +120,9 @@
       <SolidColorBrush x:Key='CheckBox.SelectedPressedBrush'>#384868</SolidColorBrush>
 
       <SolidColorBrush x:Key='Mods.FavoriteBrush'>#FFC861</SolidColorBrush>
+
+      <SolidColorBrush x:Key='CodeEntry.BorderBrushBrush'>#565867</SolidColorBrush>
+      <SolidColorBrush x:Key='CodeEntry.BorderDisabledBrushBrush'>#00000000</SolidColorBrush>
 
       <!-- Control Themes -->
       <SolidColorBrush x:Key="NormalBackgroundBrush">#262837</SolidColorBrush>

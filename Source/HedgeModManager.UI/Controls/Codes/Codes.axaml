@@ -11,15 +11,19 @@
              x:Class="HedgeModManager.UI.Controls.Codes.Codes"
              x:DataType="vm:MainWindowViewModel"
              Loaded="OnLoaded"
-             Unloaded="OnUnloaded"
-             >
-  <Grid RowDefinitions="Auto,*">
-    <TextBlock Grid.Row="0" Margin="0,0,0,8"
-               Text="Layout for this tab is not final."
-               HorizontalAlignment="Center" />
-    <ScrollViewer Grid.Row="1" Margin="12,4,12,12">
-      <StackPanel>
-        <ItemsControl ItemsSource="{Binding Cateories, RelativeSource={RelativeSource AncestorType=cc:Codes}}">
+             Unloaded="OnUnloaded">
+  <Grid RowDefinitions="Auto,*" ColumnDefinitions="2*,1*"
+        Margin="8,0,0,0">
+    <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="Auto" ColumnDefinitions="2*,1*">
+      <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Watermark="{DynamicResource Codes.Text.Search}"
+               FontSize="14" Height="28"
+               Text="{Binding Search, RelativeSource={RelativeSource AncestorType=cc:Codes}}"
+               Margin="4,23,32,8"
+               VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+    </Grid>
+    <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="0,4,12,12">
+      <StackPanel Margin="0,0,16,0">
+        <ItemsControl ItemsSource="{Binding CategoryView, RelativeSource={RelativeSource AncestorType=cc:Codes}}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <cc:CodeCategory />
@@ -27,6 +31,11 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </StackPanel>
+    </ScrollViewer>
+    <ScrollViewer Grid.Row="1" Grid.Column="1" Margin="12,4,12,12">
+      <TextBlock Text="{Binding CodeDescription, Converter={StaticResource StringLocalizeConverter}}"
+                 FontSize="16" TextWrapping="Wrap"
+                 Foreground="{DynamicResource Text.SubBrush}" />
     </ScrollViewer>
   </Grid>
 </UserControl>

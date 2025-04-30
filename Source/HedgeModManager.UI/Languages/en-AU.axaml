@@ -72,11 +72,15 @@
   <system:String x:Key="Mods.Button.Open"       >Open Directory</system:String>
   <system:String x:Key="Mods.Button.Update"     >Update</system:String>
   <system:String x:Key="Mods.Text.Loading"      >Loading Mods...</system:String>
+  <system:String x:Key="Mods.Text.Search"       >Search Mods...</system:String>
   <system:String xml:space="preserve" x:Key="Mods.Text.NoResults">No Results.&#x0a;Filtering is enabled.</system:String>
   <system:String xml:space="preserve" x:Key="Mods.Text.NoMods">..There is not a lot here.&#x0a;Go get some mods!</system:String>
 
   <!-- Codes -->
-  <system:String x:Key="Codes.Button.UpdateCodes">Update Community Codes</system:String>
+  <system:String x:Key="Codes.Text.Uncategorized" >Uncategorised</system:String>
+  <system:String x:Key="Codes.Text.NoCodeSelected">Hover or select a code to see it's description.</system:String>
+  <system:String x:Key="Codes.Text.Search"        >Search Codes...</system:String>
+  <system:String x:Key="Codes.Button.UpdateCodes" >Update Community Codes</system:String>
 
   <!-- Settings -->
   <system:String x:Key="Settings.Button.ChangeModsDir"       >Change</system:String>
