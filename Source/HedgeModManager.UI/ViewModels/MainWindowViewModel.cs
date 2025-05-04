@@ -102,7 +102,9 @@ public partial class MainWindowViewModel : ViewModelBase
         if (Config.LastUpdateCheck.AddMinutes(20) < DateTime.Now &&
             !Design.IsDesignMode && !Program.IsDebugBuild)
         {
-            await CheckForManagerUpdatesAsync();
+            if (OperatingSystem.IsWindows())
+                await CheckForManagerUpdatesAsync();
+
             try
             {
                 Config.LastUpdateCheck = DateTime.Now;

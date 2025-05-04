@@ -116,6 +116,7 @@
 
       <StackPanel Spacing="12">
         <cs:SettingsEntry Icon="Update"
+                          IsVisible="{Binding ViewModel.SupportsUpdates, RelativeSource={RelativeSource AncestorType=cs:Settings}}"
                           Title="{DynamicResource Settings.Title.UpdateManager}"
                           Description="{DynamicResource Settings.Description.UpdateManager}">
           <cs:SettingsEntry.Data>

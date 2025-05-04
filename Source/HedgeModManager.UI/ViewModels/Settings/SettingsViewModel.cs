@@ -130,6 +130,7 @@ public partial class SettingsViewModel : ViewModelBase
     }
 
     public bool SupportsProton => (Game?.NativeOS == "Windows" && OperatingSystem.IsLinux() && !string.IsNullOrEmpty(Game.PrefixRoot)) || MainViewModel == null;
+    public bool SupportsUpdates => OperatingSystem.IsWindows() || MainViewModel?.Config.TestModeEnabled == true;
 
     public string ModLoaderDescription
     {
