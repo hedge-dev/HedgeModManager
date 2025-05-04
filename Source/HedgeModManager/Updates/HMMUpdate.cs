@@ -162,14 +162,14 @@ public class HMMUpdate(HMMUpdateManifest manifest)
             }
             else if (fileExists && file.Size > 0 && fileSize != file.Size)
             {
-                UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, null));
+                UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, Manifest.BasePath));
                 Logger.Debug($"  Modified - \"{localPath}\"");
             }
             else if (fileExists && !string.IsNullOrEmpty(file.SHA256))
             {
                 if (!await Helpers.CheckFileHashAsync(localPath, file.SHA256, sha256, c))
                 {
-                    UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, null));
+                    UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, Manifest.BasePath));
                     Logger.Debug($"  Modified - \"{localPath}\"");
                 }
             }
