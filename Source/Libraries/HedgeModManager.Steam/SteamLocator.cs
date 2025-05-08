@@ -32,6 +32,13 @@ public class SteamLocator : IGameLocator
         return null;
     }
 
+    [SupportedOSPlatform("macos")]
+    private string? FindSteamLibraryMacOS()
+    {
+        // TODO: Open a folder selection window
+        return "";
+    }
+
     private string? FindSteamLibraryUnix()
     {
         var pathList = new[]
@@ -59,6 +66,12 @@ public class SteamLocator : IGameLocator
             if (OperatingSystem.IsWindows())
             {
                 SteamInstallPath = FindSteamLibraryWindows();
+                return SteamInstallPath;
+            }
+
+            if (OperatingSystem.IsMacOS())
+            {
+                SteamInstallPath = FindSteamLibraryMacOS();
                 return SteamInstallPath;
             }
 
@@ -135,6 +148,22 @@ public class SteamLocator : IGameLocator
             if (apps == null)
             {
                 continue;
+            }
+
+            // Paths will be encoded by Windows Steam and will need to be adapted for macOS paths.
+            // C:\ is equivalent to the Wine prefix.
+            // Any other drive letter should be removed and treated as raw Unix path.
+            if (OperatingSystem.IsMacOS())
+            {
+                if (path.StartsWith(@"C:\"))
+                {
+                    path = SteamInstallPath;
+                }
+                else
+                {
+                    // Remove drive letter and replace slashes
+                    path = path[2..].Replace(@"\", "/");
+                }
             }
 
             var libPath = Path.Combine(path, "steamapps");
