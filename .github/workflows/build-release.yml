@@ -3,10 +3,6 @@ name: Build Release
 on:
   workflow_dispatch:
     inputs:
-      version: 
-        description: 'Version'
-        required: true
-        default: '8.0.0.4'
       tag: 
         description: 'Tag'
         required: true
@@ -73,12 +69,10 @@ jobs:
           python3 flatpak-dotnet-generator.py ./flatpak/nuget-sources.json ${{env.PROJECT_PATH}} --dotnet ${{env.DOTNET_VERSION}} --freedesktop ${{env.FREEDESKTOP_VERSION}}
       
       - name: win-x64 Build
-        run: dotnet publish -p:PublishProfile=win-x64 -c Release -p:AssemblyVersion=${{ github.event.inputs.version }} -p:FileVersion=${{ github.event.inputs.version }} -o ./output/win-x64 ${{env.PROJECT_PATH}}
+        run: dotnet publish -p:PublishProfile=win-x64 -c Release -o ./output/win-x64 ${{env.PROJECT_PATH}}
 
       - name: flatpak-x86_64 Build
-        env:
-          APP_VERSION: ${{ github.event.inputs.version }}
-        run: flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{ env.FLATPAK_ID }}.yml
+        run: flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{env.FLATPAK_ID}}.yml
 
       - name: Build Flatpak Bundle
         run: flatpak build-bundle repo ./flatpak/${{env.FLATPAK_ID}}.flatpak ${{env.FLATPAK_ID}}

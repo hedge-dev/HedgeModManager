@@ -7,8 +7,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
-    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">8.0.0.4</AssemblyVersion>
-    <FileVersion Condition="'$(FileVersion)' == ''">8.0.0.4</FileVersion>
   </PropertyGroup>
   <PropertyGroup Label="Avalonia">
     <AvaloniaXamlReportImportance>Low</AvaloniaXamlReportImportance>
@@ -40,6 +38,10 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Markdig" Version="0.40.0" />
     <PackageReference Include="Material.Icons.Avalonia" Version="2.2.0" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

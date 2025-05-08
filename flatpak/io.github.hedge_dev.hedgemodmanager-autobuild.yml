@@ -46,10 +46,8 @@ modules:
       - type: dir
         path: ../
       - ./nuget-sources.json
-    secret-env:
-      - APP_VERSION
     build-commands:
-      - dotnet publish Source/HedgeModManager.UI/HedgeModManager.UI.csproj -c Release -p:DefineConstants=AUTOBUILD -p:AssemblyVersion=${APP_VERSION} -p:FileVersion=${APP_VERSION} --no-self-contained --source ./nuget-sources
+      - dotnet publish Source/HedgeModManager.UI/HedgeModManager.UI.csproj -c Release -p:DefineConstants=COMMITBUILD --no-self-contained --source ./nuget-sources
       - mkdir -p ${FLATPAK_DEST}/bin
       - cp -r Source/HedgeModManager.UI/bin/Release/net8.0/publish/* ${FLATPAK_DEST}/bin
       - install -Dm644 flatpak/hedgemodmanager.png ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png

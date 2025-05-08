@@ -178,26 +178,26 @@ public sealed class Program
 
     public static string GetFormattedAppVersion()
     {
-        string unstableType = "beta";
-#if AUTOBUILD
-        unstableType = "dev";
+        string commitHash = ThisAssembly.GitCommitId[..7];
+        if (Version.TryParse(ThisAssembly.AssemblyFileVersion, out Version? version) && version != null)
+        {
+            string baseVersion = $"{version.Major}.{version.Minor}.{version.Build}";
+#if COMMITBUILD
+            return $"{baseVersion} {commitHash}";
+#else
+            if (version.Revision == 0)
+                return baseVersion;
+            return $"{baseVersion} beta {version.Revision}";
 #endif
-
-        var version = Assembly.GetExecutingAssembly().GetName().Version ?? Version.Parse("0");
-        if (version.Revision == 0)
-            return $"{version.Major}.{version.Minor}.{version.Build}";
-        return $"{version.Major}.{version.Minor}.{version.Build} {unstableType} {version.Revision}";
+        }
+        return commitHash;
     }
 
     public static string GetTagName()
     {
-        string unstableType = "beta";
-#if AUTOBUILD
-        unstableType = "dev";
-#endif
-
-        var version = Assembly.GetExecutingAssembly().GetName().Version ?? Version.Parse("0");
-        return $"{version.Major}.{version.Minor}.{version.Build}-{unstableType}{version.Revision}";
+        if (Version.TryParse(ThisAssembly.AssemblyFileVersion, out Version? version) && version != null)
+            return $"{version.Major}.{version.Minor}.{version.Build}-beta{version.Revision}";
+        return "0";
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
