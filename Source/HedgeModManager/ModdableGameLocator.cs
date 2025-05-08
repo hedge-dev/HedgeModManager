@@ -178,6 +178,16 @@ public class ModdableGameLocator
             Logger.Debug("Heroic not found!");
         }
 
+        if (!string.IsNullOrEmpty(epicLocator.EGLInstalledPath))
+        {
+            Logger.Debug($"Found LauncherInstalled.dat at: {epicLocator.EGLInstalledPath}");
+        }
+        else
+        {
+            if (OperatingSystem.IsWindows())
+                Logger.Debug("EGL not found!");
+        }
+
         if (OperatingSystem.IsLinux())
         {
             Logger.Debug("XDG Data paths: " + string.Join(':', Paths.GetProgramDataPaths()));

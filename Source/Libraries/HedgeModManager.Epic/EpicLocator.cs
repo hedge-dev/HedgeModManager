@@ -1,5 +1,7 @@
 ﻿namespace HedgeModManager.Epic;
 using Foundation;
+using Microsoft.Win32;
+using System.Runtime.Versioning;
 using System.Text.Json;
 
 
@@ -18,8 +20,24 @@ public class EpicLocator : IGameLocator
     };
 
     public List<string> HeroicRootPaths = [];
+    public string? EGLInstalledPath { get; set; } = null;
 
-    public void LocateEpicRoots()
+    [SupportedOSPlatform("windows")]
+    public void LocateEGLRoot()
+    {
+        var eosKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\\Epic Games\\EOS");
+        if (eosKey?.GetValue("ModSdkMetadataDir") is string modSdkMetadataDir)
+        {
+            string installedPath = Path.Combine(modSdkMetadataDir, "..", "..", "..", "UnrealEngineLauncher", "LauncherInstalled.dat");
+
+            if (File.Exists(installedPath))
+            {
+                EGLInstalledPath = installedPath;
+            }
+        }
+    }
+
+    public void LocateHeroicRoots()
     {
         var searchPaths = new List<string>();
         string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -47,8 +65,32 @@ public class EpicLocator : IGameLocator
 
     public List<EpicGame> Locate()
     {
-        LocateEpicRoots();
+        if (OperatingSystem.IsWindows())
+        {
+            LocateEGLRoot();
+        }
+
+        LocateHeroicRoots();
         var games = new List<EpicGame>();
+
+        // Epic Games Launcher
+        if (EGLInstalledPath != null)
+        {
+            var installedApps = JsonSerializer.Deserialize<EpicLauncherInstalled>(File.ReadAllText(EGLInstalledPath));
+            if (installedApps != null)
+            {
+                foreach (var app in installedApps.InstallationList)
+                {
+                    games.Add(new EpicGame
+                    {
+                        ID = app.AppName ?? "NONE",
+                        Name = app.AppName ?? "NONE",
+                        Root = app.InstallLocation ?? "NONE",
+                        NativeOS = "Windows"
+                    });
+                }
+            }
+        }
 
         foreach (string rootPath in HeroicRootPaths)
         {
