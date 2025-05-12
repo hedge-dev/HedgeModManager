@@ -71,6 +71,9 @@ jobs:
       - name: win-x64 Build
         run: dotnet publish -p:PublishProfile=win-x64 -c Release -o ./output/win-x64 ${{env.PROJECT_PATH}}
 
+      - name: linux-x64 Build
+        run: dotnet publish -p:PublishProfile=linux-x64 -c Release -o ./output/linux-x64 ${{env.PROJECT_PATH}}
+
       - name: flatpak-x86_64 Build
         run: flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{env.FLATPAK_ID}}.yml
 
@@ -82,6 +85,7 @@ jobs:
           mkdir -p ./release
           mv ./output/win-x64/HedgeModManager.UI.exe ./release/HedgeModManager.exe
           mv ./flatpak/${{env.FLATPAK_ID}}.flatpak ./release/${{env.FLATPAK_ID}}.flatpak
+          tar -czvf ./release/HedgeModManager-linux-x64.tar.gz ./output/linux-x64
 
       - name: Create Release
         uses: softprops/action-gh-release@v2.2.1
