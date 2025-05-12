@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using Foundation;
 using System.IO;
 using System.Collections.Generic;
+using ValveKeyValue;
 
 public class SteamLocator : IGameLocator
 {
@@ -93,6 +94,39 @@ public class SteamLocator : IGameLocator
         return null;
     }
 
+    /// <summary>
+    /// Searches for appmanifest_{appid}.acf files and returns a list of parsed manifests
+    /// </summary>
+    /// <param name="library">Path to library, which must contain the steamapps directory</param>
+    /// <returns>List of manifests as KVObject</returns>
+    public static List<KVObject> ScanAppsInLibrary(string library)
+    {
+        var foundManifests = new List<KVObject>();
+        var steamAppsDir = Path.Combine(library, "steamapps");
+        if (!Directory.Exists(steamAppsDir))
+        {
+            return foundManifests;
+        }
+
+        foreach (var file in Directory.GetFiles(steamAppsDir, "appmanifest_*.acf"))
+        {
+            try
+            {
+                var manifest = ValveDataFile.FromFile(file);
+                if (manifest != null)
+                {
+                    foundManifests.Add(manifest);
+                    continue;
+                }
+            }
+            catch
+            {
+                Logger.Error($"Failed to parse manifest file: {file}");
+            }
+        }
+        return foundManifests;
+    }
+
     public List<SteamGame> Locate()
     {
         var games = new List<SteamGame>();
@@ -131,27 +165,16 @@ public class SteamLocator : IGameLocator
                 continue;
             }
 
-            var apps = folder.GetCaseInsensitive("apps");
-            if (apps == null)
+            var manifests = ScanAppsInLibrary(path);
+            var libraryAppsPath = Path.Combine(path, "steamapps");
+            foreach (var manifest in manifests)
             {
-                continue;
-            }
-
-            var libPath = Path.Combine(path, "steamapps");
-            foreach (var app in apps)
-            {
-                var appid = app.Name;
-                if (string.IsNullOrEmpty(appid))
-                {
-                    continue;
-                }
-
                 try
                 {
-                    var manifest = ValveDataFile.FromFile(Path.Combine(libPath, $"appmanifest_{appid}.acf"));
+                    var appid = manifest.GetCaseInsensitive("appid").GetString();
                     var name = manifest.GetCaseInsensitive("name").GetString();
                     var installDir = manifest.GetCaseInsensitive("installdir").GetString();
-                    var root = Path.Combine(libPath, "common", installDir);
+                    var root = Path.Combine(libraryAppsPath, "common", installDir);
                     if (Directory.Exists(root))
                     {
                         games.Add(new SteamGame
@@ -165,7 +188,7 @@ public class SteamLocator : IGameLocator
                 }
                 catch
                 {
-                    // ignore
+                    Logger.Error($"Failed to read manifest file: {manifest}");
                 }
             }
         }
