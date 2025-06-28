@@ -22,6 +22,9 @@ finish-args:
   - --filesystem=~/.steam/steam/steamapps
   - --filesystem=~/.local/share/Steam/steamapps
   - --filesystem=~/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps
+  - --filesystem=~/snap/steam/common/.local/share/Steam/steamapps
+  - --filesystem=~/snap/steam/common/.steam/steam/steamapps
+  - --filesystem=~/snap/steam/common/.steam/root/steamapps
   # Heroic permissions
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/GamesConfig:ro
   - --filesystem=~/.var/app/com.heroicgameslauncher.hgl/config/heroic/legendaryConfig/legendary:ro
