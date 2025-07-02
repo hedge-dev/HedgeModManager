@@ -25,12 +25,18 @@
                           Title="{DynamicResource Settings.Title.Profile}"
                           Description="{DynamicResource Settings.Description.Profile}">
           <cs:SettingsEntry.Data>
-            <ComboBox MinWidth="240"
-                      ItemsSource="{Binding Profiles}"
-                      SelectedItem="{Binding ViewModel.SelectedProfile, RelativeSource={RelativeSource AncestorType=cs:Settings}}"
-                      SelectionChanged="OnProfileSelectionChanged"
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <cb:Button MinWidth="115"
+                      Text="{DynamicResource Settings.Button.ManageProfiles}"
                       VerticalContentAlignment="Center"
-                      HorizontalAlignment="Stretch" />
+                      Click="OnManageProfilesClick" />
+              <ComboBox MinWidth="240" MinHeight="36"
+                        ItemsSource="{Binding Profiles}"
+                        SelectedItem="{Binding ViewModel.SelectedProfile, RelativeSource={RelativeSource AncestorType=cs:Settings}}"
+                        SelectionChanged="OnProfileSelectionChanged"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Stretch" />
+            </StackPanel>
           </cs:SettingsEntry.Data>
         </cs:SettingsEntry>
         <cs:SettingsEntry Icon="FolderOpen"
@@ -172,7 +178,7 @@
         <cs:SettingsEntry Icon="Palette"
                           Title="{DynamicResource Settings.Title.Theme}">
           <cs:SettingsEntry.Data>
-            <ComboBox MinWidth="240"
+            <ComboBox MinWidth="240" MinHeight="36"
                       ItemsSource="{Binding ViewModel.ThemeCollection, RelativeSource={RelativeSource AncestorType=cs:Settings}}"
                       SelectedValue="{Binding ViewModel.SelectedTheme, RelativeSource={RelativeSource AncestorType=cs:Settings}}"
                       SelectionChanged="OnThemeSelectionChanged"
@@ -189,7 +195,7 @@
         <cs:SettingsEntry Icon="Translate"
                           Title="{DynamicResource Settings.Title.Language}">
           <cs:SettingsEntry.Data>
-            <ComboBox MinWidth="240"
+            <ComboBox MinWidth="240" MinHeight="36"
                       ItemsSource="{Binding Languages}"
                       SelectedItem="{Binding ViewModel.SelectedLanguage, RelativeSource={RelativeSource AncestorType=cs:Settings}}"
                       SelectionChanged="OnLanguageSelectionChanged"

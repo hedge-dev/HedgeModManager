@@ -1,0 +1,52 @@
+<local:WindowModal xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:html="using:TheArtOfDev.HtmlRenderer.Avalonia"
+             xmlns:local="using:HedgeModManager.UI.Controls.Modals"
+             xmlns:m="using:HedgeModManager.UI.Models"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="540"
+             x:Class="HedgeModManager.UI.Controls.Modals.ProfileManagerModal"
+             x:DataType="vm:MainWindowViewModel"
+             Loaded="OnLoaded" Unloaded="OnUnloaded"
+             MinWidth="400" MinHeight="200" Title="Modal.Title.ProfileManager"
+             UseTitlePadding="True" LargeWindow="True">
+  <local:WindowModal.Buttons>
+    <Grid>
+      <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Spacing="10">
+        <cb:Button Text="Modal.Button.DuplicateProfile" Click="OnDuplicateClick" IsEnabled="{Binding ViewModel.CanDuplicate, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}" />
+        <cb:Button Text="Modal.Button.DeleteProfile" Click="OnDeleteClick" IsEnabled="{Binding ViewModel.CanDelete, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}" />
+        <cb:Button Text="Modal.Button.RenameProfile" Click="OnRenameClick" IsEnabled="{Binding ViewModel.CanRename, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}" />
+        <cb:Button Text="Modal.Button.SelectProfile" Click="OnSelectClick" IsEnabled="{Binding ViewModel.CanSelect, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}" />
+      </StackPanel>
+      <StackPanel HorizontalAlignment="Right">
+        <cb:Button Text="Common.Button.Close" Click="OnCloseClick" />
+      </StackPanel>
+    </Grid>
+  </local:WindowModal.Buttons>
+  <local:WindowModal.Data>
+    <Border CornerRadius="10" ClipToBounds="True" Margin="16">
+      <ListBox x:Name="ProfileListBox"
+               ItemsSource="{Binding Profiles}"
+               SelectedItem="{Binding ViewModel.SelectedProfile, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               Background="{DynamicResource BackgroundL0Brush}"
+               SelectionChanged="OnSelectionChanged">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <StackPanel Orientation="Vertical" Spacing="4">
+              <TextBlock Text="{Binding Name}" Foreground="{DynamicResource Text.NormalBrush}" />
+              <TextBlock Text="{Binding FileName}" Foreground="{DynamicResource Text.SubBrush}"/>
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Border>
+  </local:WindowModal.Data>
+</local:WindowModal>

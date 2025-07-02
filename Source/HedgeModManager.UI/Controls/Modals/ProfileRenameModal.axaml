@@ -1,0 +1,37 @@
+<local:WindowModal xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:html="using:TheArtOfDev.HtmlRenderer.Avalonia"
+             xmlns:local="using:HedgeModManager.UI.Controls.Modals"
+             xmlns:m="using:HedgeModManager.UI.Models"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="200"
+             x:Class="HedgeModManager.UI.Controls.Modals.ProfileRenameModal"
+             x:DataType="vm:MainWindowViewModel"
+             MinWidth="500" MinHeight="200" Title="Modal.Title.RenameProfile"
+             UseTitlePadding="True">
+  <local:WindowModal.Buttons>
+    <Grid>
+      <StackPanel HorizontalAlignment="Right">
+        <cb:Button Text="Common.Button.OK" Click="OnOkClick" />
+      </StackPanel>
+    </Grid>
+  </local:WindowModal.Buttons>
+  <local:WindowModal.Data>
+    <StackPanel Margin="20,0,20,0"
+                Orientation="Vertical"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center">
+      <TextBlock Text="{DynamicResource Modal.Text.NewProfileName}"
+                 VerticalAlignment="Center" />
+      <TextBox Text="{Binding NewName, RelativeSource={RelativeSource AncestorType=local:ProfileRenameModal}}"
+               Watermark="{Binding SelectedProfile.Name, RelativeSource={RelativeSource AncestorType=local:ProfileRenameModal}}"
+               HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+    </StackPanel>
+  </local:WindowModal.Data>
+</local:WindowModal>

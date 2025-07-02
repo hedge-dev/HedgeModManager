@@ -302,6 +302,15 @@ public partial class Settings : UserControl
         ViewModel.CheckCodeUpdatesText = "Settings.Button.CheckUpdates";
     }
 
+    private void OnManageProfilesClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel mainViewModel)
+            return;
+
+        var profileManager = new ProfileManagerModal();
+        profileManager.Open(mainViewModel);
+    }
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == GameProperty)

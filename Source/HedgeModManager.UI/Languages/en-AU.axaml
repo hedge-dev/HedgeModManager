@@ -89,6 +89,7 @@
   <system:String x:Key="Settings.Button.ClearPrefix"         >Delete</system:String>
   <system:String x:Key="Settings.Button.ExportLog"           >Save Log File</system:String>
   <system:String x:Key="Settings.Button.InstallML"           >Install</system:String>
+  <system:String x:Key="Settings.Button.ManageProfiles"      >Manage</system:String>
   <system:String x:Key="Settings.Button.ReinstallRuntime"    >Reinstall</system:String>
   <system:String x:Key="Settings.Button.UninstallML"         >Uninstall</system:String>
   <system:String x:Key="Settings.Button.OpenGameDir"         >Open Game Directory</system:String>
@@ -130,15 +131,21 @@
   <system:String x:Key="About.Header.SupportedGames">Supported Games</system:String>
 
   <!-- Modal -->
+  <system:String x:Key="Modal.Button.DeleteProfile"    >Delete</system:String>
+  <system:String x:Key="Modal.Button.DuplicateProfile" >Duplicate</system:String>
   <system:String x:Key="Modal.Button.ExportLog"        >Save Log File</system:String>
+  <system:String x:Key="Modal.Button.RenameProfile"    >Rename</system:String>
+  <system:String x:Key="Modal.Button.SelectProfile"    >Select</system:String>
   <system:String x:Key="Modal.Header.Credits"          >Credits</system:String>
   <system:String x:Key="Modal.Header.Description"      >Description</system:String>
   <system:String x:Key="Modal.Header.AboutMod"         >{0} v{1}</system:String>
   <system:String x:Key="Modal.Header.AboutModAuthor"   >Authored by {0} on {1}</system:String>
   <system:String x:Key="Modal.Text.GameMissing"        >Missing Unleashed Recompiled?</system:String>
+  <system:String x:Key="Modal.Text.NewProfileName"     >New Name:</system:String>
   <system:String x:Key="Modal.Text.TargetGame"         >For {0}</system:String>
   <system:String x:Key="Modal.Title.AboutMod"          >About {0}</system:String>
   <system:String x:Key="Modal.Title.Confirm"           >Confirmation</system:String>
+  <system:String x:Key="Modal.Title.DeleteProfile"     >Delete Confirmation</system:String>
   <system:String x:Key="Modal.Title.DownloadError"     >Download Error</system:String>
   <system:String x:Key="Modal.Title.DownloadMod"       >Download {0}</system:String>
   <system:String x:Key="Modal.Title.DownloadModLoading">Download Mod</system:String>
@@ -147,17 +154,20 @@
   <system:String x:Key="Modal.Title.InstallError"      >Install Error</system:String>
   <system:String x:Key="Modal.Title.LoadError"         >Load Error</system:String>
   <system:String x:Key="Modal.Title.MissingDependency" >Missing Dependencies</system:String>
+  <system:String x:Key="Modal.Title.ProfileManager"    >Manage Profiles</system:String>
   <system:String x:Key="Modal.Title.SaveError"         >Save Error</system:String>
   <system:String x:Key="Modal.Title.SelectMods"        >Select Mods Directory...</system:String>
   <system:String x:Key="Modal.Title.SelectModsFailed"  >Invalid Mods Directory</system:String>
   <system:String x:Key="Modal.Title.UpdateError"       >Update Error</system:String>
   <system:String x:Key="Modal.Title.UpdateMod"         >Update Available</system:String>
   <system:String x:Key="Modal.Title.UpdateManager"     >Hedge Mod Manager Update</system:String>
+  <system:String x:Key="Modal.Title.RenameProfile"     >Rename Profile</system:String>
   <system:String x:Key="Modal.Title.RunError"          >Launch Error</system:String>
   <system:String x:Key="Modal.Title.ConfigureMod"      >Configure {0}</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.ClearPrefix">Are you sure you want to delete the game prefix?&#x0a;&#x0a;Please make sure you are aware of the effects of&#x0a;deleting prefixes for the selected game.&#x0a;&#x0a;This action cannot be undone!</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.ClearPrefixComplete">Prefix deleted successfully.&#x0a;&#x0a;Make sure to relaunch the game on Steam to regenerate the prefix.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.DeleteMod">Are you sure you want to delete &quot;{0}&quot;?&#x0a;This action cannot be undone!</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.DeleteProfile">Are you sure you want to delete the profile &quot;{0}&quot;?&#x0a;This action cannot be undone!</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.DownloadError">Failed to download mod.&quot; Please try again later.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.ExitConfirm">Are you sure you want to exit Hedge Mod Manager?</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.GameLoadError">An error occurred when Hedge Mod Manager was trying&#x0a;to load mod data.</system:String>

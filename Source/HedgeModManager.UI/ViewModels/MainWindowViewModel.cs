@@ -465,6 +465,17 @@ public partial class MainWindowViewModel : ViewModelBase
         return profiles ?? [ModProfile.Default];
     }
 
+    public async Task SaveProfilesAsync(IModdableGame game)
+    {
+        string filePath = Path.Combine(game.Root, "profiles.json");
+        // Profiles are only supported for ModDatabaseGeneric
+        if (SelectedGame?.Game.ModDatabase is not ModDatabaseGeneric)
+            return;
+
+        string json = JsonSerializer.Serialize(Profiles, Program.JsonSerializerOptions);
+        await File.WriteAllTextAsync(filePath, json);
+    }
+
     public async Task SaveAsync(bool setBusy = true)
     {
         if (setBusy)
