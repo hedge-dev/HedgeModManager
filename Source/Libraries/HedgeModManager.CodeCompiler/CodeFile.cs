@@ -65,10 +65,7 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
         {
             // Added
             if (old.Codes.All(x => x != code))
-            {
                 addedCodes.Add(code);
-                continue;
-            }
         }
 
         foreach (var code in old.Codes)
@@ -99,7 +96,13 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
 
             try
             {
-                if (Codes.SingleOrDefault(x => x.Body.Trim() == code.Body.Trim()) is { } renamed)
+                if (Codes.SingleOrDefault(x => x.Name == code.Name && x.Category == code.Category && x.Body.Trim() == code.Body.Trim()) is { } unchanged)
+                {
+                    if (addedCodes.Contains(unchanged))
+                        addedCodes.Remove(unchanged);
+                }
+                else if (Codes.Count(x => x.Body.Trim() == code.Body.Trim()) == 1 &&
+                    Codes.SingleOrDefault(x => x.Body.Trim() == code.Body.Trim()) is { } renamed)
                 {
                     CreateMetadataDiff(renamed);
                 }

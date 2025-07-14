@@ -633,7 +633,14 @@ public partial class MainWindowViewModel : ViewModelBase
                 await CreateSimpleDownload("Download.Text.DownloadCodes", "Failed to download community codes",
                     async (d, p, c) =>
                     {
-                        await gameGeneric.DownloadCodes(null);
+                        var diff = await gameGeneric.UpdateCodes();
+                        var blocks = diff.ToList();
+
+                        // Print to logger for now
+                        Logger.Debug($"Updated codes with {blocks.Count} blocks:");
+                        foreach (var block in blocks)
+                            Logger.Debug($"  {block.Type} {block.Description}");
+
                         if (append)
                             gameGeneric.ModDatabase.LoadSingleCodeFile(mainCodesPath);
                         else

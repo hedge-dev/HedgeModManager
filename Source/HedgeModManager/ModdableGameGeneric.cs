@@ -1,8 +1,11 @@
 ﻿namespace HedgeModManager;
 using CoreLib;
 using Foundation;
+using HedgeModManager.CodeCompiler;
+using HedgeModManager.Diagnostics;
 using HedgeModManager.IO;
 using HedgeModManager.Properties;
+using System;
 
 public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, IModdableGameTConfiguration<ModLoaderConfiguration>
 {
@@ -47,17 +50,32 @@ public class ModdableGameGeneric : IModdableGameTDatabase<ModDatabaseGeneric>, I
         NativeOS = game.NativeOS;
     }
 
-    public async Task DownloadCodes(string? url)
+    public async Task<Diff> UpdateCodes(bool dryRun = false, string? downloadUrl = null)
     {
-        url ??= Resources.CommunityCodesURL;
-        if (url.EndsWith('/'))
-            url += $"{Name}.hmm";
+        downloadUrl ??= Resources.CommunityCodesURL;
+        if (downloadUrl.EndsWith('/'))
+            downloadUrl += $"{Name}.hmm?t={DateTime.Now:yyyyMMddHHmmss}";
 
-        string contents = await Network.Client.GetStringAsync(url);
-        string modsRoot = PathEx.GetDirectoryName(ModLoaderConfiguration.DatabasePath).ToString();
+        string codesPath = Path.Combine(PathEx.GetDirectoryName(ModLoaderConfiguration.DatabasePath).ToString(), ModDatabaseGeneric.MainCodesFileName);
 
-        Directory.CreateDirectory(modsRoot);
-        File.WriteAllText(Path.Combine(modsRoot, ModDatabaseGeneric.MainCodesFileName), contents);
+        var remoteContents = await Network.Client.GetStringAsync(downloadUrl);
+
+        Diff? diff = null;
+        if (File.Exists(codesPath))
+        {
+            var localCodes = CodeFile.FromText(File.ReadAllText(codesPath));
+            var remoteCodes = CodeFile.FromText(remoteContents);
+
+            diff = remoteCodes.CalculateDiff(localCodes);
+        }
+
+        if (!dryRun)
+        {
+            Directory.CreateDirectory(PathEx.GetDirectoryName(codesPath).ToString());
+            File.WriteAllText(codesPath, remoteContents);
+        }
+
+        return diff ?? new Diff();
     }
 
     public async Task InitializeAsync()
