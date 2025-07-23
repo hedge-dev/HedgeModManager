@@ -23,7 +23,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
     public bool SupportsCodeCompilation { get; set; } = true;
     public string NativeOS { get; set; } = "Windows";
 
-    public async Task Save()
+    public async Task<Report> SaveWithReport()
     {
         var ini = new Ini();
 
@@ -99,43 +99,19 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
             Directory.CreateDirectory(Root);
         }
 
+        var report = new Report();
         if (SupportsCodeCompilation)
         {
-            // TODO: Look into reporting back the results of the compilation
             await using var codeStream = File.Create(Path.Combine(Root, CompileCodesFileName));
-            var report = await CodeProvider.CompileCodes(codes, codeStream, this);
-            if (report != null && report.Blocks.Count != 0)
-            {
-                Logger.Warning("Code compilation messages:");
-                foreach (var block in report.Blocks)
-                {
-                    Logger.Warning($"  {block.Key}:");
-                    foreach (var message in block.Value)
-                    {
-                        switch (message.Severity)
-                        {
-                            case Severity.Information:
-                                Logger.Information($"    {message.Message}");
-                                break;
-                            case Severity.Warning:
-                                Logger.Warning($"    {message.Message}");
-                                break;
-                            case Severity.Error:
-                                Logger.Error($"    {message.Message}");
-                                break;
-                            default:
-                                Logger.Debug($"    {message.Message}");
-                                break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Logger.Information("Compiled codes");
-            }
+            report = await CodeProvider.CompileCodes(codes, codeStream, this);
         }
         await File.WriteAllTextAsync(Path.Combine(Root, Name), ini.Serialize());
+        return report;
+    }
+
+    public async Task Save()
+    {
+        _ = await SaveWithReport();
     }
 
     public void LoadDatabase(string path, bool scan = true)

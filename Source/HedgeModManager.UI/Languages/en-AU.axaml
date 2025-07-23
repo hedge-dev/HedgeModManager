@@ -26,6 +26,7 @@
   <system:String x:Key="Common.Button.Back"    >Back</system:String>
   <system:String x:Key="Common.Button.Cancel"  >Cancel</system:String>
   <system:String x:Key="Common.Button.Close"   >Close</system:String>
+  <system:String x:Key="Common.Button.CopyAll" >Copy All</system:String>
   <system:String x:Key="Common.Button.Delete"  >Delete</system:String>
   <system:String x:Key="Common.Button.Download">Download</system:String>
   <system:String x:Key="Common.Button.Exit"    >Exit</system:String>
@@ -144,6 +145,7 @@
   <system:String x:Key="Modal.Text.NewProfileName"     >New Name:</system:String>
   <system:String x:Key="Modal.Text.TargetGame"         >For {0}</system:String>
   <system:String x:Key="Modal.Title.AboutMod"          >About {0}</system:String>
+  <system:String x:Key="Modal.Title.CodeCompileError"  >Code Compilation Error</system:String>
   <system:String x:Key="Modal.Title.Confirm"           >Confirmation</system:String>
   <system:String x:Key="Modal.Title.DeleteProfile"     >Delete Confirmation</system:String>
   <system:String x:Key="Modal.Title.DownloadError"     >Download Error</system:String>

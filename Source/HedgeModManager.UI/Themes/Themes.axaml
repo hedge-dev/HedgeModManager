@@ -124,6 +124,10 @@
       <SolidColorBrush x:Key='CodeEntry.BorderBrushBrush'>#565867</SolidColorBrush>
       <SolidColorBrush x:Key='CodeEntry.BorderDisabledBrushBrush'>#00000000</SolidColorBrush>
 
+      <SolidColorBrush x:Key='ReportViewer.InformationBrush'>#300080FF</SolidColorBrush>
+      <SolidColorBrush x:Key='ReportViewer.WarningBrush'>#30FFFF00</SolidColorBrush>
+      <SolidColorBrush x:Key='ReportViewer.ErrorBrush'>#30FF0000</SolidColorBrush>
+
       <!-- Control Themes -->
       <SolidColorBrush x:Key="NormalBackgroundBrush">#262837</SolidColorBrush>
       <SolidColorBrush x:Key="PointerOverBackgroundBrush">#363847</SolidColorBrush>

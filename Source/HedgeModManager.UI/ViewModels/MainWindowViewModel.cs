@@ -500,9 +500,24 @@ public partial class MainWindowViewModel : ViewModelBase
                     // Ensure enabled mods are on top of disabled mods
                     // TODO: Find a method to reorder without full update
                     if (SelectedGame.Game.ModDatabase is ModDatabaseGeneric modsDB)
+                    {
                         Mods = new(modsDB.Mods = new(modsDB.Mods.OrderBy(x => !x.Enabled)));
-
-                    await SelectedGame.Game.ModDatabase.Save();
+                        var report = await modsDB.SaveWithReport();
+                        if (report.HasErrors)
+                        {
+                            Logger.Warning("Code compilation failed");
+                            var reportViewer = new ReportViewerModal(report);
+                            reportViewer.Open(this, "Modal.Title.CodeCompileError");
+                        }
+                        else
+                        {
+                            Logger.Information("Compiled codes");
+                        }
+                    }
+                    else
+                    {
+                        await SelectedGame.Game.ModDatabase.Save();
+                    }
                     if (SelectedGame.Game.ModLoaderConfiguration is ModLoaderConfiguration config)
                         await config.Save(Path.Combine(SelectedGame.Game.Root, "cpkredir.ini"));
                 }

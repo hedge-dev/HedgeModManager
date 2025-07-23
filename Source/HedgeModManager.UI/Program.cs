@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Runtime.Versioning;
+using System.Globalization;
 
 #if !DEBUG
 using System.Diagnostics;
@@ -54,6 +55,9 @@ public sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        // Set the default culture to en-US
+        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+
 #if !DEBUG
         // Save and display unhandled exceptions
         AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
