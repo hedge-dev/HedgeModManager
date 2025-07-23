@@ -128,7 +128,7 @@ public class CodeProvider
                         continue;
                     }
 
-                    var libSource = sources.FirstOrDefault(x => x.Name == lib);
+                    var libSource = sources.FirstOrDefault(x => x.Name == lib || x.ID == lib);
                     if (libSource == null)
                     {
                         report.Error(sourceRef, $"Unable to find dependency library '{lib}'");

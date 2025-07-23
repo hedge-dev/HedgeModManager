@@ -115,7 +115,14 @@ public class ModGeneric : IMod
                     var codePath = Path.Combine(Root, codeFile.Trim());
                     if (File.Exists(codePath))
                     {
-                        Codes.AddRange(CodeFile.FromFile(codePath).Codes);
+                        var codes = CodeFile.FromFile(codePath).Codes;
+                        foreach (var code in codes)
+                        {
+                            if (string.IsNullOrEmpty(code.ID))
+                                code.ID = code.Name;
+                            code.Name = $"{Title}/{code.Name}";
+                        }
+                        Codes.AddRange(codes);
                     }
                 }
             }
