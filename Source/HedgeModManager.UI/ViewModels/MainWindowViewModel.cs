@@ -59,7 +59,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private bool _progressIndeterminate = false;
     [ObservableProperty] private LanguageEntry? _selectedLanguage = null;
     [ObservableProperty] private WindowState _windowState = WindowState.Normal;
-    [ObservableProperty] private string _codeDescription = "Codes.Text.NoCodeSelected";
+    [ObservableProperty] private ICode _selectedCode = Controls.Codes.Codes.NoCode.Instance;
     [ObservableProperty] private GameConfig? _selectedGameConfig = null;
 
     // Preview only

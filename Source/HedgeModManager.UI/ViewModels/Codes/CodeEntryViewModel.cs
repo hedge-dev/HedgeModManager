@@ -8,6 +8,7 @@ public partial class CodeEntryViewModel : ViewModelBase
     [ObservableProperty] private CSharpCode _code;
     [ObservableProperty] private bool _isLastElement = false;
 
+    public CodeCategoryViewModel? Category { get; set; } = null;
     public MainWindowViewModel MainViewModel { get; set; }
 
     public bool Enabled
@@ -17,6 +18,7 @@ public partial class CodeEntryViewModel : ViewModelBase
         {
             Code.Enabled = value;
             OnPropertyChanged(nameof(Enabled));
+            Category?.Update(false, true);
         }
     }
 

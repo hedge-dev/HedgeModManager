@@ -111,6 +111,7 @@ public partial class Codes : UserControl
             category.Name += $" / {oldCategory.Name}";
             category.Categories = oldCategory.Categories;
             category.Codes = oldCategory.Codes;
+            category.Codes.ForEach(x => x.Category = category);
         }
 
         foreach (var subCategory in category.Categories)
@@ -183,6 +184,7 @@ public partial class Codes : UserControl
         foreach (var code in CodesList)
         {
             var category = CreateCategory(code.Code.Category, Cateories);
+            code.Category = category;
             category.Codes.Add(code);
         }
 
@@ -211,7 +213,7 @@ public partial class Codes : UserControl
         MainViewModel.Codes.CollectionChanged += OnCodesCollectionChanged;
         MainViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
         RefreshUI();
-        MainViewModel.CodeDescription = "Codes.Text.NoCodeSelected";
+        MainViewModel.SelectedCode = NoCode.Instance;
 
         // Add buttons
         if (MainViewModel.CurrentTabInfo != null)
@@ -272,5 +274,17 @@ public partial class Codes : UserControl
                 UpdateCategories(category);
             CategoryView = new(seatchedCategories);
         }
+    }
+
+    public class NoCode : ICode
+    {
+        public string ID { get; set; } = "NoCode";
+        public bool Enabled { get; set; } = false;
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = "Codes.Text.NoCodeSelected";
+        public string Author { get; set; } = string.Empty;
+        public CodeType Type => CodeType.Unknown;
+
+        public static NoCode Instance { get; } = new();
     }
 }

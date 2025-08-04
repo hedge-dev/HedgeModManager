@@ -21,14 +21,20 @@
             PointerPressed="OnPointerPressed"
             PointerReleased="OnPointerReleased"
             PointerEntered="OnPointerEntered">
-      <StackPanel Margin="0,0,24,0" Orientation="Horizontal">
-        <materialIcons:MaterialIcon Kind="ChevronRight" Width="30" Height="30" Foreground="{DynamicResource Text.SubBrush}">
-          <materialIcons:MaterialIcon.RenderTransform>
-            <RotateTransform Angle="{Binding RotationAngle, RelativeSource={RelativeSource AncestorType=cc:CodeCategory}}" />
-          </materialIcons:MaterialIcon.RenderTransform>
-        </materialIcons:MaterialIcon>
-        <TextBlock Text="{Binding Name, Converter={StaticResource StringLocalizeConverter}}" VerticalAlignment="Center"/>
-      </StackPanel>
+      <Grid ColumnDefinitions="*,*" Margin="0,0,24,0">
+        <StackPanel Orientation="Horizontal">
+          <materialIcons:MaterialIcon Kind="ChevronRight" Width="30" Height="30" Foreground="{DynamicResource Text.SubBrush}">
+            <materialIcons:MaterialIcon.RenderTransform>
+              <RotateTransform Angle="{Binding RotationAngle, RelativeSource={RelativeSource AncestorType=cc:CodeCategory}}" />
+            </materialIcons:MaterialIcon.RenderTransform>
+          </materialIcons:MaterialIcon>
+          <TextBlock Text="{Binding Name, Converter={StaticResource StringLocalizeConverter}}" VerticalAlignment="Center"/>
+        </StackPanel>
+        <TextBlock Grid.Column="2"
+                   Text="{Binding EnabledCount, Converter={StaticResource StringLocalizeConverter}, ConverterParameter='Codes.Text.EnabledCodesCount'}"
+                   IsVisible="{Binding EnabledCount, Converter={StaticResource EmptyBoolConverter}, ConverterParameter={x:True}}"
+                   HorizontalAlignment="Right" VerticalAlignment="Center"/>
+      </Grid>
       <Border.Transitions>
         <Transitions>
           <BrushTransition Property="Background" Duration="0:0:0.1"/>

@@ -78,10 +78,12 @@
   <system:String xml:space="preserve" x:Key="Mods.Text.NoMods">..There is not a lot here.&#x0a;Go get some mods!</system:String>
 
   <!-- Codes -->
-  <system:String x:Key="Codes.Text.Uncategorized" >Uncategorised</system:String>
-  <system:String x:Key="Codes.Text.NoCodeSelected">Hover or select a code to see it's description.</system:String>
-  <system:String x:Key="Codes.Text.Search"        >Search Codes...</system:String>
-  <system:String x:Key="Codes.Button.UpdateCodes" >Update Community Codes</system:String>
+  <system:String x:Key="Codes.Header.CodeAuthor"     >by {0}</system:String>
+  <system:String x:Key="Codes.Text.EnabledCodesCount">{0} Enabled</system:String>
+  <system:String x:Key="Codes.Text.Uncategorized"    >Uncategorised</system:String>
+  <system:String x:Key="Codes.Text.NoCodeSelected"   >Hover or select a code to see it's description.</system:String>
+  <system:String x:Key="Codes.Text.Search"           >Search Codes...</system:String>
+  <system:String x:Key="Codes.Button.UpdateCodes"    >Update Community Codes</system:String>
 
   <!-- Settings -->
   <system:String x:Key="Settings.Button.ChangeModsDir"       >Change</system:String>

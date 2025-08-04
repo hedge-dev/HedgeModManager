@@ -38,6 +38,8 @@ public partial class CodeCategoryViewModel : ViewModelBase
         }
     }
 
+    public int EnabledCount => GetTotalEnabledCount();
+
     public CodeCategoryViewModel(CodeCategoryViewModel? parent, string name, MainWindowViewModel? mainViewModel)
     {
         Parent = parent;
@@ -53,12 +55,30 @@ public partial class CodeCategoryViewModel : ViewModelBase
         }
     }
 
+    public int GetTotalEnabledCount()
+    {
+        int count = Codes.Count(x => x.Enabled);
+        count += Categories.Sum(x => x.GetTotalEnabledCount());
+        return count;
+    }
+
     public string GetPathToRoot(CodeCategoryViewModel? parent, string str)
     {
         if (parent == null)
             return str;
 
         return GetPathToRoot(parent.Parent, parent.Name + "/" + str);
+    }
+
+    public void Update(bool updateChild, bool updateParent)
+    {
+        if (updateChild)
+            Categories.ForEach(x => x.Update(updateChild, false));
+
+        OnPropertyChanged(nameof(EnabledCount));
+
+        if (updateParent && Parent != null)
+            Parent.Update(false, updateParent);
     }
 
     public override string ToString()

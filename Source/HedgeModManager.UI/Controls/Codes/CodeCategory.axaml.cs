@@ -55,8 +55,11 @@ public partial class CodeCategory : ButtonUserControl
                 category.Codes.Add(new(new CSharpCode()
                 {
                     Name = $"Code {i}",
-                    Enabled = i == 0
-                }, new()));
+                    Enabled = i == 0,
+                }, new())
+                {
+                    Category = category
+                });
                 var subCategory = new CodeCategoryViewModel(category, $"Sub Category {i}", null);
                 for (int i2 = 0; i2 < 3; i2++)
                 {
@@ -64,7 +67,10 @@ public partial class CodeCategory : ButtonUserControl
                     {
                         Name = $"Code {i2}",
                         Enabled = i2 == 1
-                    }, new()));
+                    }, new())
+                    {
+                        Category = subCategory
+                    });
                 }
                 subCategory.Expanded = i == 1;
                 category.Categories.Add(subCategory);
@@ -89,7 +95,7 @@ public partial class CodeCategory : ButtonUserControl
     private void OnPointerEntered(object? sender, PointerEventArgs e)
     {
         if (DataContext is CodeCategoryViewModel viewModel && viewModel.MainViewModel != null)
-            viewModel.MainViewModel.CodeDescription = string.Empty;
+            viewModel.MainViewModel.SelectedCode = Codes.NoCode.Instance;
     }
 
     public void OnClick(object? sender, ButtonClickEventArgs e)

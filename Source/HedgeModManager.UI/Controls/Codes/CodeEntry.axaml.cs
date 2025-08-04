@@ -45,7 +45,7 @@ public partial class CodeEntry : ButtonUserControl
     private void OnPointerEntered(object? sender, PointerEventArgs e)
     {
         if (DataContext is CodeEntryViewModel viewModel)
-            viewModel.MainViewModel.CodeDescription = viewModel.Code.Description;
+            viewModel.MainViewModel.SelectedCode = viewModel.Code;
     }
 
     public void OnClick(object? sender, ButtonClickEventArgs e)

@@ -45,6 +45,8 @@ public class EmptyBoolConverter : IValueConverter
         bool val = true;
         if (value is string str)
             val = string.IsNullOrEmpty(str);
+        if (value is int i)
+            val = i == 0;
 
         return parameter as bool? == true ? !val : val;
     }
@@ -82,15 +84,29 @@ public class LogStringConverter : IValueConverter
 
 public class StringLocalizeConverter : IValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public virtual object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value?.ToString() is string str)
+        {
+            if (parameter?.ToString() is string param)
+                return Localize(param, str);
             return Localize(str);
+        }
         return BindingNotification.UnsetValue;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return BindingNotification.UnsetValue;
+    }
+}
+
+public class StringLocalizeIfNotEmptyConverter : StringLocalizeConverter
+{
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (string.IsNullOrEmpty(value?.ToString()))
+            return BindingNotification.UnsetValue;
+        return base.Convert(value, targetType, parameter, culture);
     }
 }

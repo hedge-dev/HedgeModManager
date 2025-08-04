@@ -33,9 +33,19 @@
       </StackPanel>
     </ScrollViewer>
     <ScrollViewer Grid.Row="1" Grid.Column="1" Margin="12,4,12,12">
-      <TextBlock Text="{Binding CodeDescription, Converter={StaticResource StringLocalizeConverter}}"
-                 FontSize="16" TextWrapping="Wrap"
-                 Foreground="{DynamicResource Text.SubBrush}" />
+      <StackPanel>
+        <SelectableTextBlock Text="{Binding SelectedCode.Name, Converter={StaticResource StringLocalizeConverter}}"
+                             IsVisible="{Binding SelectedCode.Name, Converter={StaticResource EmptyBoolConverter}, ConverterParameter={x:True}}"
+                             FontSize="18" FontWeight="Bold"
+                             Foreground="{DynamicResource Text.NormalBrush}" />
+        <SelectableTextBlock Text="{Binding SelectedCode.Author, Converter={StaticResource StringLocalizeIfNotEmptyConverter}, ConverterParameter='Codes.Header.CodeAuthor'}"
+                             IsVisible="{Binding SelectedCode.Author, Converter={StaticResource EmptyBoolConverter}, ConverterParameter={x:True}}"
+                             FontSize="16" TextWrapping="Wrap"
+                             Foreground="{DynamicResource Text.NormalBrush}" Margin="0,0,0,8" />
+        <SelectableTextBlock Text="{Binding SelectedCode.Description, Converter={StaticResource StringLocalizeConverter}}"
+                             FontSize="16" TextWrapping="Wrap"
+                             Foreground="{DynamicResource Text.SubBrush}" />
+      </StackPanel>
     </ScrollViewer>
   </Grid>
 </UserControl>
