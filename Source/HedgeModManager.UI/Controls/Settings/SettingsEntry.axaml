@@ -12,7 +12,7 @@
           Height="64" CornerRadius="20"
           Padding="20,0,20,0"
           HorizontalAlignment="Stretch">
-    <Grid RowDefinitions="*,*" ColumnDefinitions="Auto,Auto,*,Auto">
+    <Grid RowDefinitions="*,*" ColumnDefinitions="Auto,*,*,Auto">
       <materialIcons:MaterialIcon Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
                                   Kind="{Binding Icon, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
                                   Foreground="{DynamicResource Text.NormalBrush}"
@@ -28,8 +28,9 @@
                  Foreground="{DynamicResource Text.NormalBrush}"
                  VerticalAlignment="Center"
                  IsVisible="{Binding Description, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}, Converter={StaticResource EmptyBoolConverter}}" />
-      <TextBlock Grid.Row="1" Grid.Column="1"
+      <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                  Text="{Binding Description, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
+                 TextTrimming="PrefixCharacterEllipsis"
                  Foreground="{DynamicResource Text.SubBrush}"
                  VerticalAlignment="Top" />
       <TextBlock Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"

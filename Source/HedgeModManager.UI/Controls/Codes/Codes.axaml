@@ -36,16 +36,18 @@
       <StackPanel>
         <SelectableTextBlock Text="{Binding SelectedCode.Name, Converter={StaticResource StringLocalizeConverter}}"
                              IsVisible="{Binding SelectedCode.Name, Converter={StaticResource EmptyBoolConverter}, ConverterParameter={x:True}}"
-                             FontSize="18" FontWeight="Bold"
+                             FontSize="18" TextWrapping="Wrap" FontWeight="Bold"
                              Foreground="{DynamicResource Text.NormalBrush}" />
         <SelectableTextBlock Text="{Binding SelectedCode.Author, Converter={StaticResource StringLocalizeIfNotEmptyConverter}, ConverterParameter='Codes.Header.CodeAuthor'}"
                              IsVisible="{Binding SelectedCode.Author, Converter={StaticResource EmptyBoolConverter}, ConverterParameter={x:True}}"
                              FontSize="16" TextWrapping="Wrap"
                              Foreground="{DynamicResource Text.NormalBrush}" />
+        <cb:Separator FullWidth="True" Height="3" Margin="0,8,0,8"
+                      Foreground="{DynamicResource BorderBrush}"
+                      IsVisible="{Binding SelectedCode.Name, Converter={StaticResource EmptyBoolConverter}, ConverterParameter={x:True}}"></cb:Separator>
         <SelectableTextBlock Text="{Binding SelectedCode.Description, Converter={StaticResource StringLocalizeConverter}}"
-                             Margin="0,8,0,0"
                              FontSize="16" TextWrapping="Wrap"
-                             Foreground="{DynamicResource Text.SubBrush}" />
+                             Foreground="{DynamicResource Text.NormalBrush}" />
       </StackPanel>
     </ScrollViewer>
   </Grid>
