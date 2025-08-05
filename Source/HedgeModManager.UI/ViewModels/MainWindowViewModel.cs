@@ -952,7 +952,6 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    // TODO: Look into server crashing after some time
     public async Task StartServerAsync()
     {
         try
@@ -962,12 +961,16 @@ public partial class MainWindowViewModel : ViewModelBase
             ServerStatus = 1;
             while (ServerStatus == 1)
             {
+                if (c.IsCancellationRequested)
+                    break;
                 using var server = new NamedPipeServerStream(Program.PipeName, PipeDirection.In, 
                     NamedPipeServerStream.MaxAllowedServerInstances,
                     PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
                 Logger.Debug("Waiting for connection");
                 await server.WaitForConnectionAsync(c);
-                Logger.Debug("Recieved connection");
+                if (c.IsCancellationRequested)
+                    break;
+                Logger.Debug("Opening stream...");
                 using var reader = new StreamReader(server);
                 string message = await reader.ReadToEndAsync(c);
                 Logger.Debug("Message read");
@@ -975,11 +978,23 @@ public partial class MainWindowViewModel : ViewModelBase
                 if (argsStr == null)
                     continue;
                 Logger.Debug("Message deserialised");
-                var args = CommandLine.ParseArguments(argsStr);
-                var (continueStartup, commands) = CommandLine.ExecuteArguments(args);
-                await ProcessCommandsAsync(commands);
-                Logger.Debug("Message processed");
+                _ = Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    try
+                    {
+                        var args = CommandLine.ParseArguments(argsStr);
+                        var (continueStartup, commands) = CommandLine.ExecuteArguments(args);
+                        await ProcessCommandsAsync(commands);
+                        Logger.Debug("Message processed");
+                    }
+                    catch (Exception e)
+                    {
+                        OpenErrorMessage("Modal.Title.UnknownError", "Modal.Message.UnknownError",
+                            "Failed to process message", e);
+                    }
+                });
             }
+            Logger.Debug("Server closed");
         }
         catch (OperationCanceledException)
         {

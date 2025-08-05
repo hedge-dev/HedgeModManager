@@ -165,6 +165,7 @@
   <system:String x:Key="Modal.Title.UpdateError"       >Update Error</system:String>
   <system:String x:Key="Modal.Title.UpdateMod"         >Update Available</system:String>
   <system:String x:Key="Modal.Title.UpdateManager"     >Hedge Mod Manager Update</system:String>
+  <system:String x:Key="Modal.Title.UnknownError"      >Unknown Error</system:String>
   <system:String x:Key="Modal.Title.RenameProfile"     >Rename Profile</system:String>
   <system:String x:Key="Modal.Title.RunError"          >Launch Error</system:String>
   <system:String x:Key="Modal.Title.ConfigureMod"      >Configure {0}</system:String>
@@ -184,6 +185,7 @@
   <system:String xml:space="preserve" x:Key="Modal.Message.SelectModsError">Hedge Mod Manager does not have permissions to the selected directory.&#x0a;&#x0a;Please select another directory.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UpdateMod">There is an update available for {0}.&#x0a;&#x0a;Would you like to update the mod?</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UpdateModError">An unknown error occurred while updating &quot;{0}&quot;.&#x0a;&#x0a;Please try again later.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.UnknownError">An unknown error has occurred.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownSaveError">Hedge Mod Manager was unable to save&#x0a;due to an unknown error.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownUpdateError">An error occurred when trying to prepare&#x0a;for updating.&#x0a;&#x0a;Please try again later.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.UnknownRunError">Hedge Mod Manager was unable to launch&#x0a;the game due to an unknown error.</system:String>

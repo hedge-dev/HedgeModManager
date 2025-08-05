@@ -78,8 +78,9 @@ public partial class MainWindow : Window
             if (Program.StartupCommands.Count > 0)
                 await ViewModel.ProcessCommandsAsync(Program.StartupCommands);
             await ViewModel.OnStartUpAsync();
-            await ViewModel.StartServerAsync();
         });
+
+        _ = Task.Run(ViewModel.StartServerAsync);
 
         AddHandler(DragDrop.DropEvent, OnDrop);
         AddHandler(DragDrop.DragOverEvent, OnDragOver);
@@ -222,6 +223,13 @@ public partial class MainWindow : Window
         {
             Close();
         }
+    }
+
+    private void OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        if (ViewModel == null)
+            return;
+        ViewModel.StopServer();
     }
 
     private void OnDragOver(object? sender, DragEventArgs e)

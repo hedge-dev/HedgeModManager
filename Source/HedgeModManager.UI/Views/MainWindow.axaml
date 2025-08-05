@@ -19,7 +19,7 @@
         Background="Black" FontSize="14"
         DragDrop.AllowDrop="True" WindowState="{Binding WindowState}"
         Loaded="Window_Loaded"
-        KeyDown="OnKeyDown">
+        KeyDown="OnKeyDown" Closing="OnClosing">
   <!-- FontFamily="{StaticResource NunitoFont}"-->
 
   <Design.DataContext>
