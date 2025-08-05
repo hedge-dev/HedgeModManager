@@ -62,6 +62,9 @@ public sealed class Program
         // Save and display unhandled exceptions
         AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
         {
+            // Ignore TaskCanceledException due to unknown issue
+            if (e.ExceptionObject is TaskCanceledException)
+                return;
             try
             {
                 StringBuilder sb = new();
