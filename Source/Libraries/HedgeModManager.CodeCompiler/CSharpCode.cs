@@ -229,6 +229,18 @@ public class CSharpCode : ICode
         }
     }
 
+    public string GetIdentifier()
+    {
+        if (string.IsNullOrEmpty(ID))
+        {
+            return Name;
+        }
+        else
+        {
+            return ID;
+        }
+    }
+
     public List<string> GetReferences()
     {
         var references = new List<string>();
@@ -288,23 +300,24 @@ public class CSharpCode : ICode
 
         var libNamespace = string.Empty;
         var name = string.Empty;
+        var id = GetIdentifier();
 
         if (Type == CodeType.Library)
         {
-            var dotIdx = Name.LastIndexOf('.');
+            var dotIdx = id.LastIndexOf('.');
             if (dotIdx > 0)
             {
-                name = Name.Substring(dotIdx + 1);
-                libNamespace = Name.Substring(0, dotIdx);
+                name = id.Substring(dotIdx + 1);
+                libNamespace = id.Substring(0, dotIdx);
             }
             else
             {
-                name = Name;
+                name = id;
             }
         }
         else
         {
-            name = Regex.Replace($"{Name}_{Guid.NewGuid()}", "[^a-z_0-9]", string.Empty, RegexOptions.IgnoreCase);
+            name = Regex.Replace($"{id}_{Guid.NewGuid()}", "[^a-z_0-9]", string.Empty, RegexOptions.IgnoreCase);
         }
 
         var classUnit = SyntaxFactory
