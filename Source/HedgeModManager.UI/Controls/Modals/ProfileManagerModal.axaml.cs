@@ -28,8 +28,13 @@ public partial class ProfileManagerModal : WindowModal
 
         var profiles = ViewModel.MainWindowViewModel.Profiles;
         string name = baseName;
+        int count = 0;
         while (profiles.Any(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-            name += " - Copy";
+        {
+            ++count;
+            name = $"{baseName} ({count})";
+        }
+
         return name;
     }
 
@@ -53,6 +58,32 @@ public partial class ProfileManagerModal : WindowModal
     private void OnCloseClick(object? sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void OnNewClick(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.MainWindowViewModel == null)
+            return;
+        if (ViewModel.MainWindowViewModel.SelectedGame?.Game is not ModdableGameGeneric game)
+            return;
+
+        // Create profile
+        var profile = new ModProfile()
+        {
+            Name = GenerateProfileName("New Profile")
+        };
+
+        var modal = new ProfileRenameModal(profile, true);
+        modal.OnProfileRenamed = () =>
+        {
+            profile.FileName = profile.GenerateFileNameFromName();
+            ViewModel.MainWindowViewModel.Profiles.Add(profile);
+            ViewModel.MainWindowViewModel.SelectedProfile = ViewModel.SelectedProfile = profile;
+            ProfileListBox.Bind(ListBox.ItemsSourceProperty, new Binding("Profiles"));
+            Dispatcher.UIThread.Invoke(async () => await ViewModel.MainWindowViewModel.SaveProfilesAsync(game));
+            ViewModel.Update();
+        };
+        modal.Open(ViewModel.MainWindowViewModel);
     }
 
     private void OnDuplicateClick(object? sender, RoutedEventArgs e)
@@ -134,7 +165,7 @@ public partial class ProfileManagerModal : WindowModal
         if (ViewModel.MainWindowViewModel == null || ViewModel.SelectedProfile == null)
             return;
 
-        var modal = new ProfileRenameModal(ViewModel.SelectedProfile);
+        var modal = new ProfileRenameModal(ViewModel.SelectedProfile, false);
         modal.OnProfileRenamed = () =>
         {
             ProfileListBox.Bind(ListBox.ItemsSourceProperty, new Binding("Profiles"));
@@ -143,17 +174,17 @@ public partial class ProfileManagerModal : WindowModal
         ViewModel.Update();
     }
 
-    private void OnSelectClick(object? sender, RoutedEventArgs e)
+    private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ViewModel.Update();
+    }
+
+    private void OnDoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
     {
         if (ViewModel.MainWindowViewModel == null || ViewModel.SelectedProfile == null)
             return;
 
         ViewModel.MainWindowViewModel.SelectedProfile = ViewModel.SelectedProfile;
-        ViewModel.Update();
-    }
-
-    private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
         ViewModel.Update();
     }
 

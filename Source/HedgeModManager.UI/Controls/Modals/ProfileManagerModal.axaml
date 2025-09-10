@@ -19,10 +19,10 @@
   <local:WindowModal.Buttons>
     <Grid>
       <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Spacing="10">
+        <cb:Button Text="Modal.Button.NewProfile" Click="OnNewClick" IsEnabled="{Binding ViewModel.CanDuplicate, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}" />
         <cb:Button Text="Modal.Button.DuplicateProfile" Click="OnDuplicateClick" IsEnabled="{Binding ViewModel.CanDuplicate, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}" />
         <cb:Button Text="Modal.Button.DeleteProfile" Click="OnDeleteClick" IsEnabled="{Binding ViewModel.CanDelete, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}" />
         <cb:Button Text="Modal.Button.RenameProfile" Click="OnRenameClick" IsEnabled="{Binding ViewModel.CanRename, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}" />
-        <cb:Button Text="Modal.Button.SelectProfile" Click="OnSelectClick" IsEnabled="{Binding ViewModel.CanSelect, RelativeSource={RelativeSource AncestorType=local:ProfileManagerModal}}" />
       </StackPanel>
       <StackPanel HorizontalAlignment="Right">
         <cb:Button Text="Common.Button.Close" Click="OnCloseClick" />
@@ -37,11 +37,22 @@
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"
                Background="{DynamicResource BackgroundL0Brush}"
-               SelectionChanged="OnSelectionChanged">
+               SelectionChanged="OnSelectionChanged" DoubleTapped="OnDoubleTapped">
         <ListBox.ItemTemplate>
           <DataTemplate>
             <StackPanel Orientation="Vertical" Spacing="4">
-              <TextBlock Text="{Binding Name}" Foreground="{DynamicResource Text.NormalBrush}" />
+              <StackPanel Orientation="Horizontal" Spacing="0">
+                <TextBlock Text="{Binding Name}" Foreground="{DynamicResource Text.NormalBrush}" />
+                <TextBlock Text="{DynamicResource Modal.Text.SelectedProfile}" Foreground="{DynamicResource Text.SubBrush}">
+                  <TextBlock.IsVisible>
+                    <MultiBinding Converter="{StaticResource BoolIfEqualsConverter}">
+                      <Binding Path="." />
+                      <Binding Path="ViewModel.MainWindowViewModel.SelectedProfile"
+                               RelativeSource="{RelativeSource AncestorType=local:ProfileManagerModal}" />
+                    </MultiBinding>
+                  </TextBlock.IsVisible>
+                </TextBlock>
+              </StackPanel>
               <TextBlock Text="{Binding FileName}" Foreground="{DynamicResource Text.SubBrush}"/>
             </StackPanel>
           </DataTemplate>

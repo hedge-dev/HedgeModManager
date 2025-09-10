@@ -22,6 +22,7 @@
     <local:LogStringConverter x:Key="LogStringConverter"/>
     <local:StringLocalizeConverter x:Key="StringLocalizeConverter"/>
     <local:StringLocalizeIfNotEmptyConverter x:Key="StringLocalizeIfNotEmptyConverter"/>
+    <local:BoolIfEqualsConverter x:Key="BoolIfEqualsConverter"/>
   </Application.Resources>
 
   <Application.DataTemplates>

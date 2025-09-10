@@ -1,5 +1,6 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.Controls.Modals;
 
@@ -10,12 +11,14 @@ public partial class ProfileRenameModal : WindowModal
     public Action? OnProfileRenamed { get; set; }
 
     // Preview
-    public ProfileRenameModal() : this(new ModProfile("No Profile")) { }
+    public ProfileRenameModal() : this(new ModProfile("No Profile"), false) { }
 
-    public ProfileRenameModal(ModProfile modProfile)
+    public ProfileRenameModal(ModProfile modProfile, bool newProfile)
     {
         SelectedProfile = modProfile;
         AvaloniaXamlLoader.Load(this);
+        if (newProfile)
+            Title = Localize("Modal.Title.NewProfile");
     }
 
     private void OnOkClick(object? sender, RoutedEventArgs e)

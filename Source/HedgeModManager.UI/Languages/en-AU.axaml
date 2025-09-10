@@ -137,8 +137,8 @@
   <system:String x:Key="Modal.Button.DeleteProfile"    >Delete</system:String>
   <system:String x:Key="Modal.Button.DuplicateProfile" >Duplicate</system:String>
   <system:String x:Key="Modal.Button.ExportLog"        >Save Log File</system:String>
+  <system:String x:Key="Modal.Button.NewProfile"       >New</system:String>
   <system:String x:Key="Modal.Button.RenameProfile"    >Rename</system:String>
-  <system:String x:Key="Modal.Button.SelectProfile"    >Select</system:String>
   <system:String x:Key="Modal.Header.Credits"          >Credits</system:String>
   <system:String x:Key="Modal.Header.Description"      >Description</system:String>
   <system:String x:Key="Modal.Header.AboutMod"         >{0} v{1}</system:String>
@@ -146,6 +146,7 @@
   <system:String x:Key="Modal.Text.GameMissing"        >Missing Unleashed Recompiled?</system:String>
   <system:String x:Key="Modal.Text.NewProfileName"     >New Name:</system:String>
   <system:String x:Key="Modal.Text.TargetGame"         >For {0}</system:String>
+  <system:String x:Key="Modal.Text.SelectedProfile"    > (Selected)</system:String>
   <system:String x:Key="Modal.Title.AboutMod"          >About {0}</system:String>
   <system:String x:Key="Modal.Title.CodeCompileError"  >Code Compilation Error</system:String>
   <system:String x:Key="Modal.Title.Confirm"           >Confirmation</system:String>
@@ -158,6 +159,7 @@
   <system:String x:Key="Modal.Title.InstallError"      >Install Error</system:String>
   <system:String x:Key="Modal.Title.LoadError"         >Load Error</system:String>
   <system:String x:Key="Modal.Title.MissingDependency" >Missing Dependencies</system:String>
+  <system:String x:Key="Modal.Title.NewProfile"        >New Profile</system:String>
   <system:String x:Key="Modal.Title.ProfileManager"    >Manage Profiles</system:String>
   <system:String x:Key="Modal.Title.SaveError"         >Save Error</system:String>
   <system:String x:Key="Modal.Title.SelectMods"        >Select Mods Directory...</system:String>
