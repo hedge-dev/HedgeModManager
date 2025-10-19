@@ -97,7 +97,7 @@ public class ModGeneric : IMod
             var server = mainSection.Get("UpdateServer", string.Empty);
             if (!string.IsNullOrEmpty(server))
             {
-                if (Uri.TryCreate(server, UriKind.Absolute, out Uri? uri))
+                if (Uri.TryCreate(Helpers.EnsureTrailingSlash(server), UriKind.Absolute, out Uri? uri))
                 {
                     Updater = new UpdateSourceMulti(this, uri);
                 }

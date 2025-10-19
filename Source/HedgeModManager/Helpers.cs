@@ -28,6 +28,14 @@ public static class Helpers
     }
 
     /// <summary>
+    /// Ensures that the specified path ends with a trailing forward slash "/"
+    /// </summary>
+    public static string EnsureTrailingSlash(string baseHost)
+    {
+        return baseHost.TrimEnd('/') + '/';
+    }
+
+    /// <summary>
     /// Combines a base URL path and a file path into a single URL
     /// </summary>
     public static string CombineURL(string baseHost, string path)
