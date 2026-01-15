@@ -42,6 +42,7 @@
   <system:String x:Key="Common.Button.Save"    >Save</system:String>
   <system:String x:Key="Common.Button.SavePlay">Save and Play</system:String>
   <system:String x:Key="Common.Button.Select"  >Select</system:String>
+  <system:String x:Key="Common.Button.Stop"    >Stop</system:String>
   <system:String x:Key="Common.Button.Update"  >Update</system:String>
   <system:String x:Key="Common.Button.Yes"     >Yes</system:String>
 
@@ -155,6 +156,7 @@
   <system:String x:Key="Modal.Title.DownloadMod"       >Download {0}</system:String>
   <system:String x:Key="Modal.Title.DownloadModLoading">Download Mod</system:String>
   <system:String x:Key="Modal.Title.Games"             >Games</system:String>
+  <system:String x:Key="Modal.Title.GameSearch"        >Information</system:String>
   <system:String x:Key="Modal.Title.Information"       >Information</system:String>
   <system:String x:Key="Modal.Title.InstallError"      >Install Error</system:String>
   <system:String x:Key="Modal.Title.LoadError"         >Load Error</system:String>
@@ -181,6 +183,7 @@
   <system:String xml:space="preserve" x:Key="Modal.Message.GameMissingError">Hedge Mod Manager is unable to install &quot;{0}&quot;&#x0a;due to {1} not being found.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.GameNoAccess">Hedge Mod Manager does not have write&#x0a;access to the game files.&#x0a;&#x0a;Please make sure the game files are writable.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.GamescopeError">Mod configuration has been saved.&#x0a;&#x0a;Hedge Mod Manager currently cannot launch games while in Gaming Mode.&#x0a;&#x0a;Please exit Hedge Mod Manager then launch the game.</system:String>
+  <system:String xml:space="preserve" x:Key="Modal.Message.GameSearch">Scanning for games...&#x0a;&#x0a;Launch Unleashed Recompiled to the title screen&#x0a;then return to Hedge Mod Manager.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.InstallError">Failed to install mod. Check log for exception.</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.MissingDependency">The mods listed below are missing and are required to play.&#x0a;&#x0a;{0}</system:String>
   <system:String xml:space="preserve" x:Key="Modal.Message.ModLoaderInstallError">An error occurred while trying to install the mod loader.&#x0a;&#x0a;Check log for exception.</system:String>

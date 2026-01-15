@@ -4,6 +4,7 @@
              xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
              xmlns:cp="using:HedgeModManager.UI.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:h="using:HedgeModManager"
              xmlns:materialIcons="using:Material.Icons.Avalonia"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
@@ -24,11 +25,12 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </ScrollViewer>
-      <StackPanel Margin="4" Orientation="Horizontal" IsVisible="{Binding IsGameMissing, RelativeSource={RelativeSource AncestorType=cm:GameSelectModal}}">
+      <StackPanel Margin="4" Orientation="Horizontal" IsVisible="{Binding IsUnleashedRecompiledMissing, RelativeSource={RelativeSource AncestorType=cm:GameSelectModal}}">
         <TextBlock Text="{DynamicResource Modal.Text.GameMissing}" TextDecorations="Underline" Cursor="Hand"
                    Margin="4"
                    PointerReleased="OnGameMissingPointerReleased"/>
-        <materialIcons:MaterialIcon Kind="OpenInNew" Foreground="{DynamicResource Text.NormalBrush}" />
+        <materialIcons:MaterialIcon IsVisible="{x:Static h:Helpers.IsFlatpak}"
+                                    Kind="OpenInNew" Foreground="{DynamicResource Text.NormalBrush}" />
 
       </StackPanel>
     </StackPanel>

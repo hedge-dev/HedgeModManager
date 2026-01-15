@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using HedgeModManager.CoreLib;
@@ -9,14 +10,10 @@ namespace HedgeModManager.UI.Controls.Modals;
 
 public partial class GameSelectModal : UserControl
 {
-    // For displaying if the game is missing while on Flatpak
-    public bool IsGameMissing
+    public bool IsUnleashedRecompiledMissing
     {
         get
         {
-            if (!Helpers.IsFlatpak)
-                return false;
-
             var viewModel = DataContext as MainWindowViewModel;
             if (viewModel == null)
                 return true;
@@ -56,9 +53,18 @@ public partial class GameSelectModal : UserControl
         }
     }
 
-    // TODO: Handle pointer down 
-    private void OnGameMissingPointerReleased(object? sender, Avalonia.Input.PointerReleasedEventArgs e)
+    private void OnGameMissingPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        Utils.OpenURL("https://github.com/hedge-dev/HedgeModManager/issues/44");
+        if (Helpers.IsFlatpak)
+        {
+            Utils.OpenURL("https://github.com/hedge-dev/HedgeModManager/issues/44");
+        }
+        else
+        {
+            var modal = new GameMissingInfoModal();
+            if (DataContext is MainWindowViewModel viewModel)
+                modal.Open(viewModel);
+        }
+
     }
 }
