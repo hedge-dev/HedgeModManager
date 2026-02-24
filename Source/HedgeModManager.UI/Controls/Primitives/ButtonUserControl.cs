@@ -20,13 +20,13 @@ public class ButtonUserControl : UserControl
         remove => RemoveHandler(ClickEvent, value);
     }
 
-    protected void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    protected virtual void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         e.Handled = true;
         PseudoClasses.Set(":pressed", true);
     }
 
-    protected void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    protected virtual void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         bool wasHandled = e.Handled;
         e.Handled = true;

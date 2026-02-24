@@ -20,7 +20,7 @@ public class UpdateSourceHMM : IUpdateSource
 
     public async Task<bool?> CheckForUpdatesAsync(CancellationToken cancellationToken)
     {
-        Manifest = await Network.Get<HMMUpdateManifest>(Helpers.CombineURL(BaseURI, ManifestFileName), HMMUpdate.JsonOptions, cancellationToken);
+        Manifest = await Network.Get<HMMUpdateManifest>(Helpers.CombineURL(BaseURI, ManifestFileName), HMMUpdate.JsonOptions, false, cancellationToken);
         if (Manifest == null)
         {
             Logger.Error("Failed to get update manifest!");
@@ -31,7 +31,7 @@ public class UpdateSourceHMM : IUpdateSource
 
     public async Task<UpdateInfo?> GetUpdateInfoAsync(CancellationToken cancellationToken)
     {
-        Manifest = await Network.Get<HMMUpdateManifest>(Helpers.CombineURL(BaseURI, ManifestFileName), HMMUpdate.JsonOptions, cancellationToken);
+        Manifest = await Network.Get<HMMUpdateManifest>(Helpers.CombineURL(BaseURI, ManifestFileName), HMMUpdate.JsonOptions, false, cancellationToken);
         if (Manifest == null)
         {
             Logger.Debug("Failed to get update manifest!");

@@ -33,12 +33,15 @@
   <system:String x:Key="Common.Button.Finish"  >Finish</system:String>
   <system:String x:Key="Common.Button.Ignore"  >Ignore</system:String>
   <system:String x:Key="Common.Button.Install" >Install</system:String>
+  <system:String x:Key="Common.Button.Login"   >Login</system:String>
+  <system:String x:Key="Common.Button.Logout"  >Logout</system:String>
   <system:String x:Key="Common.Button.Menu"    >Menu</system:String>
   <system:String x:Key="Common.Button.Next"    >Next</system:String>
   <system:String x:Key="Common.Button.No"      >No</system:String>
   <system:String x:Key="Common.Button.OK"      >OK</system:String>
   <system:String x:Key="Common.Button.Options" >Options</system:String>
   <system:String x:Key="Common.Button.Retry"   >Retry</system:String>
+  <system:String x:Key="Common.Button.Reload"  >Reload</system:String>
   <system:String x:Key="Common.Button.Save"    >Save</system:String>
   <system:String x:Key="Common.Button.SavePlay">Save and Play</system:String>
   <system:String x:Key="Common.Button.Select"  >Select</system:String>
@@ -62,6 +65,11 @@
   <system:String x:Key="Download.Text.UpdateManager0"    >Downloading updates...</system:String>
   <system:String x:Key="Download.Text.UpdateManager1"    >Extracting update...</system:String>
   <system:String x:Key="Download.Text.UpdateMod"         >Updating {0}...</system:String>
+  <system:String x:Key="Status.Text.NotRunning"          >Not Running</system:String>
+  <system:String x:Key="Status.Text.Running"             >Running</system:String>
+  <system:String x:Key="Status.Text.Running1"            >Running ({0})</system:String>
+  <system:String x:Key="Status.Text.Error"               >Errored</system:String>
+  <system:String x:Key="Status.Text.Unknown"             >Unknown</system:String>
   <system:String x:Key="Theme.Name.Dark"                 >Cool Dark</system:String>
   <system:String x:Key="Theme.Name.Darker"               >Neutral Dark</system:String>
 
@@ -105,6 +113,7 @@
   <system:String x:Key="Settings.Header.Text"                >Settings</system:String>
   <system:String x:Key="Settings.Title.Profile"              >Profile</system:String>
   <system:String x:Key="Settings.Description.DebugConsole"   >Enable to display mod loader debug messages.</system:String>
+  <system:String x:Key="Settings.Description.Integrations"   >Configure integration features such as GameBanana.</system:String>
   <system:String x:Key="Settings.Description.ModLoader"      >Enable and install to load mods.</system:String>
   <system:String x:Key="Settings.Description.Launcher"       >Launch the game using the associated game launcher.</system:String>
   <system:String x:Key="Settings.Description.Profile"        >Quickly change the enabled mods using user-defined presets.</system:String>
@@ -114,7 +123,10 @@
   <system:String x:Key="Settings.Description.UpdateManager"  >Automatically check for Hedge Mod Manager updates on startup.</system:String>
   <system:String x:Key="Settings.Description.UpdateML"       >Automatically check for mod loader updates on startup and game change.</system:String>
   <system:String x:Key="Settings.Description.UpdateMod"      >Automatically check for mod updates on startup and game change.</system:String>
+  <system:String x:Key="Settings.Integrations.GameBanana.RemoteDL.Header">Remote Install</system:String>
+  <system:String x:Key="Settings.Integrations.Header.Text"   >Integrations</system:String>
   <system:String x:Key="Settings.Title.DebugConsole"         >Enable Debug Console</system:String>
+  <system:String x:Key="Settings.Title.Integrations"         >Integrations</system:String>
   <system:String x:Key="Settings.Title.Language"             >Language</system:String>
   <system:String x:Key="Settings.Title.Launcher"             >Use Game Launcher</system:String>
   <system:String x:Key="Settings.Title.ModsDir"              >Mods Directory</system:String>

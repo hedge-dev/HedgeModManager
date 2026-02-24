@@ -22,7 +22,7 @@ public static class GameBanana
         { "hedgemmmillershadow", [ "ShadowGenerations" ] },
     };
 
-    public static async Task<ModDownloadInfo?> GetDownloadInfo(string schema, string downloadURL, string type, string id)
+    public static async Task<ModDownloadInfo?> GetDownloadInfo(string gameID, string downloadURL, string type, string id)
     {
         Logger.Information("Downloading item data from GameBanana...");
         var client = new HttpClient();
@@ -58,7 +58,7 @@ public static class GameBanana
             authors.TryAdd(group.Name, authorList);
         }
 
-        if (GameIDMappings.TryGetValue(schema, out var mappings))
+        if (GameIDMappings.TryGetValue(gameID, out var mappings))
         {
             var downloadInfo = new ModDownloadInfo()
             {
@@ -73,8 +73,21 @@ public static class GameBanana
 
             return downloadInfo;
         }
-        Logger.Error($"Failed to find game ID mapping for schema: {schema}");
-        return null;
+        else
+        {
+            var downloadInfo = new ModDownloadInfo()
+            {
+                GameID = gameID,
+                Name = profilePage.Name,
+                Description = profilePage.Description,
+                Authors = authors,
+                Images = profilePage.PreviewMedia.Images.Select(x => $"{x.BaseURL}/{x.FilePath}").ToList(),
+                DownloadURL = downloadURL,
+            };
+            Logger.Information("Finished downloading item data");
+
+            return downloadInfo;
+        }
     }
 
     public class ProfilePage

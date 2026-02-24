@@ -1,0 +1,219 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cs="using:HedgeModManager.UI.Controls.Settings"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1168" d:DesignHeight="1200"
+             x:Class="HedgeModManager.UI.Controls.Settings.SettingsMain"
+             x:DataType="vm:MainWindowViewModel"
+             Loaded="OnLoaded"
+             
+             Background="{DynamicResource BackgroundL0Brush}">
+    <StackPanel Margin="18,24,18,0">
+      <!-- Game and Mod Loader -->
+      <Label Content="{DynamicResource Settings.Header.GameML}"
+             Margin="0,0,0,10" FontSize="16" FontWeight="Bold" />
+
+      <StackPanel Spacing="8">
+        <cs:SettingsEntry Icon="ListStatus"
+                          Title="{DynamicResource Settings.Title.Profile}"
+                          Description="{DynamicResource Settings.Description.Profile}">
+          <cs:SettingsEntry.Data>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <cb:Button MinWidth="115"
+                      Text="{DynamicResource Settings.Button.ManageProfiles}"
+                      VerticalContentAlignment="Center"
+                      Click="OnManageProfilesClick" />
+              <ComboBox MinWidth="240" MinHeight="36"
+                        ItemsSource="{Binding Profiles}"
+                        SelectedItem="{Binding ViewModel.SelectedProfile, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
+                        SelectionChanged="OnProfileSelectionChanged"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Stretch" />
+            </StackPanel>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="FolderOpen"
+                          Title="{DynamicResource Settings.Title.ModsDir}"
+                          Description="{Binding ViewModel.ModsDirectory, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}">
+          <cs:SettingsEntry.Data>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <cb:Button MinWidth="115"
+                      Text="{DynamicResource Settings.Button.ChangeModsDir}"
+                      VerticalContentAlignment="Center"
+                      Click="OnModsDirectoryChangeClick" />
+              <cb:Button MinWidth="115"
+                      Text="{DynamicResource Settings.Button.OpenModsDir}"
+                      VerticalContentAlignment="Center"
+                      Click="OnModsDirClick" />
+            </StackPanel>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="Abacus"
+                          Title="{DynamicResource Settings.Title.ModLoader}"
+                          Description="{Binding ViewModel.ModLoaderDescription, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}">
+          <cs:SettingsEntry.Data>
+            <StackPanel Orientation="Horizontal">
+              <cb:Button MinWidth="115"
+                         Margin="0,0,45,0" FontSize="14"
+                         IsVisible="{Binding ViewModel.InstallModLoaderText, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}, Converter={StaticResource EmptyBoolConverter}, ConverterParameter={x:True}}"
+                         Text="{Binding ViewModel.InstallModLoaderText, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
+                         Click="OnInstallMLClick"/>
+              <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding ViewModel.ModLoaderEnabled, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}" />
+            </StackPanel>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="ConsoleLine"
+                          Title="{DynamicResource Settings.Title.DebugConsole}"
+                          Description="{DynamicResource Settings.Description.DebugConsole}">
+          <cs:SettingsEntry.Data>
+            <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding ViewModel.EnableDebugConsole, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}" />
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="ContentSaveMoveOutline"
+                          Title="{DynamicResource Settings.Title.SaveRedirection}"
+                          Description="{DynamicResource Settings.Description.SaveRedirection}">
+          <cs:SettingsEntry.Data>
+            <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding ViewModel.EnableSaveRedirection, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}" />
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="RocketLaunch"
+                          IsVisible="{Binding ViewModel.SupportsMultipleLaunchMethods, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
+                          Title="{DynamicResource Settings.Title.Launcher}"
+                          Description="{DynamicResource Settings.Description.Launcher}">
+          <cs:SettingsEntry.Data>
+            <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding ViewModel.EnableLauncher, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}" />
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="Atom"
+                          IsVisible="{Binding ViewModel.SupportsProton, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
+                          Title="{DynamicResource Settings.Title.Proton}"
+                          Description="{DynamicResource Settings.Description.Proton}">
+          <cs:SettingsEntry.Data>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <cb:Button MinWidth="115"
+                         Text="{DynamicResource Settings.Button.ClearPrefix}"
+                         VerticalContentAlignment="Center"
+                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                         Click="OnPrefixClearClick" />
+              <cb:Button MinWidth="115"
+                         Text="{DynamicResource Settings.Button.ReinstallRuntime}"
+                         VerticalContentAlignment="Center"
+                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                         Click="OnPrefixReinstallClick" />
+              <cb:Button MinWidth="115"
+                         Text="{DynamicResource Settings.Button.OpenPrefixDir}"
+                         VerticalContentAlignment="Center"
+                         Click="OnPrefixOpenClick" />
+            </StackPanel>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+      </StackPanel>
+
+      <!-- Hedge Mod Manager -->
+      <Label Content="{DynamicResource Settings.Header.Manager}"
+             Margin="0,16,0,10" FontSize="16" FontWeight="Bold" />
+
+      <StackPanel Spacing="12">
+        <cs:SettingsEntry Icon="PuzzleOutline"
+                          Title="{DynamicResource Settings.Title.Integrations}"
+                          Description="{DynamicResource Settings.Description.Integrations}"
+                          Click="OnSettingsIntegrations"
+                          IsDirectory="True">
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="Update"
+                          IsVisible="{Binding ViewModel.SupportsUpdates, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
+                          Title="{DynamicResource Settings.Title.UpdateManager}"
+                          Description="{DynamicResource Settings.Description.UpdateManager}">
+          <cs:SettingsEntry.Data>
+            <StackPanel Orientation="Horizontal">
+              <cb:Button MinWidth="115"
+                         Margin="0,0,45,0" FontSize="14"
+                         Text="{Binding ViewModel.CheckManagerUpdatesText, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}, Converter={StaticResource StringLocalizeConverter}}"
+                         Click="OnCheckManagerUpdatesClick"/>
+              <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding Config.CheckManagerUpdates}" />
+            </StackPanel>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="Update"
+                          Title="{DynamicResource Settings.Title.UpdateML}"
+                          Description="{DynamicResource Settings.Description.UpdateML}">
+          <cs:SettingsEntry.Data>
+            <StackPanel Orientation="Horizontal">
+              <cb:Button MinWidth="115"
+                         Margin="0,0,45,0" FontSize="14"
+                         IsVisible="{Binding ViewModel.HasModLoader, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
+                         Text="{Binding ViewModel.CheckLoaderUpdatesText, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}, Converter={StaticResource StringLocalizeConverter}}"
+                         Click="OnCheckModLoaderUpdatesClick"/>
+              <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding Config.CheckModLoaderUpdates}" />
+            </StackPanel>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="Update"
+                          Title="{DynamicResource Settings.Title.UpdateMod}"
+                          Description="{DynamicResource Settings.Description.UpdateMod}">
+          <cs:SettingsEntry.Data>
+            <StackPanel Orientation="Horizontal">
+              <cb:Button MinWidth="115"
+                         Margin="0,0,45,0" FontSize="14"
+                         Text="{Binding ViewModel.CheckModUpdatesText, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}, Converter={StaticResource StringLocalizeConverter}}"
+                         Click="OnCheckModUpdatesClick"/>
+              <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding Config.CheckModUpdates}" />
+            </StackPanel>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="Update"
+                          Title="{DynamicResource Settings.Title.UpdateCodes}"
+                          Description="{DynamicResource Settings.Description.UpdateCodes}">
+          <cs:SettingsEntry.Data>
+            <StackPanel Orientation="Horizontal">
+              <cb:Button MinWidth="115"
+                         Margin="0,0,45,0" FontSize="14"
+                         Text="{Binding ViewModel.CheckCodeUpdatesText, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}, Converter={StaticResource StringLocalizeConverter}}"
+                         Click="OnCheckCodeUpdatesClick"/>
+              <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding Config.CheckCodeUpdates}" />
+            </StackPanel>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="Palette"
+                          Title="{DynamicResource Settings.Title.Theme}">
+          <cs:SettingsEntry.Data>
+            <ComboBox MinWidth="240" MinHeight="36"
+                      ItemsSource="{Binding ViewModel.ThemeCollection, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
+                      SelectedValue="{Binding ViewModel.SelectedTheme, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
+                      SelectionChanged="OnThemeSelectionChanged"
+                      VerticalContentAlignment="Center"
+                      HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Converter={StaticResource StringLocalizeConverter}}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+              </ComboBox>
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+        <cs:SettingsEntry Icon="Translate"
+                          Title="{DynamicResource Settings.Title.Language}">
+          <cs:SettingsEntry.Data>
+            <ComboBox MinWidth="240" MinHeight="36"
+                      ItemsSource="{Binding Languages}"
+                      SelectedItem="{Binding ViewModel.SelectedLanguage, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
+                      SelectionChanged="OnLanguageSelectionChanged"
+                      VerticalContentAlignment="Center"
+                      HorizontalAlignment="Stretch" />
+          </cs:SettingsEntry.Data>
+        </cs:SettingsEntry>
+      </StackPanel>
+
+              <cb:Button Grid.Row="1" Grid.Column="2"
+                      Margin="10,4,0,4" Height="32" FontSize="14"
+                      Text="{DynamicResource Settings.Button.OpenGameDir}"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      HorizontalContentAlignment="Center"
+                      Click="OnGameDirClick" />
+    </StackPanel>
+</UserControl>

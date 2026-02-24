@@ -23,6 +23,7 @@
     <local:StringLocalizeConverter x:Key="StringLocalizeConverter"/>
     <local:StringLocalizeIfNotEmptyConverter x:Key="StringLocalizeIfNotEmptyConverter"/>
     <local:BoolIfEqualsConverter x:Key="BoolIfEqualsConverter"/>
+    <local:StringLocalizeConverterMulti x:Key="StringLocalizeConverterMulti"/>
   </Application.Resources>
 
   <Application.DataTemplates>

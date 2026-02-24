@@ -68,7 +68,7 @@ public partial class MainWindow : Window
         Logger.Information($"Initialising codes...");
         CodeProvider.TryLoadRoslyn();
 
-        Logger.Information($"Loading URI handlers...");
+        Logger.Information($"Installing URI handlers...");
         Program.InstallURIHandler();
 
         LoadGames();

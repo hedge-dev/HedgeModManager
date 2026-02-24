@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace HedgeModManager.GitHub;
+﻿namespace HedgeModManager.GitHub;
 
 public class GitHubAPI
 {

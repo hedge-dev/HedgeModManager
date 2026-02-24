@@ -124,3 +124,22 @@ public class BoolIfEqualsConverter : IMultiValueConverter
         return [BindingNotification.UnsetValue];
     }
 }
+
+public class StringLocalizeConverterMulti : IMultiValueConverter
+{
+    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (values.Count == 0 || values[0]?.ToString() is not string str)
+            return BindingNotification.UnsetValue;
+
+        var args = values.Skip(1).Where(x => x != null).Cast<object>().ToArray();
+
+        return Localize(str, args);
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object? parameter, CultureInfo culture)
+    {
+        return [BindingNotification.UnsetValue];
+    }
+}
+

@@ -1,8 +1,8 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.VisualTree;
 using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.ViewModels;
 
@@ -22,6 +22,22 @@ public partial class Sidebar : UserControl
     {
         if (sender is Control control)
             ViewModel.SelectedTabIndex = TabButtons.Children.IndexOf(control);
+        ViewModel.UpdateButtons(TabButtons.Children.ToList());
+    }
+    private void OnSettingsClicked(object? sender, RoutedEventArgs e)
+    {
+        int oldTabIndex = ViewModel.SelectedTabIndex;
+        if (sender is Control control)
+        {
+            ViewModel.SelectedTabIndex = TabButtons.Children.IndexOf(control);
+
+            if (oldTabIndex == ViewModel.SelectedTabIndex)
+            {
+                var mainWindow = control.FindAncestorOfType<Views.MainWindow>();
+                var settings = mainWindow.FindDescendantOfType<Settings.Settings>();
+                settings?.SwitchPanel(null);
+            }
+        }
         ViewModel.UpdateButtons(TabButtons.Children.ToList());
     }
 

@@ -2,7 +2,9 @@
 
 using CoreLib;
 using Foundation;
+using System.Net.Http;
 using System.Text.Json;
+using System.Net;
 
 public static class Network
 {
@@ -32,10 +34,11 @@ public static class Network
     /// <typeparam name="T">Type to convert to</typeparam>
     /// <param name="url">URL to send request to</param>
     /// <param name="options">JSON options</param>
+    /// <param name="cache">Whether to allow caching of the response</param>
     /// <param name="c">Cancellation token</param>
     /// <returns>Converted type from response, default if failed</returns>
-    public static async Task<T?> Get<T>(string url, JsonSerializerOptions? options = null, CancellationToken c = default)
-        => await Get<T>(CreateUri(url), options, c);
+    public static async Task<T?> Get<T>(string url, JsonSerializerOptions? options = null, bool cache = true, CancellationToken c = default)
+        => await Get<T>(CreateUri(url), options, cache, c);
 
 
     /// <summary>
@@ -44,15 +47,26 @@ public static class Network
     /// <typeparam name="T">Type to convert to</typeparam>
     /// <param name="uri">URI to send request to</param>
     /// <param name="options">JSON options</param>
+    /// <param name="cache">Whether to allow caching of the response</param>
     /// <param name="c">Cancellation token</param>
     /// <returns>Converted type from response, default if failed</returns>
-    public static async Task<T?> Get<T>(Uri? uri, JsonSerializerOptions? options = null, CancellationToken c = default)
+    public static async Task<T?> Get<T>(Uri? uri, JsonSerializerOptions? options = null, bool cache = true, CancellationToken c = default)
     {
         Logger.Debug($"Sending GET request to {uri} for {typeof(T).Name}");
+        Client.DefaultRequestHeaders.CacheControl = new()
+        {
+            NoStore = !cache,
+            NoCache = !cache
+        };
         var response = await Client.GetAsync(uri, c);
         if (!response.IsSuccessStatusCode)
         {
             Logger.Debug($"Got error status code: {response.StatusCode}");
+            if (response.Content != null && response.StatusCode != HttpStatusCode.NotFound)
+            {
+                var error = await response.Content.ReadAsStringAsync(c);
+                Logger.Debug($"Error content: {error}");
+            }
             return default;
         }
         var json = await response.Content.ReadAsStringAsync(c);

@@ -6,57 +6,83 @@ namespace HedgeModManager.UI.Config;
 
 public abstract class ConfigBase : ViewModelBase
 {
+    protected readonly SemaphoreSlim _semaphore = new(1, 1);
+
     public virtual void Load()
     {
-        string filePath = GetConfigFilePath();
-        if (!File.Exists(filePath))
-            return;
-
-        string jsonData = File.ReadAllText(filePath);
-
-        var config = JsonSerializer.Deserialize(jsonData, GetType(), Program.JsonSerializerOptions);
-
-        // Copy data
-        if (config != null)
+        _semaphore.Wait();
+        try
         {
-            foreach (var property in GetType().GetProperties())
-                if (property.CanWrite)
-                    property.SetValue(this, property.GetValue(config));
+            string filePath = GetConfigFilePath();
+            if (!File.Exists(filePath))
+                return;
+
+            string jsonData = File.ReadAllText(filePath);
+
+            var config = JsonSerializer.Deserialize(jsonData, GetType(), Program.JsonSerializerOptions);
+
+            // Copy data
+            if (config != null)
+            {
+                foreach (var property in GetType().GetProperties())
+                    if (property.CanWrite)
+                        property.SetValue(this, property.GetValue(config));
+            }
+        }
+        finally
+        {
+            _semaphore.Release();
         }
     }
 
     public virtual async Task LoadAsync()
     {
-        string filePath = GetConfigFilePath();
-        if (!File.Exists(filePath))
-            return;
-
-        string jsonData = await File.ReadAllTextAsync(filePath);
-
-        var config = JsonSerializer.Deserialize(jsonData, GetType(), Program.JsonSerializerOptions);
-
-        // Copy data
-        if (config != null)
+        await _semaphore.WaitAsync();
+        try
         {
-            foreach (var property in GetType().GetProperties())
-                if (property.CanWrite)
-                    property.SetValue(this, property.GetValue(config));
+            string filePath = GetConfigFilePath();
+            if (!File.Exists(filePath))
+                return;
+
+            string jsonData = await File.ReadAllTextAsync(filePath);
+
+            var config = JsonSerializer.Deserialize(jsonData, GetType(), Program.JsonSerializerOptions);
+
+            // Copy data
+            if (config != null)
+            {
+                foreach (var property in GetType().GetProperties())
+                    if (property.CanWrite)
+                        property.SetValue(this, property.GetValue(config));
+            }
+        }
+        finally
+        {
+            _semaphore.Release();
         }
     }
 
     public virtual async Task SaveAsync()
     {
-        string filePath = GetConfigFilePath();
-
-        string jsonData = JsonSerializer.Serialize(this, GetType(), Program.JsonSerializerOptions);
+        await _semaphore.WaitAsync();
         try
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
-            await File.WriteAllTextAsync(filePath, jsonData);
+            string filePath = GetConfigFilePath();
+
+            string jsonData = JsonSerializer.Serialize(this, GetType(), Program.JsonSerializerOptions);
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+                await File.WriteAllTextAsync(filePath, jsonData);
+            }
+            catch
+            {
+                Logger.Error($"Failed to save config file: {filePath} [{GetType().FullName}]");
+            }
         }
-        catch
+        finally
         {
-            Logger.Error($"Failed to save config file: {filePath} [{GetType().FullName}]");
+            _semaphore.Release();
         }
     }
 

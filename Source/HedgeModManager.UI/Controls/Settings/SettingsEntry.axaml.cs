@@ -1,10 +1,12 @@
 using Avalonia;
-using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using HedgeModManager.UI.Controls.Primitives;
 
 namespace HedgeModManager.UI.Controls.Settings;
 
-public partial class SettingsEntry : UserControl
+public partial class SettingsEntry : ButtonUserControl
 {
     public static readonly StyledProperty<string> IconProperty =
         AvaloniaProperty.Register<SettingsEntry, string>(nameof(Icon),
@@ -24,6 +26,9 @@ public partial class SettingsEntry : UserControl
 
     public static readonly StyledProperty<object?> DataProperty =
         AvaloniaProperty.Register<SettingsEntry, object?>(nameof(Content));
+
+    public static readonly StyledProperty<bool> IsDirectoryProperty =
+        AvaloniaProperty.Register<SettingsEntry, bool>(nameof(IsDirectory), false);
 
     public string Icon
     {
@@ -55,12 +60,30 @@ public partial class SettingsEntry : UserControl
         set => SetValue(DataProperty, value);
     }
 
+    public bool IsDirectory
+    {
+        get => GetValue(IsDirectoryProperty);
+        set => SetValue(IsDirectoryProperty, value);
+    }
+
     public SettingsEntry()
     {
         AvaloniaXamlLoader.Load(this);
     }
 
-    private void OnLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    protected override void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (IsDirectory)
+            base.OnPointerPressed(sender, e);
+    }
+
+    protected override void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (IsDirectory)
+            base.OnPointerReleased(sender, e);
+    }
+
+    private void OnLoaded(object? sender, RoutedEventArgs e)
     {
         if (string.IsNullOrEmpty(Title))
         {

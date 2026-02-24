@@ -1,17 +1,20 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="using:HedgeModManager.UI.Controls.Settings"
-             xmlns:materialIcons="using:Material.Icons.Avalonia"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="64"
-             x:Class="HedgeModManager.UI.Controls.Settings.SettingsEntry"
-             Loaded="OnLoaded">
-  <Border ClipToBounds="True"
+<ButtonUserControl xmlns="https://github.com/avaloniaui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:local="using:HedgeModManager.UI.Controls.Settings"
+                   xmlns:materialIcons="using:Material.Icons.Avalonia"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="64"
+                   x:Class="HedgeModManager.UI.Controls.Settings.SettingsEntry"
+                   Loaded="OnLoaded">
+  <Border Classes.isDirectory="{Binding IsDirectory, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
+          ClipToBounds="True"
           Background="{DynamicResource BackgroundL1Brush}"
           Height="64" CornerRadius="20"
           Padding="20,0,20,0"
-          HorizontalAlignment="Stretch">
+          HorizontalAlignment="Stretch"
+          PointerPressed="OnPointerPressed"
+          PointerReleased="OnPointerReleased">
     <Grid RowDefinitions="*,*" ColumnDefinitions="Auto,*,*,Auto">
       <materialIcons:MaterialIcon Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
                                   Kind="{Binding Icon, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
@@ -42,5 +45,11 @@
                         Content="{Binding Data, RelativeSource={RelativeSource AncestorType=local:SettingsEntry}}"
                         VerticalContentAlignment="Center" />
     </Grid>
+    <Border.Styles>
+      <Style Selector="Border.isDirectory">
+        <Setter Property="Cursor" Value="Hand"/>
+      </Style>
+    </Border.Styles>
+
   </Border>
-</UserControl>
+</ButtonUserControl>

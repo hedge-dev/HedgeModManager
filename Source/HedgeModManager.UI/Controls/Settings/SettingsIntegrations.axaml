@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:HedgeModManager.UI.Controls"
+             xmlns:cs="using:HedgeModManager.UI.Controls.Settings"
+             xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialIcons="using:Material.Icons.Avalonia"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HedgeModManager.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1168" d:DesignHeight="1200"
+             x:Class="HedgeModManager.UI.Controls.Settings.SettingsIntegrations"
+             x:DataType="vm:MainWindowViewModel"
+             Loaded="OnLoaded"
+             Background="{DynamicResource BackgroundL0Brush}">
+  <StackPanel Margin="18,24,18,0">
+    <Label Content="GameBanana"
+             Margin="0,0,0,10" FontSize="16" FontWeight="Bold" />
+    <StackPanel Spacing="8">
+      <cs:SettingsEntry Icon="Web"
+                        Title="Enable GameBanana Integration"
+                        Description="Enables GameBanana features within HedgeModManager.">
+        <cs:SettingsEntry.Data>
+          <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding ViewModel.GameBananaEnabled, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}" />
+        </cs:SettingsEntry.Data>
+      </cs:SettingsEntry>
+      <Border ClipToBounds="True"
+              Background="{DynamicResource BackgroundL1Brush}" CornerRadius="20"
+              Padding="20,16,20,16"
+              HorizontalAlignment="Stretch"
+              IsVisible="{Binding ViewModel.GameBananaEnabled, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}">
+        <Grid RowDefinitions="*,*" ColumnDefinitions="Auto,*,*,Auto">
+          <materialIcons:MaterialIcon Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                                      Kind="Account"
+                                      Foreground="{DynamicResource Text.NormalBrush}"
+                                      Width="32" Height="32" Margin="0,0,24,0"
+                                      VerticalAlignment="Top" />
+          <TextBlock Grid.Row="0" Grid.Column="1"
+                     Text="{DynamicResource Settings.Integrations.GameBanana.RemoteDL.Header}"
+                     Foreground="{DynamicResource Text.NormalBrush}"
+                     VerticalAlignment="Top" />
+          <Grid Grid.Row="0" Grid.Column="3" Grid.RowSpan="2"
+                RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="User ID" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Key" />
+            <TextBox Grid.Row="1" Grid.Column="0" Width="200" Margin="0,4,8,0"
+                     Text="{Binding ViewModel.LocalGameBananaRemoteDLID, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}"
+                     IsEnabled="{Binding ViewModel.GameBananaRemoteDLEnabled, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}, Converter={StaticResource InvertedBoolConverter}}" />
+            <TextBox Grid.Row="1" Grid.Column="1" Width="200" Margin="0,4,0,0"
+                     PasswordChar="*"
+                     Text="{Binding ViewModel.LocalGameBananaRemoteDLKey, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}"
+                     IsEnabled="{Binding ViewModel.GameBananaRemoteDLEnabled, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}, Converter={StaticResource InvertedBoolConverter}}" />
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="Auto,Auto">
+              <Button Grid.Column="0" Margin="0,8,0,0" Width="100"
+                    Content="{Binding ViewModel.LoginButtonText, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}" Click="OnLoginClick" />
+              <Button Grid.Column="1" Margin="0,8,0,0" Width="100"
+                    Content="{DynamicResource Common.Button.Reload}" Click="OnReloadClick"
+                    IsEnabled="{Binding ViewModel.GameBananaRemoteDLEnabled, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}"/>
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="1">
+              <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource StringLocalizeConverterMulti}">
+                  <Binding Path="GameBananaRemoteDLServerInstance.StatusMessage"/>
+                  <Binding Path="GameBananaRemoteDLServerInstance.StatusArgument"/>
+                </MultiBinding>
+              </TextBlock.Text>
+           </TextBlock>
+          </Grid>
+        </Grid>
+      </Border>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

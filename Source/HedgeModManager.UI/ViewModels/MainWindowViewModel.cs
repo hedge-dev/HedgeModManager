@@ -12,6 +12,7 @@ using HedgeModManager.UI.Controls.Modals;
 using HedgeModManager.UI.Input;
 using HedgeModManager.UI.Languages;
 using HedgeModManager.UI.Models;
+using HedgeModManager.UI.Servers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO.Pipes;
@@ -36,6 +37,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool IsFullscreen => WindowState == WindowState.FullScreen;
     public bool IsGamescope { get; set; }
     public Action<Buttons>? CurrentInputPressedHandler { get; set; }
+    public GameBananaRemoteDLServer GameBananaRemoteDLServerInstance { get; set; }
 
     private ModProfile _lastSelectedProfile = ModProfile.Default;
 
@@ -62,10 +64,12 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private ICode _selectedCode = Controls.Codes.Codes.NoCode.Instance;
     [ObservableProperty] private GameConfig? _selectedGameConfig = null;
 
-    // Preview only
-    public MainWindowViewModel() { }
+    public MainWindowViewModel()
+    {
+        GameBananaRemoteDLServerInstance = new(this);
+    }
 
-    public MainWindowViewModel(UILogger logger, List<LanguageEntry> languages)
+    public MainWindowViewModel(UILogger logger, List<LanguageEntry> languages) : this()
     {
         // Setup languages
         LanguageEntry.TotalLineCount = languages.Max(x => x.Lines);
@@ -114,6 +118,10 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             catch { }
         }
+        await CheckForAllModUpdatesAsync().ConfigureAwait(false);
+
+        if (Config.Integrations.GameBananaRemoteDLEnabled)
+            _ = GameBananaRemoteDLServerInstance.StartServerAsync();
     }
 
     public async Task CheckForManagerUpdatesAsync()
