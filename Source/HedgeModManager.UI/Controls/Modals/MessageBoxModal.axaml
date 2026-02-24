@@ -17,7 +17,9 @@
                 HorizontalAlignment="Right" />
   </local:WindowModal.Buttons>
   <local:WindowModal.Data>
-    <TextBlock Text="{Binding Message, RelativeSource={RelativeSource AncestorType=cm:MessageBoxModal}, Converter={StaticResource StringLocalizeConverter}}"
-               FontSize="14" Margin="50,70,100,0" />
+    <ScrollViewer Margin="50,70,100,20">
+      <TextBlock Text="{Binding Message, RelativeSource={RelativeSource AncestorType=cm:MessageBoxModal}}"
+                 FontSize="14" Margin="0,0,100,20" />
+    </ScrollViewer>
   </local:WindowModal.Data>
 </local:WindowModal>

@@ -268,7 +268,12 @@ public partial class MainWindowViewModel : ViewModelBase
                 Logger.Debug($"  Latest: {info.Version}");
                 if (promptUpdate)
                 {
-                    var messageBox = new MessageBoxModal("Modal.Title.UpdateMod", Localize("Modal.Message.UpdateMod", mod.Title));
+                    var message = Localize("Modal.Message.UpdateMod", mod.Title, mod.Version, info.Version);
+                    if (!string.IsNullOrEmpty(info.Changelog))
+                    {
+                        message += "\n\n" + info.Changelog;
+                    }
+                    var messageBox = new MessageBoxModal(Localize("Modal.Title.UpdateMod"), message);
                     messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
                     messageBox.AddButton("Common.Button.Update", async (s, e) =>
                     {
