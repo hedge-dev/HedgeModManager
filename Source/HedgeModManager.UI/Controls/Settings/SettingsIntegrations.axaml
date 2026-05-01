@@ -18,7 +18,7 @@
     <StackPanel Spacing="8">
       <cs:SettingsEntry Icon="Web"
                         Title="Enable GameBanana Integration"
-                        Description="Enables GameBanana features within HedgeModManager.">
+                        Description="Enables GameBanana features within Hedge Mod Manager.">
         <cs:SettingsEntry.Data>
           <ToggleSwitch Margin="0,0,10,0" IsChecked="{Binding ViewModel.GameBananaEnabled, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}" />
         </cs:SettingsEntry.Data>

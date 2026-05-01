@@ -55,6 +55,24 @@
   </screenshots>
 
   <releases>
+    <release version="8.0.0-beta5" date="2026-05-02">
+      <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta5</url>
+      <description>
+        <ul>
+          <li>Added code categories</li>
+          <li>Added codes compile error window</li>
+          <li>Added link for Unleashed Recompiled detection issues</li>
+          <li>Added basic GameBanana Remote Install integration</li>
+          <li>Added close keyboard shortcut</li>
+          <li>Fixed mod configuration issues</li>
+          <li>Fixed mod update issues</li>
+          <li>Improved game detection</li>
+          <li>Fixed codes downloading issues</li>
+          <li>Fixed code compilation issues</li>
+          <li>Many Linux related fixes</li>
+        </ul>
+      </description>
+    </release>
     <release version="8.0.0-beta4" date="2025-03-08">
       <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta4</url>
       <description>
@@ -79,17 +97,6 @@
           <li>Fixed issues with mod configuration</li>
           <li>Fixed profile switching</li>
           <li>Fixed dependency checker</li>
-        </ul>
-      </description>
-    </release>
-    <release version="8.0.0-beta2" date="2025-03-04">
-      <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta2</url>
-      <description>
-        <ul>
-          <li>Fixed prefix patcher</li>
-          <li>Fixed updater</li>
-          <li>Fixed GameBanana downloader</li>
-          <li>Fixed mod loader conflict issue</li>
         </ul>
       </description>
     </release>
