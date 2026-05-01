@@ -250,7 +250,9 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         IsBusy = true;
         var download = new Download(Localize("Download.Text.CheckModUpdate"), true, -1);
-        download.Run(this);
+        if (promptUpdate)
+            download.Run(this);
+
         try
         {
             if (await mod.Updater!.CheckForUpdatesAsync(c) == true)
@@ -266,30 +268,27 @@ public partial class MainWindowViewModel : ViewModelBase
                 Logger.Debug($"Update found for {mod.Title}");
                 Logger.Debug($"  Current: {mod.Version}");
                 Logger.Debug($"  Latest: {info.Version}");
-                if (promptUpdate)
+                var messageBox = new MessageBoxModal("Modal.Title.UpdateMod", Localize("Modal.Message.UpdateMod", mod.Title));
+                messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
+                messageBox.AddButton("Common.Button.Update", async (s, e) =>
                 {
-                    var messageBox = new MessageBoxModal("Modal.Title.UpdateMod", Localize("Modal.Message.UpdateMod", mod.Title));
-                    messageBox.AddButton("Common.Button.Cancel", (s, e) => messageBox.Close());
-                    messageBox.AddButton("Common.Button.Update", async (s, e) =>
+                    // TODO: Look into threading issues
+                    await Dispatcher.UIThread.InvokeAsync(async () =>
                     {
-                        // TODO: Look into threading issues
-                        await Dispatcher.UIThread.InvokeAsync(async () =>
-                        {
-                            Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
-                            Logger.Information($"Update clicked for {mod.Title}");
-                            messageBox.Close();
-                            await CreateSimpleDownload(Localize("Download.Text.UpdateMod", mod.Title),
-                                "Failed to update mod", "Modal.Title.UpdateError", Localize("Modal.Message.UpdateModError", mod.Title),
-                                async (d, p, c) =>
-                                {
-                                    await mod.Updater.PerformUpdateAsync(p, c);
-                                }).RunAsync(this);
-                            Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
-                            RefreshGame();
-                        });
+                        Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
+                        Logger.Information($"Update clicked for {mod.Title}");
+                        messageBox.Close();
+                        await CreateSimpleDownload(Localize("Download.Text.UpdateMod", mod.Title),
+                            "Failed to update mod", "Modal.Title.UpdateError", Localize("Modal.Message.UpdateModError", mod.Title),
+                            async (d, p, c) =>
+                            {
+                                await mod.Updater.PerformUpdateAsync(p, c);
+                            }).RunAsync(this);
+                        Modals.Where(x => x.Control is ModInfoModal).ToList().ForEach(x => x.Close());
+                        RefreshGame();
                     });
-                    messageBox.Open(this);
-                }
+                });
+                messageBox.Open(this);
                 return info;
             }
         }
