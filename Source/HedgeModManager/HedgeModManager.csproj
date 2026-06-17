@@ -11,9 +11,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
-    <PackageReference Include="PeNet" Version="4.1.1" />
-    <PackageReference Include="SharpCompress" Version="0.39.0" />
-    <PackageReference Include="ValveKeyValue" Version="0.12.0.391" />
+    <PackageReference Include="PeNet" Version="5.1.0" />
+    <PackageReference Include="SharpCompress" Version="0.49.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="ValveKeyValue" Version="0.20.0.417" />
   </ItemGroup>
 
   <ItemGroup>
