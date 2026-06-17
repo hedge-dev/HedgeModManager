@@ -355,7 +355,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
     public async Task<bool> InstallModFromArchive(string archivePath, IProgress<long>? progress)
     {
         // Open archive
-        using var archive = ArchiveFactory.OpenArchive(archivePath);
+        using var archive = ArchiveFactory.Open(archivePath);
         if (archive == null)
             return false;
 
