@@ -63,6 +63,12 @@ public class HMMUpdateCommand(HMMUpdateManifest.FileEntry fileEntry, HMMUpdateCo
                         string otherFileLocalPath = Path.Combine(root, otherFile.Path);
                         if (File.Exists(otherFileLocalPath))
                         {
+                            string? parentDir = Path.GetDirectoryName(localPath);
+                            if (parentDir != null && !Directory.Exists(parentDir))
+                            {
+                                Logger.Debug($"Creating parent directory \"{parentDir}\"...");
+                                Directory.CreateDirectory(parentDir);
+                            }
                             Logger.Debug($"Copying file \"{otherFileLocalPath}\" to \"{localPath}\"");
                             File.Copy(otherFileLocalPath, localPath, true);
                         }
