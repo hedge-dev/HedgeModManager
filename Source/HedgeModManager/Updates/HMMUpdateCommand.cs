@@ -66,7 +66,7 @@ public class HMMUpdateCommand(HMMUpdateManifest.FileEntry fileEntry, HMMUpdateCo
                             string? parentDir = Path.GetDirectoryName(localPath);
                             if (parentDir != null && !Directory.Exists(parentDir))
                             {
-                                Logger.Debug($"Creating parent directory \"{parentDir}\"...");
+                                Logger.Debug($"Creating directory \"{parentDir}\"...");
                                 Directory.CreateDirectory(parentDir);
                             }
                             Logger.Debug($"Copying file \"{otherFileLocalPath}\" to \"{localPath}\"");
@@ -78,7 +78,8 @@ public class HMMUpdateCommand(HMMUpdateManifest.FileEntry fileEntry, HMMUpdateCo
                         }
 
                     }
-                    Logger.Error("Extra data is not a file entry!");
+                    else
+                        Logger.Error("Extra data is not a file entry!");
                 }
                 catch (Exception e)
                 {
