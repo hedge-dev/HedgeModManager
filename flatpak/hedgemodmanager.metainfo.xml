@@ -55,6 +55,14 @@
   </screenshots>
 
   <releases>
+    <release version="8.0.0-beta6" date="2026-06-18">
+      <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta6</url>
+      <description>
+        <ul>
+          <li>Fixed mod update errors</li>
+        </ul>
+      </description>
+    </release>
     <release version="8.0.0-beta5" date="2026-05-02">
       <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta5</url>
       <description>
