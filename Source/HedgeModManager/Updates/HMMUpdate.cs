@@ -84,12 +84,15 @@ public class HMMUpdate(HMMUpdateManifest manifest)
                 return;
             }
 
-            Manifest.Files.Add(new()
+            lock (options)
             {
-                Path = Helpers.NormalizePath(relativePath),
-                Size = fileSize,
-                SHA256 = fileHash
-            });
+                Manifest.Files.Add(new()
+                {
+                    Path = Helpers.NormalizePath(relativePath),
+                    Size = fileSize,
+                    SHA256 = fileHash
+                });
+            }
             Logger.Debug($"  Added - \"{relativePath}\"");
             progress?.ReportAdd(1);
         });
@@ -146,30 +149,35 @@ public class HMMUpdate(HMMUpdateManifest manifest)
             {
                 if (file.Size == 0)
                 {
-                    UpdateCommands.Add(new(file, HMMUpdateCommandType.Create, null));
+                    lock (options)
+                        UpdateCommands.Add(new(file, HMMUpdateCommandType.Create, null));
                     Logger.Debug($"  Create - \"{localPath}\"");
                 }
                 else
                 {
-                    UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, Manifest.BasePath));
+                    lock (options)
+                        UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, Manifest.BasePath));
                     Logger.Debug($"  New - \"{localPath}\"");
                 }
             }
             else if (fileExists && file.Size == -1)
             {
-                UpdateCommands.Add(new(file, HMMUpdateCommandType.Delete, null));
+                lock (options)
+                    UpdateCommands.Add(new(file, HMMUpdateCommandType.Delete, null));
                 Logger.Debug($"  Delete - \"{localPath}\"");
             }
             else if (fileExists && file.Size > 0 && fileSize != file.Size)
             {
-                UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, Manifest.BasePath));
+                lock (options)
+                    UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, Manifest.BasePath));
                 Logger.Debug($"  Modified - \"{localPath}\"");
             }
             else if (fileExists && !string.IsNullOrEmpty(file.SHA256))
             {
                 if (!await Helpers.CheckFileHashAsync(localPath, file.SHA256, sha256, c))
                 {
-                    UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, Manifest.BasePath));
+                    lock (options)
+                        UpdateCommands.Add(new(file, HMMUpdateCommandType.Download, Manifest.BasePath));
                     Logger.Debug($"  Modified - \"{localPath}\"");
                 }
             }
