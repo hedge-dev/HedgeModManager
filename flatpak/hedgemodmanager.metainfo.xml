@@ -55,11 +55,11 @@
   </screenshots>
 
   <releases>
-    <release version="8.0.0-beta6" date="2026-06-18">
+    <release version="8.0.0-beta6" date="2026-06-23">
       <url type="details">https://github.com/hedge-dev/HedgeModManager/releases/tag/8.0.0-beta6</url>
       <description>
         <ul>
-          <li>Fixed mod update errors</li>
+          <li>Fixed mod update issues</li>
         </ul>
       </description>
     </release>
