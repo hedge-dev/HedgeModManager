@@ -428,7 +428,7 @@ public class TextProcessor
                         }
                     }
 
-                    builder.AppendLine();
+                    builder.Append("\r\n");
                 }
             }
             else

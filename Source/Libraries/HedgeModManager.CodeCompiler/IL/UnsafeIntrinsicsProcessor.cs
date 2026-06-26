@@ -25,7 +25,7 @@ public static class UnsafeIntrinsicsProcessor
                 break;
 
             case "InitBlockUnaligned":
-                method.EmitInitBlock(false);
+                method.EmitInitBlock(true);
                 break;
 
             case "SizeOf":
