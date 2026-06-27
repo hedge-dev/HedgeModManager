@@ -104,7 +104,7 @@ namespace HMMCodes
             => ref Read<T>((IntPtr)address);
 
         public static byte[] Assemble(string source)
-            => MemoryProvider.AssembleInstructions(source);
+            => MemoryProvider.AssembleInstructions(RemoveComments(source));
 
         public static long GetPointer(long address, params long[] offsets)
         {
@@ -154,7 +154,7 @@ namespace HMMCodes
         }
 
         public static void WriteAsmHook(string instructions, long address, HookBehavior behavior = HookBehavior.After, HookParameter parameter = HookParameter.Jump)
-            => MemoryProvider.WriteASMHook(instructions, (IntPtr)address, (int)behavior, (int)parameter);
+            => MemoryProvider.WriteASMHook(RemoveComments(instructions), (IntPtr)address, (int)behavior, (int)parameter);
 
         public static void WriteAsmHook(string instructions, long address, HookParameter parameter, HookBehavior behavior)
             => WriteAsmHook(instructions, address, behavior, parameter);
@@ -202,6 +202,24 @@ namespace HMMCodes
                     return result;
             }
             return 0;
+        }
+
+        public static string RemoveComments(string instructions)
+        {
+            var lines = instructions.Split(new char[] { '\n' });
+            var sb = new StringBuilder();
+            foreach (var line in lines)
+            {
+                string processedLine = line.Trim();
+                if (string.IsNullOrEmpty(processedLine))
+                    continue;
+                var index = processedLine.IndexOf(';');
+                if (index != -1)
+                    processedLine = processedLine.Substring(0, index);
+                sb.Append(processedLine);
+                sb.Append("\r\n");
+            }
+            return sb.ToString();
         }
 
         public static bool IsKeyDown(Keys key)
