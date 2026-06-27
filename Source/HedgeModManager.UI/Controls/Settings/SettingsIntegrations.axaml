@@ -44,11 +44,11 @@
             <TextBlock Grid.Row="0" Grid.Column="1" Text="Key" />
             <TextBox Grid.Row="1" Grid.Column="0" Width="200" Margin="0,4,8,0"
                      Text="{Binding ViewModel.LocalGameBananaRemoteDLID, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}"
-                     IsEnabled="{Binding ViewModel.GameBananaRemoteDLEnabled, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}, Converter={StaticResource InvertedBoolConverter}}" />
+                     IsEnabled="False" />
             <TextBox Grid.Row="1" Grid.Column="1" Width="200" Margin="0,4,0,0"
                      PasswordChar="*"
                      Text="{Binding ViewModel.LocalGameBananaRemoteDLKey, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}"
-                     IsEnabled="{Binding ViewModel.GameBananaRemoteDLEnabled, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}, Converter={StaticResource InvertedBoolConverter}}" />
+                     IsEnabled="False" />
             <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="Auto,Auto">
               <Button Grid.Column="0" Margin="0,8,0,0" Width="100"
                     Content="{Binding ViewModel.LoginButtonText, RelativeSource={RelativeSource AncestorType=cs:SettingsIntegrations}}" Click="OnLoginClick" />
