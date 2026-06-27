@@ -6,7 +6,7 @@ on:
       tag: 
         description: 'Tag'
         required: true
-        default: '8.0.0-beta6'
+        default: '8.0.0-beta7'
       prerelease:
         description: 'Prerelease'
         required: true
