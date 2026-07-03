@@ -103,7 +103,6 @@ public class ModProfile
         if (database == null)
             return;
 
-        string profilePath = Path.Combine(database.Root, FileName);
         var mods = database.Mods
             .Where(x => !string.IsNullOrEmpty(x.ConfigSchemaFile))
             .ToList();
@@ -120,8 +119,6 @@ public class ModProfile
                 File.Delete(profileModPath);
         }
         progress.Report(mods.Count);
-        if (File.Exists(profilePath))
-            File.Delete(profilePath);
     }
 
     public override string ToString()

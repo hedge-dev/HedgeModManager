@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
 using HedgeModManager.Foundation;
 using HedgeModManager.UI.ViewModels;
 using System.ComponentModel;
@@ -125,7 +124,6 @@ public partial class ProfileManagerModal : WindowModal
             ViewModel.Update();
         };
         modal.Open(ViewModel.MainWindowViewModel);
-
     }
 
     private void OnDeleteClick(object? sender, RoutedEventArgs e)
@@ -146,6 +144,9 @@ public partial class ProfileManagerModal : WindowModal
                 await MainWindowViewModel.CreateSimpleDownload("Download.Text.DeleteProfile", "Failed to delete profile", async (d, p, c) =>
                 {
                     await profile.DeleteModConfigAsync(game.ModDatabase, d.CreateProgress());
+                    string profilePath = Path.Combine(game.ModDatabase.Root, profile.ModDBPath);
+                    if (File.Exists(profilePath))
+                        File.Delete(profilePath);
                 }).RunAsync(ViewModel.MainWindowViewModel);
             }
             catch (Exception ex)
