@@ -74,13 +74,15 @@ public partial class ProfileManagerModal : WindowModal
         };
 
         var modal = new ProfileRenameModal(profile, true);
-        modal.OnProfileRenamed = () =>
+        modal.OnConfirm += async (s, e) =>
         {
             profile.FileName = profile.GenerateFileNameFromName();
+            profile.ModDBPath = profile.FileName;
+
             ViewModel.MainWindowViewModel.Profiles.Add(profile);
             ViewModel.MainWindowViewModel.SelectedProfile = ViewModel.SelectedProfile = profile;
             ProfileListBox.Bind(ListBox.ItemsSourceProperty, new Binding("Profiles"));
-            Dispatcher.UIThread.Invoke(async () => await ViewModel.MainWindowViewModel.SaveProfilesAsync(game));
+            await ViewModel.MainWindowViewModel.SaveProfilesAsync(game);
             ViewModel.Update();
         };
         modal.Open(ViewModel.MainWindowViewModel);
@@ -88,37 +90,42 @@ public partial class ProfileManagerModal : WindowModal
 
     private void OnDuplicateClick(object? sender, RoutedEventArgs e)
     {
-        if (ViewModel.MainWindowViewModel == null || ViewModel.SelectedProfile == null)
-            return;
-
-        if (ViewModel.MainWindowViewModel.SelectedGame?.Game is not ModdableGameGeneric game)
+        if (ViewModel.SelectedProfile == null ||
+            ViewModel.MainWindowViewModel?.SelectedGame?.Game is not ModdableGameGeneric game)
             return;
 
         var baseProfile = ViewModel.SelectedProfile;
-        var profile = new ModProfile(GenerateProfileName(baseProfile.Name), baseProfile.ModDBPath, baseProfile.FileName);
-        profile.FileName = profile.GenerateFileNameFromName();
+        var newProfile = new ModProfile(GenerateProfileName(baseProfile.Name));
 
-        // Copy profile
-        string modsPath = game.ModDatabase.Root;
-        string baseProfilePath = Path.Combine(modsPath, baseProfile.FileName);
-        string newProfilePath = Path.Combine(modsPath, profile.FileName);
-        if (File.Exists(baseProfilePath))
+        // Aquire the new profile name
+        var modal = new ProfileRenameModal(newProfile, true);
+        modal.OnConfirm += async (s, e) =>
         {
-            try
-            {
-                File.Copy(baseProfilePath, newProfilePath, true);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Failed to copy profile: {baseProfilePath} -> {newProfilePath}");
-                Logger.Error(ex);
-            }
-        }
+            newProfile.FileName = newProfile.GenerateFileNameFromName();
+            newProfile.ModDBPath = newProfile.FileName;
 
-        ViewModel.MainWindowViewModel.Profiles.Add(profile);
-        ViewModel.MainWindowViewModel.SelectedProfile = ViewModel.SelectedProfile = profile;
-        Dispatcher.UIThread.Invoke(async () => await ViewModel.MainWindowViewModel.SaveProfilesAsync(game));
-        ViewModel.Update();
+            string modsPath = game.ModDatabase.Root;
+            string baseProfilePath = Path.Combine(modsPath, baseProfile.ModDBPath);
+            string newProfilePath = Path.Combine(modsPath, newProfile.ModDBPath);
+
+            if (File.Exists(baseProfilePath))
+            {
+                await MainWindowViewModel.CreateSimpleDownload("Download.Text.DuplicateProfile", "Failed to duplicate profile", async (d, p, c) =>
+                {
+                    bool isbaseSelected = ViewModel.MainWindowViewModel.SelectedProfile == baseProfile;
+                    await newProfile.BackupModConfigAsync(game.ModDatabase, isbaseSelected ? null : baseProfile, d.CreateProgress());
+                    File.Copy(baseProfilePath, newProfilePath, true);
+
+                }).RunAsync(ViewModel.MainWindowViewModel);
+            }
+
+            ViewModel.MainWindowViewModel.Profiles.Add(newProfile);
+            ViewModel.MainWindowViewModel.SelectedProfile = ViewModel.SelectedProfile = newProfile;
+            await ViewModel.MainWindowViewModel.SaveProfilesAsync(game);
+            ViewModel.Update();
+        };
+        modal.Open(ViewModel.MainWindowViewModel);
+
     }
 
     private void OnDeleteClick(object? sender, RoutedEventArgs e)
@@ -128,32 +135,32 @@ public partial class ProfileManagerModal : WindowModal
 
         var messageBox = new MessageBoxModal("Modal.Title.DeleteProfile", Localize("Modal.Message.DeleteProfile", ViewModel.SelectedProfile.Name));
         messageBox.AddButton("Common.Button.No", (s, e) => messageBox.Close());
-        messageBox.AddButton("Common.Button.Yes", (s, e) =>
+        messageBox.AddButton("Common.Button.Yes", async (s, e) =>
         {
             if (ViewModel.MainWindowViewModel.SelectedGame?.Game is not ModdableGameGeneric game)
                 return;
 
             var profile = ViewModel.SelectedProfile;
-            string profilePath = Path.Combine(game.ModDatabase.Root, profile.FileName);
-            if (File.Exists(profilePath))
+            try
             {
-                try
+                await MainWindowViewModel.CreateSimpleDownload("Download.Text.DeleteProfile", "Failed to delete profile", async (d, p, c) =>
                 {
-                    File.Delete(profilePath);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error($"Failed to delete profile: {profilePath}");
-                    Logger.Error(ex);
-                }
+                    await profile.DeleteModConfigAsync(game.ModDatabase, d.CreateProgress());
+                }).RunAsync(ViewModel.MainWindowViewModel);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Failed to delete profile: {profile.Name} - {profile.FileName}");
+                Logger.Error(ex);
             }
 
             int pos = ViewModel.MainWindowViewModel.Profiles.IndexOf(ViewModel.SelectedProfile);
             if (pos == ViewModel.MainWindowViewModel.Profiles.Count - 1)
                 pos -= 1;
-            ViewModel.MainWindowViewModel?.Profiles.Remove(ViewModel.SelectedProfile);
-            ViewModel.SelectedProfile = ViewModel.MainWindowViewModel?.Profiles[pos];
+            ViewModel.MainWindowViewModel.Profiles.Remove(ViewModel.SelectedProfile);
+            ViewModel.SelectedProfile = ViewModel.MainWindowViewModel.Profiles[pos];
             ViewModel.Update();
+            await ViewModel.MainWindowViewModel.SaveProfilesAsync(game);
             messageBox.Close();
         });
         messageBox.SetDanger();
@@ -166,7 +173,7 @@ public partial class ProfileManagerModal : WindowModal
             return;
 
         var modal = new ProfileRenameModal(ViewModel.SelectedProfile, false);
-        modal.OnProfileRenamed = () =>
+        modal.OnConfirm += async (s, e) =>
         {
             ProfileListBox.Bind(ListBox.ItemsSourceProperty, new Binding("Profiles"));
         };

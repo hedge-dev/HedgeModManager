@@ -8,7 +8,8 @@ public partial class ProfileRenameModal : WindowModal
 {
     public ModProfile SelectedProfile { get; set; }
     public string NewName { get; set; } = string.Empty;
-    public Action? OnProfileRenamed { get; set; }
+    public delegate Task OnConfirmEventHandler(object? sender, EventArgs e);
+    public event OnConfirmEventHandler? OnConfirm;
 
     // Preview
     public ProfileRenameModal() : this(new ModProfile("No Profile"), false) { }
@@ -21,7 +22,7 @@ public partial class ProfileRenameModal : WindowModal
             Title = Localize("Modal.Title.NewProfile");
     }
 
-    private void OnOkClick(object? sender, RoutedEventArgs e)
+    private async void OnOkClick(object? sender, RoutedEventArgs e)
     {
         NewName = NewName?.Trim() ?? string.Empty;
         if (string.IsNullOrEmpty(NewName))
@@ -30,7 +31,8 @@ public partial class ProfileRenameModal : WindowModal
             return;
         }
         SelectedProfile.Name = NewName;
-        OnProfileRenamed?.Invoke();
+        if (OnConfirm != null)
+            await OnConfirm(this, e);
         Close();
     }
 }

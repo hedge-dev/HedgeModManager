@@ -430,14 +430,11 @@ public partial class MainWindowViewModel : ViewModelBase
                 var backupProgress = d.CreateProgress();
                 var restoreProgress = d.CreateProgress();
 
-                await lastProfile.BackupModConfigAsync(moddableGameGeneric.ModDatabase, backupProgress);
+                await lastProfile.BackupModConfigAsync(moddableGameGeneric.ModDatabase, null, backupProgress);
 
                 d.Name = Localize("Download.Text.SwitchProfileLoad");
                 await currentProfile.RestoreModConfigAsync(moddableGameGeneric.ModDatabase, restoreProgress);
             }).RunAsync(this);
-
-        Logger.Debug($"Switched profile {_lastSelectedProfile.Name} -> {SelectedProfile.Name}");
-        _lastSelectedProfile = SelectedProfile;
 
         if (moddableGameGeneric.ModLoaderConfiguration is ModLoaderConfiguration config)
         {
@@ -447,6 +444,8 @@ public partial class MainWindowViewModel : ViewModelBase
             RefreshUI();
         }
 
+        Logger.Debug($"Switched profile {_lastSelectedProfile.Name} -> {SelectedProfile.Name}");
+        _lastSelectedProfile = SelectedProfile;
         await SaveAsync(false);
         IsBusy = false;
     }
