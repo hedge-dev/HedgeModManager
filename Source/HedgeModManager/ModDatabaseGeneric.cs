@@ -8,6 +8,7 @@ using System.IO;
 using Text;
 using IO;
 using SharpCompress.Archives;
+using SharpCompress.Common;
 
 public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
 {
@@ -355,7 +356,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
     public async Task<bool> InstallModFromArchive(string archivePath, IProgress<long>? progress)
     {
         // Open archive
-        using var archive = ArchiveFactory.Open(archivePath);
+        using var archive = ArchiveFactory.OpenArchive(archivePath);
         if (archive == null)
             return false;
 
@@ -415,33 +416,66 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
 
         // Extract files
         long totalBytesRead = 0;
-        var archiveReader = archive.ExtractAllEntries();
 
-        while (archiveReader.MoveToNextEntry())
+        if (archive.IsSolid || archive.Type == ArchiveType.SevenZip)
         {
-            var (modDir, entryPath, entry) = archiveEntries
-                .FirstOrDefault(x => x.Item3.Key == archiveReader.Entry.Key);
+            var archiveReader = archive.ExtractAllEntries();
 
-            if (entry == null)
-                continue;
-
-            string fullPath = Path.Combine(modDir, entryPath);
-            string dir = Path.GetDirectoryName(fullPath)!;
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-
-            using var archiveFileStream = archiveReader.OpenEntryStream();
-            using var fileStream = File.Create(fullPath);
-
-            var buffer = new byte[1048576];
-            int bytesRead;
-            while ((bytesRead = await archiveFileStream.ReadAsync(buffer)) > 0)
+            while (archiveReader.MoveToNextEntry())
             {
-                await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-                totalBytesRead += bytesRead;
-                progress?.Report(totalBytesRead);
+                var (modDir, entryPath, entry) = archiveEntries
+                    .FirstOrDefault(x => x.Item3.Key == archiveReader.Entry.Key);
+
+                if (entry == null)
+                    continue;
+
+                string fullPath = Path.Combine(modDir, entryPath);
+                string dir = Path.GetDirectoryName(fullPath)!;
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                using var archiveFileStream = archiveReader.OpenEntryStream();
+                using var fileStream = File.Create(fullPath);
+
+                var buffer = new byte[1048576];
+                int bytesRead;
+                while ((bytesRead = await archiveFileStream.ReadAsync(buffer)) > 0)
+                {
+                    await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+                    totalBytesRead += bytesRead;
+                    progress?.Report(totalBytesRead);
+                }
+                await archiveFileStream.DisposeAsync();
             }
-            await archiveFileStream.DisposeAsync();
+        }
+        else
+        {
+            foreach (var archiveEntry in archive.Entries.Where(x => x.Key != null && !x.IsDirectory))
+            {
+                var (modDir, entryPath, entry) = archiveEntries
+                    .FirstOrDefault(x => x.Item3.Key == archiveEntry.Key);
+
+                if (entry == null)
+                    continue;
+
+                string fullPath = Path.Combine(modDir, entryPath);
+                string dir = Path.GetDirectoryName(fullPath)!;
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                using var archiveFileStream = archiveEntry.OpenEntryStream();
+                using var fileStream = File.Create(fullPath);
+
+                var buffer = new byte[1048576];
+                int bytesRead;
+                while ((bytesRead = await archiveFileStream.ReadAsync(buffer)) > 0)
+                {
+                    await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+                    totalBytesRead += bytesRead;
+                    progress?.Report(totalBytesRead);
+                }
+                await archiveFileStream.DisposeAsync();
+            }
         }
         return true;
     }
