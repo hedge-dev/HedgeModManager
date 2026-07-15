@@ -434,7 +434,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
-                using var archiveFileStream = archiveReader.OpenEntryStream();
+                await using var archiveFileStream = archiveReader.OpenEntryStream();
                 using var fileStream = File.Create(fullPath);
 
                 var buffer = new byte[1048576];
@@ -445,7 +445,6 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
                     totalBytesRead += bytesRead;
                     progress?.Report(totalBytesRead);
                 }
-                await archiveFileStream.DisposeAsync();
             }
         }
         else
@@ -463,7 +462,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
-                using var archiveFileStream = archiveEntry.OpenEntryStream();
+                await using var archiveFileStream = archiveEntry.OpenEntryStream();
                 using var fileStream = File.Create(fullPath);
 
                 var buffer = new byte[1048576];
@@ -474,7 +473,6 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
                     totalBytesRead += bytesRead;
                     progress?.Report(totalBytesRead);
                 }
-                await archiveFileStream.DisposeAsync();
             }
         }
         return true;
