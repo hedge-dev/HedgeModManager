@@ -11,9 +11,9 @@ env:
   PROJECT_PATH: ./Source/HedgeModManager.UI/HedgeModManager.UI.csproj
   FLATPAK_ID: io.github.hedge_dev.hedgemodmanager
   GENERATOR_URL: https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/refs/heads/master/dotnet/flatpak-dotnet-generator.py
-  DOTNET_VERSION: 8
+  DOTNET_VERSION: 10
   DOTNET_CLI_HOME: /tmp/.dotnet
-  FREEDESKTOP_VERSION: 24.08
+  FREEDESKTOP_VERSION: 25.08
 
 jobs:
   build:

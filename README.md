@@ -38,7 +38,7 @@ A mod manager for Hedgehog Engine games on PC.
 #### Windows
 Download the Windows binary from the [releases page](https://github.com/hedge-dev/HedgeModManager/releases) and store it anywhere. Avoid using multiple copies such as placing a copy of Hedge Mod Manager in every game folder.
 > [!NOTE]
-> .NET 8 Runtime or newer is required to run Hedge Mod Manager. This can be downloaded [here](https://dotnet.microsoft.com/en-us/download/dotnet/9.0).
+> .NET 10 Runtime or newer is required to run Hedge Mod Manager. This can be downloaded [here](https://dotnet.microsoft.com/en-us/download/dotnet/10.0).
 >
 > Make sure you are downloading the **Installer** of **.NET Runtime**. For most systems the **x64** **Installer** is the correct option. 
 
