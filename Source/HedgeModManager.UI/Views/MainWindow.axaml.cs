@@ -60,7 +60,7 @@ public partial class MainWindow : Window
             ViewModel.WindowState = ViewModel.Config.LastWindowState;
     }
 
-    private void Window_Loaded(object? sender, RoutedEventArgs e)
+    private async void Window_Loaded(object? sender, RoutedEventArgs e)
     {
         if (ViewModel == null)
             return;
@@ -73,12 +73,11 @@ public partial class MainWindow : Window
 
         LoadGames();
 
-        _ = Dispatcher.UIThread.Invoke(async () =>
-        {
-            if (Program.StartupCommands.Count > 0)
-                await ViewModel.ProcessCommandsAsync(Program.StartupCommands);
-            await ViewModel.OnStartUpAsync();
-        });
+        if (Program.StartupCommands.Count > 0)
+            await ViewModel.ProcessCommandsAsync(Program.StartupCommands);
+
+        Logger.Information($"Running startup events...");
+        await ViewModel.OnStartUpAsync();
 
         _ = Task.Run(ViewModel.StartServerAsync);
 
@@ -94,7 +93,7 @@ public partial class MainWindow : Window
         ViewModel.CurrentTabInfo = ViewModel.TabInfos[ViewModel.SelectedTabIndex];
     }
 
-    private void OnKeyDown(object? sender, KeyEventArgs e)
+    private async void OnKeyDown(object? sender, KeyEventArgs e)
     {
         bool toggleFullscreen = e.KeyModifiers == KeyModifiers.Alt && e.Key == Key.Enter;
         bool isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
@@ -107,7 +106,7 @@ public partial class MainWindow : Window
         {
             case Key.F1:
                 if (isShift)
-                    _ = Dispatcher.UIThread.Invoke(() => MainWindowViewModel.ExportLogAsync(this));
+                    await MainWindowViewModel.ExportLogAsync(this);
                 break;
             case Key.F3:
                 ViewModel.Config.TestModeEnabled = !ViewModel.Config.TestModeEnabled;
@@ -127,7 +126,10 @@ public partial class MainWindow : Window
                     ViewModel.IsBusy = true;
 
                     Logger.Information($"Loading config...");
-                    _ = Dispatcher.UIThread.Invoke(ViewModel.Config.LoadAsync);
+                    await ViewModel.Config.LoadAsync();
+
+                    Logger.Information($"Running startup events...");
+                    await ViewModel.OnStartUpAsync();
 
                     Logger.Information($"Loading URI handlers...");
                     Program.InstallURIHandler();
@@ -141,12 +143,9 @@ public partial class MainWindow : Window
                 {
                     if (ViewModel.SelectedGame != null)
                     {
-                        _ = Dispatcher.UIThread.Invoke(async () =>
-                        {
-                            await ViewModel.SelectedGame.Game.InitializeAsync();
-                            ViewModel.RefreshUI();
-                            Logger.Debug($"Refreshed game");
-                        });
+                        await ViewModel.SelectedGame.Game.InitializeAsync();
+                        ViewModel.RefreshUI();
+                        Logger.Debug($"Refreshed game");
                     }
                 }
                 break;
@@ -206,7 +205,7 @@ public partial class MainWindow : Window
                     }
 
                     if (button != Buttons.None)
-                        _ = Dispatcher.UIThread.Invoke(async () => await ViewModel.OnInputDownAsync(button));
+                        await ViewModel.OnInputDownAsync(button);
                 }
                 break;
         }

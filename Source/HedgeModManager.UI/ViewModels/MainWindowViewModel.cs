@@ -118,7 +118,6 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             catch { }
         }
-        await CheckForAllModUpdatesAsync().ConfigureAwait(false);
 
         if (Config.Integrations.GameBananaRemoteDLEnabled)
             _ = GameBananaRemoteDLServerInstance.StartServerAsync();
@@ -348,12 +347,23 @@ public partial class MainWindowViewModel : ViewModelBase
             Logger.Debug("Loading game config...");
             await SelectedGameConfig.LoadAsync();
 
-            Logger.Debug("Updating UI");
             _ = Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await UpdateCodesAsync(false, true);
-                await CheckForModLoaderUpdatesAsync();
+                try
+                {
+                    await UpdateCodesAsync(Config.CheckCodeUpdates, true);
+
+                    if (Config.CheckModLoaderUpdates)
+                        await CheckForModLoaderUpdatesAsync();
+                    if (Config.CheckModUpdates)
+                        await CheckForAllModUpdatesAsync();
+                }catch (Exception e)
+                {
+                    OpenErrorMessage("Modal.Title.LoadError", "Modal.Message.GameLoadError",
+                        "Update events failed", e);
+                }
             });
+            Logger.Debug("Updating UI");
             RefreshUI();
         }
         catch (Exception e)
