@@ -61,8 +61,10 @@ jobs:
         include:
         - arch: x86_64
           runner: ubuntu-26.04
+          runtime: linux-x64
         - arch: aarch64
           runner: ubuntu-26.04-arm
+          runtime: linux-arm64
     runs-on: ${{ matrix.runner }}
 
     steps:
@@ -92,7 +94,7 @@ jobs:
         run: |
           curl -o flatpak-dotnet-generator.py ${{env.GENERATOR_URL}}
           chmod +x flatpak-dotnet-generator.py
-          python3 flatpak-dotnet-generator.py ./flatpak/nuget-sources.json ${{env.PROJECT_PATH}} --dotnet ${{env.DOTNET_VERSION}} --freedesktop ${{env.FREEDESKTOP_VERSION}}
+          python3 flatpak-dotnet-generator.py ./flatpak/nuget-sources.json ${{env.PROJECT_PATH}} --dotnet ${{env.DOTNET_VERSION}} --freedesktop ${{env.FREEDESKTOP_VERSION}} --runtime ${{ matrix.runtime }}
 
       - name: Build Flatpak
         run: flatpak-builder --user --arch=${{ matrix.arch }} --force-clean --install-deps-from=flathub --repo=repo builddir ./flatpak/${{ env.FLATPAK_ID }}-autobuild.yml

@@ -68,7 +68,7 @@ jobs:
         run: |
           curl -o flatpak-dotnet-generator.py ${{env.GENERATOR_URL}}
           chmod +x flatpak-dotnet-generator.py
-          python3 flatpak-dotnet-generator.py ./flatpak/nuget-sources.json ${{env.PROJECT_PATH}} --dotnet ${{env.DOTNET_VERSION}} --freedesktop ${{env.FREEDESKTOP_VERSION}}
+          python3 flatpak-dotnet-generator.py ./flatpak/nuget-sources.json ${{env.PROJECT_PATH}} --dotnet ${{env.DOTNET_VERSION}} --freedesktop ${{env.FREEDESKTOP_VERSION}} --runtime linux-x64
       
       - name: win-x64 Build
         run: dotnet publish -p:PublishProfile=win-x64 -c Release -o ./output/win-x64 ${{env.PROJECT_PATH}}
