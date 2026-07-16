@@ -18,9 +18,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         AvaloniaXamlLoader.Load(this);
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
 
     public void LoadGames()
@@ -233,16 +230,16 @@ public partial class MainWindow : Window
 
     private void OnDragOver(object? sender, DragEventArgs e)
     {
-        if (ViewModel == null || !e.Data.Contains(DataFormats.Files))
+        if (ViewModel == null || !e.DataTransfer.Formats.Contains(DataFormat.File))
             return;
         e.DragEffects = DragDropEffects.Copy;
     }
 
     private void OnDrop(object? sender, DragEventArgs e)
     {
-        if (ViewModel == null || !e.Data.Contains(DataFormats.Files))
+        if (ViewModel == null || !e.DataTransfer.Formats.Contains(DataFormat.File))
             return;
-        foreach (var file in e.Data.GetFiles() ?? [])
+        foreach (var file in e.DataTransfer.TryGetFiles() ?? [])
             ViewModel.InstallMod(file.Name, Utils.ConvertToPath(file.Path), null);
     }
 }

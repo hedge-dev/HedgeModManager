@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Styling;
 using HedgeModManager.Foundation;
@@ -82,10 +81,6 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // Line below is needed to remove Avalonia data validation.
-            // Without this line you will get duplicate validations from both Avalonia and CT
-            BindingPlugins.DataValidators.RemoveAt(0);
-
             var languages = GetLanguages();
             var viewModel = new MainWindowViewModel(new UILogger(), languages);
             viewModel.IsGamescope = Environment.GetEnvironmentVariable("XDG_CURRENT_DESKTOP") == "gamescope";

@@ -139,7 +139,7 @@ public partial class ModConfigModal : UserControl
 
         foreach (var group in ConfigViewModel.Config.Groups)
         {
-            var groupBox = new GroupBox()
+            var groupBox = new Basic.GroupBox()
             {
                 Header = group.DisplayName,
                 Margin = new Thickness(16, 4, 16, 4)

@@ -1,9 +1,10 @@
-<ButtonUserControl xmlns="https://github.com/avaloniaui"
+<primitives:ButtonUserControl xmlns="https://github.com/avaloniaui"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:local="using:HedgeModManager.UI.Controls.Settings"
                    xmlns:materialIcons="using:Material.Icons.Avalonia"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:primitives="clr-namespace:HedgeModManager.UI.Controls.Primitives"
                    mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="64"
                    x:Class="HedgeModManager.UI.Controls.Settings.SettingsEntry"
                    Loaded="OnLoaded">
@@ -52,4 +53,4 @@
     </Border.Styles>
 
   </Border>
-</ButtonUserControl>
+</primitives:ButtonUserControl>
