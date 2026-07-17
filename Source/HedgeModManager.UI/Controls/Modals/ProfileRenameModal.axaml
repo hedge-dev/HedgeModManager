@@ -30,7 +30,7 @@
       <TextBlock Text="{DynamicResource Modal.Text.NewProfileName}"
                  VerticalAlignment="Center" />
       <TextBox Text="{Binding NewName, RelativeSource={RelativeSource AncestorType=local:ProfileRenameModal}}"
-               Watermark="{Binding SelectedProfile.Name, RelativeSource={RelativeSource AncestorType=local:ProfileRenameModal}}"
+               PlaceholderText="{Binding SelectedProfile.Name, RelativeSource={RelativeSource AncestorType=local:ProfileRenameModal}}"
                HorizontalAlignment="Stretch" VerticalAlignment="Top" />
     </StackPanel>
   </local:WindowModal.Data>

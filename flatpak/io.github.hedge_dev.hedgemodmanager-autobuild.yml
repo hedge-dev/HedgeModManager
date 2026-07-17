@@ -44,14 +44,14 @@ modules:
     buildsystem: simple
     build-options:
       env:
-        PUBLISH_PROFILE: linux-x86_64
+        PUBLISH_PROFILE: linux-x64
       arch:
         x86_64:
           env:
-            PUBLISH_PROFILE: linux-x86_64
+            PUBLISH_PROFILE: linux-x64
         aarch64:
           env:
-            PUBLISH_PROFILE: linux-arm
+            PUBLISH_PROFILE: linux-arm64
     sources:
       - type: dir
         path: ../
@@ -59,7 +59,7 @@ modules:
     build-commands:
       - dotnet publish Source/HedgeModManager.UI/HedgeModManager.UI.csproj -c Release -p:DefineConstants=COMMITBUILD -p:PublishProfile=${PUBLISH_PROFILE} --no-self-contained --source ./nuget-sources
       - mkdir -p ${FLATPAK_DEST}/bin
-      - cp -r Source/HedgeModManager.UI/bin/Release/net10.0/publish/* ${FLATPAK_DEST}/bin
+      - cp -r Source/HedgeModManager.UI/bin/Release/net10.0/${PUBLISH_PROFILE}/publish/* ${FLATPAK_DEST}/bin
       - install -Dm644 flatpak/hedgemodmanager.png ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png
       - install -Dm644 flatpak/hedgemodmanager.metainfo.xml ${FLATPAK_DEST}/share/metainfo/${FLATPAK_ID}.metainfo.xml
       - install -Dm644 flatpak/hedgemodmanager.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop

@@ -15,7 +15,7 @@
   <Grid RowDefinitions="Auto,*" ColumnDefinitions="2*,1*"
         Margin="8,0,0,0">
     <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="Auto" ColumnDefinitions="2*,1*">
-      <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Watermark="{DynamicResource Codes.Text.Search}"
+      <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" PlaceholderText="{DynamicResource Codes.Text.Search}"
                FontSize="14" Height="28"
                Text="{Binding Search, RelativeSource={RelativeSource AncestorType=cc:Codes}}"
                Margin="4,23,32,8"
