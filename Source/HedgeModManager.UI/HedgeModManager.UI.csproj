@@ -33,6 +33,7 @@
     <PackageReference Include="Avalonia.HtmlRenderer" Version="12.0.0" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.0" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.0" />
+    <PackageReference Include="Avalonia.Wayland" Version="12.1.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Markdig" Version="0.41.3" />
     <PackageReference Include="Material.Icons.Avalonia" Version="3.0.2" />
