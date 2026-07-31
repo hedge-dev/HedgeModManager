@@ -351,7 +351,7 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 try
                 {
-                    await UpdateCodesAsync(Config.CheckCodeUpdates, true);
+                    await UpdateCodesAsync(Config.CheckCodeUpdates, false);
 
                     if (Config.CheckModLoaderUpdates)
                         await CheckForModLoaderUpdatesAsync();
