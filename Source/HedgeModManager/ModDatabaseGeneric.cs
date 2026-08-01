@@ -263,7 +263,12 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
         {
             if (File.Exists(path))
             {
-                Codes.AddRange(CodeFile.FromFile(path).Codes);
+                var codeFile = CodeFile.FromFile(path);
+                foreach (var code in codeFile.Codes)
+                {
+                    Codes.RemoveAll(x => (x.Name == code.Name && x.Category == code.Category) || (!string.IsNullOrEmpty(x.ID) && x.ID == code.ID));
+                    Codes.Add(code);
+                }
             }
         }
         catch
