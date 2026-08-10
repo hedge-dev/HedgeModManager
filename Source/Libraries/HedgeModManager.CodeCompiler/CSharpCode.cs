@@ -5,25 +5,32 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using PreProcessor;
 using System.Text;
+using System.Text.Json;
 using Foundation;
 
 public class CSharpCode : ICode
 {
     private string mBody = string.Empty;
     private SyntaxTreeEx? mCachedSyntaxTree;
-    
+
+    [CodeMetadata]
     public string ID { get; set; } = string.Empty;
+
+    [CodeMetadata]
     public string Name { get; set; } = string.Empty;
 
-    public string Category { get; set; } = string.Empty;
-
+    [CodeMetadata]
     public string Author { get; set; } = string.Empty;
+
+    [CodeMetadata]
+    public string Category { get; set; } = string.Empty;
 
     public string Description { get; set; } = string.Empty;
 
     public CodeType Type { get; set; }
 
     public bool Enabled { get; set; }
+
     public bool Naked { get; set; }
 
     public List<BasicLexer.Token> Header { get; set; } = new List<BasicLexer.Token>();
@@ -369,8 +376,14 @@ public class CSharpCode : ICode
             var localFuncUnit = SyntaxFactoryEx.MethodDeclaration(methodName, "void",
                                SyntaxFactory.Block(SyntaxFactory.ExpressionStatement(SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName(staticMethodName)))), "public");
 
+            var metadataJson = JsonSerializer.Serialize(this, new JsonSerializerOptions
+            {
+                TypeInfoResolver = CodeMetadataAttribute.JsonTypeInfoResolver
+            });
+
             classUnit = classUnit
                 .WithMembers(SyntaxFactory.List(globalMembers))
+                .AddMembers(ConstStringFieldDeclaration("__META__", metadataJson))
                 .AddMembers(CodeProvider.LoaderExecutableMethod)
                 .AddMembers(funcUnit, localFuncUnit);
         }
@@ -468,6 +481,24 @@ public class CSharpCode : ICode
             }
 
             return SyntaxFactory.UsingDirective(nameSyntax);
+        }
+
+        FieldDeclarationSyntax ConstStringFieldDeclaration(string name, string value)
+        {
+            return SyntaxFactory.FieldDeclaration
+            (
+                SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName("string")).AddVariables
+                (
+                    SyntaxFactory.VariableDeclarator(name).WithInitializer
+                    (
+                        SyntaxFactory.EqualsValueClause
+                        (
+                            SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(value))
+                        )
+                    )
+                )
+            )
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.ConstKeyword));
         }
     }
 
