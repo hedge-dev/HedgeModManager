@@ -210,7 +210,31 @@ public sealed class Program
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
-            .UsePlatformDetect()
+            .UsePlatformDetectPreferWayland()
             .WithInterFont()
             .LogToTrace();
+}
+
+internal static class LinuxPlatformDetector
+{
+    public static AppBuilder UsePlatformDetectPreferWayland(this AppBuilder builder)
+    {
+        if (!OperatingSystem.IsLinux())
+            return builder.UsePlatformDetect();
+
+        if (IsWaylandSession())
+            builder.UseWayland();
+        else
+            builder.UseX11();
+
+        builder.UseSkia().UseHarfBuzz();
+        return builder;
+    }
+
+    private static bool IsWaylandSession()
+        => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY"))
+           || string.Equals(
+               Environment.GetEnvironmentVariable("XDG_SESSION_TYPE"),
+               "wayland",
+               StringComparison.OrdinalIgnoreCase);
 }

@@ -12,7 +12,8 @@ build-options:
 command: HedgeModManager.UI
 
 finish-args:
-  - --socket=x11
+  - --socket=fallback-x11
+  - --socket=wayland
   # UnleashedRecomp permissions
   - --filesystem=~/.config/UnleashedRecomp
   - --filesystem=~/.local/share/applications/UnleashedRecomp.desktop:ro
