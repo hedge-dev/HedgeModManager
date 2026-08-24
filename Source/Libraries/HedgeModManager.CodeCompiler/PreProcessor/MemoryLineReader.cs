@@ -6,9 +6,14 @@ public class MemoryLineReader
     public int Position { get; private set; }
     public long Line { get; private set; }
 
-    public MemoryLineReader(string text)
+    public MemoryLineReader(ReadOnlyMemory<char> text)
     {
-        Text = text.AsMemory();
+        Text = text;
+    }
+
+    public MemoryLineReader(string text) : this(text.AsMemory())
+    {
+
     }
 
     public bool ReadLine(out ReadOnlyMemory<char> line)

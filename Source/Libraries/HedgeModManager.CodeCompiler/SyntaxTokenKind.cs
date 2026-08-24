@@ -8,6 +8,7 @@ public enum SyntaxTokenKind
     LoadDirectiveTrivia,
     LibDirectiveTrivia,
     ImportDirectiveTrivia,
+    LineTrivia,
     WhitespaceTrivia,
     SingleLineCommentTrivia,
     MultiLineCommentTrivia,

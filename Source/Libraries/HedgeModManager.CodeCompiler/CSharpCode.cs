@@ -7,9 +7,12 @@ using PreProcessor;
 using System.Text;
 using System.Text.Json;
 using Foundation;
+using System.Collections.Immutable;
 
 public class CSharpCode : ICode
 {
+    public const string DefaultFilename = "<UNKNOWN>";
+
     private string mBody = string.Empty;
     private SyntaxTreeEx? mCachedSyntaxTree;
 
@@ -32,6 +35,10 @@ public class CSharpCode : ICode
     public bool Enabled { get; set; }
 
     public bool Naked { get; set; }
+
+    public string FileName => ContainingFile?.Path ?? DefaultFilename;
+    public long LineOffset { get; set; }
+    public CodeFile? ContainingFile { get; set; }
 
     public List<BasicLexer.Token> Header { get; set; } = new List<BasicLexer.Token>();
 
@@ -78,7 +85,9 @@ public class CSharpCode : ICode
     public static List<CSharpCode> ParseFile(string path)
     {
         using var stream = File.OpenRead(path);
-        return Parse(stream);
+        var codes = Parse(stream);
+
+        return codes;
     }
 
     public static unsafe List<CSharpCode> Parse(string text)
@@ -96,17 +105,19 @@ public class CSharpCode : ICode
         return Parse(reader);
     }
 
-    public static List<CSharpCode> Parse(StreamReader reader)
+    public static List<CSharpCode> Parse(StreamReader reader, string fileName = DefaultFilename)
     {
         var codes = new List<CSharpCode>();
         CSharpCode? currentCode = null;
         {
             bool isMultilineDescription = false;
             var lineBuilder = new StringBuilder();
+            var currentLine = 0L;
 
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
+                currentLine++;
 
                 if (line == null)
                     continue;
@@ -133,7 +144,8 @@ public class CSharpCode : ICode
                         isMultilineDescription = false;
                         currentCode = new CSharpCode
                         {
-                            Type = codeType
+                            Type = codeType,
+                            LineOffset = currentLine + 1, // Code starts after the header
                         };
 
                         codes.Add(currentCode);
@@ -280,7 +292,14 @@ public class CSharpCode : ICode
     {
         if (mCachedSyntaxTree == null)
         {
-            mCachedSyntaxTree = SyntaxTreeEx.Parse(Body, includeResolver, Naked ? CSharpParseOptions.Default : null);
+            mCachedSyntaxTree = SyntaxTreeEx.Parse(Body, new() 
+            {
+                EmitChecksum = ContainingFile != null,
+                EmitLineNumbers = true,
+                Sha1Checksum = ContainingFile?.Sha1.ToImmutableArray() ?? default,
+                FileName = FileName,
+                LineOffset = LineOffset,
+            }, includeResolver, Naked ? CSharpParseOptions.Default : null);
             return mCachedSyntaxTree;
         }
 
@@ -504,7 +523,8 @@ public class CSharpCode : ICode
 
     public SyntaxTree CreateSyntaxTree(IIncludeResolver? includeResolver = null)
     {
-        return SyntaxFactory.SyntaxTree(CreateCompilationUnit(includeResolver), path: Name);
+        // Do NOT feed a filename to the compiler, that forces the compiler generate it's own checksum
+        return SyntaxFactory.SyntaxTree(CreateCompilationUnit(includeResolver), CSharpParseOptions.Default, "", Encoding.Unicode);
     }
 
     public static bool CodeTypeFromString(ReadOnlySpan<char> text, out CodeType type)

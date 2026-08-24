@@ -23,7 +23,7 @@ public class LinuxCompatibility
 
         // Download runtime
         Logger.Information($"Downloading runtime files (x64)");
-        var stream = await Network.Download(Resources.ExtraProtonFiles64DownloadURL, "extra-proton-files-x64.zip", null);
+        await using var stream = await Network.Download(Resources.ExtraProtonFiles64DownloadURL, "extra-proton-files-x64.zip", null);
         if (stream == null)
         {
             Logger.Error($"Failed to download runtime files");
@@ -72,7 +72,6 @@ public class LinuxCompatibility
             }
             Logger.Debug("Finish extracting runtime files");
         });
-        await stream.DisposeAsync();
 
         await AddProtonRegistryPatch(path);
         await AddDllOverride(path, "d3dcompiler_47");

@@ -16,10 +16,10 @@ public class SyntaxTreeEx : CSharpSyntaxTree
         mBaseSyntaxTree = baseTree;
     }
 
-    private static string ProcessText(string text, out TextProcessor preprocessor, IIncludeResolver? includeResolver = null)
+    private static string ProcessText(string text, in BasicLexer.FilterOptions filter, out TextProcessor preprocessor, IIncludeResolver? includeResolver = null)
     {
         preprocessor = new TextProcessor(includeResolver);
-        var body = new StringBuilder(preprocessor.Process(text));
+        var body = new StringBuilder(preprocessor.Process(text, filter));
 
         var tokens = SyntaxFactory.ParseTokens(body.ToString(), options: new CSharpParseOptions(kind: SourceCodeKind.Script, documentationMode: DocumentationMode.Parse));
         using var enumerator = tokens.GetEnumerator();
@@ -49,11 +49,12 @@ public class SyntaxTreeEx : CSharpSyntaxTree
         return body.ToString();
     }
 
-    public static SyntaxTreeEx Parse(string text, IIncludeResolver? includeResolver = null, CSharpParseOptions? options = null)
+    public static SyntaxTreeEx Parse(string text, in BasicLexer.FilterOptions filter, IIncludeResolver? includeResolver = null, CSharpParseOptions? options = null)
     {
-        var tree = new SyntaxTreeEx((CSharpSyntaxTree)ParseText(ProcessText(text, out var processor, includeResolver), options ?? new (kind: SourceCodeKind.Script)))
+        // Do NOT feed a filename to the compiler, that forces the compiler generate it's own checksum
+        var tree = new SyntaxTreeEx((CSharpSyntaxTree)ParseText(ProcessText(text, filter, out var processor, includeResolver), options ?? new (kind: SourceCodeKind.Regular)))
         {
-            PreProcessor = processor
+            PreProcessor = processor,
         };
         return tree;
     }

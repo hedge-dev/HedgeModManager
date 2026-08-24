@@ -206,9 +206,14 @@ public class TextProcessor
 
     public string Process(string text)
     {
+        return Process(text, new());
+    }
+
+    public string Process(string text, in BasicLexer.FilterOptions filterOptions)
+    {
         var builder = new StringBuilder();
         var readers = new Stack<(MemoryLineReader, bool)>();
-        readers.Push(new (new MemoryLineReader(BasicLexer.FilterComments(text.AsMemory())), true));
+        readers.Push(new (new MemoryLineReader(BasicLexer.FilterText(text.AsMemory(), filterOptions)), true));
 
         var emitStack = 0;
 
@@ -354,13 +359,21 @@ public class TextProcessor
                                     var includeText = IncludeResolver.Resolve(includeToken.ValueText.ToString());
                                     if (includeText != null)
                                     {
-                                        readers.Push(new (new MemoryLineReader(BasicLexer.FilterComments(includeText.AsMemory())), emit));
+                                        readers.Push(new (new MemoryLineReader(BasicLexer.FilterText(includeText.AsMemory())), emit));
                                     }
                                 }
                                 else
                                 {
                                     continue;
                                 }
+                                break;
+                            }
+
+                            case "pragma":
+                            case "line":
+                            {
+                                builder.Append(line);
+                                builder.AppendLine();
                                 break;
                             }
 

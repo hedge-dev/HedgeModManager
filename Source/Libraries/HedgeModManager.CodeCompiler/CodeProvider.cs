@@ -1,13 +1,15 @@
 ﻿namespace HedgeModManager.CodeCompiler;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis;
-using System.IO.Compression;
-using Properties;
-using Foundation;
 using Diagnostics;
-using PreProcessor;
+using Foundation;
 using IL;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Emit;
+using PreProcessor;
+using Properties;
+using System.IO.Compression;
+using System.Text;
 
 public class CodeProvider
 {
@@ -71,7 +73,7 @@ public class CodeProvider
             var report = new Report();
             var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true);
             var trees = new List<SyntaxTree>();
-            var newLibs = new HashSet<string>();
+            var newLibs = new HashSet<LibraryReference>();
             var loads = GetLoadAssemblies(sources, includeResolver, loadPaths);
             var resultStream = compileOptions.OutputStream;
 
@@ -96,12 +98,12 @@ public class CodeProvider
 
                     foreach (string reference in source.GetReferences())
                     {
-                        newLibs.Add($"{source.Name}\x00{reference}");
+                        newLibs.Add(new(reference, source));
                     }
 
                     foreach (string reference in source.GetImports())
                     {
-                        newLibs.Add($"{source.Name}\x00{reference}");
+                        newLibs.Add(new(reference, source));
                     }
                 }
             }
@@ -109,19 +111,12 @@ public class CodeProvider
             var libs = new HashSet<string>();
             while (newLibs.Count != 0)
             {
-                var addedLibs = new List<string>(newLibs.Count);
+                var addedLibs = new List<LibraryReference>(newLibs.Count);
                 var hasError = false;
-                foreach (string libIter in newLibs)
+                foreach (var newLib in newLibs)
                 {
-                    var lib = libIter;
-                    var dividerIndex = lib.IndexOf('\x00');
-                    var sourceRef = string.Empty;
-
-                    if (dividerIndex != -1)
-                    {
-                        sourceRef = lib.Substring(0, dividerIndex);
-                        lib = lib.Substring(dividerIndex + 1);
-                    }
+                    var lib = newLib.Library;
+                    var sourceRef = newLib.From;
 
                     if (libs.Contains(lib))
                     {
@@ -131,22 +126,23 @@ public class CodeProvider
                     var libSource = sources.FirstOrDefault(x => x.Name == lib || x.ID == lib);
                     if (libSource == null)
                     {
-                        report.Error(sourceRef, $"Unable to find dependency library '{lib}'");
+                        report.Error(sourceRef.Name, $"Unable to find dependency library '{lib}'");
                         hasError = true;
                         continue;
                     }
 
                     trees.Add(libSource.CreateSyntaxTree(includeResolver));
+
                     libs.Add(lib);
 
                     foreach (string reference in libSource.GetReferences())
                     {
-                        addedLibs.Add(reference);
+                        addedLibs.Add(new(reference, libSource));
                     }
 
                     foreach (string reference in libSource.GetImports())
                     {
-                        addedLibs.Add(reference);
+                        addedLibs.Add(new(reference, libSource));
                     }
                 }
 
@@ -168,7 +164,9 @@ public class CodeProvider
                 .AddSyntaxTrees(PredefinedClasses);
 
             var memStream = new MemoryStream();
-            var result = compiler.Emit(memStream);
+            var result = compiler.Emit(memStream, 
+                options: new(debugInformationFormat: DebugInformationFormat.Embedded));
+
             memStream.Position = 0;
 
             if (result.Success)
@@ -271,6 +269,8 @@ public class CodeProvider
             return metaRef;
         }
     }
+
+    public record struct LibraryReference(string Library, CSharpCode From);
 }
 
 public class OptionalColonRewriter : CSharpSyntaxRewriter

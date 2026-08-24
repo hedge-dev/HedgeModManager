@@ -4,6 +4,7 @@ using PreProcessor;
 using Diagnostics;
 using Foundation;
 using System.Text;
+using System.Security.Cryptography;
 
 public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
 {
@@ -11,9 +12,11 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
     public const string VersionTag = "VERSION";
     protected Version? mFileVersion;
 
+    public string Path { get; set; } = "<UNKNOWN>";
     public Dictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();
     public List<CSharpCode> Codes { get; set; } = new List<CSharpCode>();
     public IEnumerable<CSharpCode> ExecutableCodes => Codes.Where(x => x.IsExecutable());
+    public byte[] Sha1 { get; private set; } = [];
 
     public CodeFile() { }
 
@@ -132,7 +135,13 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
     {
         if (File.Exists(path))
         {
+            Path = path;
             using var stream = File.OpenRead(path);
+            using var sha = SHA1.Create();
+
+            Sha1 = sha.ComputeHash(stream);
+            stream.Position = 0;
+
             Parse(stream);
         }
     }
@@ -170,7 +179,13 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
 
         stream.Position = start;
         reader.DiscardBufferedData();
-        Codes.AddRange(CSharpCode.Parse(reader));
+
+        var newCodes = CSharpCode.Parse(reader, Path);
+        foreach(var code in newCodes)
+        {
+            code.ContainingFile = this;
+        }
+        Codes.AddRange(newCodes);
     }
 
     public static unsafe CodeFile FromText(string text)
@@ -180,6 +195,10 @@ public class CodeFile : IIncludeResolver, IEnumerable<CSharpCode>
         fixed (char* textPtr = text)
         {
             using var stream = new UnmanagedMemoryStream((byte*)textPtr, text.Length * sizeof(char));
+            using var sha = SHA1.Create();
+            file.Sha1 = sha.ComputeHash(stream);
+
+            stream.Position = 0;
             file.Parse(stream, BitConverter.IsLittleEndian ? Encoding.Unicode : Encoding.BigEndianUnicode);
             return file;
         }

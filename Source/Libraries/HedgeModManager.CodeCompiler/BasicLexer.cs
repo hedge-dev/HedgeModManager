@@ -1,7 +1,10 @@
 ﻿namespace HedgeModManager.CodeCompiler;
-using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography;
 using System.Text;
 
 public class BasicLexer
@@ -16,9 +19,22 @@ public class BasicLexer
         return c is >= '0' and <= '9';
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsAnyWhitespace(char c)
+    {
+        return IsWhitespace(c) || IsLine(c);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsWhitespace(char c)
     {
-        return c is ' ' or '\t' or '\r' or '\n';
+        return c is ' ' or '\t';
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsLine(char c)
+    {
+        return c is '\r' or '\n';
     }
 
     public static Token ParseToken(ReadOnlyMemory<char> text, int offset = 0, bool ignoreWhitespace = false)
@@ -29,26 +45,49 @@ public class BasicLexer
         var span = text.Span;
         char c = span[offset];
 
-        if (IsWhitespace(c))
+        if (ignoreWhitespace)
         {
-            int l = 0;
-            while (offset + l < text.Length && IsWhitespace(span[offset + l]))
+            if (IsAnyWhitespace(c))
             {
-                l++;
-            }
+                int l = 0;
+                while (offset + l < text.Length && IsAnyWhitespace(span[offset + l]))
+                {
+                    l++;
+                }
 
-            if (!ignoreWhitespace)
+                offset += l;
+                if (offset >= text.Length)
+                {
+                    return Token.Create(text, SyntaxTokenKind.EndOfFileToken, 0, 0);
+                }
+            }
+        }
+        else
+        {
+            if (IsWhitespace(c))
             {
+                int l = 0;
+                while (offset + l < text.Length && IsWhitespace(span[offset + l]))
+                {
+                    l++;
+                }
+
                 return Token.Create(text, SyntaxTokenKind.WhitespaceTrivia, offset, l);
             }
 
-            offset += l;
-            if (offset >= text.Length)
+            if (c == '\r')
             {
-                return Token.Create(text, SyntaxTokenKind.EndOfFileToken, 0, 0);
-            }
+                if (offset + 1 < text.Length && span[offset + 1] == '\n')
+                {
+                    return Token.Create(text, SyntaxTokenKind.LineTrivia, offset, 2);
+                }
 
-            c = span[offset];
+                return Token.Create(text, SyntaxTokenKind.LineTrivia, offset, 1);
+            }
+            else if (c == '\n')
+            {
+                return Token.Create(text, SyntaxTokenKind.LineTrivia, offset, 1);
+            }
         }
 
         if (CharEquals('/') && CharEquals('/', 1))
@@ -268,17 +307,54 @@ public class BasicLexer
         }
     }
 
-    public static string FilterComments(ReadOnlyMemory<char> text)
+    public static string FilterText(ReadOnlyMemory<char> text)
+    {
+        return FilterText(text, new());
+    }
+
+    public static string FilterText(ReadOnlyMemory<char> text, in FilterOptions options)
     {
         var sb = new StringBuilder();
+        var currentLine = options.LineOffset;
+
+        if (options.EmitChecksum)
+        {
+            var checksum = new StringBuilder(32);
+            foreach(var b in options.Sha1Checksum)
+            {
+                checksum.Append($"{b:x2}");
+            }
+
+            sb.AppendLine($"#pragma checksum \"{options.FileName}\" \"{{ff1816ec-aa5e-4d10-87f7-6f4963833460}}\" \"{checksum}\"");
+        }
+        if (options.EmitLineNumbers) sb.AppendLine($"#line {currentLine++} \"{options.FileName}\"");
+
         foreach (var token in ParseTokens(text,
                      t => t.Kind != SyntaxTokenKind.SingleLineCommentTrivia &&
                           t.Kind != SyntaxTokenKind.MultiLineCommentTrivia))
         {
+            if (token.IsKind(SyntaxTokenKind.LineTrivia))
+            {
+                sb.Append(token.Text);
+
+                if (options.EmitLineNumbers) sb.AppendLine($"#line {currentLine++}");
+                continue;
+            }
             sb.Append(token.Text);
         }
 
         return sb.ToString();
+    }
+
+    public readonly struct FilterOptions
+    {
+        public bool EmitChecksum { get; init; } = false;
+        public bool EmitLineNumbers { get; init; } = false;
+        public string FileName { get; init; } = string.Empty;
+        public long LineOffset { get; init; } = 1;
+        public ImmutableArray<byte> Sha1Checksum { get; init; }
+        
+        public FilterOptions() { }
     }
 
     public struct DirectiveSyntax
