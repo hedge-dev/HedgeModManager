@@ -149,7 +149,7 @@ public sealed class Program
         if (continueStartup)
         {
             // Start Avalonia
-            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+            BuildAvaloniaApp().WithDeveloperTools().StartWithClassicDesktopLifetime(args);
         }
         CurrentMutex?.ReleaseMutex();
         CurrentMutex?.Dispose();
