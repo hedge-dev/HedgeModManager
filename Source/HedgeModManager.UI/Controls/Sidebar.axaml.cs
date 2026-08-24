@@ -60,7 +60,7 @@ public partial class Sidebar : UserControl
     private void OnGameIconPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var viewModel = (DataContext as MainWindowViewModel)!;
-        viewModel.Modals.Add(new Modal(new GameSelectModal()));
+        viewModel.Modals.Add(new Modal(new GameSelectModal(), new(0)));
     }
 
     private void OnExitClicked(object? sender, RoutedEventArgs e)

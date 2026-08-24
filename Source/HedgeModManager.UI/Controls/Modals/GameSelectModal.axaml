@@ -9,22 +9,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
              mc:Ignorable="d" d:DesignWidth="340" d:DesignHeight="408"
-             Background="{DynamicResource Common.Background0Brush}"
              x:Class="HedgeModManager.UI.Controls.Modals.GameSelectModal"
              x:DataType="vm:MainWindowViewModel"
              Loaded="OnLoaded">
-    <StackPanel>
-      <TextBlock Text="{DynamicResource Modal.Title.Games}" FontSize="32" Margin="0,0,0,4" HorizontalAlignment="Center" />
-      <ScrollViewer MaxHeight="320" Margin="4,4,0,4">
-        <ItemsControl ItemsSource="{Binding Games}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <cp:GameSelectButton Game="{Binding}" Margin="0,0,4,0"
-                                   Click="OnGameClick" />
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
+    <StackPanel Margin="20">
+        <TextBlock Text="{DynamicResource Modal.Title.Games}" FontSize="32" HorizontalAlignment="Center" />
+        <Separator Margin="0,8,0,16"/>
+        <ScrollViewer MaxHeight="320">
+            <ItemsControl ItemsSource="{Binding Games}">
+                <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <cp:GameSelectButton Game="{Binding}" Margin="0,0,10,10"
+                                        Click="OnGameClick" />
+                </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer> 
       <StackPanel Margin="4" Orientation="Horizontal" IsVisible="{Binding IsUnleashedRecompiledMissing, RelativeSource={RelativeSource AncestorType=cm:GameSelectModal}}">
         <TextBlock Text="{DynamicResource Modal.Text.GameMissing}" TextDecorations="Underline" Cursor="Hand"
                    Margin="4"
