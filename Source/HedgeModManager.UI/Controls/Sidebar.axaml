@@ -56,19 +56,19 @@
         <StackPanel x:Name="TabButtons" Margin="0,12,0,12">
           <c:SidebarButton Type="Tab" IsVisible="False" Icon="{DynamicResource Geometry.ScrewDriverWrench}" Click="OnTabChanged" />
           <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}, Converter={StaticResource InvertedBoolConverter}}" Icon="{DynamicResource Geometry.ScrewDriverWrench}" Click="OnTabChanged" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Whench}" Click="OnTabChanged" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Code}" Click="OnTabChanged" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Gear}" Click="OnSettingsClicked" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.CircleInfo}" Click="OnTabChanged" />
-          <c:SidebarButton Type="Tab" IsVisible="{Binding Config.TestModeEnabled}" Icon="{DynamicResource Geometry.Flask}" Click="OnTabChanged" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Whench}" Click="OnTabChanged" ToolTip.Tip="Mods" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Code}" Click="OnTabChanged" ToolTip.Tip="Codes" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.Gear}" Click="OnSettingsClicked" ToolTip.Tip="{DynamicResource Settings.Header.Text}" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding ViewModel.IsSetupCompleted, RelativeSource={RelativeSource AncestorType=c:Sidebar}}" Icon="{DynamicResource Geometry.CircleInfo}" Click="OnTabChanged" ToolTip.Tip="About" />
+          <c:SidebarButton Type="Tab" IsVisible="{Binding Config.TestModeEnabled}" Icon="{DynamicResource Geometry.Flask}" Click="OnTabChanged" ToolTip.Tip="Lab" />
           <c:SidebarButton Type="Normal" IsVisible="{Binding IsFullscreen}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" Icon="{DynamicResource Geometry.Exit}" Click="OnExitClicked"  />
         </StackPanel>
         <cb:Separator Foreground="{DynamicResource BorderBrush}" />
       </StackPanel>
       <StackPanel Margin="0,0,0,16" VerticalAlignment="Bottom">
         <StackPanel IsVisible="{Binding Config.IsSetupCompleted}">
-          <c:SidebarButton Type="Normal" Click="OnSaveClicked" Icon="{DynamicResource Geometry.FloppyDisk}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
-          <c:SidebarButton Type="Normal" Click="OnRunClicked" Icon="{DynamicResource Geometry.Play}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
+          <c:SidebarButton Type="Normal" Click="OnSaveClicked" Icon="{DynamicResource Geometry.FloppyDisk}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" ToolTip.Tip="{DynamicResource Common.Button.Save}" />
+          <c:SidebarButton Type="Normal" Click="OnRunClicked" Icon="{DynamicResource Geometry.Play}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" ToolTip.Tip="{DynamicResource Common.Button.SavePlay}" />
         </StackPanel>
         <TextBlock Text="{Binding AppVersion}"
                    Margin="14,16,14,0" TextWrapping="Wrap"
