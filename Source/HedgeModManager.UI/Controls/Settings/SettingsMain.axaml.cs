@@ -68,6 +68,12 @@ public partial class SettingsMain : SettingsBase
                     viewModel.Config.LastWindowState = viewModel.WindowState;
                 }));
             }
+
+            viewModel.CurrentTabInfo.Buttons.Add(new("Settings.Button.OpenGameDir", ButtonsOLD.Start, (b) =>
+            {
+                OpenGameDirectory();
+            }));
+
             viewModel.CurrentTabInfo.Buttons.Add(new("Settings.Button.ExportLog", ButtonsOLD.Y, (b) =>
             {
                 _ = Dispatcher.UIThread.Invoke(() => MainWindowViewModel.ExportLogAsync(this));
@@ -151,11 +157,11 @@ public partial class SettingsMain : SettingsBase
         });
     }
 
-    private void OnGameDirClick(object? sender, RoutedEventArgs e)
+    private void OpenGameDirectory()
     {
         if (DataContext is not MainWindowViewModel viewModel ||
             viewModel.SelectedGame is not UIGame game)
-            return;
+                return;
 
         Process.Start(new ProcessStartInfo
         {
