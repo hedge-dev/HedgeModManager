@@ -44,13 +44,14 @@ public partial class MessageBoxModal : WindowModal
 
     public MessageBoxModal AddButton(string text, EventHandler<ButtonClickEventArgs> handler)
     {
-        var button = new Basic.Button
+        var button = new SimpleModalButton
         {
             Text = text
         };
-        button.Click += handler;
 
+        button.Click += handler;
         ButtonStackPanel.Children.Add(button);
+
         return this;
     }
 
