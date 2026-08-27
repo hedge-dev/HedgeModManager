@@ -18,7 +18,7 @@
              UseTitlePadding="False"
              LargeWindow="True">
   <local:WindowModal.Buttons>
-    <StackPanel HorizontalAlignment="Right">
+    <StackPanel HorizontalAlignment="Right" Margin="10">
       <cb:Button Text="Common.Button.Download"
                  Icon="Download" UseIcon="True"
                  IsEnabled="{Binding ViewModel.Ready, RelativeSource={RelativeSource AncestorType=local:ModDownloaderModal}}"

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:HedgeModManager.UI.Controls"
              xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
              xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:html="using:TheArtOfDev.HtmlRenderer.Avalonia"
@@ -14,11 +15,12 @@
              x:Class="HedgeModManager.UI.Controls.Modals.ProfileRenameModal"
              x:DataType="vm:MainWindowViewModel"
              MinWidth="500" MinHeight="200" Title="Modal.Title.RenameProfile"
-             UseTitlePadding="True">
+             UseTitlePadding="True"
+             Background="{DynamicResource BackgroundL1Brush}">
   <local:WindowModal.Buttons>
     <Grid>
       <StackPanel HorizontalAlignment="Right">
-        <cb:Button Text="Common.Button.OK" Click="OnOkClick" />
+        <cm:SimpleModalButton Text="Common.Button.OK" Click="OnOkClick" />
       </StackPanel>
     </Grid>
   </local:WindowModal.Buttons>
@@ -28,7 +30,8 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center">
       <TextBlock Text="{DynamicResource Modal.Text.NewProfileName}"
-                 VerticalAlignment="Center" />
+                 VerticalAlignment="Center"
+                 Margin="0,0,0,10"/>
       <TextBox Text="{Binding NewName, RelativeSource={RelativeSource AncestorType=local:ProfileRenameModal}}"
                PlaceholderText="{Binding SelectedProfile.Name, RelativeSource={RelativeSource AncestorType=local:ProfileRenameModal}}"
                HorizontalAlignment="Stretch" VerticalAlignment="Top" />

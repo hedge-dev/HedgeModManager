@@ -21,11 +21,17 @@
                    LargeWindow="True">
   <local:WindowModal.Buttons>
     <StackPanel>
-      <cb:Button Text="{DynamicResource Mods.Button.Open}" Click="OnOpenClick" />
-      <cb:Button Text="{Binding InfoViewModel.FavoriteButtonText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource StringLocalizeConverter}}" Click="OnFavoriteClick" />
-      <cb:Button Text="{DynamicResource Mods.Button.Configure}" Click="OnConfigureClick" IsEnabled="{Binding ModViewModel.HasConfig, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}" />
-      <cb:Button Text="{DynamicResource Mods.Button.Update}" IsEnabled="{Binding ModViewModel.Mod.Updater, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource NullBoolConverter}}" Click="OnUpdateClick" />
-      <cb:Button Text="{DynamicResource Mods.Button.Delete}" Click="OnDeleteClick" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Open}" Click="OnOpenClick" />
+      <cm:SimpleModalButton Text="{Binding InfoViewModel.FavoriteButtonText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource StringLocalizeConverter}}" Click="OnFavoriteClick" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Configure}" Click="OnConfigureClick" IsEnabled="{Binding ModViewModel.HasConfig, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Update}" IsEnabled="{Binding ModViewModel.Mod.Updater, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource NullBoolConverter}}" Click="OnUpdateClick" />
+      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Delete}" Click="OnDeleteClick">
+         <cm:SimpleModalButton.Resources>
+            <SolidColorBrush x:Key="Button.HoverBrush" Color="{DynamicResource Common.DangerColor}"/> 
+         </cm:SimpleModalButton.Resources> 
+      </cm:SimpleModalButton>
+
+      <cm:SimpleModalButton Text="{DynamicResource Common.Button.Close}" Click="Close_Click"/>
     </StackPanel>
   </local:WindowModal.Buttons>
   <local:WindowModal.Data>

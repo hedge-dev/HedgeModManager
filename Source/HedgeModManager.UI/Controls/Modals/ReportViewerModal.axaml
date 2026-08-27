@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="using:HedgeModManager.UI.Controls"
              xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+             xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
              xmlns:cp="using:HedgeModManager.UI.Controls.Primitives"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:html="using:TheArtOfDev.HtmlRenderer.Avalonia"
@@ -14,14 +15,15 @@
              x:Class="HedgeModManager.UI.Controls.Modals.ReportViewerModal"
              x:DataType="vm:MainWindowViewModel"
              MinWidth="400" MinHeight="200" Title="Modal.Title.ReportViewer"
-             UseTitlePadding="True" LargeWindow="True">
+             UseTitlePadding="True" LargeWindow="True"
+             Background="{DynamicResource BackgroundL1Brush}">
   <local:WindowModal.Buttons>
     <Grid>
       <StackPanel HorizontalAlignment="Left">
-        <cb:Button Text="Common.Button.CopyAll" Click="OnCopyAllClick" />
+        <cm:SimpleModalButton Text="Common.Button.CopyAll" Click="OnCopyAllClick" />
       </StackPanel>
       <StackPanel HorizontalAlignment="Right">
-        <cb:Button Text="Common.Button.Close" Click="OnCloseClick" />
+        <cm:SimpleModalButton Text="Common.Button.Close" Click="OnCloseClick" />
       </StackPanel>
     </Grid>
   </local:WindowModal.Buttons>

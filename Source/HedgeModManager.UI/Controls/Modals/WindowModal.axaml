@@ -12,7 +12,7 @@
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="540"
              x:Class="HedgeModManager.UI.Controls.Modals.WindowModal"
-             Background="{DynamicResource Common.Background0Brush}"
+             Background="{DynamicResource BackgroundL1Brush}"
              MinWidth="400" MinHeight="200">
   <Grid>
     <Grid.Background>
@@ -25,7 +25,7 @@
       <Grid RowDefinitions="*,Auto">
         <ContentPresenter Grid.Row="0"
                           Content="{Binding Data, RelativeSource={RelativeSource AncestorType=local:WindowModal}}" />
-        <Border Grid.Row="1" Margin="20,12,20,20">
+        <Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}">
           <ContentPresenter Content="{Binding Buttons, RelativeSource={RelativeSource AncestorType=local:WindowModal}}" />
         </Border>
       </Grid>

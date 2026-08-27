@@ -19,15 +19,18 @@ public partial class ModInfoViewModel : ViewModelBase
         ModViewModel = modEntryViewModel;
         Title = Localize("Modal.Title.AboutMod", modEntryViewModel.Mod.Title);
         ModText = Localize("Modal.Header.AboutMod", modEntryViewModel.Mod.Title, modEntryViewModel.Mod.Version);
+
         string desc = modEntryViewModel.Mod.Description.Replace("\\n", "\n\n ");
+        var authorText = string.IsNullOrWhiteSpace(modEntryViewModel.Mod.Date) ? "Modal.Header.AboutModAuthorNoDate" : "Modal.Header.AboutModAuthor";
         if (ModViewModel.Mod is ModGeneric mod)
         {
-            AuthorText = Localize("Modal.Header.AboutModAuthor", mod.AuthorShort, mod.Date);
+            AuthorText = Localize(authorText, mod.AuthorShort, mod.Date);
             if (!string.IsNullOrEmpty(mod.Markdown))
                 desc = mod.Markdown;
         }
         else
-            AuthorText = Localize("Modal.Header.AboutModAuthor", modEntryViewModel.Authors, modEntryViewModel.Mod.Date);
+            AuthorText = Localize(authorText, modEntryViewModel.Authors, modEntryViewModel.Mod.Date);
+
         Description = Utils.ConvertToHTML(desc);
         UpdateButtons();
     }

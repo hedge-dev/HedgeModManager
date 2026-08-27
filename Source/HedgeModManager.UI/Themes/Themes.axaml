@@ -19,6 +19,8 @@
       <SolidColorBrush x:Key='Common.Background1Brush'>#191919</SolidColorBrush>
       <SolidColorBrush x:Key='Common.Background2Brush'>#202020</SolidColorBrush>
       <SolidColorBrush x:Key='Common.Background3Brush'>#272727</SolidColorBrush>
+      <Color x:Key='Common.DangerColor'>Red</Color>
+
       <SolidColorBrush x:Key='BackgroundL0Brush'>#191919</SolidColorBrush>
       <SolidColorBrush x:Key='BackgroundL1Brush'>#202020</SolidColorBrush>
       <SolidColorBrush x:Key='BackgroundL2Brush'>#272727</SolidColorBrush>
@@ -94,6 +96,7 @@
       <SolidColorBrush x:Key='TextHoverBrush'>#ABB0CD</SolidColorBrush>
       <SolidColorBrush x:Key='BorderBrush'>#282838</SolidColorBrush>
       <SolidColorBrush x:Key='HoverBrush'>#000000</SolidColorBrush>
+      <Color x:Key='Common.DangerColor'>Red</Color>
 
       <SolidColorBrush x:Key='Text.NormalBrush'>#D3DBFF</SolidColorBrush>
       <SolidColorBrush x:Key='Text.SubBrush'>#6A6F84</SolidColorBrush>

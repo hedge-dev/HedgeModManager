@@ -69,6 +69,7 @@ public partial class ModInfoModal : WindowModal
         var viewModel = DataContext as MainWindowViewModel;
         if (viewModel == null)
             return;
+
         Close();
         await viewModel.CheckForModUpdatesAsync(ModViewModel.Mod, true);
     }
@@ -105,5 +106,10 @@ public partial class ModInfoModal : WindowModal
         modal.SetDanger();
 
         modal.Open(viewModel);
+    }
+
+    private void Close_Click(object? sender, HedgeModManager.UI.Events.ButtonClickEventArgs e)
+    {
+        Close();
     }
 }

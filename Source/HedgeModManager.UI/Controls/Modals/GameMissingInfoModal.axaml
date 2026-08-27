@@ -1,6 +1,7 @@
 <local:WindowModal xmlns="https://github.com/avaloniaui"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:cb="using:HedgeModManager.UI.Controls.Basic"
+                   xmlns:cm="using:HedgeModManager.UI.Controls.Modals"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:local="using:HedgeModManager.UI.Controls.Modals"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,10 +10,11 @@
                    x:Class="HedgeModManager.UI.Controls.Modals.GameMissingInfoModal"
                    x:DataType="vm:MainWindowViewModel"
                    Loaded="OnLoaded"
-                   Title="Modal.Title.GameSearch">
+                   Title="Modal.Title.GameSearch"
+                   Background="{DynamicResource BackgroundL1Brush}">
   <local:WindowModal.Buttons>
     <StackPanel HorizontalAlignment="Right">
-      <cb:Button Text="Common.Button.Stop" Click="OnStopClick" />
+      <cm:SimpleModalButton Text="Common.Button.Stop" Click="OnStopClick" />
     </StackPanel>
   </local:WindowModal.Buttons>
   <local:WindowModal.Data>

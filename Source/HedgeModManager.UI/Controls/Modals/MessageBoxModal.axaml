@@ -11,10 +11,10 @@
                    xmlns:vm="using:HedgeModManager.UI.ViewModels"
                    mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="200"
                    x:Class="HedgeModManager.UI.Controls.Modals.MessageBoxModal"
-                   x:DataType="vm:MainWindowViewModel">
+                   x:DataType="vm:MainWindowViewModel"
+                   Background="{DynamicResource BackgroundL1Brush}">
   <local:WindowModal.Buttons>
-    <StackPanel x:Name="ButtonStackPanel"
-                HorizontalAlignment="Right" />
+    <StackPanel x:Name="ButtonStackPanel"/>
   </local:WindowModal.Buttons>
   <local:WindowModal.Data>
     <TextBlock Text="{Binding Message, RelativeSource={RelativeSource AncestorType=cm:MessageBoxModal}, Converter={StaticResource StringLocalizeConverter}}"

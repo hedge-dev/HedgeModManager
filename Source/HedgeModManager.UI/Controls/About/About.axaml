@@ -35,7 +35,8 @@
         </TextBlock>
       <cb:Separator Grid.Row="0" Grid.ColumnSpan="2"
                     Margin="8"
-                    VerticalAlignment="Bottom"/>
+                    VerticalAlignment="Bottom"
+                    FullWidth="False"/>
       <StackPanel Grid.Row="1" Grid.ColumnSpan="2"
                   Margin="0,12,0,0"
                   HorizontalAlignment="Center">
