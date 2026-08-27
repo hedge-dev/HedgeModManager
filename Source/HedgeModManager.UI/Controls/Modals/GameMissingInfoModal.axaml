@@ -19,7 +19,7 @@
   </local:WindowModal.Buttons>
   <local:WindowModal.Data>
     <TextBlock Text="{DynamicResource Modal.Message.GameSearch}"
-               FontSize="14" Margin="50,70,50,20"
+               FontSize="14"
                TextAlignment="Center"/>
   </local:WindowModal.Data>
 </local:WindowModal>

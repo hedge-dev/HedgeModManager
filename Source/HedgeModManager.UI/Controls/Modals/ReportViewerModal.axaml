@@ -15,7 +15,7 @@
              x:Class="HedgeModManager.UI.Controls.Modals.ReportViewerModal"
              x:DataType="vm:MainWindowViewModel"
              MinWidth="400" MinHeight="200" Title="Modal.Title.ReportViewer"
-             UseTitlePadding="True" LargeWindow="True"
+             LargeWindow="True"
              Background="{DynamicResource BackgroundL1Brush}">
   <local:WindowModal.Buttons>
     <Grid>

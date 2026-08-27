@@ -13,12 +13,11 @@ using static HedgeModManager.UI.Languages.Language;
 
 namespace HedgeModManager.UI.Controls.Modals;
 
-public partial class ModConfigModal : UserControl
+public partial class ModConfigModal : WindowModal
 {
     public ModEntryViewModel ModViewModel { get; set; }
     public ModConfigViewModel ConfigViewModel { get; set; }
 
-    public string Title { get; set; } = "Common.Text.Loading";
     public bool PauseDescription { get; set; } = false;
 
     public string ConfigIniPath = string.Empty;
@@ -30,7 +29,7 @@ public partial class ModConfigModal : UserControl
         var mod = (ModGeneric)ModViewModel.Mod;
         ConfigViewModel = new(mod);
         Title = Localize("Modal.Title.ConfigureMod", mod.Title);
-        
+
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -129,7 +128,9 @@ public partial class ModConfigModal : UserControl
         {
             string jsonPath = Path.Combine(ConfigViewModel.Mod.Root, ConfigViewModel.Mod.ConfigSchemaFile);
             await ConfigViewModel.DeserializeSchema(jsonPath);
+
             ConfigIniPath = Path.Combine(ConfigViewModel.Mod.Root, ConfigViewModel.Config.IniFile);
+
             await ConfigViewModel.Config.Load(ConfigIniPath);
         }
         else
@@ -144,10 +145,12 @@ public partial class ModConfigModal : UserControl
                 Header = group.DisplayName,
                 Margin = new Thickness(16, 4, 16, 4)
             };
+
             var configStackPanel = new StackPanel()
             {
                 Margin = new Thickness(4)
             };
+
             foreach (var element in group.Elements)
             {
                 var grid = new Grid()
@@ -156,11 +159,15 @@ public partial class ModConfigModal : UserControl
                     Margin = new Thickness(4),
                     Background = App.GetStyleResource<ImmutableSolidColorBrush>("BackgroundL0Brush", this)
                 };
+
                 grid.PointerMoved += (s, e) =>
                 {
                     if (!PauseDescription)
+                    {
                         ConfigViewModel.Description = string.Join("\n", element.Description);
+                    }
                 };
+
                 grid.Children.Add(new Avalonia.Controls.TextBlock()
                 {
                     Text = element.DisplayName,
@@ -171,29 +178,15 @@ public partial class ModConfigModal : UserControl
 
                 var editControl = CreateControl(element, ConfigViewModel.Config);
                 editControl.SetValue(Grid.ColumnProperty, 1);
-                editControl.SetValue(Layoutable.HorizontalAlignmentProperty, HorizontalAlignment.Stretch);
-                editControl.SetValue(Layoutable.VerticalAlignmentProperty, VerticalAlignment.Center);
+                editControl.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Stretch);
+                editControl.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
                 grid.Children.Add(editControl);
                 
                 configStackPanel.Children.Add(grid);
             }
+
             groupBox.Data = configStackPanel;
             FormStackPanel.Children.Add(groupBox);
-        }
-    }
-
-    public void Open(MainWindowViewModel viewModel)
-    {
-        viewModel.Modals.Add(new Modal(this, new Thickness(0)));
-    }
-
-    public void Close()
-    {
-        if (DataContext is MainWindowViewModel viewModel)
-        {
-            var modalInstance = viewModel.Modals.FirstOrDefault(x => x.Control == this);
-            if (modalInstance != null)
-                viewModel.Modals.Remove(modalInstance);
         }
     }
 

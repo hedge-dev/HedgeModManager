@@ -15,7 +15,7 @@
              x:DataType="vm:MainWindowViewModel"
              Loaded="OnInitialized"
              MinWidth="400" MinHeight="200"
-             UseTitlePadding="False"
+             UseFloatingTitle="True"
              LargeWindow="True">
   <local:WindowModal.Buttons>
     <StackPanel HorizontalAlignment="Right" Margin="10">

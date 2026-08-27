@@ -17,37 +17,37 @@
                    Initialized="OnInitialized"
                    Background="{DynamicResource BackgroundL1Brush}"
                    MinWidth="500" MinHeight="250"
-                   UseTitlePadding="True"
                    LargeWindow="True">
-  <local:WindowModal.Buttons>
-    <StackPanel>
-      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Open}" Click="OnOpenClick" />
-      <cm:SimpleModalButton Text="{Binding InfoViewModel.FavoriteButtonText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource StringLocalizeConverter}}" Click="OnFavoriteClick" />
-      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Configure}" Click="OnConfigureClick" IsEnabled="{Binding ModViewModel.HasConfig, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}" />
-      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Update}" IsEnabled="{Binding ModViewModel.Mod.Updater, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource NullBoolConverter}}" Click="OnUpdateClick" />
-      <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Delete}" Click="OnDeleteClick">
-         <cm:SimpleModalButton.Resources>
-            <SolidColorBrush x:Key="Button.HoverBrush" Color="{DynamicResource Common.DangerColor}"/> 
-         </cm:SimpleModalButton.Resources> 
-      </cm:SimpleModalButton>
+    <local:WindowModal.Data>
+        <Grid RowDefinitions="Auto,Auto,*,Auto">
+            <StackPanel Grid.Row="0" Margin="24,0">
+                <TextBlock
+                    Text="{Binding InfoViewModel.ModText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
+                    FontSize="32" HorizontalAlignment="Center" />
+                <TextBlock
+                    Text="{Binding InfoViewModel.AuthorText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
+                    FontSize="16" HorizontalAlignment="Center" />
+            </StackPanel>
+            <cb:Separator Grid.Row="1" Margin="0,10" />
+            <html:HtmlPanel Grid.Row="2" Margin="24,0"
+                            Text="{Binding InfoViewModel.Description, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
+                            HorizontalAlignment="Center" />
+        </Grid>
+    </local:WindowModal.Data>
 
-      <cm:SimpleModalButton Text="{DynamicResource Common.Button.Close}" Click="Close_Click"/>
-    </StackPanel>
-  </local:WindowModal.Buttons>
-  <local:WindowModal.Data>
-    <Grid RowDefinitions="Auto,Auto,*,Auto">
-      <StackPanel Grid.Row="0" Margin="24,16,24,4">
-        <TextBlock
-                   Text="{Binding InfoViewModel.ModText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
-                   FontSize="32" HorizontalAlignment="Center" />
-        <TextBlock
-                   Text="{Binding InfoViewModel.AuthorText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
-                   FontSize="16" HorizontalAlignment="Center" />
-      </StackPanel>
-      <cb:Separator Grid.Row="1" />
-      <html:HtmlPanel Grid.Row="2" Margin="24,16,24,16"
-                      Text="{Binding InfoViewModel.Description, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}"
-                      HorizontalAlignment="Center" />
-    </Grid>
-  </local:WindowModal.Data>
+    <local:WindowModal.Buttons>
+        <StackPanel>
+            <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Open}" Click="OnOpenClick" />
+            <cm:SimpleModalButton Text="{Binding InfoViewModel.FavoriteButtonText, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource StringLocalizeConverter}}" Click="OnFavoriteClick" />
+            <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Configure}" Click="OnConfigureClick" IsEnabled="{Binding ModViewModel.HasConfig, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}}" />
+            <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Update}" IsEnabled="{Binding ModViewModel.Mod.Updater, RelativeSource={RelativeSource AncestorType=cm:ModInfoModal}, Converter={StaticResource NullBoolConverter}}" Click="OnUpdateClick" />
+            <cm:SimpleModalButton Text="{DynamicResource Mods.Button.Delete}" Click="OnDeleteClick">
+                <cm:SimpleModalButton.Resources>
+                    <SolidColorBrush x:Key="Button.HoverBrush" Color="{DynamicResource Common.DangerColor}"/>
+                </cm:SimpleModalButton.Resources>
+            </cm:SimpleModalButton>
+
+            <cm:SimpleModalButton Text="{DynamicResource Common.Button.Close}" Click="Close_Click"/>
+        </StackPanel>
+    </local:WindowModal.Buttons>
 </local:WindowModal>

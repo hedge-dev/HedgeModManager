@@ -143,3 +143,24 @@ public class StringLocalizeConverterMulti : IMultiValueConverter
     }
 }
 
+public class StringToVisibilityConverter : IValueConverter
+{
+    public virtual object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value?.ToString() is string str)
+        {
+            return !string.IsNullOrWhiteSpace(str);
+        }
+        else if (value is null)
+        {
+            return false;
+        }
+
+        return BindingNotification.UnsetValue;
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return BindingNotification.UnsetValue;
+    }
+}

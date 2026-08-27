@@ -24,6 +24,7 @@
     <local:StringLocalizeIfNotEmptyConverter x:Key="StringLocalizeIfNotEmptyConverter"/>
     <local:BoolIfEqualsConverter x:Key="BoolIfEqualsConverter"/>
     <local:StringLocalizeConverterMulti x:Key="StringLocalizeConverterMulti"/>
+      <local:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
   </Application.Resources>
 
   <Application.DataTemplates>

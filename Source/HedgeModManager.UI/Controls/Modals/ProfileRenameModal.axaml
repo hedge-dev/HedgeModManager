@@ -15,7 +15,6 @@
              x:Class="HedgeModManager.UI.Controls.Modals.ProfileRenameModal"
              x:DataType="vm:MainWindowViewModel"
              MinWidth="500" MinHeight="200" Title="Modal.Title.RenameProfile"
-             UseTitlePadding="True"
              Background="{DynamicResource BackgroundL1Brush}">
   <local:WindowModal.Buttons>
     <Grid>
@@ -25,7 +24,7 @@
     </Grid>
   </local:WindowModal.Buttons>
   <local:WindowModal.Data>
-    <StackPanel Margin="20,0,20,0"
+    <StackPanel Margin="20,0"
                 Orientation="Vertical"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center">

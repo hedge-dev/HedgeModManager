@@ -18,6 +18,6 @@
   </local:WindowModal.Buttons>
   <local:WindowModal.Data>
     <TextBlock Text="{Binding Message, RelativeSource={RelativeSource AncestorType=cm:MessageBoxModal}, Converter={StaticResource StringLocalizeConverter}}"
-               FontSize="14" Margin="50,70,100,0" />
+               FontSize="14" Margin="50,0" />
   </local:WindowModal.Data>
 </local:WindowModal>

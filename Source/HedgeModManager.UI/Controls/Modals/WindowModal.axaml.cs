@@ -17,6 +17,9 @@ public partial class WindowModal : UserControl
     public static readonly StyledProperty<bool> UseTitlePaddingProperty =
         AvaloniaProperty.Register<WindowModal, bool>(nameof(UseTitlePadding), false);
 
+    public static readonly StyledProperty<bool> UseFloatingTitleProperty =
+    AvaloniaProperty.Register<WindowModal, bool>(nameof(UseFloatingTitle), false);
+
     public static readonly StyledProperty<bool> LargeWindowProperty =
         AvaloniaProperty.Register<WindowModal, bool>(nameof(LargeWindow), false);
 
@@ -40,6 +43,12 @@ public partial class WindowModal : UserControl
     {
         get => GetValue(UseTitlePaddingProperty);
         set => SetValue(UseTitlePaddingProperty, value);
+    }
+
+    public bool UseFloatingTitle
+    {
+        get => GetValue(UseFloatingTitleProperty);
+        set => SetValue(UseFloatingTitleProperty, value);
     }
 
     public bool LargeWindow
@@ -86,6 +95,7 @@ public partial class WindowModal : UserControl
             Source = this,
             Mode = BindingMode.TwoWay
         });
+
         if (LargeWindow)
         {
             baseModal.SizeChanged += (object? sender, SizeChangedEventArgs e) =>
@@ -131,7 +141,12 @@ public partial class WindowModal : UserControl
             if (change.NewValue is bool value)
                 ContentBorder.Padding = new Thickness(0, value ? 32 : 0, 0, 0);
         }
-        if (change.Property == ButtonsProperty)
+        if (change.Property == UseFloatingTitleProperty)
+        {
+            if (change.NewValue is bool value)
+                TitleLabel.SetValue(Grid.RowProperty, Convert.ToInt32(value));
+        }
+        else if (change.Property == ButtonsProperty)
         {
             if (change.NewValue is StackPanel stackPanel)
             {
