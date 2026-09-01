@@ -215,3 +215,7 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 Ignored/
+
+# JetBrains IDEs (Rider)
+.idea/
+Source/.idea/
