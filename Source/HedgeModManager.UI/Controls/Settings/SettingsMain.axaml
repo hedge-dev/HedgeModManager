@@ -42,13 +42,13 @@
           <cs:SettingsEntry.Data>
             <StackPanel Orientation="Horizontal" Spacing="10">
               <cb:Button MinWidth="115"
-                      Text="{DynamicResource Settings.Button.ChangeModsDir}"
-                      VerticalContentAlignment="Center"
-                      Click="OnModsDirectoryChangeClick" />
-              <cb:Button MinWidth="115"
                       Text="{DynamicResource Settings.Button.OpenModsDir}"
                       VerticalContentAlignment="Center"
                       Click="OnModsDirClick" />
+              <cb:Button MinWidth="115"
+                      Text="{DynamicResource Settings.Button.ChangeModsDir}"
+                      VerticalContentAlignment="Center"
+                      Click="OnModsDirectoryChangeClick" />
             </StackPanel>
           </cs:SettingsEntry.Data>
         </cs:SettingsEntry>
@@ -95,19 +95,19 @@
           <cs:SettingsEntry.Data>
             <StackPanel Orientation="Horizontal" Spacing="10">
               <cb:Button MinWidth="115"
-                         Text="{DynamicResource Settings.Button.ClearPrefix}"
+                         Text="{DynamicResource Settings.Button.OpenPrefixDir}"
                          VerticalContentAlignment="Center"
-                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
-                         Click="OnPrefixClearClick" />
+                         Click="OnPrefixOpenClick" />
               <cb:Button MinWidth="115"
                          Text="{DynamicResource Settings.Button.ReinstallRuntime}"
                          VerticalContentAlignment="Center"
                          IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
                          Click="OnPrefixReinstallClick" />
               <cb:Button MinWidth="115"
-                         Text="{DynamicResource Settings.Button.OpenPrefixDir}"
+                         Text="{DynamicResource Settings.Button.ClearPrefix}"
                          VerticalContentAlignment="Center"
-                         Click="OnPrefixOpenClick" />
+                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                         Click="OnPrefixClearClick" />
             </StackPanel>
           </cs:SettingsEntry.Data>
         </cs:SettingsEntry>
@@ -117,7 +117,7 @@
       <Label Content="{DynamicResource Settings.Header.Manager}"
              Margin="0,16,0,10" FontSize="16" FontWeight="Bold" />
 
-      <StackPanel Spacing="12">
+      <StackPanel Spacing="8">
         <cs:SettingsEntry Icon="PuzzleOutline"
                           Title="{DynamicResource Settings.Title.Integrations}"
                           Description="{DynamicResource Settings.Description.Integrations}"
