@@ -300,7 +300,7 @@ namespace HMMCodes
 
 namespace System.Runtime.CompilerServices
 {
-    public static unsafe class Unsafe
+    internal static unsafe class Unsafe
     {
         public static TTo BitCast<TFrom, TTo>(TFrom source)
             where TFrom : struct

@@ -16,11 +16,14 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
+    <AvaloniaXaml Remove="Styles\**" />
+    <Compile Remove="Styles\**" />
+    <EmbeddedResource Remove="Styles\**" />
+    <None Remove="Styles\**" />
     <Folder Include="Controls\Mods\" />
     <Folder Include="Controls\Codes\" />
     <Folder Include="Controls\About\" />
     <Folder Include="Controls\Setup\" />
-    <Folder Include="Styles\" />
   </ItemGroup>
 
   <ItemGroup>

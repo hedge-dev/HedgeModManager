@@ -16,16 +16,12 @@ public class CSharpCode : ICode
     private string mBody = string.Empty;
     private SyntaxTreeEx? mCachedSyntaxTree;
 
-    [CodeMetadata]
     public string ID { get; set; } = string.Empty;
 
-    [CodeMetadata]
     public string Name { get; set; } = string.Empty;
 
-    [CodeMetadata]
     public string Author { get; set; } = string.Empty;
 
-    [CodeMetadata]
     public string Category { get; set; } = string.Empty;
 
     public string Description { get; set; } = string.Empty;
@@ -35,6 +31,8 @@ public class CSharpCode : ICode
     public bool Enabled { get; set; }
 
     public bool Naked { get; set; }
+
+    public Dictionary<string, string> AdditionalMetadata { get; set; } = [];
 
     public string FileName => ContainingFile?.Path ?? DefaultFilename;
     public long LineOffset { get; set; }
@@ -236,6 +234,36 @@ public class CSharpCode : ICode
         }
     }
 
+    public Dictionary<string, string> BuildMetadata()
+    {
+        var result = new Dictionary<string, string>(8);
+
+        AddValue(nameof(ID), ID);
+        AddValue(nameof(Name), Name);
+        AddValue(nameof(Author), Author);
+        AddValue(nameof(Category), Category);
+        AddValue(nameof(Type), Type.ToString());
+
+        foreach (var data in AdditionalMetadata)
+        {
+            if (result.ContainsKey(data.Key))
+            {
+                result[data.Key] = data.Value;
+            }
+            else
+            {
+                result.Add(data.Key, data.Value);
+            }
+        }
+
+        return result;
+
+        void AddValue(string key, string value)
+        {
+            if (!string.IsNullOrEmpty(value)) result.Add(key, value);
+        }
+    }
+
     public string GetFullName()
     {
         if (string.IsNullOrEmpty(Category))
@@ -395,14 +423,9 @@ public class CSharpCode : ICode
             var localFuncUnit = SyntaxFactoryEx.MethodDeclaration(methodName, "void",
                                SyntaxFactory.Block(SyntaxFactory.ExpressionStatement(SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName(staticMethodName)))), "public");
 
-            var metadataJson = JsonSerializer.Serialize(this, new JsonSerializerOptions
-            {
-                TypeInfoResolver = CodeMetadataAttribute.JsonTypeInfoResolver
-            });
-
             classUnit = classUnit
                 .WithMembers(SyntaxFactory.List(globalMembers))
-                .AddMembers(ConstStringFieldDeclaration("__META__", metadataJson))
+                .AddMembers(BuildMetadataDecleration(BuildMetadata()))
                 .AddMembers(CodeProvider.LoaderExecutableMethod)
                 .AddMembers(funcUnit, localFuncUnit);
         }
@@ -519,6 +542,20 @@ public class CSharpCode : ICode
             )
             .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.ConstKeyword));
         }
+
+        MemberDeclarationSyntax BuildMetadataDecleration(Dictionary<string, string> metadata)
+        {
+            var metadataText = new StringBuilder();
+            metadataText.AppendLine("public static global::System.Collections.Generic.Dictionary<string, string> __META__ = new global::System.Collections.Generic.Dictionary<string, string>() {");
+
+            foreach(var kvp in metadata)
+            {
+                metadataText.AppendLine($"\t{{ \"\"\"{kvp.Key}\"\"\", \"\"\"{kvp.Value}\"\"\" }},");
+            }
+
+            metadataText.AppendLine("};");
+            return SyntaxFactory.ParseMemberDeclaration(metadataText.ToString())!;
+        }
     }
 
     public SyntaxTree CreateSyntaxTree(IIncludeResolver? includeResolver = null)
@@ -547,5 +584,11 @@ public class CSharpCode : ICode
 
         type = CodeType.Unknown;
         return false;
+    }
+
+    public static class MetadataKeys
+    {
+        public const string ModID = "Mod.ID";
+        public const string ModTitle = "Mod.Title";
     }
 }

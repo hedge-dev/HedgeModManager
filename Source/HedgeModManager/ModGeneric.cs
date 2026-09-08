@@ -95,6 +95,12 @@ public class ModGeneric : IMod
             ConfigSchemaFile = mainSection.Get("ConfigSchemaFile", string.Empty);
             SaveFile = mainSection.Get("SaveFile", string.Empty);
             var server = mainSection.Get("UpdateServer", string.Empty);
+
+            if (string.IsNullOrEmpty(ID))
+            {
+                ID = Title.GetDeterministicHashCode().ToString("X");
+            }
+
             if (!string.IsNullOrEmpty(server))
             {
                 if (Uri.TryCreate(Helpers.EnsureTrailingSlash(server), UriKind.Absolute, out Uri? uri))
@@ -120,8 +126,13 @@ public class ModGeneric : IMod
                         {
                             if (string.IsNullOrEmpty(code.ID))
                                 code.ID = code.Name;
+                            
                             code.Name = $"{Title}/{code.Name}";
+
+                            code.AdditionalMetadata.Add(CSharpCode.MetadataKeys.ModID, ID);
+                            code.AdditionalMetadata.Add(CSharpCode.MetadataKeys.ModTitle, Title);
                         }
+
                         Codes.AddRange(codes);
                     }
                 }
@@ -159,11 +170,6 @@ public class ModGeneric : IMod
                     logError($"Split count < 3 ({splits.Length})");
                 }
             }
-        }
-
-        if (string.IsNullOrEmpty(ID))
-        {
-            ID = Title.GetDeterministicHashCode().ToString("X");
         }
 
         void logError(string reason)
