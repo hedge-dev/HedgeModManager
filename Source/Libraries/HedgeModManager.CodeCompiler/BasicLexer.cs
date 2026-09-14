@@ -49,7 +49,7 @@ public class BasicLexer
         {
             if (IsAnyWhitespace(c))
             {
-                int l = 0;
+                int l = 1;
                 while (offset + l < text.Length && IsAnyWhitespace(span[offset + l]))
                 {
                     l++;
@@ -60,13 +60,15 @@ public class BasicLexer
                 {
                     return Token.Create(text, SyntaxTokenKind.EndOfFileToken, 0, 0);
                 }
+
+                c = span[offset];
             }
         }
         else
         {
             if (IsWhitespace(c))
             {
-                int l = 0;
+                int l = 1;
                 while (offset + l < text.Length && IsWhitespace(span[offset + l]))
                 {
                     l++;
@@ -77,7 +79,7 @@ public class BasicLexer
 
             if (c == '\r')
             {
-                if (offset + 1 < text.Length && span[offset + 1] == '\n')
+                if (CharEquals('\n', 1))
                 {
                     return Token.Create(text, SyntaxTokenKind.LineTrivia, offset, 2);
                 }

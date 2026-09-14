@@ -52,7 +52,7 @@ public class SyntaxTreeEx : CSharpSyntaxTree
     public static SyntaxTreeEx Parse(string text, in BasicLexer.FilterOptions filter, IIncludeResolver? includeResolver = null, CSharpParseOptions? options = null)
     {
         // Do NOT feed a filename to the compiler, that forces the compiler generate it's own checksum
-        var tree = new SyntaxTreeEx((CSharpSyntaxTree)ParseText(ProcessText(text, filter, out var processor, includeResolver), options ?? new (kind: SourceCodeKind.Regular)))
+        var tree = new SyntaxTreeEx((CSharpSyntaxTree)ParseText(ProcessText(text, filter, out var processor, includeResolver), options ?? new (kind: SourceCodeKind.Script)))
         {
             PreProcessor = processor,
         };

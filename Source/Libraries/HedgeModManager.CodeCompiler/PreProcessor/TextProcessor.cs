@@ -306,15 +306,27 @@ public class TextProcessor
                                         var macroBody = new StringBuilder();
                                         macroBody.Append(value);
 
-                                        while (macroBody[macroBody.Length - 1] == '\\')
+                                        var hasLine = macroBody[macroBody.Length - 1] == '\\';
+                                        if (hasLine) macroBody.Remove(macroBody.Length - 1, 1);
+                                        
+                                        while (hasLine)
                                         {
-                                            macroBody.Remove(macroBody.Length - 1, 1);
                                             if (!reader.ReadLine(out line))
                                             {
                                                 continue;
                                             }
 
-                                            macroBody.Append(line);
+                                            // Ignore preprocessor directives in macros.
+                                            // A side-effect of emitting #line tokens.
+                                            if (!BasicLexer.ParseToken(line, 0, true).IsKind(SyntaxTokenKind.HashToken))
+                                            {
+                                                hasLine = line.Length != 0 && line.Span[line.Length - 1] == '\\';
+                                                macroBody.Append(line.Slice(0, line.Length - Unsafe.As<bool, byte>(ref hasLine)).ToString());
+                                            }
+                                            else // Continue to next line
+                                            {
+                                                hasLine = true;
+                                            }
                                         }
 
                                         Define(name, macroBody.ToString());

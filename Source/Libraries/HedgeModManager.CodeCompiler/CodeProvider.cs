@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis.Emit;
 using PreProcessor;
 using Properties;
 using System.IO.Compression;
-using System.Text;
 
 public class CodeProvider
 {
@@ -76,6 +75,7 @@ public class CodeProvider
             var newLibs = new HashSet<LibraryReference>();
             var loads = GetLoadAssemblies(sources, includeResolver, loadPaths);
             var resultStream = compileOptions.OutputStream;
+            var codeTrees = new Dictionary<SyntaxTree, CSharpCode>();
 
             // We don't have to concern ourselves with resolving references if everything is compiled
             if (compileOptions.IncludeAllSources)
@@ -83,6 +83,7 @@ public class CodeProvider
                 foreach (var source in sources)
                 {
                     trees.Add(source.CreateSyntaxTree(includeResolver));
+                    codeTrees.Add(trees[trees.Count - 1], source);
                 }
             }
             else
@@ -95,6 +96,7 @@ public class CodeProvider
                     }
 
                     trees.Add(source.CreateSyntaxTree(includeResolver));
+                    codeTrees.Add(trees[trees.Count - 1], source);
 
                     foreach (string reference in source.GetReferences())
                     {
@@ -132,6 +134,7 @@ public class CodeProvider
                     }
 
                     trees.Add(libSource.CreateSyntaxTree(includeResolver));
+                    codeTrees.Add(trees[trees.Count - 1], libSource);
 
                     libs.Add(lib);
 
@@ -183,6 +186,12 @@ public class CodeProvider
                     var line = diagnostic.Location.GetLineSpan();
                     var message =
                         $"@({line.StartLinePosition.Line + 1},{line.StartLinePosition.Character}) {diagnostic.Descriptor.Id}: {diagnostic.GetMessage()}";
+
+                    var sourceTree = diagnostic.Location.SourceTree;
+                    if (sourceTree != null && codeTrees.TryGetValue(sourceTree, out var faultCode))
+                    {
+                        path = faultCode.Name;
+                    }
 
                     switch (diagnostic.Severity)
                     {
