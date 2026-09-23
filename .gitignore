@@ -215,3 +215,6 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 Ignored/
+.DS_Store
+Source/.DS_Store
+Source/HedgeModManager.UI/.DS_Store
