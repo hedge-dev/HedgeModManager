@@ -52,6 +52,23 @@ public class SteamLocator : IGameLocator
         }
         return null;
     }
+    
+    private string? FindSteamLibraryMac()
+    {
+        var pathList = new[]
+        {
+            Path.Combine("Library", "Application Support", "Steam"),
+            Path.Combine("Applications", "Steam.app", "Contents", "Resources", ".steam")
+        };
+
+        foreach (string path in pathList)
+        {
+            string steamPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), path);
+            if (File.Exists(Path.Combine(steamPath, "steamapps", "libraryfolders.vdf")))
+                return steamPath;
+        }
+        return null;
+    }
 
     public string? FindDefaultSteamLibrary()
     {
@@ -63,8 +80,12 @@ public class SteamLocator : IGameLocator
                 return SteamInstallPath;
             }
 
+            if (OperatingSystem.IsMacOS())
+            {
+                SteamInstallPath = FindSteamLibraryMac();
+                return SteamInstallPath;
+            }
             SteamInstallPath = FindSteamLibraryUnix();
-            return SteamInstallPath;
         }
 
         return SteamInstallPath;
