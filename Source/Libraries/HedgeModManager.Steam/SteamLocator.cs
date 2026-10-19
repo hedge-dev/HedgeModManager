@@ -93,7 +93,7 @@ public class SteamLocator : IGameLocator
 
     public static string? LocateSteamPrefix(string appid, IReadOnlyList<string> compatDirs)
     {
-        if (!OperatingSystem.IsLinux())
+        if (OperatingSystem.IsWindows())
             return null;
 
         foreach (var compatDir in compatDirs)
@@ -168,7 +168,7 @@ public class SteamLocator : IGameLocator
                 continue;
             }
 
-            if (OperatingSystem.IsLinux())
+            if (!OperatingSystem.IsWindows())
             {
                 var compatDataDir = Path.Combine(path, "steamapps", "compatdata");
                 if (Directory.Exists(compatDataDir))
