@@ -53,12 +53,12 @@ public class SteamLocator : IGameLocator
         return null;
     }
     
-    private string? FindSteamLibraryMac()
+    [SupportedOSPlatform("macos")]
+    private string? FindSteamLibraryMacOS()
     {
         var pathList = new[]
         {
             Path.Combine("Library", "Application Support", "Steam"),
-            Path.Combine("Applications", "Steam.app", "Contents", "Resources", ".steam")
         };
 
         foreach (string path in pathList)
@@ -82,7 +82,7 @@ public class SteamLocator : IGameLocator
 
             if (OperatingSystem.IsMacOS())
             {
-                SteamInstallPath = FindSteamLibraryMac();
+                SteamInstallPath = FindSteamLibraryMacOS();
                 return SteamInstallPath;
             }
             SteamInstallPath = FindSteamLibraryUnix();
