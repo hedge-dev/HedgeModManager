@@ -52,6 +52,23 @@ public class SteamLocator : IGameLocator
         }
         return null;
     }
+    
+    [SupportedOSPlatform("macos")]
+    private string? FindSteamLibraryMacOS()
+    {
+        var pathList = new[]
+        {
+            Path.Combine("Library", "Application Support", "Steam"),
+        };
+
+        foreach (string path in pathList)
+        {
+            string steamPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), path);
+            if (File.Exists(Path.Combine(steamPath, "steamapps", "libraryfolders.vdf")))
+                return steamPath;
+        }
+        return null;
+    }
 
     public string? FindDefaultSteamLibrary()
     {
@@ -63,8 +80,12 @@ public class SteamLocator : IGameLocator
                 return SteamInstallPath;
             }
 
+            if (OperatingSystem.IsMacOS())
+            {
+                SteamInstallPath = FindSteamLibraryMacOS();
+                return SteamInstallPath;
+            }
             SteamInstallPath = FindSteamLibraryUnix();
-            return SteamInstallPath;
         }
 
         return SteamInstallPath;
@@ -72,7 +93,7 @@ public class SteamLocator : IGameLocator
 
     public static string? LocateSteamPrefix(string appid, IReadOnlyList<string> compatDirs)
     {
-        if (!OperatingSystem.IsLinux())
+        if (OperatingSystem.IsWindows())
             return null;
 
         foreach (var compatDir in compatDirs)
@@ -147,7 +168,7 @@ public class SteamLocator : IGameLocator
                 continue;
             }
 
-            if (OperatingSystem.IsLinux())
+            if (!OperatingSystem.IsWindows())
             {
                 var compatDataDir = Path.Combine(path, "steamapps", "compatdata");
                 if (Directory.Exists(compatDataDir))
