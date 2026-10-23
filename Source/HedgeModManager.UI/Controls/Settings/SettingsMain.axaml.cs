@@ -51,6 +51,7 @@ public partial class SettingsMain : SettingsBase
         var viewModel = (DataContext as MainWindowViewModel);
         if (viewModel == null)
             return;
+
         ViewModel.MainViewModel = viewModel;
 
         // Add buttons

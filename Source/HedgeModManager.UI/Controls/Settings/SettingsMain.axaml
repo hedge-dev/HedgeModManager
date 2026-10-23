@@ -28,7 +28,7 @@
                       VerticalContentAlignment="Center"
                       Click="OnManageProfilesClick" />
               <ComboBox MinWidth="240" MinHeight="36"
-                        ItemsSource="{Binding Profiles}"
+                        ItemsSource="{Binding ViewModel.SelectableProfiles, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
                         SelectedItem="{Binding ViewModel.SelectedProfile, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
                         SelectionChanged="OnProfileSelectionChanged"
                         VerticalContentAlignment="Center"
@@ -199,7 +199,7 @@
                           Title="{DynamicResource Settings.Title.Language}">
           <cs:SettingsEntry.Data>
             <ComboBox MinWidth="240" MinHeight="36"
-                      ItemsSource="{Binding Languages}"
+                      ItemsSource="{Binding ViewModel.SelectableLanguages, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
                       SelectedItem="{Binding ViewModel.SelectedLanguage, RelativeSource={RelativeSource AncestorType=cs:SettingsMain}}"
                       SelectionChanged="OnLanguageSelectionChanged"
                       VerticalContentAlignment="Center"

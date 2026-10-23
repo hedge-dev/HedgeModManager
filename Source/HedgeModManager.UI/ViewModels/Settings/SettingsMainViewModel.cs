@@ -118,7 +118,8 @@ public partial class SettingsMainViewModel : ViewModelBase
         get => MainViewModel?.SelectedProfile ?? ModProfile.Default;
     }
 
-    public ObservableCollection<ModProfile> SelectedProfiles => MainViewModel?.Profiles ?? [];
+    public ObservableCollection<ModProfile> SelectableProfiles => MainViewModel?.Profiles ?? [];
+    public ObservableCollection<LanguageEntry> SelectableLanguages => MainViewModel?.Languages ?? [];
 
     public Theme SelectedTheme
     {
