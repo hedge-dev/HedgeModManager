@@ -17,6 +17,11 @@ public class Logger
         return Singleton<Logger>.GetInstance();
     }
 
+    public static void AddSecret(string secret)
+    {
+        GetInstance()?.logger.AddSecret(secret);
+    }
+
     public static void Information(string message)
     {
         GetInstance()?.WriteLine(LogType.Information, message);

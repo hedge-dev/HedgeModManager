@@ -42,6 +42,7 @@ public partial class GameBananaRemoteDLServer(MainWindowViewModel viewModel) : O
 
                 string memberID = _viewModel.Config.Integrations.GameBananaRemoteDLMemberID;
                 string secretKey = _viewModel.Config.Integrations.GameBananaRemoteDLSecretKey;
+                Logger.AddSecret(secretKey);
                 var uris = await GameBananaAPI.FetchRemoteInstallQueue(memberID, secretKey, Program.ApplicationName);
                 LastPoll = DateTime.Now;
                 if (uris == null)

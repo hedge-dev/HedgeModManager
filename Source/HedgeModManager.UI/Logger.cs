@@ -11,9 +11,19 @@ public partial class UILogger : ObservableObject, ILogger
     [ObservableProperty] private ObservableCollection<Log> _logs = [];
     private List<Log> _backupLogs = [];
 
+    private List<string> _secrets = [];
+
     public UILogger()
     {
         Singleton<UILogger>.SetInstance(this);
+    }
+
+    public void AddSecret(string secret)
+    {
+        string secretStr = secret.Trim().ToLowerInvariant();
+        if (string.IsNullOrWhiteSpace(secretStr) || _secrets.Contains(secretStr))
+            return;
+        _secrets.Add(secretStr);
     }
 
     public void WriteLine(LogType type, string message)
@@ -39,7 +49,11 @@ public partial class UILogger : ObservableObject, ILogger
 
     public static string Export()
     {
+        var secrets = GetInstance()._secrets;
         return GetInstance()._backupLogs
+            .Select(log =>
+                secrets.Aggregate(log.Message, (msg, secret) =>
+                    msg.Replace(secret, new string('*', secret.Length), StringComparison.InvariantCultureIgnoreCase)))
             .Aggregate(new StringBuilder(), (sb, log) => sb.AppendLine(log.ToString()))
             .ToString();
     }
