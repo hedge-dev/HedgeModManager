@@ -50,7 +50,7 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
             }
 
             string modPath = Path.Combine(mod.Root, ModGeneric.ConfigName);
-            if (OperatingSystem.IsLinux() && NativeOS == "Windows")
+            if (!OperatingSystem.IsWindows() && NativeOS == "Windows")
             {
                 modPath = LinuxCompatibility.ToWinePath(modPath);
             }
@@ -266,8 +266,21 @@ public class ModDatabaseGeneric : IModDatabase, IIncludeResolver
                 var codeFile = CodeFile.FromFile(path);
                 foreach (var code in codeFile.Codes)
                 {
-                    Codes.RemoveAll(x => (x.Name == code.Name && x.Category == code.Category) || (!string.IsNullOrEmpty(x.ID) && x.ID == code.ID));
-                    Codes.Add(code);
+                    bool Matches(CSharpCode x) =>
+                        (x.Name == code.Name && x.Category == code.Category) ||
+                        (!string.IsNullOrEmpty(x.ID) && x.ID == code.ID);
+
+                    int index = Codes.FindIndex(Matches);
+                    if (index != -1)
+                    {
+                        code.Enabled = Codes.Any(x => Matches(x) && x.Enabled);
+                        Codes.RemoveAll(Matches);
+                        Codes.Insert(Math.Min(index, Codes.Count), code);
+                    }
+                    else
+                    {
+                        Codes.Add(code);
+                    }
                 }
             }
         }
