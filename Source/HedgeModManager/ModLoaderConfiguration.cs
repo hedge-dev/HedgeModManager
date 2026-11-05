@@ -27,7 +27,7 @@ public class ModLoaderConfiguration : IModLoaderConfiguration
             SaveFileFallback = group.Get("SaveFileFallback", SaveFileFallback);
             SaveFileOverride = group.Get("SaveFileOverride", string.Empty);
 
-            if (OperatingSystem.IsLinux() && NativeOS == "Windows")
+            if (!OperatingSystem.IsWindows() && NativeOS == "Windows")
             {
                 DatabasePath = LinuxCompatibility.ToUnixPath(DatabasePath);
             }
@@ -41,7 +41,7 @@ public class ModLoaderConfiguration : IModLoaderConfiguration
         var group = ini.GetOrAddValue(LegacySectionName);
         group.Set("Enabled", Enabled ? 1 : 0);
         group.Set("EnableSaveFileRedirection", EnableSaveFileRedirection ? 1 : 0);
-        if (OperatingSystem.IsLinux() && NativeOS == "Windows")
+        if (!OperatingSystem.IsWindows() && NativeOS == "Windows")
         {
             group.Set("ModsDbIni", LinuxCompatibility.ToWinePath(DatabasePath));
         }
