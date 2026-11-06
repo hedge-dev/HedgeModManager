@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFBundleExecutable</key>
+        <string>HedgeModManager.UI</string>
+        <key>CFBundleName</key>
+        <string>HedgeDevHedgeMM</string>
+        <key>CFBundleDisplayName</key>
+        <string>Hedge Mod Manager</string>
+        <key>CFBundleIconFile</key>
+        <string>Icon.icns</string>
+        <key>CFBundleIdentifier</key>
+        <string>io.github.hedge_dev.hedgemodmanager</string>
+        <key>NSHighResolutionCapable</key>
+        <true/>
+        <key>CFBundleVersion</key>
+        <string>HEDGEMM_VERSION</string>
+        <key>CFBundleShortVersionString</key>
+        <string>HEDGEMM_VERSION</string>
+        <key>CFBundleURLTypes</key>
+        <array>
+          <dict>
+            <key>CFBundleURLName</key>
+            <string>Hedge Mod Manager</string>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+              <string>hedgemm</string>
+              <string>hedgemmswa</string>
+              <string>hedgemmgens</string>
+              <string>hedgemmlw</string>
+              <string>hedgemmforces</string>
+              <string>hedgemmtenpex</string>
+              <string>hedgemmmusashi</string>
+              <string>hedgemmrainbow</string>
+              <string>hedgemmhite</string>
+              <string>hedgemmrangers</string>
+              <string>hedgemmmillersonic</string>
+              <string>hedgemmmillershadow</string>
+            </array>
+          </dict>
+        </array>
+    </dict>
+</plist>

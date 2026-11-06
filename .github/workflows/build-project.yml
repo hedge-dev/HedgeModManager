@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-26.04
     strategy:
       matrix:
-        rid: [linux-x64, linux-arm64, win-x64]
+        rid: [linux-x64, linux-arm64, win-x64, osx-x64, osx-arm64]
 
     steps:
       - name: Checkout Repository
@@ -48,11 +48,31 @@ jobs:
       - name: ${{ matrix.rid }} Build
         run: dotnet publish -p:DefineConstants=COMMITBUILD -p:PublishProfile=${{ matrix.rid }} -c Release -o ./output/${{ matrix.rid }} ${{ env.PROJECT_PATH }}
 
+      - name: Package macOS App
+        if: ${{ startsWith(matrix.rid, 'osx') }}
+        run: |
+          mkdir -p ./output/package/HedgeModManager.app/Contents/MacOS
+          mkdir ./output/package/HedgeModManager.app/Contents/Resources
+          cp -R ./output/${{ matrix.rid }}/* ./output/package/HedgeModManager.app/Contents/MacOS
+          cp ./data/macOS/Icon.icns ./output/package/HedgeModManager.app/Contents/Resources/Icon.icns
+          cp ./data/macOS/Info.plist ./output/package/HedgeModManager.app/Contents/Info.plist
+          VERSION="8.0.0-${GITHUB_SHA::7}"
+          sed -i "s/HEDGEMM_VERSION/$VERSION/g" ./output/package/HedgeModManager.app/Contents/Info.plist
+
       - name: Upload Artifact
+        if: ${{ !startsWith(matrix.rid, 'osx') }}
         uses: actions/upload-artifact@v7
         with:
-          name: HedgeModManager-${{matrix.rid}}
-          path: ./output/${{matrix.rid}}
+          name: HedgeModManager-${{ matrix.rid }}
+          path: ./output/${{ matrix.rid }}
+      
+      - name: Upload Artifact (macOS)
+        if: ${{ startsWith(matrix.rid, 'osx') }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: HedgeModManager-${{ matrix.rid }}
+          path: ./output/package
+
   
   build-flatpak:
     name: Build Flatpak
