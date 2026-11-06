@@ -133,7 +133,8 @@ public class ModdableGameLocator
             {
                 { "Windows", [new(string.Empty, "SOFTWARE\\UnleashedRecomp")] },
                 { "Flatpak", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")] },
-                { "Desktop", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] }
+                { "Desktop", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] },
+                { "macOS",   [new("UnleashedRecomp", "UnleashedRecomp")] }
             }
         }
     ];
@@ -399,6 +400,34 @@ public class ModdableGameLocator
                             }
                         }
                     }
+                }
+            }
+            if (OperatingSystem.IsMacOS() && gameInfo.PlatformInfos.TryGetValue("macOS", out var macInfo))
+            {
+                foreach (var entry in macInfo)
+                {
+                    string home = Paths.GetUserHomePath();
+                    string[] candidates =
+                    [
+                        Path.Combine(home, "Library", "Application Support", entry.ID),
+                    ];
+
+                    string? root = candidates.FirstOrDefault(Directory.Exists);
+                    if (root == null)
+                        continue;
+
+                    var gameSimple = new GameSimple(
+                        "macOS", string.Empty, gameInfo.ID,
+                        root, entry.Executable, "macOS", null, null, null);
+
+                    var game = new ModdableGameGeneric(gameSimple)
+                    {
+                        SupportsDirectLaunch = false,
+                        SupportsLauncher = false,
+                        Is64Bit = gameInfo.Is64Bit
+                    };
+                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                    games.Add(game);
                 }
             }
         }
