@@ -5,6 +5,7 @@ using Properties;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using System.Text;
 
 public class LinuxCompatibility
@@ -15,11 +16,19 @@ public class LinuxCompatibility
     /// <param name="path">Path to the prefix root directory</param>
     public static async Task<bool> InstallRuntimeToPrefix(string? path)
     {
-        Logger.Debug($"Installing runtime files to {path}");
+        if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
+        {
+            Logger.Information("Runtime installation are not for ARM64 prefixes");
+            return true;
+        }
+
         if (path == null)
         {
+            Logger.Error("Failed to install runtime files: path is null");
             return false;
         }
+
+        Logger.Information($"Installing runtime files to {path}");
 
         // Download runtime
         Logger.Information($"Downloading runtime files (x64)");
