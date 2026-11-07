@@ -271,13 +271,11 @@ public class ModdableGameLocator
                     if (Directory.Exists(root) && File.Exists(exe))
                     {
                         var gameSimple = new GameSimple(
-                            "Windows", string.Empty, gameInfo.ID,
+                            "Windows", gameInfo.ID, gameInfo.ID,
                             root, Path.GetFileName(exe), "Windows", exe.Replace(" ", "\\ "), null, null);
 
                         var game = new ModdableGameGeneric(gameSimple)
                         {
-                            SupportsDirectLaunch = true,
-                            SupportsLauncher = false,
                             Is64Bit = gameInfo.Is64Bit
                         };
                         game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
