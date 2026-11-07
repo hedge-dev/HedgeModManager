@@ -133,7 +133,8 @@ public class ModdableGameLocator
             {
                 { "Windows", [new(string.Empty, "SOFTWARE\\UnleashedRecomp")] },
                 { "Flatpak", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp")] },
-                { "Desktop", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] }
+                { "Desktop", [new("io.github.hedge_dev.unleashedrecomp", "unleashedrecomp"), new("UnleashedRecomp", "unleashedrecomp")] },
+                { "macOS",   [new("UnleashedRecomp", "Unleashed Recompiled")] }
             }
         }
     ];
@@ -399,6 +400,34 @@ public class ModdableGameLocator
                             }
                         }
                     }
+                }
+            }
+            if (OperatingSystem.IsMacOS() && gameInfo.PlatformInfos.TryGetValue("macOS", out var macInfo))
+            {
+                foreach (var entry in macInfo)
+                {
+                    string home = Paths.GetUserHomePath();
+                    string[] candidates =
+                    [
+                        Path.Combine(home, "Library", "Application Support", entry.ID),
+                    ];
+
+                    string? root = candidates.FirstOrDefault(Directory.Exists);
+                    if (root == null)
+                        continue;
+
+                    var gameSimple = new GameSimple(
+                        "macOS", gameInfo.ID, gameInfo.ID,
+                        root, entry.Executable, "macOS", $"open -a \"{entry.Executable}\"", null, null);
+                    // This assumes the game is at the application folder, which is where it'll be for most users
+
+                    var game = new ModdableGameGeneric(gameSimple)
+                    {
+                        SupportsDirectLaunch = true,
+                        Is64Bit = gameInfo.Is64Bit
+                    };
+                    game.ModDatabase.SupportsCodeCompilation = gameInfo.SupportsCodes;
+                    games.Add(game);
                 }
             }
         }
