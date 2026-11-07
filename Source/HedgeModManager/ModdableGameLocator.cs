@@ -149,7 +149,7 @@ public class ModdableGameLocator
 
         if (!string.IsNullOrEmpty(steamLocator.SteamInstallPath))
         {
-            Logger.Debug($"Found Steam at: {steamLocator.SteamInstallPath}");
+            Logger.Information($"Found Steam at: {steamLocator.SteamInstallPath}");
             Logger.Debug("  Supported games:");
             foreach (var game in steamGames)
             {
@@ -163,30 +163,37 @@ public class ModdableGameLocator
         }
         else
         {
-            Logger.Debug("Steam not found!");
+            Logger.Information("Steam not found!");
         }
 
         if (epicLocator.HeroicRootPaths.Count > 0)
         {
-            Logger.Debug("Found Heroic at: ");
-            foreach (var path in epicLocator.HeroicRootPaths)
+            if (epicLocator.HeroicRootPaths.Count == 1)
             {
-                Logger.Debug($"  {path}");
+                Logger.Information($"Found Heroic at: {epicLocator.HeroicRootPaths.FirstOrDefault(string.Empty)}");
+            }
+            else
+            {
+                Logger.Information("Found Heroic at:");
+                foreach (var path in epicLocator.HeroicRootPaths)
+                {
+                    Logger.Information($"  {path}");
+                }
             }
         }
         else
         {
-            Logger.Debug("Heroic not found!");
+            Logger.Information("Heroic not found!");
         }
 
         if (!string.IsNullOrEmpty(epicLocator.EGLInstalledPath))
         {
-            Logger.Debug($"Found LauncherInstalled.dat at: {epicLocator.EGLInstalledPath}");
+            Logger.Information($"Found LauncherInstalled.dat at: {epicLocator.EGLInstalledPath}");
         }
         else
         {
             if (OperatingSystem.IsWindows())
-                Logger.Debug("EGL not found!");
+                Logger.Information("EGL not found!");
         }
 
         if (OperatingSystem.IsLinux())

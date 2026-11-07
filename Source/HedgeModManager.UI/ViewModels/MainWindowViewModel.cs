@@ -94,11 +94,19 @@ public partial class MainWindowViewModel : ViewModelBase
             os = "Linux"; // Excludes Android
         else if (OperatingSystem.IsMacOS())
             os = "macOS";
-        Logger.Debug($"OS: {os}");
-        Logger.Debug($"RID: {RuntimeInformation.RuntimeIdentifier}");
-        Logger.Debug($"FlatpakID: \"{Program.FlatpakID}\" ({!string.IsNullOrEmpty(Program.FlatpakID)})");
+        Logger.Information($"System: {os} (OS: {RuntimeInformation.OSArchitecture}, Process: {RuntimeInformation.ProcessArchitecture})");
+        string build = RuntimeInformation.RuntimeIdentifier;
+        if (Program.IsDebugBuild)
+            build += " (Debug)";
+        if (!string.IsNullOrEmpty(Program.FlatpakID))
+        {
+            if (build.EndsWith(')'))
+                build = build[..^1] + $", Flatpak: {Program.FlatpakID})";
+            else
+                build += $" (Flatpak: {Program.FlatpakID})";
+        }
+        Logger.Information($"Build: {build}");
         Logger.Debug($"InstallLocation: {Program.InstallLocation}");
-        Logger.Debug($"IsDebugBuild: {Program.IsDebugBuild}");
     }
 
     public async Task OnStartUpAsync()

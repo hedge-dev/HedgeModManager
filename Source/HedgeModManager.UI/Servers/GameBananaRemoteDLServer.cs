@@ -28,7 +28,7 @@ public partial class GameBananaRemoteDLServer(MainWindowViewModel viewModel) : O
             LastPoll = DateTime.MinValue;
             var refreshTime = TimeSpan.FromSeconds(60);
             var c = ServerCancellationTokenSource.Token;
-            Logger.Debug("Starting GameBanana Remote Install server");
+            Logger.Information("Starting GameBanana Remote Install server");
             while (!c.IsCancellationRequested)
             {
                 if (DateTime.Now - LastPoll < refreshTime)

@@ -19,9 +19,105 @@ namespace HedgeModManager.UI.Controls.MainWindow;
 
 public partial class Test : UserControl
 {
+
+    public bool IsLogInformationEnabled
+    {
+        get
+        {
+            if (DataContext is not MainWindowViewModel viewModel)
+                return false;
+            return viewModel.Config.LogFilters.Contains(LogType.Information);
+        }
+        set
+        {
+            if (DataContext is not MainWindowViewModel viewModel)
+                return;
+            if (value && !viewModel.Config.LogFilters.Contains(LogType.Information))
+                viewModel.Config.LogFilters.Add(LogType.Information);
+            else if (!value && viewModel.Config.LogFilters.Contains(LogType.Information))
+                viewModel.Config.LogFilters.Remove(LogType.Information);
+            UILogger.GetInstance().FilterLogs(viewModel.Config.LogFilters);
+        }
+    }
+
+    public bool IsLogWarningEnabled
+    {
+        get
+        {
+            if (DataContext is not MainWindowViewModel viewModel)
+                return false;
+            return viewModel.Config.LogFilters.Contains(LogType.Warning);
+        }
+        set
+        {
+            if (DataContext is not MainWindowViewModel viewModel)
+                return;
+            if (value && !viewModel.Config.LogFilters.Contains(LogType.Warning))
+                viewModel.Config.LogFilters.Add(LogType.Warning);
+            else if (!value && viewModel.Config.LogFilters.Contains(LogType.Warning))
+                viewModel.Config.LogFilters.Remove(LogType.Warning);
+            UILogger.GetInstance().FilterLogs(viewModel.Config.LogFilters);
+        }
+    }
+
+    public bool IsLogErrorEnabled
+    {
+        get
+        {
+            if (DataContext is not MainWindowViewModel viewModel)
+                return false;
+            return viewModel.Config.LogFilters.Contains(LogType.Error);
+        }
+        set
+        {
+            if (DataContext is not MainWindowViewModel viewModel)
+                return;
+            if (value && !viewModel.Config.LogFilters.Contains(LogType.Error))
+                viewModel.Config.LogFilters.Add(LogType.Error);
+            else if (!value && viewModel.Config.LogFilters.Contains(LogType.Error))
+                viewModel.Config.LogFilters.Remove(LogType.Error);
+            UILogger.GetInstance().FilterLogs(viewModel.Config.LogFilters);
+        }
+    }
+
+    public bool IsLogDebugEnabled
+    {
+        get
+        {
+            if (DataContext is not MainWindowViewModel viewModel)
+                return false;
+            return viewModel.Config.LogFilters.Contains(LogType.Debug);
+        }
+        set
+        {
+            if (DataContext is not MainWindowViewModel viewModel)
+                return;
+            if (value && !viewModel.Config.LogFilters.Contains(LogType.Debug))
+                viewModel.Config.LogFilters.Add(LogType.Debug);
+            else if (!value && viewModel.Config.LogFilters.Contains(LogType.Debug))
+                viewModel.Config.LogFilters.Remove(LogType.Debug);
+            UILogger.GetInstance().FilterLogs(viewModel.Config.LogFilters);
+        }
+    }
+
+
     public Test()
     {
         AvaloniaXamlLoader.Load(this);
+    }
+
+    public void UpdateLog()
+    {
+        var filters = new List<LogType>();
+        if (IsLogInformationEnabled)
+            filters.Add(LogType.Information);
+        if (IsLogWarningEnabled)
+            filters.Add(LogType.Warning);
+        if (IsLogErrorEnabled)
+            filters.Add(LogType.Error);
+        if (IsLogDebugEnabled)
+            filters.Add(LogType.Debug);
+        UILogger.GetInstance().FilterLogs([.. filters]);
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -95,6 +191,7 @@ public partial class Test : UserControl
                     }).RunAsync(viewModel);
 
             }));
+            UILogger.GetInstance().FilterLogs(viewModel.Config.LogFilters);
         }
 
         void createCheckbox(string name)

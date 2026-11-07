@@ -3,6 +3,7 @@
              xmlns:c="using:HedgeModManager.UI.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mw="using:HedgeModManager.UI.Controls.MainWindow"
              xmlns:vm="using:HedgeModManager.UI.ViewModels"
              mc:Ignorable="d" d:DesignWidth="920" d:DesignHeight="390"
              x:Class="HedgeModManager.UI.Controls.MainWindow.Test"
@@ -74,6 +75,10 @@
                   Spacing="4"
                   Orientation="Horizontal"
                   HorizontalAlignment="Right">
+        <CheckBox IsChecked="{Binding IsLogInformationEnabled, RelativeSource={RelativeSource AncestorType=mw:Test}}">Information</CheckBox>
+        <CheckBox IsChecked="{Binding IsLogWarningEnabled, RelativeSource={RelativeSource AncestorType=mw:Test}}">Warning</CheckBox>
+        <CheckBox IsChecked="{Binding IsLogErrorEnabled, RelativeSource={RelativeSource AncestorType=mw:Test}}">Error</CheckBox>
+        <CheckBox IsChecked="{Binding IsLogDebugEnabled, RelativeSource={RelativeSource AncestorType=mw:Test}}">Debug</CheckBox>
         <Button Click="ExportLog_Click">Export</Button>
         <Button Click="ClearLog_Click">Clear</Button>
       </StackPanel>
@@ -84,7 +89,7 @@
               Margin="0,8,8,8" Padding="8"
               BorderBrush="{DynamicResource BorderBrush}">
         <ScrollViewer  x:Name="LogScrollViewer">
-          <ItemsControl ItemsSource="{Binding LoggerInstance.Logs}">
+          <ItemsControl ItemsSource="{Binding LoggerInstance.FilteredLogs}">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
                 <TextBlock FontFamily="DejaVu Sans Mono, Consolas" Text="{Binding Converter={StaticResource LogStringConverter}}" />

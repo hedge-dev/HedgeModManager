@@ -19,6 +19,7 @@ public partial class ProgramConfig : ConfigBase
     [ObservableProperty] private WindowState _lastWindowState = WindowState.Normal;
     [ObservableProperty] private List<string> _lastSeenLanguages = [];
     [ObservableProperty] private IntegrationsConfig _integrations = new();
+    [ObservableProperty] private List<LogType> _logFilters = [LogType.Information, LogType.Warning, LogType.Error, LogType.Debug];
 
     // Test Flags
     [ObservableProperty] private bool _testKeyboardInput = false;
